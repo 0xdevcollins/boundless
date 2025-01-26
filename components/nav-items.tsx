@@ -28,9 +28,9 @@ import {
 import Link from "next/link";
 
 export function NavItems({
-  projects,
+  items,
 }: {
-  projects: {
+  items: {
     name: string;
     url: string;
     icon: LucideIcon;
@@ -44,7 +44,7 @@ export function NavItems({
         Dashboard Links <Link2Icon />
       </SidebarGroupLabel>
       <SidebarMenu>
-        {projects.map((item) => (
+        {items.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
               <Link href={item.url}>
