@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import {
-  GalleryVerticalEnd,
   LayoutDashboardIcon,
   Map,
   PieChart,
@@ -19,7 +18,6 @@ import {
 } from "@/components/ui/sidebar";
 import Image from "next/image";
 
-// Sample Data
 const data = {
   user: {
     name: "collins",
@@ -63,7 +61,7 @@ export function AppSidebar({
         <NavUser
           user={{
             ...data.user,
-            avatar: data.user.avatar || "/default-avatar.png",
+            avatar: data.user.avatar || "/globe.svg",
           }}
         />
       </SidebarFooter>
