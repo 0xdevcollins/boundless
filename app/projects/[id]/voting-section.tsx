@@ -18,7 +18,7 @@ export function VotingSection() {
             <div>
               <h4 className="font-medium">Technical Feasibility Review</h4>
               <p className="text-sm text-muted-foreground">
-                Community voting on project's technical implementation plan
+                Community voting on project&apos;s technical implementation plan
               </p>
             </div>
 

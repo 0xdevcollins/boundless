@@ -4,20 +4,22 @@ import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Users, MessageSquare, Wallet, Plus } from "lucide-react"
+import { Users, Wallet, Plus } from "lucide-react"
 import Image from "next/image"
 import { ProjectActions } from "./project-actions"
 import { MilestoneTracker } from "./milestone-tracker"
 import { VotingSection } from "./voting-section"
 import { FundingSection } from "./funding-section"
 
-interface ProjectPageProps {
-  params: {
-    id: string
-  }
-}
+// Note this should be uncommented when project id is provided. Blocked by DB creation and priject creation
+// interface ProjectPageProps {
+//   params: {
+//     id: string
+//   }
+// }
 
-export default function ProjectPage({ params }: ProjectPageProps) {
+// export default function ProjectPage({ params }: ProjectPageProps) {
+  export default function ProjectPage() {
   const isTeamMember = true // This would come from your auth logic to be handled by Benjamin
 
   return (
