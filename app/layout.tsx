@@ -43,7 +43,7 @@ export default function RootLayout({
               <MobileSidebar />
             </header>
 
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 p-5">{children}</main>
           </div>
         </div>
       </body>
