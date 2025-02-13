@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     console.log("Attempting to send email:", { to, subject, firstName, otp, resetUrl });
 
     const { data, error } = await resend.emails.send({
-      from: 'Virtual Top-up <onboarding@resend.dev>',
+      from: 'Boundless Team <onboarding@resend.dev>',
       to: [to],
       subject: subject,
       react: EmailTemplate({ firstName, otp, resetUrl }) as React.ReactElement,

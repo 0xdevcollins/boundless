@@ -12,7 +12,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
   resetUrl,
 }) => (
   <div>
-    <h1>Hello, {firstName}!</h1>
+    <h1>Hello, {firstName}</h1>
     {otp && (
       <>
         <p>Your OTP for account verification is: <strong>{otp}</strong></p>
@@ -23,7 +23,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
       <>
         <p>Click the link below to reset your password:</p>
         <a href={resetUrl}>{resetUrl}</a>
-        <p>This link will expire in 1 hour.</p>
+        <p>This link will expire in 10 mintues.</p>
       </>
     )}
     <p>If you didn&apos;t request this, please ignore this email.</p>

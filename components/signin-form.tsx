@@ -20,7 +20,26 @@ export default function SignInForm() {
       password,
     })
 
-    if (result?.error) {
+    if (result?.error === "UNVERIFIED_EMAIL") {
+      setError("Your email is not verified. Sending verification code...")
+
+      try {
+        const otpResponse = await fetch("/api/auth/resend-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        })
+
+        if (!otpResponse.ok) {
+          const data = await otpResponse.json()
+          setError(data.message || "Failed to send verification code")
+          return
+        }
+        router.push(`/auth/verify-otp?email=${encodeURIComponent(email)}`)
+      } catch (err) {
+        setError("Failed to send verification code")
+      }
+    } else if (result?.error) {
       setError(result.error)
     } else {
       router.push("/projects/12")
@@ -28,7 +47,7 @@ export default function SignInForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+    <form onSubmit={handleSubmit} className="mt-2 space-y-6">
       <div className="rounded-md shadow-sm -space-y-px">
         <div>
           <label htmlFor="email-address" className="sr-only">
@@ -69,7 +88,7 @@ export default function SignInForm() {
       <div>
         <button
           type="submit"
-          className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/85 focus:outline-none"
         >
           Sign in
         </button>
@@ -77,4 +96,3 @@ export default function SignInForm() {
     </form>
   )
 }
-

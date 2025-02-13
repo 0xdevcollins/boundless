@@ -10,26 +10,31 @@ export default function RegistrationForm() {
   const [error, setError] = useState("")
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError("")
 
-    const response = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    })
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      })
 
-    if (response.ok) {
-      router.push("/auth/signin?registered=true")
-    } else {
-      const data = await response.json()
-      setError(data.message || "An error occurred during registration.")
+      if (response.ok) {
+        // Redirect to OTP verification page with the user's email
+        router.push(`/auth/verify-otp?email=${encodeURIComponent(email)}`)
+      } else {
+        const data = await response.json()
+        setError(data.message || "An error occurred during registration.")
+      }
+    } catch (error) {
+      setError("An error occurred during registration.")
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+    <form onSubmit={handleSubmit} className="mt-2 space-y-6">
       <div className="rounded-md shadow-sm -space-y-px">
         <div>
           <label htmlFor="name" className="sr-only">
@@ -85,7 +90,7 @@ export default function RegistrationForm() {
       <div>
         <button
           type="submit"
-          className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/85 focus:outline-none"
         >
           Register
         </button>

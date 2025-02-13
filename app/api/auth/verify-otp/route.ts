@@ -1,41 +1,51 @@
 import { NextResponse } from "next/server"
 import { PrismaClient } from "@prisma/client"
-import { z } from "zod"
 
 const prisma = new PrismaClient()
 
-const otpSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  otp: z.string().length(6, "OTP must be 6 digits"),
-})
-
 export async function POST(req: Request) {
   try {
-    const body = await req.json()
-    const { email, otp } = otpSchema.parse(body)
+    const { email, otp } = await req.json()
+    console.log("Received OTP verification request:", { email, otp })
 
-    const verificationToken = await prisma.verificationToken.findFirst({
-      where: {
-        identifier: email,
-        token: otp,
-        expires: { gt: new Date() },
-      },
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { OTP: true },
     })
 
-    if (!verificationToken) {
+    console.log("User found:", user ? "Yes" : "No")
+
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 400 })
+    }
+
+    const validOTP = user.OTP?.find((otpRecord) => otpRecord.token === otp && otpRecord.expires > new Date())
+
+    console.log("Valid OTP found:", validOTP ? "Yes" : "No")
+
+    if (!validOTP) {
       return NextResponse.json({ message: "Invalid or expired OTP" }, { status: 400 })
     }
 
-    await prisma.verificationToken.delete({
-      where: { id: verificationToken.id },
+    // Mark email as verified
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { emailVerified: new Date() },
     })
 
-    return NextResponse.json({ message: "OTP verified successfully" }, { status: 200 })
+    console.log("User email verified")
+
+    // Delete the used OTP
+    await prisma.oTP.delete({
+      where: { id: validOTP.id },
+    })
+
+    console.log("OTP deleted")
+
+    return NextResponse.json({ message: "Email verified successfully" }, { status: 200 })
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({ message: error.errors[0].message }, { status: 400 })
-    }
-    return NextResponse.json({ message: "An error occurred" }, { status: 500 })
+    console.error("Error in OTP verification:", error)
+    return NextResponse.json({ message: "An error occurred during OTP verification" }, { status: 500 })
   }
 }
 

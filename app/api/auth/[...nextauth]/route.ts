@@ -5,12 +5,12 @@ import GoogleProvider from "next-auth/providers/google"
 import GitHubProvider from "next-auth/providers/github"
 import { compare } from "bcrypt"
 import { PrismaClient } from "@prisma/client"
-import type { Role } from "@prisma/client"
+import type { User } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as any, // Type assertion to avoid compatibility issues
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -20,23 +20,33 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          return null
+          throw new Error("Please provide both email and password")
         }
+
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         })
+
         if (!user || !user.password) {
-          return null
+          throw new Error("Invalid credentials")
         }
+
         const isPasswordValid = await compare(credentials.password, user.password)
         if (!isPasswordValid) {
-          return null
+          throw new Error("Invalid credentials")
         }
+
+        if (!user.emailVerified) {
+          throw new Error("UNVERIFIED_EMAIL")
+        }
+
         return {
           id: user.id,
           email: user.email,
           name: user.name,
+          image: user.image,
           role: user.role,
+          emailVerified: user.emailVerified
         }
       },
     }),
@@ -58,13 +68,14 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.role = token.role as Role
+        session.user.role = token.role
       }
       return session
     },
   },
   pages: {
     signIn: "/auth/signin",
+    error: "/auth/error",
   },
   session: {
     strategy: "jwt",
@@ -74,4 +85,3 @@ export const authOptions: NextAuthOptions = {
 const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }
-
