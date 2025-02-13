@@ -34,12 +34,11 @@ export async function POST(req: Request) {
 
     try {
       await sendPasswordResetEmail(user.email, user.name, otp);
-      return NextResponse.json({ success: true, message: "Password reset email sent" })
+      return NextResponse.json({ success: true, message: "Password reset email sent" , status: 200})
     } catch (emailError) {
       console.error("Error sending password reset email:", emailError)
       return NextResponse.json({ error: "Failed to send password reset email" }, { status: 500 })
     }
-    return NextResponse.json({ message: "Password reset link sent successfully" }, { status: 200 });
   } catch (error) {
     console.error("Forgot Password API Error:", error);
 

@@ -1,11 +1,9 @@
+import type React from "react"
 import { NextResponse } from "next/server"
 import { PrismaClient } from "@prisma/client"
-import { Resend } from "resend"
-import EmailTemplate from "@/components/email-template"
-import type React from "react"
+import { resendOTP } from "@/lib/email"
 
 const prisma = new PrismaClient()
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(req: Request) {
   try {
@@ -21,14 +19,10 @@ export async function POST(req: Request) {
 
     // Generate new OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString()
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000) // OTP expires in 10 minutes
-
-    // Delete any existing OTP for this user
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000)
     await prisma.oTP.deleteMany({
       where: { userId: user.id },
     })
-
-    // Save new OTP to database
     await prisma.oTP.create({
       data: {
         userId: user.id,
@@ -36,14 +30,13 @@ export async function POST(req: Request) {
         expires: otpExpires,
       },
     })
-    await resend.emails.send({
-      from: "Boundless Team <onboarding@resend.dev>",
-      to: [email],
-      subject: "Your New OTP for Email Verification",
-      react: EmailTemplate({ name: user.name || "User", otp, resetUrl: "" }) as React.ReactElement,
-    })
-
-    return NextResponse.json({ message: "New OTP sent successfully" }, { status: 200 })
+    try {
+      await resendOTP(user.email, user.name, otp);
+      return NextResponse.json({ success: true, message: "OTP code succesfully resent", status: 2000 })
+    } catch (error) {
+      console.error("Error sending password reset email:", error)
+      return NextResponse.json({ error: "Failed to resend OTP" }, { status: 500 })
+    }
   } catch (error) {
     console.error("Error in resending OTP:", error)
     return NextResponse.json({ message: "An error occurred while resending OTP" }, { status: 500 })

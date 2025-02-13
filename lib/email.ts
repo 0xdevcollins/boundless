@@ -65,3 +65,32 @@ export async function sendPasswordResetEmail(to: string | null, name: string | n
   }
 }
 
+export async function resendOTP(to: string | null, name: string | null, otp: string) {
+  console.log("Resending OTP:", { to, name, otp });
+  try {
+    const response = await fetch(`${BASE_URL}/api/auth/send`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        to,
+        subject: 'Your New OTP for Email Verification',
+        name,
+        otp,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Email API response:", errorData);
+      throw new Error('Failed to resend OTP');
+    }
+
+    console.log("Password reset email sent successfully");
+    return await response.json();
+  } catch (error) {
+    console.error('Failed to resend OTP:', error);
+    throw new Error('Failed to resend OTP');
+  }
+}
