@@ -32,7 +32,7 @@ export default function ForgotPassword() {
         setError(data.message || "Failed to send reset link.")
       }
     } catch (error) {
-      setError("An error occurred. Please try again.")
+      setError(`An error occurred. Please try again: ${error instanceof Error ? error.message : String(error)}`)
     } finally {
       setIsLoading(false)
     }

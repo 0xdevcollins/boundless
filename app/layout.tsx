@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { MobileSidebar } from "@/components/mobile-sidebar";
-import { Sidebar } from "@/components/sidebar";
 import { getServerSession } from "next-auth";
 import { SessionProvider } from "@/components/session-provider";
 

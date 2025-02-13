@@ -1,8 +1,7 @@
-"use client"
+"use client";
 
-import { signIn } from "next-auth/react"
-
-import { ClientSafeProvider } from "next-auth/react"
+import { signIn } from "next-auth/react";
+import { ClientSafeProvider } from "next-auth/react";
 
 interface SignInButtonsProps {
   providers: Record<string, ClientSafeProvider>;
@@ -11,8 +10,8 @@ interface SignInButtonsProps {
 export default function SignInButtons({ providers }: SignInButtonsProps) {
   return (
     <div className="mt-6 grid grid-cols-2 gap-3">
-      {Object.values(providers).map((provider: any) => {
-        if (provider.name === "Credentials") return null
+      {Object.values(providers).map((provider) => {
+        if (provider.name === "Credentials") return null;
         return (
           <div key={provider.name}>
             <button
@@ -22,9 +21,8 @@ export default function SignInButtons({ providers }: SignInButtonsProps) {
               Sign in with {provider.name}
             </button>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
-

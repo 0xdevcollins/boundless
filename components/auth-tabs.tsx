@@ -7,6 +7,9 @@ import SignInButtons from "@/components/signin-buttons"
 import SignInForm from "@/components/signin-form"
 import RegistrationForm from "./registeration-form"
 import Link from "next/link"
+import { BuiltInProviderType } from "next-auth/providers/index"
+import { ClientSafeProvider, LiteralUnion } from "next-auth/react"
+
 
 const tabVariants: Variants = {
   active: { 
@@ -19,18 +22,6 @@ const tabVariants: Variants = {
     color: "#194247",
     transition: { duration: 0.2 }
   },
-}
-
-const containerVariants: Variants = {
-  initial: { height: 0 },
-  animate: { 
-    height: "auto",
-    transition: { duration: 0.4 }
-  },
-  exit: { 
-    height: 0,
-    transition: { duration: 0.4 }
-  }
 }
 
 const contentVariants: Variants = {
@@ -57,7 +48,8 @@ const contentVariants: Variants = {
 }
 
 interface AuthTabsProps {
-  providers: any
+  providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> | null
+
 }
 
 export default function AuthTabs({ providers }: AuthTabsProps) {

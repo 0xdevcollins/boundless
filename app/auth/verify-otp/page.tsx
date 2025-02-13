@@ -69,7 +69,7 @@ export default function VerifyOTP() {
         setError(data.message || "Failed to resend OTP.")
       }
     } catch (error) {
-      setError("An error occurred while resending OTP.")
+      setError(`An error occurred while resending OTP: ${error instanceof Error ? error.message : String(error)}`)
     } finally {
       setIsLoading(false)
     }
@@ -91,14 +91,14 @@ export default function VerifyOTP() {
       })
 
       if (response.ok) {
-        const data = await response.json()
+        // const data = await response.json()
         router.push("/dashboard")
       } else {
         const data = await response.json()
         setError(data.message || "Invalid OTP. Please try again.")
       }
     } catch (error) {
-      setError("An error occurred during OTP verification.")
+      setError(`An error occurred during OTP verification: ${error instanceof Error ? error.message : String(error)}`)
     } finally {
       setIsLoading(false)
     }

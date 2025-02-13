@@ -49,7 +49,7 @@ export default function ResetPassword() {
         setError(data.message || "Failed to reset password")
       }
     } catch (error) {
-      setError("An error occurred. Please try again.")
+      setError(`An error occurred. Please try again: ${error instanceof Error ? error.message : String(error)}`)
     } finally {
       setIsLoading(false)
     }

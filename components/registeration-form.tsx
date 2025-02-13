@@ -29,7 +29,7 @@ export default function RegistrationForm() {
         setError(data.message || "An error occurred during registration.")
       }
     } catch (error) {
-      setError("An error occurred during registration.")
+      setError(`An error occurred during registration: ${error instanceof Error ? error.message : String(error)}`)
     }
   }
 

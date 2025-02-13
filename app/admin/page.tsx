@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "../api/auth/[...nextauth]/route"
 import { redirect } from "next/navigation"
+import { authOptions } from "../api/auth/[...nextauth]/auth"
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions)

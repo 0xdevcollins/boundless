@@ -37,7 +37,7 @@ export default function SignInForm() {
         }
         router.push(`/auth/verify-otp?email=${encodeURIComponent(email)}`)
       } catch (err) {
-        setError("Failed to send verification code")
+        setError(`Failed to send verification code: ${err instanceof Error ? err.message : String(err)}`)
       }
     } else if (result?.error) {
       setError(result.error)
