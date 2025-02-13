@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     })
 
     if (!verificationToken) {
-      return NextResponse.json({ message: "Invalid or expired OTP" }, { status: 400 })
+      return NextResponse.json({ message: "Invalid email or expired OTP" }, { status: 400 })
     }
 
     // Hash new password

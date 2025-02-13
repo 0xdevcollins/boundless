@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { Resend } from "resend";
 import { z } from "zod";
 import EmailTemplate from "@/components/email-template";
+import { sendPasswordResetEmail } from "@/lib/email";
 
 const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
     });
 
     if (!user) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json({ message: "User email not found" }, { status: 404 });
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -35,23 +36,30 @@ export async function POST(req: Request) {
       },
     });
 
-    const baseUrl =
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : process.env.NEXT_PUBLIC_APP_URL;
-
-    if (!baseUrl) {
-      throw new Error("Base URL is missing. Set NEXT_PUBLIC_APP_URL in .env");
+    try {
+      await sendPasswordResetEmail(user.email, user.name, otp);
+      return NextResponse.json({ success: true, message: "Password reset email sent" })
+    } catch (emailError) {
+      console.error("Error sending password reset email:", emailError)
+      return NextResponse.json({ error: "Failed to send password reset email" }, { status: 500 })
     }
+    // const baseUrl =
+    //   process.env.NODE_ENV === "development"
+    //     ? "http://localhost:3000"
+    //     : process.env.NEXT_PUBLIC_APP_URL;
 
-    const resetUrl = `${baseUrl}/auth/reset-password?otp=${otp}`;
-    
-    await resend.emails.send({
-          from: "Boundless Team <onboarding@resend.dev>",
-          to: [email],
-          subject: "Reset you password",
-          react: EmailTemplate({ firstName: user.name || "Boundless User", resetUrl: resetUrl }) as React.ReactElement,
-        })
+    // if (!baseUrl) {
+    //   throw new Error("Base URL is missing. Set NEXT_PUBLIC_APP_URL in .env");
+    // }
+
+    // const resetUrl = `${baseUrl}/auth/reset-password?token=${otp}`;
+
+    // await resend.emails.send({
+    //       from: "Boundless Team <onboarding@resend.dev>",
+    //       to: [email],
+    //       subject: "Reset you password",
+    //       react: EmailTemplate({ name: user.name || "Boundless User", resetUrl: resetUrl }) as React.ReactElement,
+    //     })
     return NextResponse.json({ message: "Password reset link sent successfully" }, { status: 200 });
   } catch (error) {
     console.error("Forgot Password API Error:", error);

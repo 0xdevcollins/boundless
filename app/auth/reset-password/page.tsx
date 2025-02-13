@@ -14,7 +14,7 @@ export default function ResetPassword() {
 
   const router = useRouter()
   const searchParams = useSearchParams()
-  const otp = searchParams.get("otp") 
+  const otp = searchParams.get("token") 
 
   useEffect(() => {
     if (!otp) {

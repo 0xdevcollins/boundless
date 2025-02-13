@@ -3,8 +3,9 @@ import { hash } from "bcrypt"
 import { PrismaClient } from "@prisma/client"
 import { z } from "zod"
 import { Resend } from "resend"
-import EmailTemplate from "@/components/email-template"
+// import EmailTemplate from "@/components/email-template"
 import type React from "react"
+import { sendVerificationEmail } from "@/lib/email"
 
 const prisma = new PrismaClient()
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -51,14 +52,19 @@ export async function POST(req: Request) {
       },
     })
 
-    // Send OTP email
-    await resend.emails.send({
-      from: "Boundless Team <onboarding@resend.dev>",
-      to: [email],
-      subject: "Verify your email",
-      react: EmailTemplate({ firstName: name, otp, resetUrl: "" }) as React.ReactElement,
-    })
-
+    // // Send OTP email
+    // await resend.emails.send({
+    //   from: "Boundless Team <onboarding@resend.dev>",
+    //   to: [email],
+    //   subject: "Verify your email",
+    //   react: EmailTemplate({ firstName: name, otp, resetUrl: "" }) as React.ReactElement,
+    // })
+    try {
+      await sendVerificationEmail(email, name, otp)
+      console.log("Verification email sent successfully")
+    } catch (error) {
+      console.error("Error sending verification email:", error)
+    }
     return NextResponse.json(
       { message: "User created successfully. Please check your email for OTP.", userId: user.id },
       { status: 201 },

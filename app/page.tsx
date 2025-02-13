@@ -12,9 +12,9 @@ export default async function Page() {
   return (
     <div className="flex min-h-screen">
       <main className="flex-1 p-8">
-        <h1 className="text-2xl font-semibold">Welcome to Dashboard</h1>
+        <h1 className="text-2xl font-semibold">Welcome to Homepage</h1>
         <Link href="/projects/12">
-          <Button>View Projects</Button>
+          <Button>View Dashboard</Button>
         </Link>
       </main>
     </div>

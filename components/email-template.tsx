@@ -1,18 +1,18 @@
 import * as React from "react";
 
 interface EmailTemplateProps {
-  firstName: string;
+  name: string;
   otp?: string;
   resetUrl?: string;
 }
 
 export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
-  firstName,
+  name,
   otp,
   resetUrl,
 }) => (
   <div>
-    <h1>Hello, {firstName}</h1>
+    <h1>Hello, {name || "Boundless User"}</h1>
     {otp && (
       <>
         <p>Your OTP for account verification is: <strong>{otp}</strong></p>
