@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { PrismaClient } from "@prisma/client"
 import { Resend } from "resend"
 import EmailTemplate from "@/components/email-template"
-import type React from "react" // Import React
+import type React from "react"
 
 const prisma = new PrismaClient()
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       from: "Boundless Team <onboarding@resend.dev>",
       to: [email],
       subject: "Your New OTP for Email Verification",
-      react: EmailTemplate({ firstName: user.name || "User", otp, resetUrl: "" }) as React.ReactElement,
+      react: EmailTemplate({ name: user.name || "User", otp, resetUrl: "" }) as React.ReactElement,
     })
 
     return NextResponse.json({ message: "New OTP sent successfully" }, { status: 200 })

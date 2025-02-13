@@ -2,14 +2,10 @@ import { NextResponse } from "next/server"
 import { hash } from "bcrypt"
 import { PrismaClient } from "@prisma/client"
 import { z } from "zod"
-import { Resend } from "resend"
-// import EmailTemplate from "@/components/email-template"
 import type React from "react"
 import { sendVerificationEmail } from "@/lib/email"
 
 const prisma = new PrismaClient()
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 const userSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
@@ -52,13 +48,6 @@ export async function POST(req: Request) {
       },
     })
 
-    // // Send OTP email
-    // await resend.emails.send({
-    //   from: "Boundless Team <onboarding@resend.dev>",
-    //   to: [email],
-    //   subject: "Verify your email",
-    //   react: EmailTemplate({ firstName: name, otp, resetUrl: "" }) as React.ReactElement,
-    // })
     try {
       await sendVerificationEmail(email, name, otp)
       console.log("Verification email sent successfully")
