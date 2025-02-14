@@ -2,7 +2,6 @@ import { NextResponse } from "next/server"
 import { hash } from "bcrypt"
 import { PrismaClient } from "@prisma/client"
 import { z } from "zod"
-import type React from "react"
 import { sendVerificationEmail } from "@/lib/email"
 
 const prisma = new PrismaClient()

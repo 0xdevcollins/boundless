@@ -1,4 +1,3 @@
-import type React from "react"
 import { NextResponse } from "next/server"
 import { PrismaClient } from "@prisma/client"
 import { resendOTP } from "@/lib/email"
