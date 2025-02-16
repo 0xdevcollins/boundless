@@ -40,7 +40,7 @@ import { FundingSection } from "./funding-section"
             <div className="flex flex-1 flex-col gap-4">
               <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <h1 className="text-2xl font-bold md:text-3xl">Project Name</h1>
+                  <h1 className="text-2xl font-bold md:text-3xl"> Boundless</h1>
                   <div className="mt-1 flex flex-wrap gap-2 text-sm text-muted-foreground">
                     <Badge variant="secondary" className="flex items-center gap-1">
                       <Users className="h-3 w-3" /> 50 Supporters
