@@ -1,4 +1,5 @@
-import Image from "next/image";
+// "use server"
+// import Image from "next/image";
 import * as React from "react";
 
 interface EmailTemplateProps {
@@ -22,7 +23,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
   }}>
     <div style={{ backgroundColor: '#ffffff', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)' }}>
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <Image src="https://i.postimg.cc/RZtm3Zct/project.png" alt="Boundless Logo" width={'150'} height={'100'} style={{ maxWidth: '150px' }} />
+        <img src="https://i.postimg.cc/RZtm3Zct/project.png" alt="Boundless Logo" width={'150'} height={'100'} style={{ maxWidth: '150px' }} />
       </div>
       <h1 style={{ color: '#194247', textAlign: 'center' }}>Hello, {name || "Boundless User"}</h1>
       {otp && (

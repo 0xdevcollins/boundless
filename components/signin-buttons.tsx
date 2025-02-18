@@ -15,7 +15,7 @@ export default function SignInButtons({ providers }: SignInButtonsProps) {
         return (
           <div key={provider.name}>
             <button
-              onClick={() => signIn(provider.id)}
+              onClick={() => signIn(provider.id, { callbackUrl: "/dashboard" })}
               className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
             >
               Sign in with {provider.name}
