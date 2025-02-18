@@ -44,13 +44,12 @@ interface BaseProject {
   href: string;
 }
 
-interface MyProject extends BaseProject {
+interface ProjectWithDays extends BaseProject {
   daysLeft: number;
 }
 
-interface TrendingProject extends BaseProject {
+interface TrendingProject extends ProjectWithDays {
   engagementChange: string;
-  daysLeft: number;
 }
 
 interface CompletedProject {
@@ -63,7 +62,7 @@ interface CompletedProject {
   href: string;
 }
 
-const myProjects: MyProject[] = [
+const myProjects: ProjectWithDays[] = [
   {
     id: 1,
     title: "Decentralized Finance Platform",
@@ -234,11 +233,10 @@ export default function Page() {
         .sort((a, b) => b.progress - a.progress)
         .slice(0, 3);
     } else if (exploreFilter === "ending") {
-      return [...myProjects, ...trendingProjects]
-        .sort((a, b) => {
-          return (a as any).daysLeft - (b as any).daysLeft;
-        })
+      const projectsWithDays = [...myProjects, ...trendingProjects]
+        .sort((a, b) => a.daysLeft - b.daysLeft)
         .slice(0, 3);
+      return projectsWithDays;
     }
     
     return exploreProjects;
@@ -258,6 +256,10 @@ export default function Page() {
     }
     return 0;
   });
+
+  const isProjectWithDays = (project: BaseProject): project is ProjectWithDays => {
+    return 'daysLeft' in project;
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -402,271 +404,271 @@ export default function Page() {
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="rounded-full w-2 h-2 bg-yellow-500"></div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium">Project update</p>
-                    <p className="text-xs text-muted-foreground">Yesterday</p>
+                    <div className="rounded-full w-2 h-2 bg-yellow-500"></div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium">Project update</p>
+                      <p className="text-xs text-muted-foreground">Yesterday</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="rounded-full w-2 h-2 bg-purple-500"></div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium">Voted on proposal</p>
+                      <p className="text-xs text-muted-foreground">2 days ago</p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="rounded-full w-2 h-2 bg-purple-500"></div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium">Voted on proposal</p>
-                    <p className="text-xs text-muted-foreground">2 days ago</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </div>
 
-        <Tabs defaultValue="myprojects" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="myprojects" className="flex items-center gap-2">
-              <Wallet className="h-4 w-4" />
-              <span className="hidden sm:inline">My Projects</span>
-            </TabsTrigger>
-            <TabsTrigger value="trending" className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              <span className="hidden sm:inline">Trending</span>
-            </TabsTrigger>
-            <TabsTrigger value="explore" className="flex items-center gap-2">
-              <Compass className="h-4 w-4" />
-              <span className="hidden sm:inline">Explore</span>
-            </TabsTrigger>
-            <TabsTrigger value="completed" className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4" />
-              <span className="hidden sm:inline">Completed</span>
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="myprojects">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {myProjects.map((project) => (
-                <Card key={project.id}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{project.title}</CardTitle>
-                      <Badge>{project.category}</Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span>Progress</span>
-                          <span>{project.progress}%</span>
-                        </div>
-                        <Progress value={project.progress} className="h-2" />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-sm text-muted-foreground">Raised</p>
-                          <p className="font-medium">{project.raised}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">Goal</p>
-                          <p className="font-medium">{project.goal}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">{project.daysLeft} days remaining</span>
-                      </div>
-                      <Link href={project.href}>
-                        <Button className="w-full">View Details</Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="trending">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Highest Engagement Past 7 Days</h2>
-            </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {trendingProjects.map((project) => (
-                <Card key={project.id}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{project.title}</CardTitle>
-                      <Badge>{project.category}</Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span>Progress</span>
-                          <span>{project.progress}%</span>
-                        </div>
-                        <Progress value={project.progress} className="h-2" />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-sm text-muted-foreground">Raised</p>
-                          <p className="font-medium">{project.raised}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">Goal</p>
-                          <p className="font-medium">{project.goal}</p>
-                        </div>
-                      </div>
+          <Tabs defaultValue="myprojects" className="w-full">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="myprojects" className="flex items-center gap-2">
+                <Wallet className="h-4 w-4" />
+                <span className="hidden sm:inline">My Projects</span>
+              </TabsTrigger>
+              <TabsTrigger value="trending" className="flex items-center gap-2">
+                <TrendingUp className="h-4 w-4" />
+                <span className="hidden sm:inline">Trending</span>
+              </TabsTrigger>
+              <TabsTrigger value="explore" className="flex items-center gap-2">
+                <Compass className="h-4 w-4" />
+                <span className="hidden sm:inline">Explore</span>
+              </TabsTrigger>
+              <TabsTrigger value="completed" className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4" />
+                <span className="hidden sm:inline">Completed</span>
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="myprojects">
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {myProjects.map((project) => (
+                  <Card key={project.id}>
+                    <CardHeader>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Engagement</span>
-                        <Badge variant="outline" className="text-green-600">{project.engagementChange}</Badge>
+                        <CardTitle className="text-lg">{project.title}</CardTitle>
+                        <Badge>{project.category}</Badge>
                       </div>
-                      <Link href={project.href}>
-                        <Button className="w-full">View Details</Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="explore">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">
-                {exploreFilter === "newest" ? "Newest Projects" : 
-                 exploreFilter === "popular" ? "Most Popular Projects" : 
-                 "Projects Ending Soon"}
-              </h2>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-2">
-                    <Filter className="h-4 w-4" />
-                    Filter: {exploreFilter === "newest" ? "Newest" : 
-                              exploreFilter === "popular" ? "Most Popular" : 
-                              "Ending Soon"}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setExploreFilter("newest")}>
-                    Newest
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setExploreFilter("popular")}>
-                    Most Popular
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setExploreFilter("ending")}>
-                    Ending Soon
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredExploreProjects.map((project) => (
-                <Card key={project.id}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{project.title}</CardTitle>
-                      <Badge>{project.category}</Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span>Progress</span>
-                          <span>{project.progress}%</span>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-sm">
+                            <span>Progress</span>
+                            <span>{project.progress}%</span>
+                          </div>
+                          <Progress value={project.progress} className="h-2" />
                         </div>
-                        <Progress value={project.progress} className="h-2" />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-sm text-muted-foreground">Raised</p>
-                          <p className="font-medium">{project.raised}</p>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-muted-foreground">Raised</p>
+                            <p className="font-medium">{project.raised}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Goal</p>
+                            <p className="font-medium">{project.goal}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">Goal</p>
-                          <p className="font-medium">{project.goal}</p>
-                        </div>
-                      </div>
-                      {"daysLeft" in project && (
                         <div className="flex items-center gap-2">
                           <Clock className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm text-muted-foreground">
-                            {(project as any).daysLeft} days remaining
-                          </span>
+                          <span className="text-sm text-muted-foreground">{project.daysLeft} days remaining</span>
                         </div>
-                      )}
-                      <Link href={project.href}>
-                        <Button className="w-full">View Details</Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="completed">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Successfully Completed Projects</h2>
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant={completedSort === "category" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setCompletedSort("category")}
-                >
-                  Category {completedSort === "category" && <ArrowUpDown className="ml-2 h-3 w-3" />}
-                </Button>
-                <Button 
-                  variant={completedSort === "date" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setCompletedSort("date")}
-                >
-                  Date {completedSort === "date" && <ArrowUpDown className="ml-2 h-3 w-3" />}
-                </Button>
-                <Button 
-                  variant={completedSort === "size" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setCompletedSort("size")}
-                >
-                  Size {completedSort === "size" && <ArrowUpDown className="ml-2 h-3 w-3" />}
-                </Button>
+                        <Link href={project.href}>
+                          <Button className="w-full">View Details</Button>
+                        </Link>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
-            </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {sortedCompletedProjects.map((project) => (
-                <Card key={project.id}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{project.title}</CardTitle>
-                      <Badge variant="secondary">{project.category}</Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-sm text-muted-foreground">Total Raised</p>
-                          <p className="font-medium">{project.totalRaised}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">Contributors</p>
-                          <p className="font-medium">{project.contributors}</p>
-                        </div>
+            </TabsContent>
+            
+            <TabsContent value="trending">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold">Highest Engagement Past 7 Days</h2>
+              </div>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {trendingProjects.map((project) => (
+                  <Card key={project.id}>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg">{project.title}</CardTitle>
+                        <Badge>{project.category}</Badge>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                        <span className="text-sm">Completed on {project.completionDate}</span>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-sm">
+                            <span>Progress</span>
+                            <span>{project.progress}%</span>
+                          </div>
+                          <Progress value={project.progress} className="h-2" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-muted-foreground">Raised</p>
+                            <p className="font-medium">{project.raised}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Goal</p>
+                            <p className="font-medium">{project.goal}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-muted-foreground">Engagement</span>
+                          <Badge variant="outline" className="text-green-600">{project.engagementChange}</Badge>
+                        </div>
+                        <Link href={project.href}>
+                          <Button className="w-full">View Details</Button>
+                        </Link>
                       </div>
-                      <Link href={project.href}>
-                        <Button className="w-full" variant="outline">View Results</Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </main>
-    </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="explore">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold">
+                  {exploreFilter === "newest" ? "Newest Projects" : 
+                   exploreFilter === "popular" ? "Most Popular Projects" : 
+                   "Projects Ending Soon"}
+                </h2>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <Filter className="h-4 w-4" />
+                      Filter: {exploreFilter === "newest" ? "Newest" : 
+                                exploreFilter === "popular" ? "Most Popular" : 
+                                "Ending Soon"}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setExploreFilter("newest")}>
+                      Newest
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setExploreFilter("popular")}>
+                      Most Popular
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setExploreFilter("ending")}>
+                      Ending Soon
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {filteredExploreProjects.map((project) => (
+                  <Card key={project.id}>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg">{project.title}</CardTitle>
+                        <Badge>{project.category}</Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-sm">
+                            <span>Progress</span>
+                            <span>{project.progress}%</span>
+                          </div>
+                          <Progress value={project.progress} className="h-2" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-muted-foreground">Raised</p>
+                            <p className="font-medium">{project.raised}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Goal</p>
+                            <p className="font-medium">{project.goal}</p>
+                          </div>
+                        </div>
+                        {isProjectWithDays(project) && (
+                          <div className="flex items-center gap-2">
+                            <Clock className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">
+                              {project.daysLeft} days remaining
+                            </span>
+                          </div>
+                        )}
+                        <Link href={project.href}>
+                          <Button className="w-full">View Details</Button>
+                        </Link>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="completed">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold">Successfully Completed Projects</h2>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant={completedSort === "category" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCompletedSort("category")}
+                  >
+                    Category {completedSort === "category" && <ArrowUpDown className="ml-2 h-3 w-3" />}
+                  </Button>
+                  <Button 
+                    variant={completedSort === "date" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCompletedSort("date")}
+                  >
+                    Date {completedSort === "date" && <ArrowUpDown className="ml-2 h-3 w-3" />}
+                  </Button>
+                  <Button 
+                    variant={completedSort === "size" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCompletedSort("size")}
+                  >
+                    Size {completedSort === "size" && <ArrowUpDown className="ml-2 h-3 w-3" />}
+                  </Button>
+                </div>
+              </div>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {sortedCompletedProjects.map((project) => (
+                  <Card key={project.id}>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg">{project.title}</CardTitle>
+                        <Badge variant="secondary">{project.category}</Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-muted-foreground">Total Raised</p>
+                            <p className="font-medium">{project.totalRaised}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Contributors</p>
+                            <p className="font-medium">{project.contributors}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          <span className="text-sm">Completed on {project.completionDate}</span>
+                        </div>
+                        <Link href={project.href}>
+                          <Button className="w-full" variant="outline">View Results</Button>
+                        </Link>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
   );
 }
