@@ -1,16 +1,29 @@
-import type { NextAuthOptions } from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import GoogleProvider from "next-auth/providers/google"
-import GitHubProvider from "next-auth/providers/github"
-import { compare } from "bcrypt"
-import { PrismaClient } from "@prisma/client"
+import { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
+import { compare } from "bcrypt";
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
+    // Google OAuth Provider
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+
+    // GitHub OAuth Provider
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID!,
+      clientSecret: process.env.GITHUB_SECRET!,
+    }),
+
+    // Credentials Provider (Email/Password)
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -19,24 +32,32 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Please provide both email and password")
+          throw new Error("Please enter both email and password");
         }
 
+        // Check if user exists
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
-        })
+        });
 
-        if (!user || !user.password) {
-          throw new Error("Invalid credentials")
+        if (!user) {
+          throw new Error("No user found with this email");
         }
 
-        const isPasswordValid = await compare(credentials.password, user.password)
+        // Ensure password exists (OAuth users don’t have one)
+        if (!user.password) {
+          throw new Error("Please sign in using Google or GitHub");
+        }
+
+        // Validate password
+        const isPasswordValid = await compare(credentials.password, user.password);
         if (!isPasswordValid) {
-          throw new Error("Invalid credentials")
+          throw new Error("Invalid password");
         }
 
+        // Ensure email is verified before login
         if (!user.emailVerified) {
-          throw new Error("UNVERIFIED_EMAIL")
+          throw new Error("UNVERIFIED_EMAIL");
         }
 
         return {
@@ -46,38 +67,37 @@ export const authOptions: NextAuthOptions = {
           image: user.image,
           role: user.role,
           emailVerified: user.emailVerified,
-        }
+        };
       },
     }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-    }),
   ],
+
+  session: {
+    strategy: "jwt",
+  },
+
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      return url.startsWith(baseUrl) ? url : `${baseUrl}/projects/12`;
+    },
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role
+        token.role = user.role;
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.role = token.role
+        session.user.role = token.role;
       }
-      return session
+      return session;
     },
   },
+
   pages: {
     signIn: "/auth/signin",
     error: "/auth/error",
   },
-  session: {
-    strategy: "jwt",
-  },
-}
 
+  secret: process.env.NEXTAUTH_SECRET,
+};
