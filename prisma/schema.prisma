@@ -45,6 +45,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   OTP           OTP[]
+  projects      Project[]
 }
 
 model VerificationToken {
@@ -70,3 +71,17 @@ enum Role {
   ADMIN
 }
 
+model Project {
+  id          String  @id @default(cuid())
+  userId      String
+  title       String
+  description String
+  fundingGoal Int
+  category    String
+  bannerUrl   String?
+  profileUrl  String?
+  blockchainTx String?
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
