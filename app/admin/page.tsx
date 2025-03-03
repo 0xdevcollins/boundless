@@ -1,6 +1,6 @@
+import { authOptions } from "@/lib/auth.config"
 import { getServerSession } from "next-auth/next"
 import { redirect } from "next/navigation"
-import { authOptions } from "../api/auth/[...nextauth]/auth"
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions)

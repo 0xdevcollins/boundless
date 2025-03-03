@@ -35,17 +35,18 @@ model Session {
 }
 
 model User {
-  id            String        @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String?       @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
   password      String?
-  role          Role          @default(USER)
+  role          Role      @default(USER)
   accounts      Account[]
   sessions      Session[]
   OTP           OTP[]
   projects      Project[]
+  Vote          Vote[]
 }
 
 model VerificationToken {
@@ -66,22 +67,45 @@ model OTP {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+// model Project {
+// id          String   @id @default(cuid())
+// title       String
+// description String
+// createdAt   DateTime @default(now())
+// updatedAt   DateTime @updatedAt
+// votes       Vote[]
+// }
+
+model Project {
+  id           String   @id @default(cuid())
+  userId       String
+  title        String
+  description  String
+  fundingGoal  Int
+  category     String
+  bannerUrl    String?
+  profileUrl   String?
+  blockchainTx String?
+  createdAt    DateTime @default(now())
+  votes        Vote[]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Vote {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@unique([projectId, userId])
+  @@index([projectId])
+  @@index([userId])
+}
+
 enum Role {
   USER
   ADMIN
-}
-
-model Project {
-  id          String  @id @default(cuid())
-  userId      String
-  title       String
-  description String
-  fundingGoal Int
-  category    String
-  bannerUrl   String?
-  profileUrl  String?
-  blockchainTx String?
-  createdAt   DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
