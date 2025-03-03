@@ -48,10 +48,19 @@ jobs:
           echo "GITHUB_ID=${{ secrets.GH_ID }}" >> .env
           echo "GITHUB_SECRET=${{ secrets.GH_SECRET }}" >> .env
 
+      - name: Debug File Listing
+        run: find . -type f | grep -E '\.(js|ts|jsx|tsx|json|md|css|scss)$' || echo "No matching files found."
+
       - name: Run Biome Formatter & Linter
         run: |
-          npx biome format --write "**/*.{js,ts,jsx,tsx,json,md,css,scss}
-          npx biome lint --write "**/*.{js,ts,jsx,tsx,json,md,css,scss}
+          FILES=$(find . -type f \( -name "*.js" -o -name "*.ts" -o -name "*.jsx" -o -name "*.tsx" -o -name "*.json" -o -name "*.md" -o -name "*.css" -o -name "*.scss" \))
+          if [ -n "$FILES" ]; then
+            echo "Running Biome on found files..."
+            echo "$FILES" | xargs npx biome format --write
+            echo "$FILES" | xargs npx biome lint --write
+          else
+            echo "No files found to format or lint. Skipping."
+          fi
 
       - name: Run Build
         run: npm run build
