@@ -50,8 +50,8 @@ jobs:
 
       - name: Run Biome Formatter & Linter
         run: |
-          npx biome format --write
-          npx biome lint --write
+          npx biome format --write "**/*.{js,ts,jsx,tsx,json,md,css,scss}
+          npx biome lint --write "**/*.{js,ts,jsx,tsx,json,md,css,scss}
 
       - name: Run Build
         run: npm run build
