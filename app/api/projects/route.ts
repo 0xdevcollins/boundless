@@ -27,10 +27,7 @@ export async function POST(request: Request) {
 			);
 		}
 
-		const project = await prisma.pconsole.log("Received POST request to create project");
-console.log("Session:", session);
-console.log("Request JSON:", title, description, fundingGoal, category, bannerPath, profilePath);
-console.log("Created project:", project);roject.create({
+		const project = await prisma.project.create({
 			data: {
 				userId: session.user.id,
 				title,
