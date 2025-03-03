@@ -94,7 +94,7 @@ export default function VerifyOTP() {
 
 			if (response.ok) {
 				// const data = await response.json()
-				router.push("/projects/12");
+				router.push("/dashboard");
 			} else {
 				const data = await response.json();
 				setError(data.message || "Invalid OTP. Please try again.");

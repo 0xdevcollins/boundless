@@ -84,7 +84,7 @@ export const authOptions: NextAuthOptions = {
 
 	callbacks: {
 		async redirect({ url, baseUrl }) {
-			return url.startsWith(baseUrl) ? url : `${baseUrl}/projects/12`;
+			return url.startsWith(baseUrl) ? url : `${baseUrl}/dashboard`;
 		},
 		async jwt({ token, user }): Promise<CustomToken> {
 			if (user) {
