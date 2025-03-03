@@ -70,6 +70,7 @@ const ConnectWalletButton = ({ className = "" }) => {
 				},
 			});
 		} catch (error) {
+			console.log(error);
 			toast.error("Connection Failed", {
 				description: "Failed to connect to the wallet.",
 			});
