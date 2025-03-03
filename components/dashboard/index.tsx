@@ -20,6 +20,7 @@ import MyProjectsTab from "./tabs/my-projects-tab";
 import TrendingTab from "./tabs/trending-tab";
 import ExploreTab from "./tabs/explore-tab";
 import CompletedTab from "./tabs/completed-tab";
+import ConnectWalletButton from "../connect-wallet";
 
 export default function Dashboard() {
 	const [exploreFilter, setExploreFilter] = useState<ExploreFilter>("newest");
@@ -81,10 +82,12 @@ export default function Dashboard() {
 			<main className="flex-1 p-8">
 				<div className="flex items-center justify-between mb-6">
 					<h1 className="text-3xl font-bold">Dashboard</h1>
-					<Button>
+					<ConnectWalletButton />
+
+					{/* <Button>
 						<Wallet className="mr-2 h-4 w-4" />
 						Connect Wallet
-					</Button>
+					</Button> */}
 				</div>
 
 				<StatsCards />

@@ -50,3 +50,5 @@ target
 # Local settings
 .soroban
 .stellar
+
+certificates
