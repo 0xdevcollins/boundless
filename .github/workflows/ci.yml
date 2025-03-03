@@ -12,18 +12,46 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Node.js (Use Required Version)
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20.18.0 # Set to the required version
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run lint-staged
-        run: npx lint-staged
+      - name: Set up environment variables
+        run: |
+          echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> .env
+          echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> .env
+          echo "NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}" >> .env
+          echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" >> .env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+          echo "DATABASE_URL_UNPOOLED=${{ secrets.DATABASE_URL_UNPOOLED }}" >> .env
+          echo "PGHOST=${{ secrets.PGHOST }}" >> .env
+          echo "PGHOST_UNPOOLED=${{ secrets.PGHOST_UNPOOLED }}" >> .env
+          echo "PGUSER=${{ secrets.PGUSER }}" >> .env
+          echo "PGDATABASE=${{ secrets.PGDATABASE }}" >> .env
+          echo "PGPASSWORD=${{ secrets.PGPASSWORD }}" >> .env
+          echo "POSTGRES_URL=${{ secrets.POSTGRES_URL }}" >> .env
+          echo "POSTGRES_URL_NON_POOLING=${{ secrets.POSTGRES_URL_NON_POOLING }}" >> .env
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+          echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }}" >> .env
+          echo "POSTGRES_URL_NO_SSL=${{ secrets.POSTGRES_URL_NO_SSL }}" >> .env
+          echo "POSTGRES_PRISMA_URL=${{ secrets.POSTGRES_PRISMA_URL }}" >> .env
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+          echo "GITHUB_ID=${{ secrets.GH_ID }}" >> .env
+          echo "GITHUB_SECRET=${{ secrets.GH_SECRET }}" >> .env
 
-      - name: Run build
+      - name: Run Biome Formatter & Linter
+        run: |
+          npx biome format --write
+          npx biome lint --write
+
+      - name: Run Build
         run: npm run build
