@@ -49,11 +49,17 @@ jobs:
           echo "GITHUB_SECRET=${{ secrets.GH_SECRET }}" >> .env
 
       - name: Debug File Listing
-        run: find . -type f | grep -E '\.(js|ts|jsx|tsx|json|md|css|scss)$' || echo "No matching files found."
+        run: |
+          echo "Checking for matching files..."
+          find . -type f \( -name "*.js" -o -name "*.ts" -o -name "*.jsx" -o -name "*.tsx" -o -name "*.json" -o -name "*.md" -o -name "*.css" -o -name "*.scss" \) \
+          ! -path "./node_modules/*" ! -path "./dist/*" ! -path "./.git/*" ! -path "./coverage/*" \
+          || echo "No matching files found."
 
       - name: Run Biome Formatter & Linter
         run: |
-          FILES=$(find . -type f \( -name "*.js" -o -name "*.ts" -o -name "*.jsx" -o -name "*.tsx" -o -name "*.json" -o -name "*.md" -o -name "*.css" -o -name "*.scss" \))
+          FILES=$(find . -type f \( -name "*.js" -o -name "*.ts" -o -name "*.jsx" -o -name "*.tsx" -o -name "*.json" -o -name "*.md" -o -name "*.css" -o -name "*.scss" \) \
+          ! -path "./node_modules/*" ! -path "./dist/*" ! -path "./.git/*" ! -path "./coverage/*")
+
           if [ -n "$FILES" ]; then
             echo "Running Biome on found files..."
             echo "$FILES" | xargs npx biome format --write
