@@ -1,22 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-	allowAllModules,
-	FREIGHTER_ID,
-	type ISupportedWallet,
-	StellarWalletsKit,
-	WalletNetwork,
-} from "@creit.tech/stellar-wallets-kit";
 import { Button } from "@/components/ui/button";
 import { Loader2, LogOut } from "lucide-react";
 import { toast } from "sonner";
-
-const kit = new StellarWalletsKit({
-	network: WalletNetwork.TESTNET,
-	selectedWalletId: FREIGHTER_ID,
-	modules: allowAllModules(),
-});
+import { connect, disconnect, getPublicKey } from "@/hooks/useStellarWallet";
 
 const ConnectWalletButton = ({ className = "" }) => {
 	const [isChecking, setIsChecking] = useState(true);
@@ -26,19 +14,12 @@ const ConnectWalletButton = ({ className = "" }) => {
 	useEffect(() => {
 		const checkConnection = async () => {
 			try {
-				const savedWallet = localStorage.getItem("stellar_wallet");
-				if (savedWallet) {
-					const parsedWallet = JSON.parse(savedWallet);
-					const { address } = await kit.getAddress();
-
-					if (address === parsedWallet.address) {
-						setWalletAddress(address);
-						toast.success("Wallet Reconnected", {
-							description: `Welcome back! Address: ${address}`,
-						});
-					} else {
-						disconnectWallet();
-					}
+				const address = await getPublicKey();
+				if (address) {
+					setWalletAddress(address);
+					toast.success("Wallet Reconnected", {
+						description: `Welcome back! Address: ${address}`,
+					});
 				}
 			} catch (error) {
 				console.log("No wallet connected.", error);
@@ -53,21 +34,14 @@ const ConnectWalletButton = ({ className = "" }) => {
 	const connectWallet = async () => {
 		try {
 			setIsConnecting(true);
+			await connect(async () => {
+				const address = await getPublicKey();
+				if (!address) throw new Error("Failed to retrieve wallet address");
 
-			await kit.openModal({
-				onWalletSelected: async (option: ISupportedWallet) => {
-					kit.setWallet(option.id);
-					const { address } = await kit.getAddress();
-
-					if (!address) throw new Error("Failed to retrieve wallet address");
-
-					setWalletAddress(address);
-					localStorage.setItem("stellar_wallet", JSON.stringify({ address }));
-
-					toast.success("Wallet Connected", {
-						description: `Connected to ${option.id}. Address: ${address}`,
-					});
-				},
+				setWalletAddress(address);
+				toast.success("Wallet Connected", {
+					description: `Connected. Address: ${address}`,
+				});
 			});
 		} catch (error) {
 			console.log(error);
@@ -79,9 +53,9 @@ const ConnectWalletButton = ({ className = "" }) => {
 		}
 	};
 
-	const disconnectWallet = () => {
+	const disconnectWallet = async () => {
+		await disconnect();
 		setWalletAddress(null);
-		localStorage.removeItem("stellar_wallet");
 		toast.info("Wallet Disconnected", {
 			description: "You have been disconnected.",
 		});
@@ -96,13 +70,11 @@ const ConnectWalletButton = ({ className = "" }) => {
 			>
 				{isChecking ? (
 					<>
-						<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-						Checking...
+						<Loader2 className="mr-2 h-4 w-4 animate-spin" /> Checking...
 					</>
 				) : isConnecting ? (
 					<>
-						<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-						Connecting...
+						<Loader2 className="mr-2 h-4 w-4 animate-spin" /> Connecting...
 					</>
 				) : walletAddress ? (
 					`Connected: ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
