@@ -36,6 +36,9 @@ const projectFormSchema = z.object({
 			message: "Funding goal must be a positive number",
 		}),
 	category: z.string().min(1, "Category is required"),
+	bannerImage: z.union([z.string().url(), z.instanceof(File)]).optional(),
+	profileImage: z.union([z.string().url(), z.instanceof(File)]).optional(),
+	ileUrl: z.string().optional(),
 });
 
 type ProjectFormValues = z.infer<typeof projectFormSchema>;
@@ -66,16 +69,32 @@ export function ProjectForm({ userId }: { userId?: string }) {
 		try {
 			setIsLoading(true);
 
-			const response = await fetch("/api/projects", {
+			const formData = new FormData();
+			formData.append("userId", userId || "");
+			formData.append("title", data.title);
+			formData.append("description", data.description);
+			formData.append("fundingGoal", data.fundingGoal);
+			formData.append("category", data.category);
+
+			if (data.bannerImage) {
+				if (typeof data.bannerImage === "string") {
+					formData.append("bannerImageUrl", data.bannerImage);
+				} else {
+					formData.append("bannerImage", data.bannerImage);
+				}
+			}
+
+			if (data.profileImage) {
+				if (typeof data.profileImage === "string") {
+					formData.append("profileImageUrl", data.profileImage);
+				} else {
+					formData.append("profileImage", data.profileImage);
+				}
+			}
+
+			const response = await fetch("/api/projects/create", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					userId,
-					title: data.title,
-					description: data.description,
-					fundingGoal: Number.parseInt(data.fundingGoal),
-					category: data.category,
-				}),
+				body: formData,
 			});
 
 			if (!response.ok) {
@@ -164,6 +183,55 @@ export function ProjectForm({ userId }: { userId?: string }) {
 									))}
 								</SelectContent>
 							</Select>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="bannerImage"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Banner Image</FormLabel>
+							<FormControl>
+								<div className="space-y-2">
+									<Input
+										type="file"
+										accept="image/*"
+										onChange={(e) => field.onChange(e.target.files?.[0])}
+									/>
+									<Input
+										type="url"
+										placeholder="Or enter image URL"
+										onChange={(e) => field.onChange(e.target.value)}
+									/>
+								</div>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="profileImage"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Profile Image</FormLabel>
+							<FormControl>
+								<div className="space-y-2">
+									<Input
+										type="file"
+										accept="image/*"
+										onChange={(e) => field.onChange(e.target.files?.[0])}
+									/>
+									<Input
+										type="url"
+										placeholder="Or enter image URL"
+										onChange={(e) => field.onChange(e.target.value)}
+									/>
+								</div>
+							</FormControl>
 							<FormMessage />
 						</FormItem>
 					)}

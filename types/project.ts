@@ -32,5 +32,48 @@ export interface ActivityDataPoint {
 	participants: number;
 }
 
+export type Project = {
+	id: string;
+	userId: string;
+	title: string;
+	description: string;
+	fundingGoal: number;
+	category: string;
+	bannerUrl: string | null;
+	profileUrl: string | null;
+	blockchainTx: string | null;
+	ideaValidation: ValidationStatus;
+	createdAt: string;
+	user: {
+		id: string;
+		name: string | null;
+		image: string | null;
+	};
+	votes: {
+		id: string;
+		userId: string;
+	}[];
+	_count: {
+		votes: number;
+	};
+};
+
+export interface TeamMember {
+	id: string;
+	fullName: string;
+	role: string;
+	bio: string | null;
+	profileImage: string | null;
+	github: string | null;
+	twitter: string | null;
+	discord: string | null;
+	linkedin: string | null;
+	userId?: string | null; // Optional
+	projectId?: string; // Optional
+	createdAt?: string | Date; // Optional
+	updatedAt?: string | Date; // Optional
+}
+
 export type ExploreFilter = "newest" | "popular" | "ending";
 export type CompletedSort = "date" | "size" | "category";
+export type ValidationStatus = "PENDING" | "REJECTED" | "VALIDATED";

@@ -1,6 +1,14 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import type { ValidationStatus } from "@/types/project";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+	return twMerge(clsx(inputs));
+}
+
+export function formatValidationStatus(
+	status: ValidationStatus | null | undefined,
+) {
+	if (!status) return "Unknown";
+	return status.charAt(0) + status.slice(1).toLowerCase();
 }
