@@ -1,48 +1,52 @@
-import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { authOptions } from "@/lib/auth.config";
+import type { Prisma, ValidationStatus } from "@prisma/client";
 
-export async function POST(request: Request) {
-	const session = await getServerSession(authOptions);
-
-	if (!session || !session.user?.id) {
-		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-	}
-
+export async function GET(request: Request) {
 	try {
-		const {
-			title,
-			description,
-			fundingGoal,
-			category,
-			bannerPath,
-			profilePath,
-		} = await request.json();
+		const { searchParams } = new URL(request.url);
+		const category = searchParams.get("category");
+		const status = searchParams.get("status");
 
-		if (!title || !description || !fundingGoal || !category) {
-			return NextResponse.json(
-				{ error: "Missing required fields" },
-				{ status: 400 },
-			);
+		const where: Prisma.ProjectWhereInput = {};
+
+		if (category) {
+			where.category = category;
 		}
 
-		const project = await prisma.project.create({
-			data: {
-				userId: session.user.id,
-				title,
-				description,
-				fundingGoal,
-				category,
-				bannerUrl: bannerPath || null,
-				profileUrl: profilePath || null,
-				blockchainTx: null,
+		if (status) {
+			where.ideaValidation = status as ValidationStatus;
+		}
+
+		const projects = await prisma.project.findMany({
+			include: {
+				user: {
+					select: {
+						id: true,
+						name: true,
+						image: true,
+					},
+				},
+				votes: {
+					select: {
+						id: true,
+						userId: true,
+					},
+				},
+				_count: {
+					select: {
+						votes: true,
+					},
+				},
+			},
+			orderBy: {
+				createdAt: "desc",
 			},
 		});
 
-		return NextResponse.json({ success: true, project }, { status: 201 });
+		return NextResponse.json(projects);
 	} catch (error) {
-		console.error("Project creation error:", error);
+		console.error("Error fetching projects:", error);
 		return NextResponse.json(
 			{ error: "Internal Server Error" },
 			{ status: 500 },

@@ -8,7 +8,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Edit, MoreVertical, Plus, Share2, Flag } from "lucide-react";
+import { Edit, MoreVertical, Share2, Flag, Plus } from "lucide-react";
+import Link from "next/link";
 
 interface ProjectActionsProps {
 	isTeamMember: boolean;
@@ -22,9 +23,11 @@ export function ProjectActions({ isTeamMember }: ProjectActionsProps) {
 					<Button size="sm" variant="outline">
 						<Edit className="mr-2 h-4 w-4" /> Edit Project
 					</Button>
-					<Button size="sm">
-						<Plus className="mr-2 h-4 w-4" /> New Update
-					</Button>
+					<Link href={"/projects/new"}>
+						<Button size="sm">
+							<Plus className="mr-2 h-4 w-4" /> New Project
+						</Button>
+					</Link>
 				</>
 			) : (
 				<Button size="sm">Support Project</Button>

@@ -35,18 +35,19 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
   password      String?
-  role          Role      @default(USER)
+  role          Role         @default(USER)
   accounts      Account[]
   sessions      Session[]
   OTP           OTP[]
   projects      Project[]
   Vote          Vote[]
+  TeamMember    TeamMember[]
 }
 
 model VerificationToken {
@@ -67,29 +68,50 @@ model OTP {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// model Project {
-// id          String   @id @default(cuid())
-// title       String
-// description String
-// createdAt   DateTime @default(now())
-// updatedAt   DateTime @updatedAt
-// votes       Vote[]
-// }
+enum ValidationStatus {
+  PENDING
+  REJECTED
+  VALIDATED
+}
 
 model Project {
-  id           String   @id @default(cuid())
-  userId       String
-  title        String
-  description  String
-  fundingGoal  Int
-  category     String
-  bannerUrl    String?
-  profileUrl   String?
-  blockchainTx String?
-  createdAt    DateTime @default(now())
-  votes        Vote[]
+  id             String           @id @default(cuid())
+  userId         String
+  title          String
+  description    String
+  fundingGoal    Int
+  category       String
+  bannerUrl      String?
+  profileUrl     String?
+  blockchainTx   String?
+  ideaValidation ValidationStatus @default(PENDING)
+  createdAt      DateTime         @default(now())
+  votes          Vote[]
+  teamMembers    TeamMember[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TeamMember {
+  id           String   @id @default(cuid())
+  fullName     String
+  role         String
+  bio          String?  @db.Text
+  profileImage String?
+  github       String?
+  twitter      String?
+  discord      String?
+  linkedin     String?
+  projectId    String
+  userId       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([projectId])
+  @@index([userId])
 }
 
 model Vote {
