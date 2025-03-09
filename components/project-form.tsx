@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -25,6 +25,9 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useWalletStore } from "@/store/useWalletStore";
+import { signTransaction } from "@/hooks/useStellarWallet";
+import createProject from "@/src/contracts/project_contract";
 
 const projectFormSchema = z.object({
 	userId: z.string().min(1, "User ID is required"),
@@ -38,6 +41,7 @@ const projectFormSchema = z.object({
 	category: z.string().min(1, "Category is required"),
 	bannerImage: z.union([z.string().url(), z.instanceof(File)]).optional(),
 	profileImage: z.union([z.string().url(), z.instanceof(File)]).optional(),
+	walletAddress: z.string(),
 	ileUrl: z.string().optional(),
 });
 
@@ -53,6 +57,8 @@ const categories = [
 export function ProjectForm({ userId }: { userId?: string }) {
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
+	const [status, setStatus] = useState("");
+	const { publicKey } = useWalletStore();
 
 	const form = useForm<ProjectFormValues>({
 		resolver: zodResolver(projectFormSchema),
@@ -65,17 +71,81 @@ export function ProjectForm({ userId }: { userId?: string }) {
 		},
 	});
 
+	// Set wallet address in form when publicKey changes
+	useEffect(() => {
+		if (publicKey) {
+			form.setValue("walletAddress", publicKey);
+			createProject.options.publicKey = publicKey;
+			createProject.options.signTransaction = signTransaction;
+		}
+	}, [publicKey, form]);
+
+	async function handleUploadMetadata(
+		data: ProjectFormValues,
+	): Promise<string> {
+		setStatus("Uploading metadata...");
+
+		const formData = new FormData();
+		formData.append("title", data.title);
+		formData.append("description", data.description);
+		formData.append("category", data.category);
+
+		if (data.bannerImage instanceof File) {
+			formData.append("bannerImage", data.bannerImage);
+		}
+		if (data.profileImage instanceof File) {
+			formData.append("profileImage", data.profileImage);
+		}
+
+		const response = await fetch("/api/projects/upload-metadata", {
+			method: "POST",
+			body: formData,
+		});
+
+		const resData = await response.json();
+		if (!response.ok) {
+			throw new Error(resData.error || "Failed to upload metadata");
+		}
+
+		return resData.metadataUri;
+	}
+
 	async function onSubmit(data: ProjectFormValues) {
 		try {
 			setIsLoading(true);
 
+			if (!publicKey) {
+				throw new Error("Wallet is not connected");
+			}
+
+			const metadataUri = await handleUploadMetadata(data);
+
+			const projectId = crypto.randomUUID();
+
+			setStatus("Building transaction...");
+			const tx = await createProject.create_project({
+				project_id: projectId,
+				creator: publicKey,
+				metadata_uri: metadataUri,
+				funding_target: BigInt(data.fundingGoal),
+				milestone_count: 3,
+			});
+
+			setStatus("Signing transaction...");
+			const { getTransactionResponse } = await tx.signAndSend();
+			// const txHash = getTransactionResponse?.txHash;
+
+			// console.log({ result, getTransactionResponse });
+			setStatus("Sending signed transaction to server...");
 			const formData = new FormData();
 			formData.append("userId", userId || "");
 			formData.append("title", data.title);
 			formData.append("description", data.description);
 			formData.append("fundingGoal", data.fundingGoal);
 			formData.append("category", data.category);
-
+			formData.append("projectId", projectId);
+			formData.append("signedTx", getTransactionResponse?.txHash ?? "");
+			formData.append("metadataUri", metadataUri);
 			if (data.bannerImage) {
 				if (typeof data.bannerImage === "string") {
 					formData.append("bannerImageUrl", data.bannerImage);
@@ -113,12 +183,14 @@ export function ProjectForm({ userId }: { userId?: string }) {
 			);
 		} finally {
 			setIsLoading(false);
+			setStatus("");
 		}
 	}
 
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+				{status && <p className="text-sm bg-blue-100 p-2 rounded">{status}</p>}
 				<FormField
 					control={form.control}
 					name="title"

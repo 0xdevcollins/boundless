@@ -12,3 +12,7 @@ export function formatValidationStatus(
 	if (!status) return "Unknown";
 	return status.charAt(0) + status.slice(1).toLowerCase();
 }
+
+export const formatAddress = (address: string) => {
+	return `${address.slice(0, 6)}...${address.slice(-4)}`;
+};
