@@ -167,9 +167,13 @@ Found a bug? Have a feature request? Open an **issue** on GitHub:
 
 ## 10. Community & Support
 ### Join Our Channels:
-- **Discord:** [Join Here](https://discord.gg/juUmBmwC3s)
+* [Join Here](https://discord.gg/juUmBmwC3s)
 - **GitHub Discussions:** [Boundless Discussions](https://github.com/0xdevcollins/boundless/discussions)
 - **Twitter:** [Follow @boundless_fi](https://x.com/boundless_fi)
+
+### Support
+- **Benjamin:** [https://t.me/kitch_the_dev](https://t.me/kitch_the_dev)
+- **Collins:** [https://t.me/devcollinss](https://t.me/devcollinss)
 
 ---
 
