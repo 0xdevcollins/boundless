@@ -48,6 +48,8 @@ model User {
   projects      Project[]
   Vote          Vote[]
   TeamMember    TeamMember[]
+  comments      Comment[]
+  reactions     CommentReaction[]
 }
 
 model VerificationToken {
@@ -88,6 +90,7 @@ model Project {
   createdAt      DateTime         @default(now())
   votes          Vote[]
   teamMembers    TeamMember[]
+  comments       Comment[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -130,4 +133,48 @@ model Vote {
 enum Role {
   USER
   ADMIN
+}
+
+enum ReactionType {
+  LIKE
+  DISLIKE
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  content   String    @db.Text
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: SetNull)
+  parentId  String?
+  replies   Comment[] @relation("CommentReplies")
+  
+  reactions CommentReaction[]
+  
+  @@index([projectId])
+  @@index([userId])
+  @@index([parentId])
+}
+
+model CommentReaction {
+  id        String       @id @default(cuid())
+  type      ReactionType
+  createdAt DateTime     @default(now())
+  
+  comment   Comment      @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
+  
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  
+  @@unique([commentId, userId])
+  @@index([commentId])
+  @@index([userId])
 }
