@@ -2,7 +2,8 @@
 
 mod project;
 mod create_project;
-// mod vote_project;
+mod vote_project;
+// pub use crate::vote_project::
 // mod fund_project;
 // mod release_milestone;
 // mod refund;
