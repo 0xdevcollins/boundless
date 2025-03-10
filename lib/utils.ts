@@ -20,6 +20,10 @@ export function formatValidationStatus(
 	return status.charAt(0) + status.slice(1).toLowerCase();
 }
 
+export const formatAddress = (address: string) => {
+	return `${address.slice(0, 6)}...${address.slice(-4)}`;
+};
+
 export function filterActiveProjects(
 	projects: ActiveProject[],
 	searchQuery: string,

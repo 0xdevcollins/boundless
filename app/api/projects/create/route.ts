@@ -17,6 +17,8 @@ export async function POST(request: Request) {
 	}
 	try {
 		const formData = await request.formData();
+		const projectId = formData.get("projectId") as string;
+		const signedTx = formData.get("signedTx") as string;
 		const title = formData.get("title") as string;
 		const description = formData.get("description") as string;
 		const fundingGoal = Number(formData.get("fundingGoal"));
@@ -48,6 +50,7 @@ export async function POST(request: Request) {
 
 		const project = await prisma.project.create({
 			data: {
+				id: projectId,
 				userId: session.user.id,
 				title,
 				description,
@@ -55,7 +58,7 @@ export async function POST(request: Request) {
 				category,
 				bannerUrl,
 				profileUrl,
-				blockchainTx: null,
+				blockchainTx: signedTx || null,
 			},
 		});
 

@@ -1,23 +1,26 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, LogOut, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
-import { connect, disconnect, getPublicKey } from "@/hooks/useStellarWallet";
+import { useWalletStore } from "@/store/useWalletStore";
+import { formatAddress } from "@/lib/utils";
 
 const ConnectWalletButton = ({ className = "" }) => {
+	const {
+		publicKey,
+		connecting,
+		connect: connectWallet,
+		disconnect: disconnectWallet,
+	} = useWalletStore();
+
 	const [isChecking, setIsChecking] = useState(true);
-	const [isConnecting, setIsConnecting] = useState(false);
-	const [walletAddress, setWalletAddress] = useState<string | null>(null);
 	const [isCopied, setIsCopied] = useState(false);
 
 	useEffect(() => {
 		const checkConnection = async () => {
 			try {
-				const address = await getPublicKey();
-				if (address) {
-					setWalletAddress(address);
+				if (publicKey) {
 					toast.success("Wallet Reconnected", {
 						description: "Welcome back!",
 					});
@@ -30,49 +33,39 @@ const ConnectWalletButton = ({ className = "" }) => {
 		};
 
 		checkConnection();
-	}, []);
+	}, [publicKey]);
 
-	const connectWallet = async () => {
+	const handleConnectWallet = async () => {
 		try {
-			setIsConnecting(true);
-			await connect(async () => {
-				const address = await getPublicKey();
-				if (!address) throw new Error("Failed to retrieve wallet address");
-
-				setWalletAddress(address);
+			await connectWallet();
+			if (publicKey) {
 				toast.success("Wallet Connected", {
 					description: "Successfully connected to wallet",
 				});
-			});
+			}
 		} catch (error) {
 			console.log(error);
 			toast.error("Connection Failed", {
 				description: "Failed to connect to the wallet.",
 			});
-		} finally {
-			setIsConnecting(false);
 		}
 	};
 
-	const disconnectWallet = async () => {
-		await disconnect();
-		setWalletAddress(null);
+	const handleDisconnectWallet = async () => {
+		await disconnectWallet();
 		toast.info("Wallet Disconnected", {
 			description: "You have been disconnected.",
 		});
 	};
 
 	const copyToClipboard = async () => {
-		if (!walletAddress) return;
-
+		if (!publicKey) return;
 		try {
-			await navigator.clipboard.writeText(walletAddress);
+			await navigator.clipboard.writeText(publicKey);
 			setIsCopied(true);
 			toast.success("Address Copied", {
 				description: "Wallet address copied to clipboard",
 			});
-
-			// Reset the copied state after 2 seconds
 			setTimeout(() => {
 				setIsCopied(false);
 			}, 2000);
@@ -83,27 +76,23 @@ const ConnectWalletButton = ({ className = "" }) => {
 		}
 	};
 
-	const formatAddress = (address: string) => {
-		return `${address.slice(0, 6)}...${address.slice(-4)}`;
-	};
-
 	return (
 		<div className="flex items-center space-x-2">
 			{isChecking ? (
 				<Button disabled className={className}>
 					<Loader2 className="mr-2 h-4 w-4 animate-spin" /> Checking...
 				</Button>
-			) : isConnecting ? (
+			) : connecting ? (
 				<Button disabled className={className}>
 					<Loader2 className="mr-2 h-4 w-4 animate-spin" /> Connecting...
 				</Button>
-			) : walletAddress ? (
+			) : publicKey ? (
 				<Button
 					variant="outline"
 					onClick={copyToClipboard}
 					className={`${className} flex items-center gap-2 cursor-pointer bg-primary text-white`}
 				>
-					{formatAddress(walletAddress)}
+					{formatAddress(publicKey)}
 					{isCopied ? (
 						<Check className="h-4 w-4 text-green-500" />
 					) : (
@@ -111,13 +100,12 @@ const ConnectWalletButton = ({ className = "" }) => {
 					)}
 				</Button>
 			) : (
-				<Button onClick={connectWallet} className={className}>
+				<Button onClick={handleConnectWallet} className={className}>
 					Connect Wallet
 				</Button>
 			)}
-
-			{walletAddress && (
-				<Button onClick={disconnectWallet} variant="outline">
+			{publicKey && (
+				<Button onClick={handleDisconnectWallet} variant="outline">
 					<LogOut className="mr-2 h-4 w-4" /> Disconnect
 				</Button>
 			)}
