@@ -1,7 +1,7 @@
 #![no_std]
 
-mod project;
 mod create_project;
+mod project;
 // pub use crate::vote_project::
 // mod fund_project;
 // mod release_milestone;
