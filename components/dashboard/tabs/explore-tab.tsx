@@ -1,8 +1,6 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
 import { Button } from "@/components/ui/button";
-import { Filter } from "lucide-react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -10,8 +8,10 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { BaseProject, ExploreFilter } from "@/types/project";
-import ProjectCard from "../project-card";
 import { motion } from "framer-motion";
+import { Filter } from "lucide-react";
+import type { Dispatch, SetStateAction } from "react";
+import ProjectCard from "../project-card";
 
 interface ExploreTabProps {
 	projects: BaseProject[];

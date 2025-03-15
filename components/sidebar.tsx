@@ -1,22 +1,22 @@
 "use client";
 
-import * as React from "react";
-import {
-	Home,
-	Briefcase,
-	Bell,
-	BarChart2,
-	Cpu,
-	Crown,
-	Settings,
-	Sun,
-	Moon,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import {
+	BarChart2,
+	Bell,
+	Briefcase,
+	Cpu,
+	Crown,
+	Home,
+	Moon,
+	Settings,
+	Sun,
+} from "lucide-react";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import * as React from "react";
 
 interface NavItem {
 	icon: React.ElementType;

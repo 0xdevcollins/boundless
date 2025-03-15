@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { authOptions } from "@/lib/auth.config";
 import prisma from "@/lib/prisma";
 import type { Prisma, ValidationStatus } from "@prisma/client";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth.config";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
 	try {

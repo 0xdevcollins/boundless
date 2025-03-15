@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
-import { VoteButton } from "../shared/vote-button";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { VoteButton } from "../shared/vote-button";
 
 type ValidationStatus = "PENDING" | "REJECTED" | "VALIDATED";
 

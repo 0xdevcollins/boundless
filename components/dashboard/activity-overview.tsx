@@ -1,17 +1,17 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { activityData } from "@/data/mock-data";
 import {
-	AreaChart,
 	Area,
+	AreaChart,
+	CartesianGrid,
+	Legend,
+	ResponsiveContainer,
+	Tooltip,
 	XAxis,
 	YAxis,
-	CartesianGrid,
-	Tooltip,
-	ResponsiveContainer,
-	Legend,
 } from "recharts";
-import { activityData } from "@/data/mock-data";
 import CustomTooltip from "./custom-tooltip";
 import RecentActivity from "./recent-activity";
 

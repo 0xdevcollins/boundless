@@ -1,17 +1,20 @@
 {
-	"$schema": "https://biomejs.dev/schemas/biome.schema.json",
-	"formatter": {
-		"enabled": true,
-		"indentWidth": 2,
-		"lineWidth": 80
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"correctness": {
-				"useExhaustiveDependencies": "off"
-			},
-			"recommended": true
-		}
-	}
+  "$schema": "https://biomejs.dev/schemas/biome.schema.json",
+  "formatter": {
+    "enabled": true,
+    "indentWidth": 2,
+    "lineWidth": 80
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "correctness": {
+        "useExhaustiveDependencies": "off"
+      },
+      "recommended": true
+    }
+  },
+  "organizeImports": {
+    "enabled": true
+  }
 }

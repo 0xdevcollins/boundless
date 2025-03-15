@@ -1,11 +1,11 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
 import type { CompletedProject, CompletedSort } from "@/types/project";
-import CompletedProjectCard from "../completed-project-card";
 import { motion } from "framer-motion";
+import { ArrowUpDown } from "lucide-react";
+import type { Dispatch, SetStateAction } from "react";
+import CompletedProjectCard from "../completed-project-card";
 
 interface CompletedTabProps {
 	projects: CompletedProject[];
