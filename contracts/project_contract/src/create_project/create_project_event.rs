@@ -1,4 +1,4 @@
-use soroban_sdk::{Address, Env, String, Symbol};
+use soroban_sdk::{Env, Address, String, Symbol};
 
 pub struct CreateProjectEvent;
 
