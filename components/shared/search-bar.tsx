@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { X, Search } from "lucide-react";
 
 const SearchBar = ({
-	// Use an arrow function that explicitly "uses" the parameter to avoid the warning
 	onSearch = (term: string) => {
 		void term;
 	},
