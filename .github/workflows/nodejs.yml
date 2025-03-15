@@ -29,5 +29,3 @@ jobs:
     - name: Biome lint check
       run: npm run lint:check
 
-    - name: Prettier format check
-      run: npm run format:check
