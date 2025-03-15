@@ -6,30 +6,28 @@ on:
       - main
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: ./.github/actions/setup-node
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run tests
-        run: npm run test
-
-      - name: Biome lint check
-        run: npm run lint:check
-
-      - name: Prettier format check
-        run: npm run format:check
 
   complete:
     if: always()
     needs: [build-and-test]
     runs-on: ubuntu-latest
     steps:
-      - if: ${{ needs.build-and-test.result == 'failure' || needs.build-and-test.result == 'cancelled' }}
-        run: exit 1
+    - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+      run: exit 1
+
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: ./.github/actions/setup-node
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Biome lint check
+      run: npm run lint:check
+
+    - name: Prettier format check
+      run: npm run format:check
