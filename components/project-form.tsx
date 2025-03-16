@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { signTransaction } from "@/hooks/useStellarWallet";
-import createProject from "@/src/contracts/project_contract";
+import { contractClient } from "@/src/contracts/project_contract";
 import { useWalletStore } from "@/store/useWalletStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -75,8 +75,8 @@ export function ProjectForm({ userId }: { userId?: string }) {
 	useEffect(() => {
 		if (publicKey) {
 			form.setValue("walletAddress", publicKey);
-			createProject.options.publicKey = publicKey;
-			createProject.options.signTransaction = signTransaction;
+			contractClient.options.publicKey = publicKey;
+			contractClient.options.signTransaction = signTransaction;
 		}
 	}, [publicKey, form]);
 
@@ -123,7 +123,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 			const projectId = crypto.randomUUID();
 
 			setStatus("Building transaction...");
-			const tx = await createProject.create_project({
+			const tx = await contractClient.create_project({
 				project_id: projectId,
 				creator: publicKey,
 				metadata_uri: metadataUri,
