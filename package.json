@@ -56,6 +56,7 @@
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.5.1",
     "clsx": "^2.1.1",
+		"cmdk": "^1.0.4",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.4.2",
     "glob": "^11.0.1",

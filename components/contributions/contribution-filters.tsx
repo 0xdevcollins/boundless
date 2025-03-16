@@ -1,16 +1,11 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { SortOption, TabOption } from "@/types/contributions";
 import { Search } from "lucide-react";
+import Filter from "../shared/filter";
+import SearchBar from "../shared/search-bar";
+import SortByFilter from "../shared/sort-by-filter";
 
 interface ContributionFiltersProps {
 	activeTab: TabOption;
@@ -22,19 +17,47 @@ interface ContributionFiltersProps {
 	categoryFilter: string;
 	setCategoryFilter: (category: string) => void;
 	categories: string[];
+	searchComponent?: React.ReactNode;
 }
 
 export function ContributionFilters({
 	activeTab,
 	setActiveTab,
-	searchQuery,
+	// searchQuery,
 	setSearchQuery,
 	sortOption,
 	setSortOption,
 	categoryFilter,
 	setCategoryFilter,
 	categories,
+	searchComponent,
 }: ContributionFiltersProps) {
+	// Add "All" to the categories list for the FilterByCategory component
+	const categoriesWithAll = ["Category (All)", ...categories];
+
+	// Map the internal value "all" to display value "All" if needed
+	const selectedCategory =
+		categoryFilter === "all" ? "Category (All)" : categoryFilter;
+
+	// Define sort options based on the active tab
+	const sortOptions = [
+		{ value: "newest", label: "Newest First" },
+		{ value: "oldest", label: "Oldest First" },
+		{ value: "votes-high", label: "Most Votes" },
+		{ value: "votes-low", label: "Least Votes" },
+		...(activeTab === "comments"
+			? [
+					{ value: "likes-high", label: "Most Likes" },
+					{ value: "likes-low", label: "Least Likes" },
+				]
+			: []),
+	];
+
+	// Handler for the SearchBar's onSearch
+	const handleSearch = (debouncedTerm: string) => {
+		setSearchQuery(debouncedTerm);
+	};
+
 	return (
 		<div className="mb-8">
 			<div className="flex flex-col md:flex-row justify-between gap-4 mb-4">
@@ -51,50 +74,30 @@ export function ContributionFilters({
 				</Tabs>
 
 				<div className="flex flex-col sm:flex-row gap-2">
-					<div className="relative">
-						<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-						<Input
+					{searchComponent || (
+						<SearchBar
+							onSearch={handleSearch}
 							placeholder="Search projects..."
-							className="pl-8 w-full sm:w-[200px] md:w-[300px]"
-							value={searchQuery}
-							onChange={(e) => setSearchQuery(e.target.value)}
+							className="w-full sm:w-[200px] md:w-[300px]"
+							inputStyles="pl-10"
 						/>
-					</div>
+					)}
 
-					<Select value={categoryFilter} onValueChange={setCategoryFilter}>
-						<SelectTrigger className="w-full sm:w-[150px]">
-							<SelectValue placeholder="Category" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All Categories</SelectItem>
-							{categories.map((category) => (
-								<SelectItem key={category} value={category}>
-									{category}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
+					<Filter
+						categories={categoriesWithAll}
+						selectedCategory={selectedCategory}
+						onChange={(value: string) =>
+							setCategoryFilter(value === "Category (All)" ? "all" : value)
+						}
+						label="Category"
+						allLabel="Category (All)"
+					/>
 
-					<Select
-						value={sortOption}
-						onValueChange={(value) => setSortOption(value as SortOption)}
-					>
-						<SelectTrigger className="w-full sm:w-[150px]">
-							<SelectValue placeholder="Sort by" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="newest">Newest First</SelectItem>
-							<SelectItem value="oldest">Oldest First</SelectItem>
-							<SelectItem value="votes-high">Most Votes</SelectItem>
-							<SelectItem value="votes-low">Least Votes</SelectItem>
-							{activeTab === "comments" && (
-								<>
-									<SelectItem value="likes-high">Most Likes</SelectItem>
-									<SelectItem value="likes-low">Least Likes</SelectItem>
-								</>
-							)}
-						</SelectContent>
-					</Select>
+					<SortByFilter
+						sortOption={sortOption}
+						setSortOption={setSortOption}
+						options={sortOptions}
+					/>
 				</div>
 			</div>
 		</div>
