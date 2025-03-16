@@ -1,6 +1,5 @@
 "use client";
 
-import { Check, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import type { ActiveProject } from "@/types/contributions";
+import { Check, X } from "lucide-react";
 
 interface ActiveContributionsProps {
 	projects: ActiveProject[];

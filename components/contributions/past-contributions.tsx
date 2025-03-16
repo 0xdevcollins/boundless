@@ -1,6 +1,5 @@
 "use client";
 
-import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +11,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import type { PastProject } from "@/types/contributions";
+import { ThumbsDown, ThumbsUp } from "lucide-react";
 
 interface PastContributionsProps {
 	projects: PastProject[];

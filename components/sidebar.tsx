@@ -15,9 +15,9 @@ import {
 	Sun,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
-import Link from "next/link";
 
 interface NavItem {
 	icon: React.ElementType;

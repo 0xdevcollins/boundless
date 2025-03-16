@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import prisma from "@/lib/prisma";
 import { authOptions } from "@/lib/auth.config";
+import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth/next";
+import { NextResponse } from "next/server";
 
 // This endpoint returns statistics about a user's contributions
 export async function GET() {

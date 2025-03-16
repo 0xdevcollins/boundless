@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -12,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import type { UserComment } from "@/types/contributions";
+import { useState } from "react";
 
 interface CommentEditModalProps {
 	comment: UserComment | null;
