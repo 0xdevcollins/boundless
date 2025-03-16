@@ -1,19 +1,19 @@
 import {
-	Contract,
-	TransactionBuilder,
-	Networks,
-	BASE_FEE,
-	nativeToScVal,
-	Address,
-	rpc,
-	type xdr,
-} from "@stellar/stellar-sdk";
-import {
-	allowAllModules,
 	FREIGHTER_ID,
 	StellarWalletsKit,
 	WalletNetwork,
+	allowAllModules,
 } from "@creit.tech/stellar-wallets-kit";
+import {
+	Address,
+	BASE_FEE,
+	Contract,
+	Networks,
+	TransactionBuilder,
+	nativeToScVal,
+	rpc,
+	type xdr,
+} from "@stellar/stellar-sdk";
 
 const RPC_URL = "https://soroban-testnet.stellar.org";
 const CONTRACT_ADDRESS =

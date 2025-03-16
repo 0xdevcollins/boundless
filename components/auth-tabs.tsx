@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence, type Variants } from "framer-motion";
-import Image from "next/image";
 import SignInButtons from "@/components/signin-buttons";
 import SignInForm from "@/components/signin-form";
-import RegistrationForm from "./registeration-form";
-import Link from "next/link";
+import { AnimatePresence, type Variants, motion } from "framer-motion";
 import type { BuiltInProviderType } from "next-auth/providers/index";
 import type { ClientSafeProvider, LiteralUnion } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import RegistrationForm from "./registeration-form";
 
 const tabVariants: Variants = {
 	active: {

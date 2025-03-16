@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
 	AlertDialog,
 	AlertDialogCancel,
@@ -11,6 +9,8 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface DeleteConfirmationDialogProps {
 	isOpen: boolean;

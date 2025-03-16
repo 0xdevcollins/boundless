@@ -8,7 +8,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Edit, MoreVertical, Share2, Flag, Plus } from "lucide-react";
+import { Edit, Flag, MoreVertical, Plus, Share2 } from "lucide-react";
 import Link from "next/link";
 
 interface ProjectActionsProps {

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Check, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +14,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import Pagination from "../shared/pagination";
 import type { ActiveProject } from "@/types/contributions";
+import { Check, X } from "lucide-react";
 
 interface ActiveContributionsProps {
 	projects: ActiveProject[];

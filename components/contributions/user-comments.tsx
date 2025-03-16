@@ -1,13 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-	Edit,
-	MoreHorizontal,
-	ThumbsDown,
-	ThumbsUp,
-	Trash,
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -25,6 +18,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Pagination from "../shared/pagination";
 import type { UserComment } from "@/types/contributions";
+import {
+	Edit,
+	MoreHorizontal,
+	ThumbsDown,
+	ThumbsUp,
+	Trash,
+} from "lucide-react";
 
 interface UserCommentsProps {
 	comments: UserComment[];

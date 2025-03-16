@@ -1,10 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2, LogOut, Copy, Check } from "lucide-react";
-import { toast } from "sonner";
-import { useWalletStore } from "@/store/useWalletStore";
 import { formatAddress } from "@/lib/utils";
+import { useWalletStore } from "@/store/useWalletStore";
+import { Check, Copy, Loader2, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const ConnectWalletButton = ({ className = "" }) => {
 	const {

@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import type { TrendingProject } from "@/types/project";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 interface TrendingProjectCardProps {
 	project: TrendingProject;

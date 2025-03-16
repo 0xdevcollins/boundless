@@ -1,22 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Users, Wallet } from "lucide-react";
-import Image from "next/image";
-import { ProjectActions } from "./project-actions";
-import { MilestoneTracker } from "./milestone-tracker";
-import { FundingSection } from "./funding-section";
-import { VotingSection } from "./voting-section";
-import { useSession } from "next-auth/react";
-import { TeamSection } from "./team-section";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Vote } from "@prisma/client";
+import { Users, Wallet } from "lucide-react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { FundingSection } from "./funding-section";
+import { MilestoneTracker } from "./milestone-tracker";
+import { ProjectActions } from "./project-actions";
+import { TeamSection } from "./team-section";
+import { VotingSection } from "./voting-section";
 
 type ValidationStatus = "PENDING" | "REJECTED" | "VALIDATED";
 

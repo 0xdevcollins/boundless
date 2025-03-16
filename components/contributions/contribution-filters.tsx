@@ -5,6 +5,7 @@ import Filter from "../shared/filter";
 import SortByFilter from "../shared/sort-by-filter";
 import SearchBar from "../shared/search-bar";
 import type { SortOption, TabOption } from "@/types/contributions";
+import { Search } from "lucide-react";
 
 interface ContributionFiltersProps {
 	activeTab: TabOption;

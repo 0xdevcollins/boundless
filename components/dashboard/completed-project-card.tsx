@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { CompletedProject } from "@/types/project";
 import { motion } from "framer-motion";
+import { CheckCircle } from "lucide-react";
+import Link from "next/link";
 
 interface CompletedProjectCardProps {
 	project: CompletedProject;

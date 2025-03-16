@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, type FormEvent, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import { type FormEvent, useEffect, useState } from "react";
 
 export default function VerifyOTP() {
 	const [otp, setOtp] = useState(["", "", "", "", "", ""]);

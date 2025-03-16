@@ -1,10 +1,10 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Users, AlertTriangle } from "lucide-react";
 import { VoteButton } from "@/components/shared/vote-button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { AlertTriangle, Users } from "lucide-react";
 
 interface VotingSectionProps {
 	projectId: string;
