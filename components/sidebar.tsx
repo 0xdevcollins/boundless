@@ -17,6 +17,7 @@ import {
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
+import Link from "next/link";
 
 interface NavItem {
 	icon: React.ElementType;
@@ -31,7 +32,7 @@ const navItems: NavItem[] = [
 	{ icon: Bell, label: "Explore", href: "/projects" },
 	{ icon: BarChart2, label: "Funded Projects", href: "/projects/funded" },
 	{ icon: Cpu, label: "Profile", href: "/profile" },
-	{ icon: Crown, label: "My Votes", href: "/votes" },
+	{ icon: Crown, label: "My Contributions", href: "/my-contributions" },
 	{ icon: Settings, label: "Settings", href: "/settings" },
 ];
 
@@ -65,7 +66,9 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 		>
 			<div className="flex h-full flex-col">
 				<div className="flex h-12 items-center">
-					<Image src="/logo.svg" width={200} height={32} alt="" />
+					<Link href="/">
+						<Image src="/logo.svg" width={200} height={32} alt="" />
+					</Link>
 				</div>
 
 				<nav className="mt-8 space-y-2">
