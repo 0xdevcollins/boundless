@@ -53,8 +53,6 @@ const bind = ({ alias, id }: { alias: string; id: string }): void => {
 // Bind all contracts
 const bindAll = (): void => {
   console.log("###################### Binding ########################");
-
-  console.log(getContracts())
   getContracts().forEach(bind);
 };
 
