@@ -1,16 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { ContributionFilters } from "@/components/contributions/contribution-filters";
 import { ActiveContributions } from "@/components/contributions/active-contribution";
-import { PastContributions } from "@/components/contributions/past-contributions";
-import { UserComments } from "@/components/contributions/user-comments";
 import { CallToAction } from "@/components/contributions/call-to-action";
 import { CommentEditModal } from "@/components/contributions/comment-edit-modal";
+import { ContributionFilters } from "@/components/contributions/contribution-filters";
+import { ContributionStats as ContributionStatsComponent } from "@/components/contributions/contribution-stats";
 import { DeleteConfirmationDialog } from "@/components/contributions/delete-confirmation-dialog";
 import { LoadingState } from "@/components/contributions/loading-state";
+import { PastContributions } from "@/components/contributions/past-contributions";
+import { UserComments } from "@/components/contributions/user-comments";
+import {
+	deleteComment as apiDeleteComment,
+	editComment as apiEditComment,
+	fetchActiveProjects,
+	fetchCategories,
+	fetchContributionStats,
+	fetchPastProjects,
+	fetchUserComments,
+} from "@/lib/actions/services";
+import {
+	sortActiveProjects,
+	sortComments,
+	sortPastProjects,
+} from "@/lib/utils";
 import type {
 	ActiveProject,
 	ContributionStats,
@@ -19,21 +31,9 @@ import type {
 	TabOption,
 	UserComment,
 } from "@/types/contributions";
-import {
-	fetchActiveProjects,
-	fetchCategories,
-	fetchContributionStats,
-	fetchPastProjects,
-	fetchUserComments,
-	editComment as apiEditComment,
-	deleteComment as apiDeleteComment,
-} from "@/lib/actions/services";
-import {
-	sortActiveProjects,
-	sortComments,
-	sortPastProjects,
-} from "@/lib/utils";
-import { ContributionStats as ContributionStatsComponent } from "@/components/contributions/contribution-stats";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function MyContributionsPage() {
 	const router = useRouter();

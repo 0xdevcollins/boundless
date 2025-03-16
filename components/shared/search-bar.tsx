@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { X, Search } from "lucide-react";
+import { Search, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const SearchBar = ({
 	onSearch = (term: string) => {

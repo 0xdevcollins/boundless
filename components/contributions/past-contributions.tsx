@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,9 +10,10 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import Pagination from "../shared/pagination";
 import type { PastProject } from "@/types/contributions";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import Pagination from "../shared/pagination";
 
 interface PastContributionsProps {
 	projects: PastProject[];
