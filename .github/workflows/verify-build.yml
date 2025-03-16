@@ -1,0 +1,68 @@
+name: Verify Build
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout your repository using git
+        uses: actions/checkout@v4
+
+      - name: Setup Rust and Stellar
+        uses: ./.github/actions/setup-rust-stellar
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup-node
+
+      - name: Build contracts
+        run: make build
+
+      - name: Run tests
+        run: cargo test --release
+
+      - name: Run clippy
+        run: cargo clippy -- -D warnings
+
+      - name: Setup env
+        run: |
+          echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> .env
+          echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> .env
+          echo "NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}" >> .env
+          echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" >> .env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+          echo "DATABASE_URL_UNPOOLED=${{ secrets.DATABASE_URL_UNPOOLED }}" >> .env
+          echo "PGHOST=${{ secrets.PGHOST }}" >> .env
+          echo "PGHOST_UNPOOLED=${{ secrets.PGHOST_UNPOOLED }}" >> .env
+          echo "PGUSER=${{ secrets.PGUSER }}" >> .env
+          echo "PGDATABASE=${{ secrets.PGDATABASE }}" >> .env
+          echo "PGPASSWORD=${{ secrets.PGPASSWORD }}" >> .env
+          echo "POSTGRES_URL=${{ secrets.POSTGRES_URL }}" >> .env
+          echo "POSTGRES_URL_NON_POOLING=${{ secrets.POSTGRES_URL_NON_POOLING }}" >> .env
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+          echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }}" >> .env
+          echo "POSTGRES_URL_NO_SSL=${{ secrets.POSTGRES_URL_NO_SSL }}" >> .env
+          echo "POSTGRES_PRISMA_URL=${{ secrets.POSTGRES_PRISMA_URL }}" >> .env
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+          echo "GITHUB_ID=${{ secrets.GH_ID }}" >> .env
+          echo "GITHUB_SECRET=${{ secrets.GH_SECRET }}" >> .env
+
+      - name: Install and build
+        env:
+          STELLAR_NETWORK: testnet
+          STELLAR_ACCOUNT: ${{ secrets.STELLAR_ACCOUNT }}
+          STELLAR_SECRET_KEY: ${{ secrets.STELLAR_SECRET_KEY }}
+        run: |
+          npm ci
+          npm run init
+
+      - name: Build Next.js App
+        env:
+          PUBLIC_STELLAR_NETWORK_PASSPHRASE: Test SDF Network ; September 2015
+          PUBLIC_STELLAR_RPC_URL: https://soroban-testnet.stellar.org/
+        run: npm run build
