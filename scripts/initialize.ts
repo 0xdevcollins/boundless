@@ -54,6 +54,7 @@ const bind = ({ alias, id }: { alias: string; id: string }): void => {
 const bindAll = (): void => {
   console.log("###################### Binding ########################");
   getContracts().forEach(bind);
+  console.log(getContracts(), 'ss')
 };
 
 // Import contract into the project
