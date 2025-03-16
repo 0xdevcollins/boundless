@@ -10,7 +10,6 @@ import {
   writeTextFile,
 } from "./util";
 import { sync as glob } from "glob";
-import { mkdirSync } from "node:fs";
 
 console.log("###################### Initializing ########################");
 
@@ -46,18 +45,23 @@ const deployAll = (): void => {
 // Bind contracts
 const bind = ({ alias, id }: { alias: string; id: string }): void => {
   exe(
-    `${CLI} contract bindings typescript --contract-id ${id} --output-dir ${dirname}/../packages/${alias} --overwrite`
+    `${CLI} contract bindings typescript --network testnet --contract-id ${id} --output-dir ${dirname}/../packages/${alias} --overwrite`
   );
   exe(`cd ${dirname}/../packages/${alias} && npm install && npm run build`);
 };
 
 // Bind all contracts
 const bindAll = (): void => {
+  console.log("###################### Binding ########################");
+
+  console.log(getContracts())
   getContracts().forEach(bind);
 };
 
 // Import contract into the project
 const importContract = ({ alias }: { alias: string }): void => {
+  console.log("###################### Importing ########################");
+
   const outputDir = `${dirname}/../src/contracts/`;
   ensureDir(outputDir);
 

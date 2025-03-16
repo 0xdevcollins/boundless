@@ -44,8 +44,9 @@ export const ensureDir = (dirPath: string): void => {
 
 // Get deployed contract IDs
 export const getContracts = (): { alias: string; id: string }[] => {
-  const contractsDir = path.join(dirname, ".stellar/contract-ids");
+  const contractsDir = `${dirname}/../.stellar/contract-ids`;
   const contractFiles = glob(`${contractsDir}/*.json`);
+  // console.log(contractFiles)
 
   return contractFiles
     .map((filePath) => ({
