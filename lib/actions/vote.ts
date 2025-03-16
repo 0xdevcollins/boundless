@@ -1,8 +1,8 @@
 "use server";
 
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth.config";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 
 export async function voteForProject(projectId: string) {

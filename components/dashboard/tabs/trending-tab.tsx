@@ -1,8 +1,8 @@
 "use client";
 
 import type { TrendingProject } from "@/types/project";
-import TrendingProjectCard from "../trending-projects-card";
 import { motion } from "framer-motion";
+import TrendingProjectCard from "../trending-projects-card";
 
 interface TrendingTabProps {
 	projects: TrendingProject[];

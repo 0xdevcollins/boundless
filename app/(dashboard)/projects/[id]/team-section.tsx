@@ -1,20 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { TeamMember } from "@/types/project";
 import {
-	Plus,
-	Github,
-	Twitter,
-	Linkedin,
-	MessageSquare,
 	ChevronDown,
 	ChevronUp,
+	Github,
+	Linkedin,
+	MessageSquare,
+	Plus,
+	Twitter,
 } from "lucide-react";
 import Link from "next/link";
-import type { TeamMember } from "@/types/project";
+import { useState } from "react";
 
 interface TeamSectionProps {
 	teamMembers: TeamMember[];

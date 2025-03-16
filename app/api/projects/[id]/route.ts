@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import type { Project, TeamMember, Vote } from "@prisma/client";
+import { NextResponse } from "next/server";
 
 // Define a type for the project with included relations
 type ProjectWithRelations = Project & {

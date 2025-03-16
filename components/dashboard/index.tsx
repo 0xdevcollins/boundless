@@ -1,25 +1,25 @@
 "use client";
 
-import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Wallet, TrendingUp, Compass, CheckCircle } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
+import { CheckCircle, Compass, TrendingUp, Wallet } from "lucide-react";
+import { useState } from "react";
 
-import type { CompletedSort, ExploreFilter } from "@/types/project";
 import {
+	completedProjects,
+	exploreProjects,
 	myProjects,
 	trendingProjects,
-	exploreProjects,
-	completedProjects,
 } from "@/data/mock-data";
+import type { CompletedSort, ExploreFilter } from "@/types/project";
 
-import StatsCards from "./stats-cards";
+import ConnectWalletButton from "../connect-wallet";
 import ActivityOverview from "./activity-overview";
+import StatsCards from "./stats-cards";
+import CompletedTab from "./tabs/completed-tab";
+import ExploreTab from "./tabs/explore-tab";
 import MyProjectsTab from "./tabs/my-projects-tab";
 import TrendingTab from "./tabs/trending-tab";
-import ExploreTab from "./tabs/explore-tab";
-import CompletedTab from "./tabs/completed-tab";
-import ConnectWalletButton from "../connect-wallet";
 
 export default function Dashboard() {
 	const [exploreFilter, setExploreFilter] = useState<ExploreFilter>("newest");

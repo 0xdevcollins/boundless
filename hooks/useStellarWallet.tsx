@@ -1,8 +1,8 @@
 import {
-	allowAllModules,
 	FREIGHTER_ID,
 	StellarWalletsKit,
 	WalletNetwork,
+	allowAllModules,
 } from "@creit.tech/stellar-wallets-kit";
 
 const SELECTED_WALLET_ID = "selectedWalletId";

@@ -1,7 +1,7 @@
 import { ProjectForm } from "@/components/project-form";
-import React from "react";
-import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth.config";
+import { getServerSession } from "next-auth/next";
+import React from "react";
 
 const Page = async () => {
 	const session = await getServerSession(authOptions);

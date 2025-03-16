@@ -1,8 +1,8 @@
 "use client";
 
 import type { ProjectWithDays } from "@/types/project";
-import ProjectCard from "../project-card";
 import { motion } from "framer-motion";
+import ProjectCard from "../project-card";
 
 interface MyProjectsTabProps {
 	projects: ProjectWithDays[];

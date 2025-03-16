@@ -2,12 +2,12 @@
 
 import type React from "react";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ThumbsUp } from "lucide-react";
 import { voteForProject } from "@/lib/actions/vote";
-import { toast } from "sonner";
+import { ThumbsUp } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface VoteButtonProps {
 	projectId: string;

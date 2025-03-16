@@ -1,6 +1,6 @@
 import { connect, disconnect, getPublicKey } from "@/hooks/useStellarWallet";
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 type WalletStore = {
 	isConnected: boolean;

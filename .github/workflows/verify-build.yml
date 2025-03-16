@@ -1,28 +1,32 @@
-name: CI/CD Pipeline
-
+name: Verify Build
 on:
-  pull_request:
-    branches:
+  push:
+    branches-ignore:
       - main
 
 jobs:
-  lint-and-build:
-    name: Lint and Build
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout your repository using git
         uses: actions/checkout@v4
 
-      - name: Set up Node.js (Use Required Version)
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.18.0 # Set to the required version
+      - name: Setup Rust and Stellar
+        uses: ./.github/actions/setup-rust-stellar
 
-      - name: Install dependencies
-        run: npm install
+      - name: Setup Node.js
+        uses: ./.github/actions/setup-node
 
-      - name: Set up environment variables
+      - name: Build contracts
+        run: make build
+
+      - name: Run tests
+        run: cargo test --release
+
+      # - name: Run clippy
+      #   run: cargo clippy -- -D warnings
+
+      - name: Setup env
         run: |
           echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> .env
           echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> .env
@@ -48,25 +52,15 @@ jobs:
           echo "GITHUB_ID=${{ secrets.GH_ID }}" >> .env
           echo "GITHUB_SECRET=${{ secrets.GH_SECRET }}" >> .env
 
-      - name: Debug File Listing
+      - name: Install and build
+        env:
+          STELLAR_NETWORK: testnet
+          STELLAR_ACCOUNT: ${{ secrets.STELLAR_ACCOUNT }}
+          STELLAR_SECRET_KEY: ${{ secrets.STELLAR_SECRET_KEY }}
+          SOROBAN_SECRET_KEY: ${{ secrets.SOROBAN_SECRET_KEY }}
+          PUBLIC_STELLAR_NETWORK_PASSPHRASE: Test SDF Network ; September 2015
+          PUBLIC_STELLAR_RPC_URL: https://soroban-testnet.stellar.org/
         run: |
-          echo "Checking for matching files..."
-          find . -type f \( -name "*.js" -o -name "*.ts" -o -name "*.jsx" -o -name "*.tsx" -o -name "*.json" -o -name "*.md" -o -name "*.css" -o -name "*.scss" \) \
-          ! -path "./node_modules/*" ! -path "./dist/*" ! -path "./.git/*" ! -path "./coverage/*" \
-          || echo "No matching files found."
-
-      - name: Run Biome Formatter & Linter
-        run: |
-          FILES=$(find . -type f \( -name "*.js" -o -name "*.ts" -o -name "*.jsx" -o -name "*.tsx" -o -name "*.json" -o -name "*.md" -o -name "*.css" -o -name "*.scss" \) \
-          ! -path "./node_modules/*" ! -path "./dist/*" ! -path "./.git/*" ! -path "./coverage/*")
-
-          if [ -n "$FILES" ]; then
-            echo "Running Biome on found files..."
-            echo "$FILES" | xargs npx biome format --write
-            echo "$FILES" | xargs npx biome lint --write
-          else
-            echo "No files found to format or lint. Skipping."
-          fi
-
-      - name: Run Build
-        run: npm run build
+          npm ci
+          npm run init
+          npm run build
