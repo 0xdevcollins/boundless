@@ -1,19 +1,10 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { SortOption, TabOption } from "@/types/contributions";
 import Filter from "../shared/filter";
 import SearchBar from "../shared/search-bar";
 import SortByFilter from "../shared/sort-by-filter";
-import { Search } from "lucide-react";
 
 interface ContributionFiltersProps {
 	activeTab: TabOption;

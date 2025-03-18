@@ -27,8 +27,8 @@ export default function UsAndStellar() {
 							<AnimatedUnderline isInView={isInView} />
 						</div>
 						<p className="text-lg text-muted-foreground mt-6">
-							Boundless leverages Stellar&apos;s blockchain technology to create a
-							secure, transparent, and efficient crowdfunding platform
+							Boundless leverages Stellar&apos;s blockchain technology to create
+							a secure, transparent, and efficient crowdfunding platform
 						</p>
 					</motion.div>
 
@@ -49,9 +49,9 @@ export default function UsAndStellar() {
 										Fast Transactions
 									</h3>
 									<p className="text-muted-foreground">
-										Process contributions in seconds with Stellar&apos;s high-speed
-										network, ensuring your project gets funded quickly and
-										efficiently.
+										Process contributions in seconds with Stellar&apos;s
+										high-speed network, ensuring your project gets funded
+										quickly and efficiently.
 									</p>
 								</div>
 							</div>
@@ -88,9 +88,9 @@ export default function UsAndStellar() {
 										Enhanced Security
 									</h3>
 									<p className="text-muted-foreground">
-										Protect all transactions with Stellar&apos;s immutable ledger
-										technology, providing transparency and peace of mind for
-										backers.
+										Protect all transactions with Stellar&apos;s immutable
+										ledger technology, providing transparency and peace of mind
+										for backers.
 									</p>
 								</div>
 							</div>
@@ -104,8 +104,9 @@ export default function UsAndStellar() {
 										Global Accessibility
 									</h3>
 									<p className="text-muted-foreground">
-										Connect with backers worldwide through Stellar&apos;s borderless
-										payment infrastructure, removing geographical limitations.
+										Connect with backers worldwide through Stellar&apos;s
+										borderless payment infrastructure, removing geographical
+										limitations.
 									</p>
 								</div>
 							</div>
