@@ -16,6 +16,7 @@ const deployProjectContract = () => {
   const contractsDir = `.stellar/contract-ids`;
   mkdirSync(contractsDir, { recursive: true });
 
+  deploy(`./target/wasm32-unknown-unknown/release/boundlessContract.wasm`);
   deploy(`./target/wasm32-unknown-unknown/release/project_contract.wasm`);
 };
 
