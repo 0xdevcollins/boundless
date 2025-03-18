@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { signTransaction } from "@/hooks/useStellarWallet";
-import { contractClient } from "@/src/contracts/project_contract";
+import { contractClient } from "@/src/contracts/boundlessContract";
 import { useWalletStore } from "@/store/useWalletStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
