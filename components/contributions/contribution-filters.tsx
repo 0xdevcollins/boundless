@@ -2,7 +2,6 @@
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { SortOption, TabOption } from "@/types/contributions";
-import { Search } from "lucide-react";
 import Filter from "../shared/filter";
 import SearchBar from "../shared/search-bar";
 import SortByFilter from "../shared/sort-by-filter";

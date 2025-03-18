@@ -36,7 +36,7 @@ export default function Footer() {
 					<div>
 						<h4 className="text-lg font-semibold mb-4">Quick Links</h4>
 						<ul className="space-y-2">
-							{quickLinks.map((link, index) => (
+							{quickLinks.map((link) => (
 								<li key={link.href}>
 									<Link
 										href={link.href}
@@ -53,7 +53,7 @@ export default function Footer() {
 					<div>
 						<h4 className="text-lg font-semibold mb-4">Explore</h4>
 						<ul className="space-y-2">
-							{essentialLinks.map((link, index) => (
+							{essentialLinks.map((link) => (
 								<li key={link.href}>
 									<Link
 										href={link.href}
@@ -70,7 +70,7 @@ export default function Footer() {
 					<div>
 						<h4 className="text-lg font-semibold mb-4">Follow Us</h4>
 						<div className="flex space-x-4">
-							{socialLinks.map((link, index) => (
+							{socialLinks.map((link) => (
 								<a
 									key={link.href}
 									href={link.href}

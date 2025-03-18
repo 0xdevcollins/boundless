@@ -190,7 +190,7 @@ export default function HowItWorks() {
 							<AnimatedUnderline isInView={isInView} />
 						</div>
 						<p className="text-lg text-muted-foreground mt-6">
-							Reimagining what's possible through democratic funding,
+							Reimagining what&apos;s possible through democratic funding,
 							milestone-driven development, and blockchain-secured transactions
 						</p>
 					</motion.div>
@@ -307,7 +307,7 @@ export default function HowItWorks() {
 									</p>
 
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-										{currentStep?.details.features.map((feature, index) => (
+										{currentStep?.details.features.map((feature) => (
 											<div key={feature.id} className="flex items-start">
 												<div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mr-3 mt-0.5">
 													<feature.icon className="h-4 w-4 text-primary" />
