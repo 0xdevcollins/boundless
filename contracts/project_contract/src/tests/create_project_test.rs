@@ -1,7 +1,11 @@
 #![cfg(test)]
 
-use crate::create_project::{CreateProject, CreateProjectClient, CreateProjectStorage};
 use soroban_sdk::{testutils::Address, Env, String};
+
+use crate::create_project::{
+    create_project::{CreateProject, CreateProjectClient},
+    CreateProjectStorage,
+};
 
 #[test]
 fn test_create_project_success() {
