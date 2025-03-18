@@ -73,4 +73,4 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: ${{ github.event_name == 'pull_request' && '--scope preview' || '--prod' }}
+          vercel-args: ${{ github.event_name == 'pull_request' && '' || '--prod' }}
