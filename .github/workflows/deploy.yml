@@ -1,0 +1,79 @@
+name: Build and Deploy to Vercel
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Rust and Stellar
+        uses: ./.github/actions/setup-rust-stellar
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup-node
+
+      - name: Build contracts
+        run: make build
+
+      - name: Install dependencies and upgrade contract
+        env:
+          SOROBAN_NETWORK: testnet
+          SOROBAN_ACCOUNT: ${{ secrets.SOROBAN_ACCOUNT }}
+          SOROBAN_SECRET_KEY: ${{ secrets.SOROBAN_SECRET_KEY }}
+          CONTRACT_ID_LOAN_MANAGER: ${{ secrets.CONTRACT_ID_LOAN_MANAGER }}
+          CONTRACT_ID_POOL_XLM: ${{ secrets.CONTRACT_ID_POOL_XLM }}
+          CONTRACT_ID_POOL_WBTC: ${{ secrets.CONTRACT_ID_POOL_WBTC }}
+          CONTRACT_ID_POOL_WETH: ${{ secrets.CONTRACT_ID_POOL_WETH }}
+          CONTRACT_ID_POOL_USDC: ${{ secrets.CONTRACT_ID_POOL_USDC }}
+          CONTRACT_ID_POOL_EURC: ${{ secrets.CONTRACT_ID_POOL_EURC }}
+        run: |
+          npm ci
+          npm run upgrade
+
+      - name: Build Next.js app
+        env:
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+          PGHOST: ${{ secrets.PGHOST }}
+          PGUSER: ${{ secrets.PGUSER }}
+          PGDATABASE: ${{ secrets.PGDATABASE }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD }}
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GITHUB_ID: ${{ secrets.GH_ID }}
+          GITHUB_SECRET: ${{ secrets.GH_SECRET }}
+          PUBLIC_SOROBAN_NETWORK_PASSPHRASE: Test SDF Network ; September 2015
+          PUBLIC_SOROBAN_RPC_URL: https://soroban-testnet.stellar.org/
+        run: |
+          npm run build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: ${{ github.event_name == 'pull_request' && '--scope preview' || '--prod' }}
