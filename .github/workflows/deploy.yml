@@ -39,7 +39,7 @@ jobs:
           CONTRACT_ID_POOL_EURC: ${{ secrets.CONTRACT_ID_POOL_EURC }}
         run: |
           npm ci
-          npm run upgrade
+          npm run init
 
       - name: Build Next.js app
         env:
