@@ -28,15 +28,12 @@ jobs:
 
       - name: Install dependencies and upgrade contract
         env:
-          SOROBAN_NETWORK: testnet
-          SOROBAN_ACCOUNT: ${{ secrets.SOROBAN_ACCOUNT }}
+          STELLAR_NETWORK: testnet
+          STELLAR_ACCOUNT: ${{ secrets.STELLAR_ACCOUNT }}
+          STELLAR_SECRET_KEY: ${{ secrets.STELLAR_SECRET_KEY }}
           SOROBAN_SECRET_KEY: ${{ secrets.SOROBAN_SECRET_KEY }}
-          CONTRACT_ID_LOAN_MANAGER: ${{ secrets.CONTRACT_ID_LOAN_MANAGER }}
-          CONTRACT_ID_POOL_XLM: ${{ secrets.CONTRACT_ID_POOL_XLM }}
-          CONTRACT_ID_POOL_WBTC: ${{ secrets.CONTRACT_ID_POOL_WBTC }}
-          CONTRACT_ID_POOL_WETH: ${{ secrets.CONTRACT_ID_POOL_WETH }}
-          CONTRACT_ID_POOL_USDC: ${{ secrets.CONTRACT_ID_POOL_USDC }}
-          CONTRACT_ID_POOL_EURC: ${{ secrets.CONTRACT_ID_POOL_EURC }}
+          PUBLIC_STELLAR_NETWORK_PASSPHRASE: Test SDF Network ; September 2015
+          PUBLIC_STELLAR_RPC_URL: https://soroban-testnet.stellar.org/
         run: |
           npm ci
           npm run init
