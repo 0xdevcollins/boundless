@@ -17,6 +17,7 @@ import { MilestoneTracker } from "./milestone-tracker";
 import { ProjectActions } from "./project-actions";
 import { TeamSection } from "./team-section";
 import { VotingSection } from "./voting-section";
+import { CommentsSection } from "./comments-section";
 
 type ValidationStatus = "PENDING" | "REJECTED" | "VALIDATED";
 
@@ -216,6 +217,7 @@ export default function ProjectPage() {
 						<TabsTrigger value="voting">Voting</TabsTrigger>
 						<TabsTrigger value="funding">Funding</TabsTrigger>
 						<TabsTrigger value="team">Team</TabsTrigger>
+						<TabsTrigger value="comments">Comments</TabsTrigger>
 					</TabsList>
 
 					<TabsContent value="description" className="mt-6 space-y-6">
@@ -258,10 +260,14 @@ export default function ProjectPage() {
 
 					<TabsContent value="team" className="mt-6">
 						<TeamSection
-							teamMembers={project.teamMembers}
-							isTeamMember={!!isTeamMember}
 							projectId={project.id}
+							initialTeamMembers={project.teamMembers}
+							isTeamMember={!!isTeamMember}
 						/>
+					</TabsContent>
+
+					<TabsContent value="comments" className="mt-6">
+						<CommentsSection projectId={project.id} />
 					</TabsContent>
 				</Tabs>
 			</div>
