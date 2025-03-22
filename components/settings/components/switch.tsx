@@ -28,8 +28,8 @@ export function Switch({ id, checked, onCheckedChange, className = "" }: SwitchP
       role="switch"
       id={id}
       aria-checked={isChecked}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-        isChecked ? "bg-blue-600" : "bg-gray-200"
+      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary/5 focus:ring-offset-2 ${
+        isChecked ? "bg-primary" : "bg-gray-200"
       } ${className}`}
       onClick={handleChange}
     >

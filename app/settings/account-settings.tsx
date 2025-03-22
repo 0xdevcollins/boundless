@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, type FormEvent, type ChangeEvent } from "react"
-import { Button } from "./components/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./components/card"
-import { Input } from "./components/input"
-import { Label } from "./components/label"
-import { LoaderIcon } from "./components/icons"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { LoaderIcon } from "@/components/settings/components/icons"
+import { Button } from "@/components/ui/button"
 
 
 const toast = (props: { title: string; description: string }) => {

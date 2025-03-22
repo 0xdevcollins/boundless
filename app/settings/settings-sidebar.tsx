@@ -1,6 +1,6 @@
 "use client"
 
-import { UserIcon, ShieldIcon, BellIcon } from "./components/icons"
+import { UserIcon, ShieldIcon, BellIcon } from "@/components/settings/components/icons"
 
 type SettingsTab = "account" | "security" | "notifications"
 
@@ -42,7 +42,7 @@ export function SettingsSidebar({ activeTab, setActiveTab }: SettingsSidebarProp
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-start gap-3 w-full rounded-lg p-3 text-left transition-colors ${
-                isActive ? "bg-blue-600 text-white" : "hover:bg-gray-100"
+                isActive ? "bg-primary text-white" : "hover:bg-gray-100"
               }`}
             >
               <tab.icon className="h-5 w-5 mt-0.5 shrink-0" />
