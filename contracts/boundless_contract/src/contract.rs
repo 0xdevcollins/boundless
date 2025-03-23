@@ -1,15 +1,57 @@
-use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, String, Vec};
+use soroban_sdk::{contract, contractimpl, symbol_short, Address, BytesN, Env, String, Vec};
 
 use crate::{
     error::ProjectError,
-    storage::{project_exists, read_project, update_project, write_project, Project},
+    storage::{
+        get_admin, get_version, is_initialized, project_exists, read_project, set_admin, set_initialized, set_version, update_project, write_project, ContractDataKey, Project
+    },
 };
 
 #[contract]
+#[allow(dead_code)]
 pub struct BoundlessContract;
 
 #[contractimpl]
+#[allow(dead_code)]
 impl BoundlessContract {
+    pub fn initialize(env: Env, admin: Address) -> Result<(), ProjectError> {
+        if is_initialized(&env) {
+            return Err(ProjectError::AlreadyInitialized);
+        }
+
+        set_admin(&env, &admin);
+        set_version(&env, 1);
+        set_initialized(&env);
+
+        Ok(())
+    }
+
+    pub fn upgrade(env: Env, new_wasm_hash: BytesN<32>) -> Result<(), ProjectError> {
+        let admin = get_admin(&env);
+        if env.current_contract_address() != admin {
+            return Err(ProjectError::Unauthorized);
+        }
+
+        env.deployer().update_current_contract_wasm(new_wasm_hash);
+        set_version(&env, get_version(&env) + 1);
+
+        Ok(())
+    }
+
+    pub fn get_admin(e: &Env) -> Address {
+        e.storage()
+            .instance()
+            .get::<ContractDataKey, Address>(&ContractDataKey::Admin)
+            .unwrap()
+    }
+
+    pub fn get_version(e: &Env) -> u32 {
+        e.storage()
+            .instance()
+            .get::<ContractDataKey, u32>(&ContractDataKey::Version)
+            .unwrap_or(1)
+    }
+
     pub fn create_project(
         env: Env,
         project_id: String,
@@ -21,9 +63,9 @@ impl BoundlessContract {
         if funding_target == 0 {
             return Err(ProjectError::InvalidFundingTarget);
         }
-        // if project_exists(&env, &project_id) {
-        //     return Err(ProjectError::AlreadyExists);
-        // }
+        if project_exists(&env, &project_id) {
+            return Err(ProjectError::AlreadyExists);
+        }
 
         let project = Project {
             project_id: project_id.clone(),
@@ -70,10 +112,10 @@ impl BoundlessContract {
         project.metadata_uri = new_metadata_uri;
         update_project(&env, &project)?;
 
-        // env.events().publish(
-        //     (symbol_short!("project"), symbol_short!("uriupdate")),
-        //     &project_id,
-        // );
+        env.events().publish(
+            (symbol_short!("project"), symbol_short!("uriup")),
+            project_id.clone(),
+        );
 
         Ok(())
     }
@@ -96,6 +138,11 @@ impl BoundlessContract {
 
         project.milestone_count = new_milestone_count;
         update_project(&env, &project)?;
+
+        env.events().publish(
+            (symbol_short!("project"), symbol_short!("milmod")),
+            project_id.clone(),
+        );
 
         Ok(())
     }
@@ -120,10 +167,10 @@ impl BoundlessContract {
         project.milestone_count = new_milestone_count;
         update_project(&env, &project)?;
 
-        // env.events().publish(
-        //     (symbol_short!("project"), symbol_short!("milestone_modified")),
-        //     &project_id,
-        // );
+        env.events().publish(
+            (symbol_short!("project"), symbol_short!("milmod")),
+            project_id.clone(),
+        );
 
         Ok(())
     }
@@ -147,10 +194,10 @@ impl BoundlessContract {
         project.is_closed = true;
         write_project(&env, project)?;
 
-        // env.events().publish(
-        //     (symbol_short!("project"), symbol_short!("closed")),
-        //     &project_id,
-        // );
+        env.events().publish(
+            (symbol_short!("project"), symbol_short!("closed")),
+            project_id.clone(),
+        );
 
         Ok(())
     }

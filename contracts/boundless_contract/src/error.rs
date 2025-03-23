@@ -1,4 +1,4 @@
-use soroban_sdk::contracterror;
+use soroban_sdk::{contracterror, symbol_short};
 
 #[contracterror]
 #[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord)]
@@ -14,4 +14,7 @@ pub enum ProjectError {
     InvalidVote = 8,
     AlreadyVoted = 9,
     NotVoted = 10,
+    AlreadyInitialized = 100,
+    NotInitialized = 101,
+    UpgradeFailed = 400,
 }

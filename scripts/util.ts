@@ -32,8 +32,8 @@ export const installContracts = () => {
   const contractsDir = `./.stellar/contract-wasm-hash`;
   mkdirSync(contractsDir, { recursive: true });
 
-  install('boundlessContract');
-  install('project_contract');
+  install('boundless_contract');
+  // install('project_contract');
 };
 
 /* Install a contract */
@@ -53,14 +53,14 @@ export const filenameNoExtension = (filename: string) => {
 export const readTextFile = (path: string): string => readFileSync(path, { encoding: 'utf8' }).trim();
 
 // This is a function so its value can update during init.
-export const projectContractAddress = (): string =>
-  process.env.CONTRACT_ID_LOAN_MANAGER || readTextFile('./.stellar/contract-ids/project_contract.txt');
+// export const projectContractAddress = (): string =>
+//   process.env.CONTRACT_ID_LOAN_MANAGER || readTextFile('./.stellar/contract-ids/project_contract.txt');
 export const boundlessContract = (): string =>
-  process.env.CONTRACT_ID_LOAN_MANAGER || readTextFile('./.stellar/contract-ids/boundlessContract.txt');
+  process.env.CONTRACT_ID_LOAN_MANAGER || readTextFile('./.stellar/contract-ids/boundless_contract.txt');
 
 export const createContractBindings = () => {
-  bind('boundlessContract', process.env.CONTRACT_ID_LOAN_MANAGER);
-  bind('project_contract', process.env.CONTRACT_ID_LOAN_MANAGER);
+  bind('boundless_contract', process.env.CONTRACT_ID_LOAN_MANAGER);
+  // bind('project_contract', process.env.CONTRACT_ID_LOAN_MANAGER);
 };
 
 const bind = (contractName: string, address: string | undefined) => {
@@ -72,7 +72,7 @@ const bind = (contractName: string, address: string | undefined) => {
 };
 
 export const createContractImports = () => {
-  const CONTRACTS = ['project_contract', 'boundlessContract'];
+  const CONTRACTS = ['boundless_contract'];
   CONTRACTS.forEach(importContract);
 };
 

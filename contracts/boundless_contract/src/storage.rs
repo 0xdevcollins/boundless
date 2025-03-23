@@ -1,12 +1,24 @@
-use soroban_sdk::{contracttype, symbol_short, Address, Env, Map, String, Symbol, Vec};
+use soroban_sdk::{contracttype, symbol_short, Address, Env, Map, String, Vec};
 
 use crate::error::ProjectError;
 
+#[allow(dead_code)]
 pub(crate) const DAY_IN_LEDGERS: u32 = 17280; // Assuming 5 seconds per ledger
+#[allow(dead_code)]
 pub(crate) const PROJECTS_BUMP_AMOUNT: u32 = 30 * DAY_IN_LEDGERS;
+#[allow(dead_code)]
 pub(crate) const PROJECTS_LIFETIME_THRESHOLD: u32 = PROJECTS_BUMP_AMOUNT - DAY_IN_LEDGERS;
 
+// Contract version and initialization storage
+#[contracttype]
+pub enum ContractDataKey {
+    Version,
+    Initialized,
+    Admin,
+}
+
 // Persistent Storage TTL Extender
+#[allow(dead_code)]
 fn extend_persistent(e: &Env, key: &ProjectDataKey) {
     e.storage()
         .persistent()
@@ -39,6 +51,8 @@ enum ProjectDataKey {
     Projects,
     Project(String),
 }
+
+#[allow(dead_code)]
 pub fn write_project(e: &Env, project: Project) -> Result<(), ProjectError> {
     let key = ProjectDataKey::Project(project.project_id.clone());
 
@@ -64,6 +78,8 @@ pub fn write_project(e: &Env, project: Project) -> Result<(), ProjectError> {
 
     Ok(())
 }
+
+#[allow(dead_code)]
 pub fn update_project(env: &Env, project: &Project) -> Result<(), ProjectError> {
     let project_key = ProjectDataKey::Project(project.project_id.clone());
 
@@ -76,11 +92,6 @@ pub fn update_project(env: &Env, project: &Project) -> Result<(), ProjectError> 
     if !projects.contains_key(project.project_id.clone()) {
         return Err(ProjectError::NotFound);
     }
-
-    // let mut existing_project = projects.get(project.project_id.clone()).unwrap();
-
-    // existing_project.metadata_uri = project.metadata_uri.clone();
-    // existing_project.milestone_count = project.milestone_count.clone();
 
     projects.set(project.project_id.clone(), project.clone());
 
@@ -100,6 +111,7 @@ pub fn update_project(env: &Env, project: &Project) -> Result<(), ProjectError> 
     Ok(())
 }
 
+#[allow(dead_code)]
 pub fn read_project(e: &Env, project_id: &String) -> Result<Project, ProjectError> {
     let key = ProjectDataKey::Project(project_id.clone());
 
@@ -109,12 +121,14 @@ pub fn read_project(e: &Env, project_id: &String) -> Result<Project, ProjectErro
         .ok_or(ProjectError::NotFound)
 }
 
+#[allow(dead_code)]
 pub fn project_exists(e: &Env, project_id: &String) -> bool {
     let key = ProjectDataKey::Project(project_id.clone());
 
     e.storage().persistent().has(&key)
 }
 
+#[allow(dead_code)]
 pub fn list_projects(e: &Env) -> Vec<Project> {
     let projects: Map<String, Project> = e
         .storage()
@@ -125,6 +139,7 @@ pub fn list_projects(e: &Env) -> Vec<Project> {
     projects.values()
 }
 
+#[allow(dead_code)]
 pub fn delete_project(e: &Env, project_id: &String) -> Result<(), ProjectError> {
     let key = ProjectDataKey::Project(project_id.clone());
 
@@ -148,4 +163,44 @@ pub fn delete_project(e: &Env, project_id: &String) -> Result<(), ProjectError> 
         .publish((key, symbol_short!("deleted")), project_id.clone());
 
     Ok(())
+}
+
+// Contract initialization and versioning functions
+pub fn is_initialized(e: &Env) -> bool {
+    e.storage()
+        .instance()
+        .get::<ContractDataKey, bool>(&ContractDataKey::Initialized)
+        .unwrap_or(false)
+}
+
+pub fn set_initialized(e: &Env) {
+    e.storage()
+        .instance()
+        .set::<ContractDataKey, bool>(&ContractDataKey::Initialized, &true);
+}
+
+pub fn get_version(e: &Env) -> u32 {
+    e.storage()
+        .instance()
+        .get::<ContractDataKey, u32>(&ContractDataKey::Version)
+        .unwrap_or(1)
+}
+
+pub fn set_version(e: &Env, version: u32) {
+    e.storage()
+        .instance()
+        .set::<ContractDataKey, u32>(&ContractDataKey::Version, &version);
+}
+
+pub fn get_admin(e: &Env) -> Address {
+    e.storage()
+        .instance()
+        .get::<ContractDataKey, Address>(&ContractDataKey::Admin)
+        .unwrap()
+}
+
+pub fn set_admin(e: &Env, admin: &Address) {
+    e.storage()
+        .instance()
+        .set::<ContractDataKey, Address>(&ContractDataKey::Admin, admin);
 }
