@@ -85,6 +85,7 @@
   ],
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@shadcn/ui": "^0.0.4",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
     "@types/node-fetch": "^2.6.12",
