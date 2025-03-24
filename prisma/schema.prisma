@@ -42,6 +42,15 @@ model User {
   image         String?
   password      String?
   role          Role         @default(USER)
+  
+  // Profile fields
+  username      String?      @unique
+  bio           String?      @db.Text
+  bannerImage   String?
+  twitter       String?
+  linkedin      String?
+  totalContributions Int     @default(0)
+  
   accounts      Account[]
   sessions      Session[]
   OTP           OTP[]
@@ -50,6 +59,8 @@ model User {
   TeamMember    TeamMember[]
   comments      Comment[]
   reactions     CommentReaction[]
+
+  @@index([username])
 }
 
 model VerificationToken {
