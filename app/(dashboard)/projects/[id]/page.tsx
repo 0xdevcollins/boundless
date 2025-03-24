@@ -12,12 +12,12 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { CommentsSection } from "./comments-section";
 import { FundingSection } from "./funding-section";
 import { MilestoneTracker } from "./milestone-tracker";
 import { ProjectActions } from "./project-actions";
 import { TeamSection } from "./team-section";
 import { VotingSection } from "./voting-section";
-import { CommentsSection } from "./comments-section";
 
 type ValidationStatus = "PENDING" | "REJECTED" | "VALIDATED";
 

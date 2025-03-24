@@ -23,6 +23,7 @@ fn test_create_project_success() {
         &metadata_uri,
         &funding_target,
         &milestone_count,
+
     );
 
     let project = client.get_project(&project_id);
@@ -69,12 +70,13 @@ fn test_update_project_metadata_success() {
     let env = Env::default();
     let contract_id = env.register(BoundlessContract, ());
     let client = BoundlessContractClient::new(&env, &contract_id);
-
+    
     let creator = Address::generate(&env);
     let project_id = String::from_str(&env, "test_project");
     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
     let new_metadata_uri = String::from_str(&env, "ipfs://new-metadata");
-
+    
+    env.mock_all_auths();
     client.create_project(&project_id, &creator, &metadata_uri, &1000, &5);
     client.update_project_metadata(&project_id, &creator, &new_metadata_uri);
 
@@ -94,6 +96,7 @@ fn test_update_project_metadata_wrong_creator_fails() {
     let other_user = Address::generate(&env);
     let project_id = String::from_str(&env, "test_project");
     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
+    env.mock_all_auths();
 
     client.create_project(&project_id, &creator, &metadata_uri, &1000, &5);
     client.update_project_metadata(
@@ -112,7 +115,7 @@ fn test_modify_milestone_success() {
     let creator = Address::generate(&env);
     let project_id = String::from_str(&env, "test_project");
     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
-
+    env.mock_all_auths();
     client.create_project(&project_id, &creator, &metadata_uri, &1000, &4);
 
     client.modify_milestone(&project_id, &creator, &10);
@@ -133,7 +136,7 @@ fn test_modify_milestone_wrong_caller_fails() {
     let other_user = Address::generate(&env);
     let project_id = String::from_str(&env, "test_project");
     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
-
+    env.mock_all_auths();
     client.create_project(&project_id, &creator, &metadata_uri, &1000, &5);
     client.modify_milestone(&project_id, &other_user, &10);
 }
@@ -149,6 +152,7 @@ fn test_close_project_wrong_caller_fails() {
     let other_user = Address::generate(&env);
     let project_id = String::from_str(&env, "test_project");
     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
+    env.mock_all_auths();
 
     client.create_project(&project_id, &creator, &metadata_uri, &1000, &5);
     client.close_project(&project_id, &other_user);
