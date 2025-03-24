@@ -1,18 +1,27 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { ImageUpload } from "@/components/ui/image-upload";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from 'lucide-react';
 
 const profileSchema = z.object({
-  username: z.string().nonempty('Username is required'),
-  displayName: z.string().nonempty('Display name is required'),
-  bio: z.string().optional(),
-  // You can also handle social links, e.g.:
-  twitter: z.string().url('Invalid URL').optional(),
-  linkedIn: z.string().url('Invalid URL').optional(),
+  username: z.string().min(3, 'Username must be at least 3 characters').max(30, 'Username must be less than 30 characters'),
+  name: z.string().min(2, 'Name must be at least 2 characters').max(50, 'Name must be less than 50 characters'),
+  bio: z.string().max(500, 'Bio must be less than 500 characters').optional(),
+  image: z.string().url('Invalid URL').optional(),
+  bannerImage: z.string().url('Invalid URL').optional(),
+  twitter: z.string().url('Invalid URL').optional().or(z.literal('')),
+  linkedin: z.string().url('Invalid URL').optional().or(z.literal('')),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
@@ -28,109 +37,169 @@ export default function ProfileEditForm({
   onSuccess,
   onCancel
 }: ProfileEditFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors }
   } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       username: initialData.username,
-      displayName: initialData.displayName,
+      name: initialData.name,
       bio: initialData.bio,
       twitter: initialData.twitter,
-      linkedIn: initialData.linkedIn
+      linkedin: initialData.linkedin,
+      image: initialData.image,
+      bannerImage: initialData.bannerImage,
     }
   });
 
   const onSubmit = async (formData: ProfileFormData) => {
+    setIsSubmitting(true);
+    setError(null);
     try {
       const response = await axios.put('/api/user/profile', formData);
-      onSuccess(response.data); // pass updated data back to parent
+      onSuccess(response.data);
     } catch (error) {
-      console.error('Error updating profile:', error);
-      // Optionally show an error toast or message
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        setError(error.response.data.error);
+      } else {
+        setError('An error occurred while updating your profile');
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {/* Username */}
-      <div>
-        <label className="block font-semibold">Username</label>
-        <input
-          type="text"
-          {...register('username')}
-          className="border border-gray-300 p-2 rounded w-full"
-        />
-        {errors.username && (
-          <p className="text-red-500 text-sm">{errors.username.message}</p>
-        )}
-      </div>
+    <Card className="w-full bg-card">
+      <CardHeader>
+        <CardTitle>Edit Profile</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          
+          <div className="grid gap-6 max-w-2xl">
+            <div className="space-y-4">
+              <div>
+                <Label>Banner Image</Label>
+                <ImageUpload
+                  value={initialData.bannerImage}
+                  onChange={(url) => setValue('bannerImage', url)}
+                  onRemove={() => setValue('bannerImage', '')}
+                  aspectRatio="21:9"
+                />
+              </div>
 
-      {/* Display Name */}
-      <div>
-        <label className="block font-semibold">Display Name</label>
-        <input
-          type="text"
-          {...register('displayName')}
-          className="border border-gray-300 p-2 rounded w-full"
-        />
-        {errors.displayName && (
-          <p className="text-red-500 text-sm">{errors.displayName.message}</p>
-        )}
-      </div>
+              <div>
+                <Label>Profile Picture</Label>
+                <ImageUpload
+                  value={initialData.image}
+                  onChange={(url) => setValue('image', url)}
+                  onRemove={() => setValue('image', '')}
+                  aspectRatio="1:1"
+                />
+              </div>
+            </div>
 
-      {/* Bio */}
-      <div>
-        <label className="block font-semibold">Bio</label>
-        <textarea
-          {...register('bio')}
-          className="border border-gray-300 p-2 rounded w-full"
-          rows={3}
-        />
-        {errors.bio && <p className="text-red-500 text-sm">{errors.bio.message}</p>}
-      </div>
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  {...register('username')}
+                  className="bg-background max-w-md"
+                />
+                {errors.username && (
+                  <p className="text-sm text-destructive">{errors.username.message}</p>
+                )}
+              </div>
 
-      {/* Twitter */}
-      <div>
-        <label className="block font-semibold">Twitter</label>
-        <input
-          type="text"
-          {...register('twitter')}
-          className="border border-gray-300 p-2 rounded w-full"
-        />
-        {errors.twitter && (
-          <p className="text-red-500 text-sm">{errors.twitter.message}</p>
-        )}
-      </div>
+              <div className="space-y-2">
+                <Label htmlFor="name">Display Name</Label>
+                <Input
+                  id="name"
+                  {...register('name')}
+                  className="bg-background max-w-md"
+                />
+                {errors.name && (
+                  <p className="text-sm text-destructive">{errors.name.message}</p>
+                )}
+              </div>
 
-      {/* LinkedIn */}
-      <div>
-        <label className="block font-semibold">LinkedIn</label>
-        <input
-          type="text"
-          {...register('linkedIn')}
-          className="border border-gray-300 p-2 rounded w-full"
-        />
-        {errors.linkedIn && (
-          <p className="text-red-500 text-sm">{errors.linkedIn.message}</p>
-        )}
-      </div>
+              <div className="space-y-2">
+                <Label htmlFor="bio">Bio</Label>
+                <Textarea
+                  id="bio"
+                  {...register('bio')}
+                  rows={4}
+                  className="bg-background resize-none"
+                />
+                {errors.bio && (
+                  <p className="text-sm text-destructive">{errors.bio.message}</p>
+                )}
+              </div>
 
-      {/* Action Buttons */}
-      <div className="flex space-x-2">
-        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
-          Save
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 bg-gray-300 text-black rounded"
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
+              <div className="space-y-2">
+                <Label htmlFor="twitter">Twitter URL</Label>
+                <Input
+                  id="twitter"
+                  {...register('twitter')}
+                  placeholder="https://twitter.com/yourusername"
+                  className="bg-background max-w-md"
+                />
+                {errors.twitter && (
+                  <p className="text-sm text-destructive">{errors.twitter.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="linkedin">LinkedIn URL</Label>
+                <Input
+                  id="linkedin"
+                  {...register('linkedin')}
+                  placeholder="https://linkedin.com/in/yourusername"
+                  className="bg-background max-w-md"
+                />
+                {errors.linkedin && (
+                  <p className="text-sm text-destructive">{errors.linkedin.message}</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              disabled={isSubmitting}
+              className="bg-background"
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                'Save Changes'
+              )}
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
