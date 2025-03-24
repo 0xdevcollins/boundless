@@ -114,7 +114,6 @@ impl<'a> FundingTest<'a> {
 fn test_funding_operations() {
     let test = FundingTest::setup();
     
-    // Test initial funding
     test.contract_client.fund_project(&test.project_id, &500, &test.funder, &test.token_contract);
     
     // Test get project funding
@@ -164,7 +163,7 @@ fn test_unauthorized_milestone_approval() {
     let env = Env::default();
     env.mock_all_auths();
 
-    let contract_id = env.register_contract(None, BoundlessContract);
+    let contract_id = env.register(BoundlessContract, ());
     let client = BoundlessContractClient::new(&env, &contract_id);
     
     let admin = Address::generate(&env);
@@ -186,7 +185,7 @@ fn test_unauthorized_milestone_release() {
     let env = Env::default();
     env.mock_all_auths();
 
-    let contract_id = env.register_contract(None, BoundlessContract);
+    let contract_id = env.register(BoundlessContract, ());
     let client = BoundlessContractClient::new(&env, &contract_id);
     
     let admin = Address::generate(&env);

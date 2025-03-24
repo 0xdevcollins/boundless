@@ -298,7 +298,6 @@ impl BoundlessContract {
         milestone_number: u32,
         admin: Address,
     ) -> Result<(), ProjectError> {
-        // Verify admin authorization
         admin.require_auth();
         if admin != get_admin(&env) {
             return Err(ProjectError::Unauthorized);
@@ -306,36 +305,29 @@ impl BoundlessContract {
 
         let mut project = read_project(&env, &project_id)?;
 
-        // Validate milestone number
         if milestone_number >= project.milestone_count {
             return Err(ProjectError::InvalidMilestoneNumber);
         }
 
-        // Check if milestone is already completed
         if project.milestone_releases.iter().any(|release| release.0 == milestone_number) {
             return Err(ProjectError::MilestoneAlreadyCompleted);
         }
 
-        // Check if milestone is approved
         if !project.milestone_approvals.iter().any(|approval| approval.0 == milestone_number && approval.1) {
             return Err(ProjectError::MilestoneNotApproved);
         }
 
-        // Calculate milestone release amount
         let milestone_amount = project.funding_target / project.milestone_count as u64;
 
-        // Update project state
         project.milestone_releases.push_back((milestone_number, milestone_amount));
         project.current_milestone = milestone_number + 1;
 
-        // If all milestones are completed, mark project as successful
         if project.current_milestone == project.milestone_count {
             project.is_successful = true;
         }
 
         update_project(&env, &project)?;
 
-        // Emit milestone release event
         env.events().publish(
             (symbol_short!("milestone"), symbol_short!("released")),
             (project_id, milestone_number, milestone_amount),
@@ -350,7 +342,6 @@ impl BoundlessContract {
         milestone_number: u32,
         admin: Address,
     ) -> Result<(), ProjectError> {
-        // Verify admin authorization
         admin.require_auth();
         if admin != get_admin(&env) {
             return Err(ProjectError::Unauthorized);
@@ -358,21 +349,17 @@ impl BoundlessContract {
 
         let mut project = read_project(&env, &project_id)?;
 
-        // Validate milestone number
         if milestone_number >= project.milestone_count {
             return Err(ProjectError::InvalidMilestoneNumber);
         }
 
-        // Check if milestone is already approved
         if project.milestone_approvals.iter().any(|approval| approval.0 == milestone_number) {
             return Err(ProjectError::MilestoneAlreadyCompleted);
         }
 
-        // Add milestone approval
         project.milestone_approvals.push_back((milestone_number, true));
         update_project(&env, &project)?;
 
-        // Emit milestone approval event
         env.events().publish(
             (symbol_short!("milestone"), symbol_short!("approved")),
             (project_id, milestone_number),
@@ -387,7 +374,6 @@ impl BoundlessContract {
         milestone_number: u32,
         admin: Address,
     ) -> Result<(), ProjectError> {
-        // Verify admin authorization
         admin.require_auth();
         if admin != get_admin(&env) {
             return Err(ProjectError::Unauthorized);
@@ -395,21 +381,17 @@ impl BoundlessContract {
 
         let mut project = read_project(&env, &project_id)?;
 
-        // Validate milestone number
         if milestone_number >= project.milestone_count {
             return Err(ProjectError::InvalidMilestoneNumber);
         }
 
-        // Check if milestone is already approved or rejected
         if project.milestone_approvals.iter().any(|approval| approval.0 == milestone_number) {
             return Err(ProjectError::MilestoneAlreadyCompleted);
         }
 
-        // Add milestone rejection
         project.milestone_approvals.push_back((milestone_number, false));
         update_project(&env, &project)?;
 
-        // Emit milestone rejection event
         env.events().publish(
             (symbol_short!("milestone"), symbol_short!("rejected")),
             (project_id, milestone_number),
@@ -454,7 +436,6 @@ impl BoundlessContract {
 
         // let token_client = token::StellarAssetClient::new(&env, &token_contract);
         
-        // For funding, we need to clawback from the funder and mint to the contract
         token::Client::new(&env, &token_contract).transfer(&funder, &env.current_contract_address(), &contribution);
         // token_client.clawback(&funder, &contribution);
         // token_client.mint(&env.current_contract_address(), &contribution);
@@ -474,35 +455,29 @@ impl BoundlessContract {
     pub fn refund(env: Env, project_id: String, token_contract: Address) -> Result<(), ProjectError> {
         let mut project = read_project(&env, &project_id)?;
 
-        // Check if project has failed (funding target not met by deadline)
         if project.total_funded >= project.funding_target || env.ledger().timestamp() < project.funding_deadline {
             return Err(ProjectError::ProjectNotFailed);
         }
 
-        // Check if refund has already been processed
         if project.refund_processed {
             return Err(ProjectError::RefundAlreadyProcessed);
         }
 
-        // Check if there are funds to refund
         if project.total_funded == 0 {
             return Err(ProjectError::NoFundsToRefund);
         }
 
         let token_client = token::Client::new(&env, &token_contract);
 
-        // Process refunds for all backers
         for (backer, amount) in project.backers.iter() {
             // For refunds, we need to transfer from the contract back to the backer
             token_client.transfer(&env.current_contract_address(), &backer, &(amount as i128));
         }
 
-        // Mark refund as processed
         project.refund_processed = true;
         project.is_closed = true;
         update_project(&env, &project)?;
 
-        // Emit refund event
         env.events().publish(
             (symbol_short!("project"), symbol_short!("refunded")),
             (project_id, project.total_funded),
