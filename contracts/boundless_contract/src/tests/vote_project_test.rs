@@ -16,6 +16,7 @@ fn test_voting() {
     let project_id = String::from_str(&env, "test_project");
     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
 
+    env.mock_all_auths();
     client.create_project(&project_id, &creator, &metadata_uri, &1000, &5);
 
     assert_eq!(client.has_voted(&project_id, &voter), false);

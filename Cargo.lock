@@ -196,7 +196,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "boundlessContract"
+name = "boundless_contract"
 version = "0.0.0"
 dependencies = [
  "soroban-sdk",
@@ -874,14 +874,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f139b0662de085916d1fb67d2b4169d1addddda1919e696f3252b740b629986e"
 dependencies = [
  "unicode-ident",
-]
-
-[[package]]
-name = "project-contract"
-version = "0.0.0"
-dependencies = [
- "serde",
- "soroban-sdk",
 ]
 
 [[package]]
