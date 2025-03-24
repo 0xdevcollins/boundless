@@ -3,8 +3,9 @@
 use crate::{
     contract::{BoundlessContract, BoundlessContractClient},
     error::ProjectError,
+    storage::{FUNDING_PERIOD_LEDGERS, VOTING_PERIOD_LEDGERS},
 };
-use soroban_sdk::{testutils::Address as _, Address, Env};
+use soroban_sdk::{testutils::Address as _, Address, Env, String};
 
 #[test]
 fn test_initialization() {
@@ -27,7 +28,6 @@ fn test_initialization() {
 
 #[test]
 #[should_panic(expected = "Error(Contract, #100)")]
-
 fn test_cannot_reinitialize() {
     let env = Env::default();
     env.mock_all_auths();
@@ -42,8 +42,42 @@ fn test_cannot_reinitialize() {
     // Attempt second initialization
     let result = client.initialize(&admin);
     
-    
     // Verify the error is AlreadyInitialized
+}
+
+#[test]
+fn test_project_deadlines() {
+    let env = Env::default();
+    env.mock_all_auths();
+
+    let contract_id = env.register(BoundlessContract, ());
+    let client = BoundlessContractClient::new(&env, &contract_id);
+    
+    // Initialize contract
+    let admin = Address::generate(&env);
+    client.initialize(&admin);
+
+    // Create a project
+    let creator = Address::generate(&env);
+    let project_id = String::from_str(&env, "test_project");
+    let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
+    
+    client.create_project(&project_id, &creator, &metadata_uri, &1000, &5);
+
+    // Get project details
+    let project = client.get_project(&project_id);
+    
+    // Verify funding deadline is set correctly (30 days from creation)
+    assert_eq!(
+        project.funding_deadline,
+        project.created_at + FUNDING_PERIOD_LEDGERS as u64
+    );
+    
+    // Verify voting deadline is set correctly (30 days after funding deadline)
+    assert_eq!(
+        project.voting_deadline,
+        project.funding_deadline + VOTING_PERIOD_LEDGERS as u64
+    );
 }
 
 // #[test]
