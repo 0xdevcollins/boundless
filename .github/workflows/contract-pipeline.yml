@@ -1,0 +1,67 @@
+name: Contract Pipeline
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'contracts/**'
+      - '.github/workflows/contract-pipeline.yml'
+      - 'Dockerfile'
+      - '.github/actions/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'contracts/**'
+      - '.github/workflows/contract-pipeline.yml'
+      - 'Dockerfile'
+      - '.github/actions/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Rust and Stellar
+        uses: ./.github/actions/setup-rust-stellar
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -t boundless-contract .
+          docker tag boundless-contract boundless-contract:latest
+
+      - name: Run contract tests
+        run: |
+          docker run --rm boundless-contract cargo test --release --target wasm32-unknown-unknown -p boundless_contract
+
+      - name: Build contract
+        run: |
+          docker run --rm boundless-contract cargo build --release --target wasm32-unknown-unknown -p boundless_contract
+
+      - name: Upload contract artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: boundless-contract
+          path: contracts/boundless_contract/target/wasm32-unknown-unknown/release/boundless_contract.wasm
+          retention-days: 7
+
+      - name: Run initialization script
+        env:
+          STELLAR_ACCOUNT: ${{ secrets.STELLAR_ACCOUNT }}
+          STELLAR_NETWORK: testnet
+          STELLAR_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"
+          STELLAR_RPC_URL: "https://soroban-testnet.stellar.org:443"
+          SOROBAN_SECRET_KEY: ${{ secrets.SOROBAN_SECRET_KEY }}
+        run: |
+          docker run --rm \
+            -e STELLAR_ACCOUNT \
+            -e STELLAR_NETWORK \
+            -e STELLAR_NETWORK_PASSPHRASE \
+            -e STELLAR_RPC_URL \
+            -e SOROBAN_SECRET_KEY \
+            boundless-contract npx --import dotenv/config tsx /app/scripts/initialize.ts
