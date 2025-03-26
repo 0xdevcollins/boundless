@@ -42,21 +42,60 @@ if ! stellar keys ls | grep -q "alice"; then\n\
 fi' > /usr/local/bin/setup-stellar-keys.sh && \
     chmod +x /usr/local/bin/setup-stellar-keys.sh
 
-# Run native tests first
-RUN cargo test --release -p boundless_contract
-
-# Build WASM contract
-RUN cargo build --release --target wasm32-unknown-unknown -p boundless_contract
-
-# Create a script to run tests
+# Create a comprehensive entrypoint script
 RUN echo '#!/bin/bash\n\
-if [ "$1" = "test" ]; then\n\
+\n\
+# Function to run tests\n\
+run_tests() {\n\
+    echo "Running native tests..."\n\
     cargo test --release -p boundless_contract\n\
-elif [ "$1" = "build" ]; then\n\
+    if [ $? -ne 0 ]; then\n\
+        echo "Tests failed"\n\
+        exit 1\n\
+    fi\n\
+}\n\
+\n\
+# Function to build WASM\n\
+build_wasm() {\n\
+    echo "Building WASM contract..."\n\
     cargo build --release --target wasm32-unknown-unknown -p boundless_contract\n\
-else\n\
+    if [ $? -ne 0 ]; then\n\
+        echo "WASM build failed"\n\
+        exit 1\n\
+    fi\n\
+}\n\
+\n\
+# Function to initialize\n\
+initialize() {\n\
+    echo "Running initialization script..."\n\
     npx --import dotenv/config tsx /app/scripts/initialize.ts\n\
-fi' > /usr/local/bin/run.sh && \
-    chmod +x /usr/local/bin/run.sh
+    if [ $? -ne 0 ]; then\n\
+        echo "Initialization failed"\n\
+        exit 1\n\
+    fi\n\
+}\n\
+\n\
+# Main execution\n\
+case "$1" in\n\
+    "test")\n\
+        run_tests\n\
+        ;;\n\
+    "build")\n\
+        build_wasm\n\
+        ;;\n\
+    "all")\n\
+        run_tests\n\
+        build_wasm\n\
+        initialize\n\
+        ;;\n\
+    "default")\n\
+        initialize\n\
+        ;;\n\
+    *)\n\
+        echo "Usage: $0 {test|build|all|default}"\n\
+        exit 1\n\
+        ;;\n\
+esac' > /usr/local/bin/entrypoint.sh && \
+    chmod +x /usr/local/bin/entrypoint.sh
 
-CMD ["/usr/local/bin/run.sh", "default"]
+CMD ["/usr/local/bin/entrypoint.sh", "all"]
