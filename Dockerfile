@@ -21,14 +21,7 @@ RUN ARCH=$(uname -m) && \
 
 WORKDIR /app
 
-# Copy necessary scripts and configuration
-# COPY package*.json ./
-# COPY
-# COPY scripts/util.ts /app/scripts/util.ts
-# COPY scripts/initialize.ts /app/scripts/initialize.ts
-# COPY .env /app/.env
 COPY . .
-
 
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
@@ -49,6 +42,21 @@ if ! stellar keys ls | grep -q "alice"; then\n\
 fi' > /usr/local/bin/setup-stellar-keys.sh && \
     chmod +x /usr/local/bin/setup-stellar-keys.sh
 
+# Run native tests first
+RUN cargo test --release -p boundless_contract
+
+# Build WASM contract
 RUN cargo build --release --target wasm32-unknown-unknown -p boundless_contract
 
-CMD ["npx", "--import", "dotenv/config", "tsx", "/app/scripts/initialize.ts"]
+# Create a script to run tests
+RUN echo '#!/bin/bash\n\
+if [ "$1" = "test" ]; then\n\
+    cargo test --release -p boundless_contract\n\
+elif [ "$1" = "build" ]; then\n\
+    cargo build --release --target wasm32-unknown-unknown -p boundless_contract\n\
+else\n\
+    npx --import dotenv/config tsx /app/scripts/initialize.ts\n\
+fi' > /usr/local/bin/run.sh && \
+    chmod +x /usr/local/bin/run.sh
+
+CMD ["/usr/local/bin/run.sh", "default"]
