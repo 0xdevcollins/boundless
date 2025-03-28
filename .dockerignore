@@ -1,0 +1,67 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/target
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+# Ignore actual .env files but keep .env.example
+.env
+!.env.example
+
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Rust's output directory
+target
+
+# Local settings
+.soroban
+.stellar
+
+certificates
+
+.DS_Store
+# generated contract clients
+packages/*
+# if you have other workspace packages, add them here
+!packages/.gitkeep
+
+# generated contract client imports
+src/contracts/*
+!src/contracts/util.ts
+
+# contract unit test test-snapshots
+**/test_snapshots

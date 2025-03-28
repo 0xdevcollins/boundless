@@ -59,38 +59,40 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 	return (
 		<aside
 			className={cn(
-				"flex h-full w-full flex-col bg-background p-4 md:h-screen md:w-[280px]",
+				"fixed left-0 top-0 z-40 h-screen w-[280px] border-r bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
 				className,
 			)}
 			{...props}
 		>
 			<div className="flex h-full flex-col">
-				<div className="flex h-12 items-center">
+				<div className="flex h-16 items-center border-b px-6">
 					<Link href="/">
 						<Image src="/logo.svg" width={200} height={32} alt="" />
 					</Link>
 				</div>
 
-				<nav className="mt-8 space-y-2">
-					{navItems.map((item) => (
-						<a
-							key={item.label}
-							href={item.href}
-							className={cn(
-								"flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
-								item.isActive
-									? "bg-accent text-accent-foreground"
-									: "text-muted-foreground",
-							)}
-						>
-							<item.icon className="h-4 w-4" />
-							{item.label}
-						</a>
-					))}
-				</nav>
+				<div className="flex-1 overflow-y-auto">
+					<nav className="space-y-1 p-4">
+						{navItems.map((item) => (
+							<a
+								key={item.label}
+								href={item.href}
+								className={cn(
+									"flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+									pathname === item.href
+										? "bg-accent text-accent-foreground"
+										: "text-muted-foreground",
+								)}
+							>
+								<item.icon className="h-4 w-4" />
+								{item.label}
+							</a>
+						))}
+					</nav>
+				</div>
 
 				{showCreatorCard && (
-					<div className="mt-auto">
+					<div className="border-t p-4">
 						<Card className="bg-primary text-white">
 							<CardContent className="p-4">
 								<Image
@@ -98,7 +100,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 									width={128}
 									src="/soroban.png"
 									alt=""
-									className="mb-4 h-32 w-full object-cover"
+									className="mb-4 h-32 w-full rounded-lg object-cover"
 								/>
 								<h3 className="font-semibold">Become a creator</h3>
 								<p className="mt-1 text-sm text-white/80">

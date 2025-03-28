@@ -1,11 +1,16 @@
 "use client";
 
+import { FundProjectButton } from "@/components/projects/FundProjectButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Wallet } from "lucide-react";
 
-export function FundingSection() {
+interface FundingSectionProps {
+	projectId: string;
+}
+
+export function FundingSection({ projectId }: FundingSectionProps) {
 	return (
 		<div className="space-y-6">
 			<Card>
@@ -32,7 +37,7 @@ export function FundingSection() {
 								</div>
 							</div>
 						</div>
-
+						<FundProjectButton projectId={projectId} />
 						<Button className="w-full">
 							<Wallet className="mr-2 h-4 w-4" /> Fund this Project
 						</Button>

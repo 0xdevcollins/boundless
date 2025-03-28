@@ -13,7 +13,7 @@ import {
 } from "@/data/mock-data";
 import type { CompletedSort, ExploreFilter } from "@/types/project";
 
-import ConnectWalletButton from "../connect-wallet";
+// import ConnectWalletButton from "../connect-wallet";
 import ActivityOverview from "./activity-overview";
 import StatsCards from "./stats-cards";
 import CompletedTab from "./tabs/completed-tab";
@@ -81,7 +81,7 @@ export default function Dashboard() {
 			<main className="flex-1 p-8">
 				<div className="flex items-center justify-between mb-6">
 					<h1 className="text-3xl font-bold">Dashboard</h1>
-					<ConnectWalletButton />
+					{/* <ConnectWalletButton /> */}
 
 					{/* <Button>
 						<Wallet className="mr-2 h-4 w-4" />

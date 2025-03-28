@@ -1,8 +1,6 @@
 #[cfg(test)]
 use crate::contract::{BoundlessContract, BoundlessContractClient};
-use crate::error::ProjectError;
 
-use super::*;
 use soroban_sdk::{testutils::Address as _, Address, Env, String};
 
 #[test]
@@ -97,6 +95,7 @@ fn test_update_project_metadata_wrong_creator_fails() {
     let project_id = String::from_str(&env, "test_project");
     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
     env.mock_all_auths();
+    env.mock_all_auths();
 
     client.create_project(&project_id, &creator, &metadata_uri, &1000, &5);
     client.update_project_metadata(
@@ -115,6 +114,7 @@ fn test_modify_milestone_success() {
     let creator = Address::generate(&env);
     let project_id = String::from_str(&env, "test_project");
     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
+    env.mock_all_auths();
     env.mock_all_auths();
     client.create_project(&project_id, &creator, &metadata_uri, &1000, &4);
 
@@ -137,6 +137,7 @@ fn test_modify_milestone_wrong_caller_fails() {
     let project_id = String::from_str(&env, "test_project");
     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
     env.mock_all_auths();
+    env.mock_all_auths();
     client.create_project(&project_id, &creator, &metadata_uri, &1000, &5);
     client.modify_milestone(&project_id, &other_user, &10);
 }
@@ -152,6 +153,7 @@ fn test_close_project_wrong_caller_fails() {
     let other_user = Address::generate(&env);
     let project_id = String::from_str(&env, "test_project");
     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
+    env.mock_all_auths();
     env.mock_all_auths();
 
     client.create_project(&project_id, &creator, &metadata_uri, &1000, &5);
