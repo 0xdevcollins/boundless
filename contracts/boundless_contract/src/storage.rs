@@ -9,6 +9,18 @@ pub(crate) const PROJECTS_BUMP_AMOUNT: u32 = 30 * DAY_IN_LEDGERS;
 #[allow(dead_code)]
 pub(crate) const PROJECTS_LIFETIME_THRESHOLD: u32 = PROJECTS_BUMP_AMOUNT - DAY_IN_LEDGERS;
 
+// Fixed periods in days
+#[allow(dead_code)]
+pub(crate) const FUNDING_PERIOD_DAYS: u32 = 30;
+#[allow(dead_code)]
+pub(crate) const VOTING_PERIOD_DAYS: u32 = 30;
+
+// Convert days to ledgers
+#[allow(dead_code)]
+pub(crate) const FUNDING_PERIOD_LEDGERS: u32 = FUNDING_PERIOD_DAYS * DAY_IN_LEDGERS;
+#[allow(dead_code)]
+pub(crate) const VOTING_PERIOD_LEDGERS: u32 = VOTING_PERIOD_DAYS * DAY_IN_LEDGERS;
+
 // Contract version and initialization storage
 #[contracttype]
 pub enum ContractDataKey {
@@ -42,6 +54,11 @@ pub struct Project {
     pub is_successful: bool,
     pub is_closed: bool,
     pub created_at: u64,
+    pub milestone_approvals: Vec<(u32, bool)>,
+    pub milestone_releases: Vec<(u32, u64)>,
+    pub refund_processed: bool,
+    pub funding_deadline: u64,
+    pub voting_deadline: u64,
 }
 
 // Enum for Project Storage Keys
