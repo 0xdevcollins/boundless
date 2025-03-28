@@ -70,35 +70,33 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 			)}
 			{...props}
 		>
-    	<div className="flex h-full flex-col">
-			<div className="flex h-16 items-center border-b px-6">
-				<Link href="/">
-					<Image src="/logo.svg" width={200} height={32} alt="" />
-				</Link>
-			</div>
-
-				<div className="flex-1 overflow-y-auto">
-					<nav className="space-y-1 p-4">
-						{navItems.map((item) => (
-							<a
-								key={item.label}
-								href={item.href}
-								className={cn(
-									"flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-									pathname === item.href
-										? "bg-accent text-accent-foreground"
-										: "text-muted-foreground",
-								)}
-							>
-								<item.icon className="h-4 w-4" />
-								{item.label}
-							</a>
-						))}
-					</nav>
+			<div className="flex h-full flex-col">
+				<div className="flex h-12 items-center">
+					<Link href="/">
+						<Image src="/logo.svg" width={200} height={32} alt="" />
+					</Link>
 				</div>
 
+				<nav className="mt-8 space-y-2">
+					{navItems.map((item) => (
+						<a
+							key={item.label}
+							href={item.href}
+							className={cn(
+								"flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
+								item.isActive
+									? "bg-accent text-accent-foreground"
+									: "text-muted-foreground",
+							)}
+						>
+							<item.icon className="h-4 w-4" />
+							{item.label}
+						</a>
+					))}
+				</nav>
+
 				{showCreatorCard && (
-					<div className="border-t p-4">
+					<div className="mt-auto">
 						<Card className="bg-primary text-white">
 							<CardContent className="p-4">
 								<Image
@@ -114,19 +112,19 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 									your project.
 								</p>
 							</CardContent>
-              <CardFooter className="p-4 pt-0">
-                <Button
-                  onClick={handleCreate}
-                  className="w-full bg-secondary hover:bg-secondary/30"
-                  variant="secondary"
-                >
-                  Create now
-                </Button>
-              </CardFooter>
-            </Card>
+							<CardFooter className="p-4 pt-0">
+								<Button
+									onClick={handleCreate}
+									className="w-full bg-secondary hover:bg-secondary/30"
+									variant="secondary"
+								>
+									Create now
+								</Button>
+							</CardFooter>
+						</Card>
 
-            <div className="mt-4 flex items-center justify-center gap-2">
-				<Button
+						<div className="mt-4 flex items-center justify-center gap-2">
+							<Button
 								variant="ghost"
 								size="icon"
 								className={cn(
@@ -150,13 +148,13 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 								<Moon className="h-4 w-4" />
 								<span className="sr-only">Dark mode</span>
 							</Button>
-              <Button variant="ghost" size="icon" onClick={handleLogout}>
-                <LogOut className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
-    </aside>
-  );
+							<Button variant="ghost" size="icon" onClick={handleLogout}>
+                				<LogOut className="h-4 w-4" />
+              				</Button>
+						</div>
+					</div>
+				)}
+			</div>
+		</aside>
+	);
 }
