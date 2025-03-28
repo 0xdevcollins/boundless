@@ -3,7 +3,8 @@ use soroban_sdk::{contract, contractimpl, symbol_short, Address, BytesN, Env, St
 use crate::{
     error::ProjectError,
     storage::{
-        get_admin, get_version, is_initialized, project_exists, read_project, set_admin, set_initialized, set_version, update_project, write_project, ContractDataKey, Project
+        get_admin, get_version, is_initialized, project_exists, read_project, set_admin,
+        set_initialized, set_version, update_project, write_project, ContractDataKey, Project,
     },
 };
 

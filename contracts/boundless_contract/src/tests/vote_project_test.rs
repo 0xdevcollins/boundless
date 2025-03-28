@@ -1,8 +1,6 @@
 #[cfg(test)]
 use crate::contract::{BoundlessContract, BoundlessContractClient};
-use crate::error::ProjectError;
 
-use super::*;
 use soroban_sdk::{testutils::Address as _, Address, Env, String};
 
 #[test]
