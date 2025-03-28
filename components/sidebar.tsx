@@ -13,11 +13,13 @@ import {
 	Moon,
 	Settings,
 	Sun,
+	LogOut,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
+import { logoutUser } from '@/utils/auth';
 
 interface NavItem {
 	icon: React.ElementType;
@@ -56,6 +58,10 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 	};
 	const showCreatorCard = pathname !== "/projects/new";
 
+ 	const handleLogout = async () => {
+   		await logoutUser(() => router.push('/login'));
+ 	};
+
 	return (
 		<aside
 			className={cn(
@@ -64,14 +70,14 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 			)}
 			{...props}
 		>
-			<div className="flex h-full flex-col">
-				<div className="flex h-12 items-center">
-					<Link href="/">
-						<Image src="/logo.svg" width={200} height={32} alt="" />
-					</Link>
-				</div>
+      <div className="flex h-full flex-col">
+        <div className="flex h-12 items-center">
+          <Link href="/">
+            <Image src="/logo.svg" width={200} height={32} alt="" />
+          </Link>
+        </div>
 
-				<nav className="mt-8 space-y-2">
+			<nav className="mt-8 space-y-2">
 					{navItems.map((item) => (
 						<a
 							key={item.label}
@@ -89,10 +95,10 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 					))}
 				</nav>
 
-				{showCreatorCard && (
-					<div className="mt-auto">
-						<Card className="bg-primary text-white">
-							<CardContent className="p-4">
+        {showCreatorCard && (
+          <div className="mt-auto">
+            <Card className="bg-primary text-white">
+				<CardContent className="p-4">
 								<Image
 									height={128}
 									width={128}
@@ -106,19 +112,19 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 									your project.
 								</p>
 							</CardContent>
-							<CardFooter className="p-4 pt-0">
-								<Button
-									onClick={handleCreate}
-									className="w-full bg-secondary hover:bg-secondary/30"
-									variant="secondary"
-								>
-									Create now
-								</Button>
-							</CardFooter>
-						</Card>
+              <CardFooter className="p-4 pt-0">
+                <Button
+                  onClick={handleCreate}
+                  className="w-full bg-secondary hover:bg-secondary/30"
+                  variant="secondary"
+                >
+                  Create now
+                </Button>
+              </CardFooter>
+            </Card>
 
-						<div className="mt-4 flex items-center justify-center gap-2">
-							<Button
+            <div className="mt-4 flex items-center justify-center gap-2">
+				<Button
 								variant="ghost"
 								size="icon"
 								className={cn(
@@ -142,10 +148,13 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 								<Moon className="h-4 w-4" />
 								<span className="sr-only">Dark mode</span>
 							</Button>
-						</div>
-					</div>
-				)}
-			</div>
-		</aside>
-	);
+              <Button variant="ghost" size="icon" onClick={handleLogout}>
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </aside>
+  );
 }
