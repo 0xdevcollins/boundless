@@ -1,10 +1,10 @@
 "use client";
 
+import { FundProjectButton } from "@/components/projects/FundProjectButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Wallet } from "lucide-react";
-import { FundProjectButton } from "@/components/projects/FundProjectButton";
 
 interface FundingSectionProps {
 	projectId: string;

@@ -22,13 +22,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { signTransaction } from "@/hooks/useStellarWallet";
 import { contractClient } from "@/src/contracts/boundless_contract";
 import { useWalletStore } from "@/store/useWalletStore";
+import { convertUSDToStroops, getXLMPrice } from "@/utils/price";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { getXLMPrice, convertUSDToStroops } from "@/utils/price";
 
 const projectFormSchema = z.object({
 	userId: z.string().min(1, "User ID is required"),
@@ -79,7 +79,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 				const price = await getXLMPrice();
 				setXlmPrice(price);
 			} catch (error) {
-				console.error('Failed to fetch XLM price:', error);
+				console.error("Failed to fetch XLM price:", error);
 			}
 		};
 		fetchPrice();
@@ -246,10 +246,10 @@ export function ProjectForm({ userId }: { userId?: string }) {
 						<FormItem>
 							<FormLabel>Funding Goal</FormLabel>
 							<FormControl>
-								<Input 
-									type="number" 
-									placeholder="Enter amount in USD" 
-									{...field} 
+								<Input
+									type="number"
+									placeholder="Enter amount in USD"
+									{...field}
 								/>
 							</FormControl>
 							<FormDescription>
