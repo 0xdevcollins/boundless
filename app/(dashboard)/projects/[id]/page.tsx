@@ -255,13 +255,13 @@ export default function ProjectPage() {
 					</TabsContent>
 
 					<TabsContent value="funding" className="mt-6">
-						<FundingSection />
+						<FundingSection projectId={project.id} />
 					</TabsContent>
 
 					<TabsContent value="team" className="mt-6">
 						<TeamSection
 							projectId={project.id}
-							initialTeamMembers={project.teamMembers}
+							teamMembers={project.teamMembers}
 							isTeamMember={!!isTeamMember}
 						/>
 					</TabsContent>

@@ -22,6 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { signTransaction } from "@/hooks/useStellarWallet";
 import { contractClient } from "@/src/contracts/boundless_contract";
 import { useWalletStore } from "@/store/useWalletStore";
+import { convertUSDToStroops, getXLMPrice } from "@/utils/price";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -58,6 +59,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
 	const [status, setStatus] = useState("");
+	const [xlmPrice, setXlmPrice] = useState<number | null>(null);
 	const { publicKey } = useWalletStore();
 
 	const form = useForm<ProjectFormValues>({
@@ -70,6 +72,18 @@ export function ProjectForm({ userId }: { userId?: string }) {
 			category: "",
 		},
 	});
+
+	useEffect(() => {
+		const fetchPrice = async () => {
+			try {
+				const price = await getXLMPrice();
+				setXlmPrice(price);
+			} catch (error) {
+				console.error("Failed to fetch XLM price:", error);
+			}
+		};
+		fetchPrice();
+	}, []);
 
 	// Set wallet address in form when publicKey changes
 	useEffect(() => {
@@ -118,6 +132,10 @@ export function ProjectForm({ userId }: { userId?: string }) {
 				throw new Error("Wallet is not connected");
 			}
 
+			if (!xlmPrice) {
+				throw new Error("Failed to fetch XLM price. Please try again.");
+			}
+
 			const metadataUri = await handleUploadMetadata(data);
 
 			const projectId = crypto.randomUUID();
@@ -127,7 +145,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 				project_id: projectId,
 				creator: publicKey,
 				metadata_uri: metadataUri,
-				funding_target: BigInt(data.fundingGoal),
+				funding_target: convertUSDToStroops(Number(data.fundingGoal), xlmPrice),
 				milestone_count: 3,
 			});
 
@@ -228,9 +246,20 @@ export function ProjectForm({ userId }: { userId?: string }) {
 						<FormItem>
 							<FormLabel>Funding Goal</FormLabel>
 							<FormControl>
-								<Input type="number" placeholder="Enter amount" {...field} />
+								<Input
+									type="number"
+									placeholder="Enter amount in USD"
+									{...field}
+								/>
 							</FormControl>
-							<FormDescription>Enter the amount in USD</FormDescription>
+							<FormDescription>
+								Enter the amount in USD
+								{xlmPrice && field.value && (
+									<span className="block mt-1 text-sm text-gray-500">
+										≈ {(Number(field.value) / xlmPrice).toFixed(2)} XLM
+									</span>
+								)}
+							</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
