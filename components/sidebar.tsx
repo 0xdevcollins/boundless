@@ -71,11 +71,11 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 			{...props}
 		>
     	<div className="flex h-full flex-col">
-				<div className="flex h-16 items-center border-b px-6">
-					<Link href="/">
-						<Image src="/logo.svg" width={200} height={32} alt="" />
-					</Link>
-				</div>
+			<div className="flex h-16 items-center border-b px-6">
+				<Link href="/">
+					<Image src="/logo.svg" width={200} height={32} alt="" />
+				</Link>
+			</div>
 
 				<div className="flex-1 overflow-y-auto">
 					<nav className="space-y-1 p-4">
