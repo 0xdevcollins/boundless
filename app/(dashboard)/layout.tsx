@@ -16,12 +16,12 @@ export default function Layout({
   return (
     <div className="flex min-h-screen">
       {/* Desktop Sidebar */}
-      <div className="hidden border-r md:block">
+      <div className="hidden md:block">
         <Sidebar />
       </div>
 
       {/* Main Content */}
-      <div className="flex w-full flex-1 flex-col">
+      <div className="flex w-full flex-1 flex-col md:pl-[280px]">
         {/* Mobile Header with Menu */}
         <header className="flex h-14 items-center border-b px-4 lg:px-6">
           <MobileSidebar />
