@@ -13,7 +13,8 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { updateUserSettings } from "@/lib/actions/settings";
+import { useEffect, useState } from "react";
 
 const toast = (props: { title: string; description: string }) => {
 	console.log(`Toast: ${props.title} - ${props.description}`);
@@ -22,6 +23,20 @@ const toast = (props: { title: string; description: string }) => {
 
 export function NotificationSettings() {
 	const [isLoading, setIsLoading] = useState(false);
+	const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+	useEffect(() => {
+		const fetchSettings = async () => {
+			try {
+				const res = await fetch("/api/user/settings");
+				const data = await res.json();
+				setNotificationsEnabled(data.notificationsEnabled);
+			} catch (err) {
+				console.error("Failed to fetch notification settings", err);
+			}
+		};
+		fetchSettings();
+	}, []);
 
 	const [emailNotifications, setEmailNotifications] = useState({
 		projectUpdates: true,
@@ -37,19 +52,22 @@ export function NotificationSettings() {
 		importantAnnouncements: true,
 	});
 
-	function handleSave() {
+	async function handleSave() {
 		setIsLoading(true);
 
-		// Simulate API call
-		setTimeout(() => {
-			setIsLoading(false);
+		try {
+			await updateUserSettings({ notificationsEnabled });
+
 			toast({
 				title: "Notification preferences updated",
-				description:
-					"Your notification preferences have been updated successfully.",
+				description: "Your preferences were successfully saved.",
 			});
-			console.log({ emailNotifications, pushNotifications });
-		}, 1000);
+		} catch (err) {
+			console.error(err);
+			toast({ title: "Error", description: "Failed to update settings." });
+		} finally {
+			setIsLoading(false);
+		}
 	}
 
 	return (
@@ -211,16 +229,26 @@ export function NotificationSettings() {
 									updates
 								</p>
 							</div>
+
+							{/* 
+  				Only `notificationsEnabled` is saved to the database.
+  				Other toggles are local UI state with no backend mapping (yet).
+			*/}
 							<Switch
 								id="push-announcements"
-								checked={pushNotifications.importantAnnouncements}
-								onCheckedChange={(checked) =>
-									setPushNotifications({
-										...pushNotifications,
-										importantAnnouncements: checked,
-									})
-								}
+								checked={notificationsEnabled}
+								onCheckedChange={(checked) => setNotificationsEnabled(checked)}
 							/>
+							{/* <Switch
+                id="push-announcements"
+                checked={pushNotifications.importantAnnouncements}
+                onCheckedChange={(checked) =>
+                  setPushNotifications({
+                    ...pushNotifications,
+                    importantAnnouncements: checked,
+                  })
+                }
+              /> */}
 						</div>
 					</div>
 				</div>
