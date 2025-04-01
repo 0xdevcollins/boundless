@@ -13,11 +13,13 @@ import {
 	Moon,
 	Settings,
 	Sun,
+	LogOut,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
+import { logoutUser } from '@/utils/auth';
 
 interface NavItem {
 	icon: React.ElementType;
@@ -55,6 +57,10 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 		router.push("/projects/new");
 	};
 	const showCreatorCard = pathname !== "/projects/new";
+
+ 	const handleLogout = async () => {
+   		await logoutUser(() => router.push('/login'));
+ 	};
 
 	return (
 		<aside
@@ -144,6 +150,9 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 								<Moon className="h-4 w-4" />
 								<span className="sr-only">Dark mode</span>
 							</Button>
+							<Button variant="ghost" size="icon" onClick={handleLogout}>
+                				<LogOut className="h-4 w-4" />
+              				</Button>
 						</div>
 					</div>
 				)}
