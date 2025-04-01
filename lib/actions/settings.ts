@@ -1,44 +1,29 @@
-"use server";
+type UserSettings = {
+  theme?: string;
+  language?: string;
+  notificationsEnabled?: boolean;
+};
 
-import { authOptions } from "@/lib/auth.config";
-import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
+export async function getUserSettings(): Promise<UserSettings> {
+  const res = await fetch('/api/user/settings');
 
-export async function getUserSettings() {
-	const session = await getServerSession(authOptions);
+  if (!res.ok) {
+    throw new Error('Failed to fetch settings');
+  }
 
-	if (!session?.user?.id) {
-		throw new Error("Unauthorized");
-	}
-
-	return await prisma.user.findUnique({
-		where: { id: session.user.id },
-		select: {
-			theme: true,
-			language: true,
-			notificationsEnabled: true,
-		},
-	});
+  return res.json();
 }
 
-export async function updateUserSettings(data: {
-	theme?: string;
-	language?: string;
-	notificationsEnabled?: boolean;
-}) {
-	const session = await getServerSession(authOptions);
+export async function updateUserSettings(data: UserSettings): Promise<UserSettings> {
+  const res = await fetch('/api/user/settings', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
 
-	if (!session?.user?.id) {
-		throw new Error("Unauthorized");
-	}
+  if (!res.ok) {
+    throw new Error('Failed to update settings');
+  }
 
-	return await prisma.user.update({
-		where: { id: session.user.id },
-		data,
-		select: {
-			theme: true,
-			language: true,
-			notificationsEnabled: true,
-		},
-	});
+  return res.json();
 }

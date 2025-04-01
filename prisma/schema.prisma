@@ -52,7 +52,6 @@ model User {
   totalContributions Int     @default(0)
 
   // Settings fields
-  theme                String?  @default("light")
   language             String?  @default("en")
   notificationsEnabled Boolean? @default(true)
 
