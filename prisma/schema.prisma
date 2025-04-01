@@ -35,22 +35,26 @@ model Session {
 }
 
 model User {
-  id            String       @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String?      @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
   password      String?
-  role          Role         @default(USER)
-  
+  role          Role      @default(USER)
+
   // Profile fields
-  username      String?      @unique
-  bio           String?      @db.Text
-  bannerImage   String?
-  twitter       String?
-  linkedin      String?
+  username           String? @unique
+  bio                String? @db.Text
+  bannerImage        String?
+  twitter            String?
+  linkedin           String?
   totalContributions Int     @default(0)
-  
+
+  // Settings fields
+  language             String?  @default("en")
+  notificationsEnabled Boolean? @default(true)
+
   accounts      Account[]
   sessions      Session[]
   OTP           OTP[]
@@ -153,23 +157,23 @@ enum ReactionType {
 }
 
 model Comment {
-  id        String    @id @default(cuid())
-  content   String    @db.Text
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  
-  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
-  
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  
-  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: SetNull)
-  parentId  String?
-  replies   Comment[] @relation("CommentReplies")
-  
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: SetNull)
+  parentId String?
+  replies  Comment[] @relation("CommentReplies")
+
   reactions CommentReaction[]
-  
+
   @@index([projectId])
   @@index([userId])
   @@index([parentId])
@@ -179,13 +183,13 @@ model CommentReaction {
   id        String       @id @default(cuid())
   type      ReactionType
   createdAt DateTime     @default(now())
-  
-  comment   Comment      @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId String
-  
-  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
   @@unique([commentId, userId])
   @@index([commentId])
   @@index([userId])
