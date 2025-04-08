@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { CommentInput } from "../comments/comment-input";
+import { CommentInput } from "./comment-input";
 
 type CommentType = {
 	id: string;
