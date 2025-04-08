@@ -28,7 +28,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
 	{ icon: Home, label: "Dashboard", href: "/dashboard", isActive: true },
-	{ icon: Briefcase, label: "My Projects", href: "projects/my-projects" },
+	{ icon: Briefcase, label: "My Projects", href: "/projects/my-projects" },
 	{ icon: Bell, label: "Explore", href: "/projects" },
 	{ icon: BarChart2, label: "Funded Projects", href: "/projects/funded" },
 	{ icon: Cpu, label: "Profile", href: "/profile" },

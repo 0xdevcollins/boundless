@@ -99,7 +99,7 @@ export function MyProjectsList() {
 						key={project.id}
 						className="h-full hover:shadow-lg transition-shadow"
 					>
-						<Link href={`/projects/${project.id}`} className="block">
+						<Link href={`/projects/edit/${project.id}`} className="block">
 							{project.bannerUrl ? (
 								<div className="relative w-full h-32 overflow-hidden">
 									<Image
