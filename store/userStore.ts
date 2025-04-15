@@ -21,7 +21,7 @@ interface UserState {
   error: string | null;
   fetchUserProfile: () => Promise<void>;
   isProjectOwner: (projectUserId: string) => boolean;
-  isProjectTeamMember: (projectId: string, projectTeamMembers: any[]) => boolean;
+//   isProjectTeamMember: (projectId: string, projectTeamMembers: any[]) => boolean;
   reset: () => void;
 }
 
@@ -50,12 +50,12 @@ export const useUserStore = create<UserState>((set, get) => ({
     return user?.id === projectUserId;
   },
   
-  isProjectTeamMember: (projectId: string, projectTeamMembers: any[]) => {
-    const { user } = get();
-    if (!user) return false;
+//   isProjectTeamMember: (projectId: string, projectTeamMembers: any[]) => {
+//     const { user } = get();
+//     if (!user) return false;
     
-    return projectTeamMembers.some(member => member.userId === user.id);
-  },
+//     return projectTeamMembers.some(member => member.userId === user.id);
+//   },
   
   reset: () => {
     set({ user: null, isLoading: false, error: null });

@@ -6,18 +6,18 @@ import { useUserStore } from '@/store/userStore';
 interface UseProjectAuthProps {
   projectId: string;
   projectUserId: string;
-  teamMembers: any[];
+  teamMembers?: any[];
   redirectTo?: string;
 }
 
 export function useProjectAuth({
   projectId,
   projectUserId,
-  teamMembers,
+//   teamMembers,
   redirectTo = '/auth/login',
 }: UseProjectAuthProps) {
   const router = useRouter();
-  const { user, fetchUserProfile, isProjectOwner, isProjectTeamMember, isLoading } = useUserStore();
+  const { user, fetchUserProfile, isProjectOwner,  isLoading } = useUserStore();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [isTeamMember, setIsTeamMember] = useState(false);
@@ -43,11 +43,9 @@ export function useProjectAuth({
         
         // Check if user is owner or team member
         const ownerStatus = isProjectOwner(projectUserId);
-        const teamMemberStatus = isProjectTeamMember(projectId, teamMembers);
         
         setIsOwner(ownerStatus);
-        setIsTeamMember(teamMemberStatus);
-        setIsAuthorized(ownerStatus || teamMemberStatus);
+        setIsAuthorized(ownerStatus);
         setAuthChecked(true);
       } catch (error) {
         console.error('Error checking auth:', error);
@@ -57,7 +55,7 @@ export function useProjectAuth({
     };
 
     checkAuth();
-  }, [projectId, projectUserId, teamMembers, fetchUserProfile, isProjectOwner, isProjectTeamMember, user]);
+  }, [projectId, projectUserId,  fetchUserProfile, isProjectOwner, user]);
 
   const requireAuth = (callback?: () => void) => {
     if (!user) {
