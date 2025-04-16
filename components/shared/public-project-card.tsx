@@ -34,7 +34,7 @@ export function PublicProjectCard({ project, className }: ProjectCardProps) {
     const fundingPercentage = calculateFundingPercentage(project);
 
     return (
-        <Card className={cn("h-full flex flex-col hover:shadow-lg transition-all duration-300 border border-border", className)}>
+        <Card className={cn("h-full flex relative flex-col hover:shadow-lg transition-all duration-300 border border-border", className)}>
             {/* Banner Image */}
             <Link href={projectLink} className="block">
                 {project.bannerUrl ? (
@@ -55,7 +55,7 @@ export function PublicProjectCard({ project, className }: ProjectCardProps) {
 
             {/* Profile Image */}
             {project.profileUrl && (
-                <div className="absolute -top-6 left-4 w-12 h-12 rounded-full overflow-hidden border-2 border-background z-10">
+                <div className="absolute top-2 left-4 w-12 h-12 rounded-full overflow-hidden border-2 border-background z-10">
                     <Image
                         src={project.profileUrl}
                         alt={`${project.title} profile`}

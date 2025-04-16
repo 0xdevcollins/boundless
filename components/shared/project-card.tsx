@@ -57,7 +57,7 @@ export function ProjectCard({ project, userVoted, className }: ProjectCardProps)
     return (
         <Card
             className={cn(
-                "h-full transition-all hover:shadow-md hover:-translate-y-1 overflow-hidden",
+                "h-full relative transition-all hover:shadow-md hover:-translate-y-1 overflow-hidden",
                 "border-border/50 dark:border-border/80",
                 className
             )}

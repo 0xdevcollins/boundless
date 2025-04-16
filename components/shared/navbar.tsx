@@ -7,6 +7,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { usePathname } from "next/navigation";
 
 interface NavbarProps {
 	className?: string;
@@ -14,6 +15,7 @@ interface NavbarProps {
 
 export const Navbar = ({ className }: NavbarProps) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const pathname = usePathname();
 
 	const navLinks = [
 		{ name: "Discover Projects", href: "/explore" },
