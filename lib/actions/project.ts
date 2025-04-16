@@ -40,10 +40,15 @@ export type Project = {
   }[]
 }
 
-export async function fetchProjects(): Promise<Project[]> {
+export async function fetchProjects(forUser?: boolean): Promise<Project[]> {
   try {
-    const response = await fetch("/api/projects")
-
+    const response = await fetch("/api/projects", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ forUser }),
+    })
     if (!response.ok) {
       throw new Error("Failed to fetch projects")
     }

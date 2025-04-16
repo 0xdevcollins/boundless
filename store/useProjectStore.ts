@@ -31,11 +31,11 @@ export const useProjectStore = create<ProjectState>((set) => ({
   projectError: null,
   
   // Fetch multiple projects
-  fetchProjects: async () => {
+  fetchProjects: async (forUser? : boolean) => {
     set({ isLoading: true, error: null })
     
     try {
-      const projects = await fetchProjects()
+      const projects = await fetchProjects(forUser)
       set({ projects, isLoading: false })
     } catch (error) {
       set({ 

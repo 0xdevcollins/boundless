@@ -12,7 +12,7 @@ export function MyProjectsList() {
 
   useEffect(() => {
     const loadProjects = async () => {
-      await fetchProjects();
+      await fetchProjects(true);
       setHasAttemptedFetch(true);
     };
     

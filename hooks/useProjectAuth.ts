@@ -6,7 +6,7 @@ import { useUserStore } from '@/store/userStore';
 interface UseProjectAuthProps {
   projectId: string;
   projectUserId: string;
-  teamMembers: any[];
+  teamMembers?: any[];
   redirectTo?: string;
 }
 
@@ -43,7 +43,7 @@ export function useProjectAuth({
         
         // Check if user is owner or team member
         const ownerStatus = isProjectOwner(projectUserId);
-        const teamMemberStatus = isProjectTeamMember(projectId, teamMembers);
+        const teamMemberStatus = isProjectTeamMember(projectId, teamMembers || []);
         
         setIsOwner(ownerStatus);
         setIsTeamMember(teamMemberStatus);

@@ -10,10 +10,12 @@ import {
 	Cpu,
 	Crown,
 	Home,
+	LogOut,
 	Moon,
 	Settings,
 	Sun,
 } from "lucide-react";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -55,6 +57,13 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 		router.push("/projects/new");
 	};
 	const showCreatorCard = pathname !== "/projects/new";
+	const handleLogout = async () => {
+		await signOut({
+			redirect: false,
+			callbackUrl: "/auth/signin",
+		});
+		router.push("/auth/signin");
+	};
 
 	return (
 		<aside
@@ -91,35 +100,41 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 					</nav>
 				</div>
 
-				{showCreatorCard && (
-					<div className="border-t p-4">
-						<Card className="bg-primary text-white">
-							<CardContent className="p-4">
-								<Image
-									height={128}
-									width={128}
-									src="/soroban.png"
-									alt=""
-									className="mb-4 h-32 w-full rounded-lg object-cover"
-								/>
-								<h3 className="font-semibold">Become a creator</h3>
-								<p className="mt-1 text-sm text-white/80">
-									Validate your concept and secure initial funding to kickstart
-									your project.
-								</p>
-							</CardContent>
-							<CardFooter className="p-4 pt-0">
-								<Button
-									onClick={handleCreate}
-									className="w-full bg-secondary hover:bg-secondary/30"
-									variant="secondary"
-								>
-									Create now
-								</Button>
-							</CardFooter>
-						</Card>
+				<section>
+					{showCreatorCard && (
+						<div className="border-t p-4">
+							<Card className="bg-primary text-white">
+								<CardContent className="p-4">
+									<Image
+										height={128}
+										width={128}
+										src="/soroban.png"
+										alt=""
+										className="mb-4 h-32 w-full rounded-lg object-cover"
+									/>
+									<h3 className="font-semibold">Become a creator</h3>
+									<p className="mt-1 text-sm text-white/80">
+										Validate your concept and secure initial funding to kickstart
+										your project.
+									</p>
+								</CardContent>
+								<CardFooter className="p-4 pt-0">
+									<Button
+										onClick={handleCreate}
+										className="w-full bg-secondary hover:bg-secondary/30"
+										variant="secondary"
+									>
+										Create now
+									</Button>
+								</CardFooter>
+							</Card>
 
-						<div className="mt-4 flex items-center justify-center gap-2">
+
+						</div>
+					)}
+
+					<div className="flex items-center justify-between my-4">
+						<div className="flex items-center gap-2">
 							<Button
 								variant="ghost"
 								size="icon"
@@ -145,8 +160,16 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 								<span className="sr-only">Dark mode</span>
 							</Button>
 						</div>
+						<Button
+							variant="ghost"
+							className="text-muted-foreground hover:text-destructive"
+							onClick={handleLogout}
+						>
+							<LogOut className="mr-2 h-4 w-4" />
+							Logout
+						</Button>
 					</div>
-				)}
+				</section>
 			</div>
 		</aside>
 	);

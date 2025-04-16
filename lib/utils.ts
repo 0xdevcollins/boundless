@@ -5,7 +5,7 @@ import type {
 	TabOption,
 	UserComment,
 } from "@/types/contributions";
-import type { ValidationStatus } from "@/types/project";
+import type { Project, ValidationStatus } from "@/types/project";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -170,3 +170,19 @@ export function sortComments(
 		return 0;
 	});
 }
+export function calculateDaysLeft(createdAt: string): number {
+  const createdDate = new Date(createdAt);
+  const deadline = new Date(createdDate);
+  deadline.setDate(createdDate.getDate() + 30); // 30-day campaign
+  const now = new Date();
+  const diff = deadline.getTime() - now.getTime();
+  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+}
+
+export function calculateFundingPercentage(project: Project): number {
+	if (!project.fundingGoal || project.fundingGoal === 0) return 0;
+	// Assuming you have a way to calculate current funding
+	// This is a placeholder - replace with your actual funding calculation
+	const currentFunding = project._count.votes * 10; // Example: each vote = $10
+	return Math.min(100, Math.round((currentFunding / project.fundingGoal) * 100));
+  }

@@ -5,6 +5,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../../ui/button";
+import Link from "next/link";
 
 type CryptoCategoryType =
 	| "DeFi Protocol"
@@ -270,17 +271,21 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
 					>
 						{/* Wrap Button with motion.div to use whileHover */}
 						<motion.div whileHover={{ scale: 1.05 }}>
+							<Link href="/auth/signin">
 							<Button size="lg" className="group relative overflow-hidden px-8">
 								Get Started
 								<ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
 							</Button>
+							</Link>
 						</motion.div>
 
 						<motion.div whileHover={{ scale: 1.05 }}>
+							<Link href="/explore">
 							<Button size="lg" variant="outline" className="group">
 								<Sparkles className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform" />
 								Browse Projects
 							</Button>
+							</Link>
 						</motion.div>
 					</motion.div>
 				</div>

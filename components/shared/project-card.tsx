@@ -1,11 +1,13 @@
 "use client"
 
 import { Badge } from "@/components/ui/badge"
-import { Card, CardFooter, CardHeader } from "@/components/ui/card"
+import { Card, CardFooter, CardHeader, CardContent } from "@/components/ui/card"
 import Image from "next/image"
 import Link from "next/link"
 import { VoteButton } from "../shared/vote-button"
 import { useProjectAuth } from "@/hooks/useProjectAuth"
+import { Progress } from "@/components/ui/progress"
+import { cn, formatValidationStatus } from "@/lib/utils"
 
 type ValidationStatus = "PENDING" | "REJECTED" | "VALIDATED"
 
@@ -39,55 +41,83 @@ interface ProjectCardProps {
     project: Project
     userVoted: boolean
     linkPath?: string
+    className?: string
 }
 
-export function ProjectCard({ project, userVoted }: ProjectCardProps) {
-    const projectOwnerLink = `/projects/edit/${project.id}`
-    const projectViewerLink = `/projects/${project.id}`
+export function ProjectCard({ project, userVoted, className }: ProjectCardProps) {
     const { isOwner, isLoading } = useProjectAuth({
         projectId: project.id,
         projectUserId: project.userId,
     })
-
- 
-
+    const projectLink = isLoading
+        ? "#"
+        : isOwner
+            ? `/projects/edit/${project.id}`
+            : `/projects/${project.id}`;
     return (
-        <Card key={project.id} className="h-full hover:shadow-lg transition-shadow">
-            <Link href={isLoading ? "#" : (isOwner ? projectOwnerLink : projectViewerLink)} className="block">
+        <Card
+            className={cn(
+                "h-full transition-all hover:shadow-md hover:-translate-y-1 overflow-hidden",
+                "border-border/50 dark:border-border/80",
+                className
+            )}
+        >
+            <Link
+                href={projectLink}
+                className="block group"
+            >
+                {/* Banner Image */}
                 {project.bannerUrl ? (
-                    <div className="relative w-full h-32 overflow-hidden">
-                        <Image src={project.bannerUrl || "/placeholder.svg"} alt={project.title} fill className="object-cover" />
+                    <div className="relative w-full h-40 overflow-hidden">
+                        <Image
+                            src={project.bannerUrl}
+                            alt={project.title}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                     </div>
                 ) : (
-                    <div className="w-full h-32 bg-muted flex items-center justify-center">
-                        <span className="text-muted-foreground">No banner image</span>
+                    <div className="w-full h-40 bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center">
+                        <span className="text-muted-foreground text-sm">No banner image</span>
                     </div>
                 )}
 
-                <CardHeader className="relative p-3 pb-0">
-                    {project.profileUrl && (
-                        <div className="absolute -top-8 left-3 w-12 h-12 rounded-full overflow-hidden border-2 border-background">
-                            <Image
-                                src={project.profileUrl || "/placeholder.svg"}
-                                alt={`${project.title} profile`}
-                                fill
-                                className="object-cover"
-                            />
-                        </div>
-                    )}
-                    <div className="mt-4">
-                        <div className="flex justify-between items-start">
-                            <h3 className="font-bold text-base line-clamp-1">{project.title}</h3>
-                        </div>
-                        <p className="text-xs text-muted-foreground line-clamp-1 mt-1">{project.description}</p>
+                {/* Profile Image */}
+                {project.profileUrl && (
+                    <div className="absolute top-6 left-4 w-12 h-12 rounded-full overflow-hidden border-2 border-background z-10">
+                        <Image
+                            src={project.profileUrl}
+                            alt={`${project.title} profile`}
+                            width={60}
+                            height={60}
+                            className="object-cover"
+                        />
                     </div>
-                </CardHeader>
+                )}
             </Link>
 
-            <CardFooter className="flex flex-col items-start gap-1 p-3 pt-0">
-                <div className="flex flex-wrap gap-1 mt-2">
-                    <Badge variant="outline" className="text-xs px-1.5 py-0">
-                        {project.category.slice(0, 1).toUpperCase() + project.category.slice(1).toLowerCase()}
+            <CardContent className="p-4 pt-3">
+                <div className="space-y-2">
+                    <div className="flex justify-between items-start gap-2">
+                        <h3 className="font-semibold text-lg line-clamp-2 leading-tight">
+                            {project.title}
+                        </h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                        {project.description}
+                    </p>
+                </div>
+            </CardContent>
+
+            <CardFooter className="flex flex-col items-start gap-3 p-4 pt-0">
+                {/* Badges */}
+                <div className="flex flex-wrap gap-2 w-full">
+                    <Badge
+                        variant="secondary"
+                        className="text-xs px-2 py-1 capitalize"
+                    >
+                        {project.category.toLowerCase()}
                     </Badge>
                     <Badge
                         variant={
@@ -97,28 +127,37 @@ export function ProjectCard({ project, userVoted }: ProjectCardProps) {
                                     ? "destructive"
                                     : "secondary"
                         }
-                        className="text-xs px-1.5 py-0"
+                        className="text-xs px-2 py-1"
                     >
                         {formatValidationStatus(project.ideaValidation)}
                     </Badge>
                 </div>
-                <div className="text-xs mb-2 flex gap-12 justify-between items-center">
-                    <span className="font-medium">
-                        {project.ideaValidation === "VALIDATED" ? "FUNDING STAGE" : "IDEA VALIDATION STAGE"}
+
+                {/* Progress Bar (optional - if you have funding data) */}
+                {/* <Progress value={50} className="h-2 w-full" /> */}
+
+                {/* Status & Creator */}
+                <div className="flex justify-between items-center w-full text-xs">
+                    <span className="font-medium text-foreground/80">
+                        {project.ideaValidation === "VALIDATED"
+                            ? "Funding Stage"
+                            : "Validation Stage"}
                     </span>
-                    <div className="text-xs">
-                        <span className="font-bold mr-1">Creator</span>
-                        <span className="text-muted-foreground p-1 rounded-xl border">
-                            {project.user.name && project.user.name}
-                        </span>
-                    </div>
+                    {isOwner && project.user.name && (
+                        <div className="flex items-center gap-1">
+                            <span className="text-muted-foreground">By</span>
+                            <span className="font-medium">
+                                {project.user.name}
+                            </span>
+                        </div>
+                    )}
                 </div>
 
-                {/* Vote Button - only show if project is in PENDING state */}
+                {/* Vote Button */}
                 {project.ideaValidation === "PENDING" && (
-                    <div className="w-full mt-2 pt-2 border-t">
+                    <div className="w-full mt-2 pt-3 border-t">
                         {isLoading ? (
-                            <div className="flex justify-center py-2">
+                            <div className="flex justify-center py-1">
                                 <span className="text-xs text-muted-foreground">Loading...</span>
                             </div>
                         ) : (
@@ -135,9 +174,4 @@ export function ProjectCard({ project, userVoted }: ProjectCardProps) {
             </CardFooter>
         </Card>
     )
-}
-
-function formatValidationStatus(status: ValidationStatus | null | undefined) {
-    if (!status) return "Unknown"
-    return status.charAt(0) + status.slice(1).toLowerCase()
 }
