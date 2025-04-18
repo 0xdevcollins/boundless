@@ -12,7 +12,7 @@ for (const key in process.env) {
 export const loadAccount = () => {
   console.log(process.env.STELLAR_ACCOUNT)
   // This takes the secret key from SOROBAN_SECRET_KEY env-variable, so make sure you have that set.
-  exe(`stellar keys add ${process.env.STELLAR_ACCOUNT}`);
+  exe(`stellar keys add ${process.env.STELLAR_ACCOUNT || 'alice'}`);
 };
 
 // Function to execute and log shell commands
