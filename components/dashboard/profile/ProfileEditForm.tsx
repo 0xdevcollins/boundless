@@ -7,34 +7,29 @@ import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import type { UserProfile } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { z } from "zod";
 
 const profileSchema = z.object({
-	username: z
-		.string()
-		.min(3, "Username must be at least 3 characters")
-		.max(30, "Username must be less than 30 characters"),
-	name: z
-		.string()
-		.min(2, "Name must be at least 2 characters")
-		.max(50, "Name must be less than 50 characters"),
-	bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
-	image: z.string().url("Invalid URL").optional(),
-	bannerImage: z.string().url("Invalid URL").optional(),
-	twitter: z.string().url("Invalid URL").optional().or(z.literal("")),
-	linkedin: z.string().url("Invalid URL").optional().or(z.literal("")),
+	name: z.string().min(1, "Name is required"),
+	bio: z.string().optional(),
+	twitter: z.string().optional(),
+	linkedin: z.string().optional(),
+	image: z.string().optional(),
+	bannerImage: z.string().optional(),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 interface ProfileEditFormProps {
-	initialData: ProfileFormData;
-	onSuccess: (updatedData: ProfileFormData) => void;
+	initialData: UserProfile;
+	onSuccess: (data: UserProfile) => void;
 	onCancel: () => void;
 }
 
@@ -46,15 +41,9 @@ export default function ProfileEditForm({
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const {
-		register,
-		handleSubmit,
-		setValue,
-		formState: { errors },
-	} = useForm<ProfileFormData>({
+	const form = useForm<ProfileFormData>({
 		resolver: zodResolver(profileSchema),
 		defaultValues: {
-			username: initialData.username,
 			name: initialData.name,
 			bio: initialData.bio,
 			twitter: initialData.twitter,
@@ -64,18 +53,15 @@ export default function ProfileEditForm({
 		},
 	});
 
-	const onSubmit = async (formData: ProfileFormData) => {
+	const onSubmit = async (data: ProfileFormData) => {
 		setIsSubmitting(true);
 		setError(null);
 		try {
-			const response = await axios.put("/api/user/profile", formData);
+			const response = await axios.put("/api/user/profile", data);
 			onSuccess(response.data);
 		} catch (error) {
-			if (axios.isAxiosError(error) && error.response?.data?.error) {
-				setError(error.response.data.error);
-			} else {
-				setError("An error occurred while updating your profile");
-			}
+			console.error("Error updating profile:", error);
+			toast.error("Failed to update profile");
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -87,7 +73,7 @@ export default function ProfileEditForm({
 				<CardTitle>Edit Profile</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 					{error && (
 						<Alert variant="destructive">
 							<AlertDescription>{error}</AlertDescription>
@@ -100,8 +86,8 @@ export default function ProfileEditForm({
 								<Label>Banner Image</Label>
 								<ImageUpload
 									value={initialData.bannerImage}
-									onChange={(url) => setValue("bannerImage", url)}
-									onRemove={() => setValue("bannerImage", "")}
+									onChange={(url) => form.setValue("bannerImage", url)}
+									onRemove={() => form.setValue("bannerImage", "")}
 									aspectRatio="21:9"
 								/>
 							</div>
@@ -110,8 +96,8 @@ export default function ProfileEditForm({
 								<Label>Profile Picture</Label>
 								<ImageUpload
 									value={initialData.image}
-									onChange={(url) => setValue("image", url)}
-									onRemove={() => setValue("image", "")}
+									onChange={(url) => form.setValue("image", url)}
+									onRemove={() => form.setValue("image", "")}
 									aspectRatio="1:1"
 								/>
 							</div>
@@ -119,29 +105,15 @@ export default function ProfileEditForm({
 
 						<div className="grid gap-4">
 							<div className="space-y-2">
-								<Label htmlFor="username">Username</Label>
-								<Input
-									id="username"
-									{...register("username")}
-									className="bg-background max-w-md"
-								/>
-								{errors.username && (
-									<p className="text-sm text-destructive">
-										{errors.username.message}
-									</p>
-								)}
-							</div>
-
-							<div className="space-y-2">
 								<Label htmlFor="name">Display Name</Label>
 								<Input
 									id="name"
-									{...register("name")}
+									{...form.register("name")}
 									className="bg-background max-w-md"
 								/>
-								{errors.name && (
+								{form.formState.errors.name && (
 									<p className="text-sm text-destructive">
-										{errors.name.message}
+										{form.formState.errors.name.message}
 									</p>
 								)}
 							</div>
@@ -150,13 +122,13 @@ export default function ProfileEditForm({
 								<Label htmlFor="bio">Bio</Label>
 								<Textarea
 									id="bio"
-									{...register("bio")}
+									{...form.register("bio")}
 									rows={4}
 									className="bg-background resize-none"
 								/>
-								{errors.bio && (
+								{form.formState.errors.bio && (
 									<p className="text-sm text-destructive">
-										{errors.bio.message}
+										{form.formState.errors.bio.message}
 									</p>
 								)}
 							</div>
@@ -165,13 +137,13 @@ export default function ProfileEditForm({
 								<Label htmlFor="twitter">Twitter URL</Label>
 								<Input
 									id="twitter"
-									{...register("twitter")}
+									{...form.register("twitter")}
 									placeholder="https://twitter.com/yourusername"
 									className="bg-background max-w-md"
 								/>
-								{errors.twitter && (
+								{form.formState.errors.twitter && (
 									<p className="text-sm text-destructive">
-										{errors.twitter.message}
+										{form.formState.errors.twitter.message}
 									</p>
 								)}
 							</div>
@@ -180,13 +152,13 @@ export default function ProfileEditForm({
 								<Label htmlFor="linkedin">LinkedIn URL</Label>
 								<Input
 									id="linkedin"
-									{...register("linkedin")}
+									{...form.register("linkedin")}
 									placeholder="https://linkedin.com/in/yourusername"
 									className="bg-background max-w-md"
 								/>
-								{errors.linkedin && (
+								{form.formState.errors.linkedin && (
 									<p className="text-sm text-destructive">
-										{errors.linkedin.message}
+										{form.formState.errors.linkedin.message}
 									</p>
 								)}
 							</div>

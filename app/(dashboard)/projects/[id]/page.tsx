@@ -1,5 +1,6 @@
-import { ProjectViewerPage } from "./viewer/project-viewer-page"
+import { ProjectViewerPage } from "./viewer/project-viewer-page";
 
-export default function ProjectPage({ params }: { params: { id: string } }) {
-  return <ProjectViewerPage />
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function ProjectPage() {
+	return <ProjectViewerPage />;
 }

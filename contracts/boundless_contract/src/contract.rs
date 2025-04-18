@@ -1,9 +1,10 @@
-use soroban_sdk::{contract, contractimpl, symbol_short, Address, BytesN, Env, String, Vec, token};
+use soroban_sdk::{contract, contractimpl, symbol_short, token, Address, BytesN, Env, String, Vec};
 
 use crate::{
     error::ProjectError,
     storage::{
-        get_admin, get_version, is_initialized, project_exists, read_project, set_admin, set_initialized, set_version, update_project, write_project, ContractDataKey, Project,
+        get_admin, get_version, is_initialized, project_exists, read_project, set_admin,
+        set_initialized, set_version, update_project, write_project, ContractDataKey, Project,
         FUNDING_PERIOD_LEDGERS, VOTING_PERIOD_LEDGERS,
     },
 };
@@ -309,17 +310,27 @@ impl BoundlessContract {
             return Err(ProjectError::InvalidMilestoneNumber);
         }
 
-        if project.milestone_releases.iter().any(|release| release.0 == milestone_number) {
+        if project
+            .milestone_releases
+            .iter()
+            .any(|release| release.0 == milestone_number)
+        {
             return Err(ProjectError::MilestoneAlreadyCompleted);
         }
 
-        if !project.milestone_approvals.iter().any(|approval| approval.0 == milestone_number && approval.1) {
+        if !project
+            .milestone_approvals
+            .iter()
+            .any(|approval| approval.0 == milestone_number && approval.1)
+        {
             return Err(ProjectError::MilestoneNotApproved);
         }
 
         let milestone_amount = project.funding_target / project.milestone_count as u64;
 
-        project.milestone_releases.push_back((milestone_number, milestone_amount));
+        project
+            .milestone_releases
+            .push_back((milestone_number, milestone_amount));
         project.current_milestone = milestone_number + 1;
 
         if project.current_milestone == project.milestone_count {
@@ -353,11 +364,17 @@ impl BoundlessContract {
             return Err(ProjectError::InvalidMilestoneNumber);
         }
 
-        if project.milestone_approvals.iter().any(|approval| approval.0 == milestone_number) {
+        if project
+            .milestone_approvals
+            .iter()
+            .any(|approval| approval.0 == milestone_number)
+        {
             return Err(ProjectError::MilestoneAlreadyCompleted);
         }
 
-        project.milestone_approvals.push_back((milestone_number, true));
+        project
+            .milestone_approvals
+            .push_back((milestone_number, true));
         update_project(&env, &project)?;
 
         env.events().publish(
@@ -385,11 +402,17 @@ impl BoundlessContract {
             return Err(ProjectError::InvalidMilestoneNumber);
         }
 
-        if project.milestone_approvals.iter().any(|approval| approval.0 == milestone_number) {
+        if project
+            .milestone_approvals
+            .iter()
+            .any(|approval| approval.0 == milestone_number)
+        {
             return Err(ProjectError::MilestoneAlreadyCompleted);
         }
 
-        project.milestone_approvals.push_back((milestone_number, false));
+        project
+            .milestone_approvals
+            .push_back((milestone_number, false));
         update_project(&env, &project)?;
 
         env.events().publish(
@@ -435,13 +458,19 @@ impl BoundlessContract {
         };
 
         // let token_client = token::StellarAssetClient::new(&env, &token_contract);
-        
-        token::Client::new(&env, &token_contract).transfer(&funder, &env.current_contract_address(), &contribution);
+
+        token::Client::new(&env, &token_contract).transfer(
+            &funder,
+            &env.current_contract_address(),
+            &contribution,
+        );
         // token_client.clawback(&funder, &contribution);
         // token_client.mint(&env.current_contract_address(), &contribution);
 
         project.total_funded += contribution as u64;
-        project.backers.push_back((funder.clone(), contribution as u64));
+        project
+            .backers
+            .push_back((funder.clone(), contribution as u64));
         update_project(&env, &project)?;
 
         env.events().publish(
@@ -452,10 +481,16 @@ impl BoundlessContract {
         Ok(())
     }
 
-    pub fn refund(env: Env, project_id: String, token_contract: Address) -> Result<(), ProjectError> {
+    pub fn refund(
+        env: Env,
+        project_id: String,
+        token_contract: Address,
+    ) -> Result<(), ProjectError> {
         let mut project = read_project(&env, &project_id)?;
 
-        if project.total_funded >= project.funding_target || env.ledger().timestamp() < project.funding_deadline {
+        if project.total_funded >= project.funding_target
+            || env.ledger().timestamp() < project.funding_deadline
+        {
             return Err(ProjectError::ProjectNotFailed);
         }
 
@@ -497,7 +532,7 @@ impl BoundlessContract {
         backer: Address,
     ) -> Result<u64, ProjectError> {
         let project = read_project(&env, &project_id)?;
-        
+
         for (addr, amount) in project.backers.iter() {
             if addr == backer {
                 return Ok(amount);

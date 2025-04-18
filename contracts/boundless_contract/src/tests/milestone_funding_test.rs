@@ -4,7 +4,11 @@ use crate::{
     contract::{BoundlessContract, BoundlessContractClient},
     error::ProjectError,
 };
-use soroban_sdk::{testutils::{Address as _, Ledger}, token::{self, TokenClient}, Address, Env, String};
+use soroban_sdk::{
+    testutils::{Address as _, Ledger},
+    token::{self, TokenClient},
+    Address, Env, String,
+};
 use token::StellarAssetClient as TokenAdminClient;
 
 fn create_token_contract<'a>(e: &Env, admin: &Address) -> (TokenClient<'a>, TokenAdminClient<'a>) {
@@ -22,16 +26,16 @@ fn create_token_contract<'a>(e: &Env, admin: &Address) -> (TokenClient<'a>, Toke
 //     // Initialize contract
 //     let contract_id = env.register_contract(None, BoundlessContract);
 //     let client = BoundlessContractClient::new(&env, &contract_id);
-    
+
 //     // Setup addresses
 //     let admin = Address::generate(&env);
 //     let creator = Address::generate(&env);
 //     let project_id = String::from_str(&env, "test_project");
 //     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
-    
+
 //     // Initialize contract
 //     client.initialize(&admin);
-    
+
 //     // Create project
 //     client.create_project(&project_id, &creator, &metadata_uri, &1000, &2);
 
@@ -76,19 +80,19 @@ impl<'a> FundingTest<'a> {
         let funder = Address::generate(&env);
         let project_id = String::from_str(&env, "test_project");
         let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
-        
+
         // Initialize token contract and client
         let (token_client, token_admin_client) = create_token_contract(&env, &admin);
         let token_contract = token_client.address.clone();
-        
+
         // Mint tokens to funder
         token_admin_client.mint(&funder, &3000);
-        
+
         // Initialize contract
         let contract_id = env.register(BoundlessContract, ());
         let contract_client = BoundlessContractClient::new(&env, &contract_id);
         contract_client.initialize(&admin);
-        
+
         // Create project
         contract_client.create_project(&project_id, &creator, &metadata_uri, &1000, &2);
 
@@ -113,45 +117,50 @@ impl<'a> FundingTest<'a> {
 #[test]
 fn test_funding_operations() {
     let test = FundingTest::setup();
-    
-    test.contract_client.fund_project(&test.project_id, &500, &test.funder, &test.token_contract);
-    
+
+    test.contract_client
+        .fund_project(&test.project_id, &500, &test.funder, &test.token_contract);
+
     // Test get project funding
     let (total_funded, target) = test.contract_client.get_project_funding(&test.project_id);
     assert_eq!(total_funded, 500);
     assert_eq!(target, 1000);
 
     // Test get backer contribution
-    let contribution = test.contract_client.get_backer_contribution(&test.project_id, &test.funder);
+    let contribution = test
+        .contract_client
+        .get_backer_contribution(&test.project_id, &test.funder);
     assert_eq!(contribution, 500);
 
     // // Test funding target reached
-    test.contract_client.fund_project(&test.project_id, &600, &test.funder, &test.token_contract);
+    test.contract_client
+        .fund_project(&test.project_id, &600, &test.funder, &test.token_contract);
     let (total_funded, _) = test.contract_client.get_project_funding(&test.project_id);
     assert_eq!(total_funded, 1000); // Should be capped at funding target
-
 }
 
 #[test]
 fn test_refund() {
     let test = FundingTest::setup();
-    
+
     // Fund project with some amount
-    test.contract_client.fund_project(&test.project_id, &500, &test.funder, &test.token_contract);
-    
+    test.contract_client
+        .fund_project(&test.project_id, &500, &test.funder, &test.token_contract);
+
     // Fast forward past funding deadline
     let before = test.env.ledger().timestamp();
     let after = before + 31 * 17280; // 31 days in ledgers
     test.env.ledger().set_timestamp(after);
 
     // Test refund
-    test.contract_client.refund(&test.project_id, &test.token_contract);
-    
+    test.contract_client
+        .refund(&test.project_id, &test.token_contract);
+
     // Verify project state
     let project = test.contract_client.get_project(&test.project_id);
     assert!(project.refund_processed);
     assert!(project.is_closed);
-    
+
     // Verify funder received their tokens back
     let funder_balance = test.token_client.balance(&test.funder);
     assert_eq!(funder_balance, 3000); // Should have original balance back
@@ -165,13 +174,13 @@ fn test_unauthorized_milestone_approval() {
 
     let contract_id = env.register(BoundlessContract, ());
     let client = BoundlessContractClient::new(&env, &contract_id);
-    
+
     let admin = Address::generate(&env);
     let creator = Address::generate(&env);
     let non_admin = Address::generate(&env);
     let project_id = String::from_str(&env, "test_project");
     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
-    
+
     client.initialize(&admin);
     client.create_project(&project_id, &creator, &metadata_uri, &1000, &2);
 
@@ -187,16 +196,16 @@ fn test_unauthorized_milestone_release() {
 
     let contract_id = env.register(BoundlessContract, ());
     let client = BoundlessContractClient::new(&env, &contract_id);
-    
+
     let admin = Address::generate(&env);
     let creator = Address::generate(&env);
     let non_admin = Address::generate(&env);
     let project_id = String::from_str(&env, "test_project");
     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
-    
+
     client.initialize(&admin);
     client.create_project(&project_id, &creator, &metadata_uri, &1000, &2);
 
     // Try to release milestone with non-admin
     client.release_milestone(&project_id, &0, &non_admin);
-} 
+}

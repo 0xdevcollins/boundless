@@ -13,7 +13,6 @@ import {
 } from "@/data/mock-data";
 import type { CompletedSort, ExploreFilter } from "@/types/project";
 
-// import ConnectWalletButton from "../connect-wallet";
 import ActivityOverview from "./activity-overview";
 import StatsCards from "./stats-cards";
 import CompletedTab from "./tabs/completed-tab";

@@ -2,8 +2,6 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Vote } from "@prisma/client";
@@ -210,64 +208,47 @@ export default function ProjectPage() {
 					</div>
 				</div>
 
-				<Tabs defaultValue="description" className="mt-6">
-					<TabsList className="w-full justify-start overflow-x-auto">
-						<TabsTrigger value="description">Description</TabsTrigger>
+				<Tabs defaultValue="milestones" className="mt-6">
+					<TabsList className="grid w-full grid-cols-2 lg:grid-cols-5">
 						<TabsTrigger value="milestones">Milestones</TabsTrigger>
-						<TabsTrigger value="voting">Voting</TabsTrigger>
 						<TabsTrigger value="funding">Funding</TabsTrigger>
 						<TabsTrigger value="team">Team</TabsTrigger>
+						<TabsTrigger value="voting">Voting</TabsTrigger>
 						<TabsTrigger value="comments">Comments</TabsTrigger>
 					</TabsList>
 
-					<TabsContent value="description" className="mt-6 space-y-6">
-						<Card>
-							<CardContent className="pt-6">
-								<div className="prose max-w-none dark:prose-invert">
-									<h3 className="font-semibold">About the Project</h3>
-									<p>{project.description}</p>
-									<div className="not-prose grid gap-4 md:grid-cols-2 mt-4">
-										<Button variant="outline" className="w-full">
-											View Pitch Deck
-										</Button>
-										<Button variant="outline" className="w-full">
-											View Whitepaper
-										</Button>
-									</div>
-								</div>
-							</CardContent>
-						</Card>
+					<TabsContent value="funding">
+						<FundingSection projectId={project.id} />
 					</TabsContent>
 
-					<TabsContent value="milestones" className="mt-6">
-						<MilestoneTracker isTeamMember={!!isTeamMember} />
+					<TabsContent value="team">
+						<TeamSection
+							teamMembers={project.teamMembers}
+							isTeamMember={!!isTeamMember}
+							projectId={project.id}
+						/>
 					</TabsContent>
 
-					<TabsContent value="voting" className="mt-6">
+					<TabsContent value="voting">
 						<VotingSection
 							projectId={project.id}
-							initialVoteCount={project._count.votes}
 							initialUserVoted={project.votes.some(
 								(vote) => vote.userId === session?.user?.id,
 							)}
 							ideaValidation={project.ideaValidation}
+							initialVoteCount={project._count.votes}
 						/>
 					</TabsContent>
 
-					<TabsContent value="funding" className="mt-6">
-						<FundingSection projectId={project.id} />
-					</TabsContent>
-
-					<TabsContent value="team" className="mt-6">
-						<TeamSection
-							projectId={project.id}
-							teamMembers={project.teamMembers}
-							isTeamMember={!!isTeamMember}
-						/>
-					</TabsContent>
-
-					<TabsContent value="comments" className="mt-6">
+					<TabsContent value="comments">
 						<CommentsSection projectId={project.id} />
+					</TabsContent>
+
+					<TabsContent value="milestones">
+						<MilestoneTracker
+							isTeamMember={!!isTeamMember}
+							projectId={project.id}
+						/>
 					</TabsContent>
 				</Tabs>
 			</div>
