@@ -23,7 +23,7 @@ export function CallToAction() {
 					</CardDescription>
 				</CardHeader>
 				<CardFooter>
-					<Button onClick={() => router.push("/explore")}>
+					<Button onClick={() => router.push("/projects")}>
 						Browse Projects
 					</Button>
 				</CardFooter>
