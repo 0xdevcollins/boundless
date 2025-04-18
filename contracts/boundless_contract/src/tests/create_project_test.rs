@@ -21,7 +21,6 @@ fn test_create_project_success() {
         &metadata_uri,
         &funding_target,
         &milestone_count,
-
     );
 
     let project = client.get_project(&project_id);
@@ -68,12 +67,12 @@ fn test_update_project_metadata_success() {
     let env = Env::default();
     let contract_id = env.register(BoundlessContract, ());
     let client = BoundlessContractClient::new(&env, &contract_id);
-    
+
     let creator = Address::generate(&env);
     let project_id = String::from_str(&env, "test_project");
     let metadata_uri = String::from_str(&env, "ipfs://example-metadata");
     let new_metadata_uri = String::from_str(&env, "ipfs://new-metadata");
-    
+
     env.mock_all_auths();
     client.create_project(&project_id, &creator, &metadata_uri, &1000, &5);
     client.update_project_metadata(&project_id, &creator, &new_metadata_uri);

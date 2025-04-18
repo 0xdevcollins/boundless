@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
 	Form,
 	FormControl,
@@ -11,6 +12,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import {
 	Select,
 	SelectContent,
@@ -18,12 +20,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { signTransaction } from "@/hooks/useStellarWallet";
 import { contractClient } from "@/src/contracts/boundless_contract";
 import { useWalletStore } from "@/store/useWalletStore";
 import { convertUSDToStroops, getXLMPrice } from "@/utils/price";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DollarSign, FileImage, Loader2, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -59,6 +63,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
 	const [status, setStatus] = useState("");
+	const [progress, setProgress] = useState(0);
 	const [xlmPrice, setXlmPrice] = useState<number | null>(null);
 	const { publicKey } = useWalletStore();
 
@@ -98,6 +103,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 		data: ProjectFormValues,
 	): Promise<string> {
 		setStatus("Uploading metadata...");
+		setProgress(25);
 
 		const formData = new FormData();
 		formData.append("title", data.title);
@@ -127,6 +133,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 	async function onSubmit(data: ProjectFormValues) {
 		try {
 			setIsLoading(true);
+			setProgress(10);
 
 			if (!publicKey) {
 				throw new Error("Wallet is not connected");
@@ -141,6 +148,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 			const projectId = crypto.randomUUID();
 
 			setStatus("Building transaction...");
+			setProgress(50);
 			const tx = await contractClient.create_project({
 				project_id: projectId,
 				creator: publicKey,
@@ -150,11 +158,11 @@ export function ProjectForm({ userId }: { userId?: string }) {
 			});
 
 			setStatus("Signing transaction...");
+			setProgress(75);
 			const { getTransactionResponse } = await tx.signAndSend();
-			// const txHash = getTransactionResponse?.txHash;
 
-			// console.log({ result, getTransactionResponse });
 			setStatus("Sending signed transaction to server...");
+			setProgress(85);
 			const formData = new FormData();
 			formData.append("userId", userId || "");
 			formData.append("title", data.title);
@@ -190,6 +198,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 				throw new Error(error.message || "Failed to create project");
 			}
 
+			setProgress(100);
 			toast.success("Project created successfully!");
 			router.push("/projects");
 			router.refresh();
@@ -206,141 +215,236 @@ export function ProjectForm({ userId }: { userId?: string }) {
 	}
 
 	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-				{status && <p className="text-sm bg-blue-100 p-2 rounded">{status}</p>}
-				<FormField
-					control={form.control}
-					name="title"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Project Title</FormLabel>
-							<FormControl>
-								<Input placeholder="Enter your project title" {...field} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="description"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Description</FormLabel>
-							<FormControl>
-								<Textarea
-									placeholder="Describe your project..."
-									className="min-h-[120px]"
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="fundingGoal"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Funding Goal</FormLabel>
-							<FormControl>
-								<Input
-									type="number"
-									placeholder="Enter amount in USD"
-									{...field}
-								/>
-							</FormControl>
-							<FormDescription>
-								Enter the amount in USD
-								{xlmPrice && field.value && (
-									<span className="block mt-1 text-sm text-gray-500">
-										≈ {(Number(field.value) / xlmPrice).toFixed(2)} XLM
-									</span>
-								)}
-							</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="category"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Category</FormLabel>
-							<Select onValueChange={field.onChange} defaultValue={field.value}>
-								<FormControl>
-									<SelectTrigger>
-										<SelectValue placeholder="Select a category" />
-									</SelectTrigger>
-								</FormControl>
-								<SelectContent>
-									{categories.map((category) => (
-										<SelectItem key={category.id} value={category.id}>
-											{category.name}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="bannerImage"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Banner Image</FormLabel>
-							<FormControl>
-								<div className="space-y-2">
-									<Input
-										type="file"
-										accept="image/*"
-										onChange={(e) => field.onChange(e.target.files?.[0])}
-									/>
-									<Input
-										type="url"
-										placeholder="Or enter image URL"
-										onChange={(e) => field.onChange(e.target.value)}
-									/>
+		<Card className="shadow-md">
+			<CardContent className="pt-6">
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+						{isLoading && (
+							<div className="mb-6 space-y-2">
+								<div className="flex items-center space-x-2">
+									<Loader2 className="h-4 w-4 animate-spin text-primary" />
+									<p className="text-sm font-medium text-primary">{status}</p>
 								</div>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+								<Progress value={progress} className="h-2" />
+							</div>
+						)}
 
-				<FormField
-					control={form.control}
-					name="profileImage"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Profile Image</FormLabel>
-							<FormControl>
-								<div className="space-y-2">
-									<Input
-										type="file"
-										accept="image/*"
-										onChange={(e) => field.onChange(e.target.files?.[0])}
-									/>
-									<Input
-										type="url"
-										placeholder="Or enter image URL"
-										onChange={(e) => field.onChange(e.target.value)}
-									/>
-								</div>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<Button type="submit" disabled={isLoading}>
-					{isLoading ? "Creating..." : "Create Project"}
-				</Button>
-			</form>
-		</Form>
+						<div className="space-y-6">
+							<div>
+								<h3 className="text-lg font-medium">Project Details</h3>
+								<p className="text-sm text-muted-foreground">
+									Basic information about your project
+								</p>
+								<Separator className="my-4" />
+							</div>
+
+							<FormField
+								control={form.control}
+								name="title"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Project Title</FormLabel>
+										<FormControl>
+											<Input
+												placeholder="Enter your project title"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="description"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Description</FormLabel>
+										<FormControl>
+											<Textarea
+												placeholder="Describe your project..."
+												className="min-h-[150px] resize-none"
+												{...field}
+											/>
+										</FormControl>
+										<FormDescription>
+											Provide a clear and compelling description of your project
+										</FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<div className="grid gap-6 md:grid-cols-2">
+								<FormField
+									control={form.control}
+									name="fundingGoal"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Funding Goal</FormLabel>
+											<FormControl>
+												<div className="relative">
+													<DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+													<Input
+														type="number"
+														placeholder="Amount in USD"
+														className="pl-9"
+														{...field}
+													/>
+												</div>
+											</FormControl>
+											<FormDescription>
+												{xlmPrice && field.value && (
+													<span className="text-sm text-muted-foreground">
+														≈ {(Number(field.value) / xlmPrice).toFixed(2)} XLM
+													</span>
+												)}
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name="category"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Category</FormLabel>
+											<Select
+												onValueChange={field.onChange}
+												defaultValue={field.value}
+											>
+												<FormControl>
+													<SelectTrigger>
+														<SelectValue placeholder="Select a category" />
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{categories.map((category) => (
+														<SelectItem key={category.id} value={category.id}>
+															{category.name}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+						</div>
+
+						<div className="space-y-6 pt-4">
+							<div>
+								<h3 className="text-lg font-medium">Project Media</h3>
+								<p className="text-sm text-muted-foreground">
+									Upload images to showcase your project
+								</p>
+								<Separator className="my-4" />
+							</div>
+
+							<div className="grid gap-6 md:grid-cols-2">
+								<FormField
+									control={form.control}
+									name="bannerImage"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Banner Image</FormLabel>
+											<FormControl>
+												<div className="space-y-3">
+													<div className="flex items-center gap-2 rounded-md border border-dashed p-4">
+														<FileImage className="h-5 w-5 text-muted-foreground" />
+														<Input
+															type="file"
+															accept="image/*"
+															className="border-0 p-0 shadow-none"
+															onChange={(e) =>
+																field.onChange(e.target.files?.[0])
+															}
+														/>
+													</div>
+													<div className="relative">
+														<Input
+															type="url"
+															placeholder="Or enter image URL"
+															onChange={(e) => field.onChange(e.target.value)}
+														/>
+													</div>
+												</div>
+											</FormControl>
+											<FormDescription>
+												Banner image will be displayed at the top of your
+												project page
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name="profileImage"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Profile Image</FormLabel>
+											<FormControl>
+												<div className="space-y-3">
+													<div className="flex items-center gap-2 rounded-md border border-dashed p-4">
+														<FileImage className="h-5 w-5 text-muted-foreground" />
+														<Input
+															type="file"
+															accept="image/*"
+															className="border-0 p-0 shadow-none"
+															onChange={(e) =>
+																field.onChange(e.target.files?.[0])
+															}
+														/>
+													</div>
+													<div className="relative">
+														<Input
+															type="url"
+															placeholder="Or enter image URL"
+															onChange={(e) => field.onChange(e.target.value)}
+														/>
+													</div>
+												</div>
+											</FormControl>
+											<FormDescription>
+												Profile image will be used as your project&apos;s
+												thumbnail
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+						</div>
+
+						<div className="pt-4">
+							<Button
+								type="submit"
+								disabled={isLoading}
+								className="w-full md:w-auto"
+								size="lg"
+							>
+								{isLoading ? (
+									<>
+										<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+										Creating Project...
+									</>
+								) : (
+									<>
+										<Upload className="mr-2 h-4 w-4" />
+										Create Project
+									</>
+								)}
+							</Button>
+						</div>
+					</form>
+				</Form>
+			</CardContent>
+		</Card>
 	);
 }

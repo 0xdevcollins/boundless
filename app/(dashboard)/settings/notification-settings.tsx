@@ -86,7 +86,7 @@ export function NotificationSettings() {
 							<div className="space-y-0.5">
 								<Label htmlFor="email-project-updates">Project Updates</Label>
 								<p className="text-sm text-gray-500">
-									Receive emails about updates to projects you're backing
+									Receive emails about updates to projects you&apos;re backing
 								</p>
 							</div>
 							<Switch
@@ -166,8 +166,8 @@ export function NotificationSettings() {
 							<div className="space-y-0.5">
 								<Label htmlFor="push-project-updates">Project Updates</Label>
 								<p className="text-sm text-gray-500">
-									Receive push notifications about updates to projects you're
-									backing
+									Receive push notifications about updates to projects
+									you&apos;re backing
 								</p>
 							</div>
 							<Switch

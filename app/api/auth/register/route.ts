@@ -70,6 +70,7 @@ export async function POST(req: Request) {
 				{ status: 400 },
 			);
 		}
+		console.error("Error during registration:", error);
 		return NextResponse.json(
 			{ message: "An error occurred during registration" },
 			{ status: 500 },

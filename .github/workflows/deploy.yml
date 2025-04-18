@@ -36,6 +36,12 @@ jobs:
           PUBLIC_STELLAR_RPC_URL: https://soroban-testnet.stellar.org/
         run: |
           npm ci
+          STELLAR_NETWORK=$STELLAR_NETWORK \
+          STELLAR_ACCOUNT=$STELLAR_ACCOUNT \
+          STELLAR_SECRET_KEY=$STELLAR_SECRET_KEY \
+          SOROBAN_SECRET_KEY=$SOROBAN_SECRET_KEY \
+          PUBLIC_STELLAR_NETWORK_PASSPHRASE=$PUBLIC_STELLAR_NETWORK_PASSPHRASE \
+          PUBLIC_STELLAR_RPC_URL=$PUBLIC_STELLAR_RPC_URL \
           npm run init
 
       - name: Build Next.js app

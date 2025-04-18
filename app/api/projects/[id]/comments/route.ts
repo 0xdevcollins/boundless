@@ -1,18 +1,24 @@
-import { authOptions } from "@/lib/auth.config";
 import prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth/next";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-	request: Request,
-	{ params }: { params: { id: string } },
-) {
+export async function GET(request: NextRequest) {
 	try {
-		const { searchParams } = new URL(request.url);
+		const { searchParams, pathname } = request.nextUrl;
+
+		// Extract the ID from the pathname (e.g., /api/projects/123/comments)
+		const idMatch = pathname.match(/\/projects\/([^/]+)\/comments/);
+		const projectId = idMatch?.[1];
+
+		if (!projectId) {
+			return NextResponse.json(
+				{ error: "Project ID not provided or invalid" },
+				{ status: 400 },
+			);
+		}
+
 		const page = Number.parseInt(searchParams.get("page") || "1");
 		const limit = Number.parseInt(searchParams.get("limit") || "5");
 
-		// Validate parameters
 		if (Number.isNaN(page) || Number.isNaN(limit) || page < 1 || limit < 1) {
 			return NextResponse.json(
 				{ error: "Invalid pagination parameters" },
@@ -20,13 +26,6 @@ export async function GET(
 			);
 		}
 
-		const projectId = params.id;
-
-		// Get session but don't require it - guest users can read comments
-		const session = await getServerSession(authOptions);
-		const userId = session?.user?.id;
-
-		// Get total count of top-level comments (those without a parent)
 		const totalComments = await prisma.comment.count({
 			where: {
 				projectId,
@@ -34,10 +33,8 @@ export async function GET(
 			},
 		});
 
-		// Calculate total pages
 		const totalPages = Math.ceil(totalComments / limit);
 
-		// Get paginated top-level comments
 		const topLevelComments = await prisma.comment.findMany({
 			where: {
 				projectId,
@@ -47,7 +44,7 @@ export async function GET(
 				createdAt: "desc",
 			},
 			skip: (page - 1) * limit,
-			limit,
+			take: limit,
 			include: {
 				user: {
 					select: {
@@ -72,10 +69,8 @@ export async function GET(
 			},
 		});
 
-		// Get IDs of all top-level comments
 		const commentIds = topLevelComments.map((comment) => comment.id);
 
-		// Get all replies for these comments
 		const replies = await prisma.comment.findMany({
 			where: {
 				parentId: {
@@ -109,7 +104,6 @@ export async function GET(
 			},
 		});
 
-		// Combine top-level comments and replies
 		const allComments = [...topLevelComments, ...replies];
 
 		return NextResponse.json({

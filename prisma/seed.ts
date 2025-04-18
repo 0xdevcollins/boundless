@@ -36,7 +36,11 @@ const notificationTypes = [
 async function main() {
   try {
     // Get all users
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+      },
+    });
 
     if (users.length === 0) {
       console.log("No users found. Please seed users first.");
