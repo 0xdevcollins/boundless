@@ -19,7 +19,6 @@ export async function GET() {
 	const user = await prisma.user.findUnique({
 		where: { id: session.user.id },
 		select: {
-			theme: true,
 			language: true,
 			notificationsEnabled: true,
 		},
@@ -43,7 +42,6 @@ export async function PUT(request: Request) {
 			where: { id: session.user.id },
 			data,
 			select: {
-				theme: true,
 				language: true,
 				notificationsEnabled: true,
 			},

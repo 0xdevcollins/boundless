@@ -3,17 +3,20 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-	request: NextRequest,
-	{ params }: { params: { id: string } },
-) {
+// Helper to extract projectId from pathname
+function extractProjectId(pathname: string) {
+	const parts = pathname.split("/");
+	return parts[parts.indexOf("projects") + 1];
+}
+
+export async function GET(request: NextRequest) {
 	try {
 		const session = await getServerSession(authOptions);
 		if (!session) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		const projectId = params.id;
+		const projectId = extractProjectId(request.nextUrl.pathname);
 		if (!projectId) {
 			return NextResponse.json(
 				{ error: "Project ID is required" },
@@ -21,21 +24,16 @@ export async function GET(
 			);
 		}
 
-		// Check if project exists
 		const project = await prisma.project.findUnique({
 			where: { id: projectId },
 		});
-
 		if (!project) {
 			return NextResponse.json({ error: "Project not found" }, { status: 404 });
 		}
 
-		// Get milestones for the project
 		const milestones = await prisma.milestone.findMany({
 			where: { projectId },
-			include: {
-				attachments: true,
-			},
+			include: { attachments: true },
 			orderBy: { createdAt: "desc" },
 		});
 
@@ -49,17 +47,14 @@ export async function GET(
 	}
 }
 
-export async function POST(
-	request: NextRequest,
-	{ params }: { params: { id: string } },
-) {
+export async function POST(request: NextRequest) {
 	try {
 		const session = await getServerSession(authOptions);
 		if (!session) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		const projectId = params.id;
+		const projectId = extractProjectId(request.nextUrl.pathname);
 		if (!projectId) {
 			return NextResponse.json(
 				{ error: "Project ID is required" },
@@ -67,7 +62,6 @@ export async function POST(
 			);
 		}
 
-		// Check if project exists and user has permission
 		const project = await prisma.project.findUnique({
 			where: { id: projectId },
 			include: {
@@ -81,7 +75,6 @@ export async function POST(
 			return NextResponse.json({ error: "Project not found" }, { status: 404 });
 		}
 
-		// Check if user is the project owner or a team member
 		const isTeamMember =
 			project.userId === session.user.id || project.teamMembers.length > 0;
 		if (!isTeamMember) {
@@ -100,7 +93,6 @@ export async function POST(
 			return NextResponse.json({ error: "Title is required" }, { status: 400 });
 		}
 
-		// Create the milestone
 		const milestone = await prisma.milestone.create({
 			data: {
 				title,

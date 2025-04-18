@@ -74,7 +74,7 @@ export function MilestoneForm({ projectId, onSuccess }: MilestoneFormProps) {
 			form.reset();
 			setOpen(false);
 			onSuccess?.();
-		} catch (error) {
+		} catch {
 			toast.error("Failed to create milestone");
 		}
 	}

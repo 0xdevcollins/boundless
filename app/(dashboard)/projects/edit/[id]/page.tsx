@@ -2,8 +2,6 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Vote } from "@prisma/client";
@@ -220,19 +218,30 @@ export default function ProjectPage() {
 					</TabsList>
 
 					<TabsContent value="funding">
-						<FundingSection project={project} />
+						<FundingSection projectId={project.id} />
 					</TabsContent>
 
 					<TabsContent value="team">
-						<TeamSection project={project} />
+						<TeamSection
+							teamMembers={project.teamMembers}
+							isTeamMember={!!isTeamMember}
+							projectId={project.id}
+						/>
 					</TabsContent>
 
 					<TabsContent value="voting">
-						<VotingSection project={project} />
+						<VotingSection
+							projectId={project.id}
+							initialUserVoted={project.votes.some(
+								(vote) => vote.userId === session?.user?.id,
+							)}
+							ideaValidation={project.ideaValidation}
+							initialVoteCount={project._count.votes}
+						/>
 					</TabsContent>
 
 					<TabsContent value="comments">
-						<CommentsSection project={project} />
+						<CommentsSection projectId={project.id} />
 					</TabsContent>
 
 					<TabsContent value="milestones">

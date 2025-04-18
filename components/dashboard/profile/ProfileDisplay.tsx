@@ -1,17 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import type { UserProfile } from "@/types/user";
-import {
-	Award,
-	Briefcase,
-	Edit2,
-	Linkedin,
-	Loader2,
-	ThumbsUp,
-	Twitter,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 // import { cn } from "@/lib/utils";
@@ -28,7 +19,6 @@ export default function ProfileDisplay({
 	isLoading = false,
 }: ProfileDisplayProps) {
 	const {
-		username,
 		name,
 		bio,
 		bannerImage,

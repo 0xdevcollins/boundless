@@ -3,18 +3,18 @@ import { getUserProfile, updateUserProfile } from "@/lib/db/profile";
 import { getServerSession } from "next-auth";
 // app/api/user/profile/route.ts
 import { NextResponse } from "next/server";
-import { z } from "zod";
+// import { z } from "zod";
 // import { authOptions } from '@/lib/auth';
 
-const profileSchema = z.object({
-	username: z.string().min(3).max(30).optional(),
-	name: z.string().min(2).max(50).optional(),
-	bio: z.string().max(500).optional(),
-	image: z.string().url().optional(),
-	bannerImage: z.string().url().optional(),
-	twitter: z.string().url().optional().or(z.literal("")),
-	linkedin: z.string().url().optional().or(z.literal("")),
-});
+// const profileSchema = z.object({
+// 	username: z.string().min(3).max(30).optional(),
+// 	name: z.string().min(2).max(50).optional(),
+// 	bio: z.string().max(500).optional(),
+// 	image: z.string().url().optional(),
+// 	bannerImage: z.string().url().optional(),
+// 	twitter: z.string().url().optional().or(z.literal("")),
+// 	linkedin: z.string().url().optional().or(z.literal("")),
+// });
 
 export async function GET() {
 	try {

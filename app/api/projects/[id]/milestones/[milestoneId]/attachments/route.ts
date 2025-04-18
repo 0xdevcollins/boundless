@@ -3,17 +3,25 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function POST(
-	request: NextRequest,
-	{ params }: { params: { id: string; milestoneId: string } },
-) {
+// Helper to extract dynamic route parameters from the pathname
+const extractParams = (pathname: string) => {
+	const match = pathname.match(
+		/\/projects\/([^/]+)\/milestones\/([^/]+)\/attachments/,
+	);
+	if (!match) return { projectId: null, milestoneId: null };
+	const [, projectId, milestoneId] = match;
+	return { projectId, milestoneId };
+};
+
+export async function POST(request: NextRequest) {
 	try {
 		const session = await getServerSession(authOptions);
 		if (!session) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		const { id: projectId, milestoneId } = params;
+		const { projectId, milestoneId } = extractParams(request.nextUrl.pathname);
+
 		if (!projectId || !milestoneId) {
 			return NextResponse.json(
 				{ error: "Project ID and Milestone ID are required" },
@@ -21,7 +29,6 @@ export async function POST(
 			);
 		}
 
-		// Check if project exists and user has permission
 		const project = await prisma.project.findUnique({
 			where: { id: projectId },
 			include: {
@@ -35,7 +42,6 @@ export async function POST(
 			return NextResponse.json({ error: "Project not found" }, { status: 404 });
 		}
 
-		// Check if user is the project owner or a team member
 		const isTeamMember =
 			project.userId === session.user.id || project.teamMembers.length > 0;
 		if (!isTeamMember) {
@@ -48,7 +54,6 @@ export async function POST(
 			);
 		}
 
-		// Get the milestone
 		const milestone = await prisma.milestone.findUnique({
 			where: { id: milestoneId },
 		});
@@ -60,7 +65,6 @@ export async function POST(
 			);
 		}
 
-		// Check if milestone belongs to the project
 		if (milestone.projectId !== projectId) {
 			return NextResponse.json(
 				{ error: "Milestone does not belong to this project" },
@@ -75,11 +79,8 @@ export async function POST(
 			return NextResponse.json({ error: "File is required" }, { status: 400 });
 		}
 
-		// In a real application, you would upload the file to a storage service
-		// For this example, we'll just create a placeholder URL
 		const fileUrl = `/uploads/${Date.now()}-${file.name}`;
 
-		// Create the attachment
 		const attachment = await prisma.milestoneAttachment.create({
 			data: {
 				fileName: file.name,
@@ -100,17 +101,15 @@ export async function POST(
 	}
 }
 
-export async function GET(
-	request: NextRequest,
-	{ params }: { params: { id: string; milestoneId: string } },
-) {
+export async function GET(request: NextRequest) {
 	try {
 		const session = await getServerSession(authOptions);
 		if (!session) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		const { id: projectId, milestoneId } = params;
+		const { projectId, milestoneId } = extractParams(request.nextUrl.pathname);
+
 		if (!projectId || !milestoneId) {
 			return NextResponse.json(
 				{ error: "Project ID and Milestone ID are required" },
@@ -118,7 +117,6 @@ export async function GET(
 			);
 		}
 
-		// Get the milestone
 		const milestone = await prisma.milestone.findUnique({
 			where: { id: milestoneId },
 		});
@@ -130,7 +128,6 @@ export async function GET(
 			);
 		}
 
-		// Check if milestone belongs to the project
 		if (milestone.projectId !== projectId) {
 			return NextResponse.json(
 				{ error: "Milestone does not belong to this project" },
@@ -138,7 +135,6 @@ export async function GET(
 			);
 		}
 
-		// Get the attachments
 		const attachments = await prisma.milestoneAttachment.findMany({
 			where: { milestoneId },
 			orderBy: { createdAt: "desc" },

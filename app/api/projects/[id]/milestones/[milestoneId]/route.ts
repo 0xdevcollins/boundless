@@ -3,17 +3,18 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-	request: NextRequest,
-	{ params }: { params: { id: string; milestoneId: string } },
-) {
+export async function GET(request: NextRequest) {
 	try {
 		const session = await getServerSession(authOptions);
 		if (!session) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		const { id: projectId, milestoneId } = params;
+		const url = new URL(request.url);
+		const pathnameParts = url.pathname.split("/");
+		const projectId = pathnameParts[pathnameParts.indexOf("projects") + 1];
+		const milestoneId = pathnameParts[pathnameParts.indexOf("milestones") + 1];
+
 		if (!projectId || !milestoneId) {
 			return NextResponse.json(
 				{ error: "Project ID and Milestone ID are required" },
@@ -21,12 +22,9 @@ export async function GET(
 			);
 		}
 
-		// Get the milestone
 		const milestone = await prisma.milestone.findUnique({
 			where: { id: milestoneId },
-			include: {
-				attachments: true,
-			},
+			include: { attachments: true },
 		});
 
 		if (!milestone) {
@@ -36,7 +34,6 @@ export async function GET(
 			);
 		}
 
-		// Check if milestone belongs to the project
 		if (milestone.projectId !== projectId) {
 			return NextResponse.json(
 				{ error: "Milestone does not belong to this project" },
@@ -54,17 +51,18 @@ export async function GET(
 	}
 }
 
-export async function PATCH(
-	request: NextRequest,
-	{ params }: { params: { id: string; milestoneId: string } },
-) {
+export async function PATCH(request: NextRequest) {
 	try {
 		const session = await getServerSession(authOptions);
 		if (!session) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		const { id: projectId, milestoneId } = params;
+		// Extract projectId and milestoneId from the URL
+		const pathnameParts = request.nextUrl.pathname.split("/");
+		const projectId = pathnameParts[pathnameParts.indexOf("projects") + 1];
+		const milestoneId = pathnameParts[pathnameParts.indexOf("milestones") + 1];
+
 		if (!projectId || !milestoneId) {
 			return NextResponse.json(
 				{ error: "Project ID and Milestone ID are required" },
@@ -72,7 +70,6 @@ export async function PATCH(
 			);
 		}
 
-		// Check if project exists and user has permission
 		const project = await prisma.project.findUnique({
 			where: { id: projectId },
 			include: {
@@ -86,7 +83,6 @@ export async function PATCH(
 			return NextResponse.json({ error: "Project not found" }, { status: 404 });
 		}
 
-		// Check if user is the project owner or a team member
 		const isTeamMember =
 			project.userId === session.user.id || project.teamMembers.length > 0;
 		if (!isTeamMember) {
@@ -99,7 +95,6 @@ export async function PATCH(
 			);
 		}
 
-		// Get the milestone
 		const milestone = await prisma.milestone.findUnique({
 			where: { id: milestoneId },
 		});
@@ -111,7 +106,6 @@ export async function PATCH(
 			);
 		}
 
-		// Check if milestone belongs to the project
 		if (milestone.projectId !== projectId) {
 			return NextResponse.json(
 				{ error: "Milestone does not belong to this project" },
@@ -122,7 +116,6 @@ export async function PATCH(
 		const body = await request.json();
 		const { title, description, status, dueDate, progress } = body;
 
-		// Update the milestone
 		const updatedMilestone = await prisma.milestone.update({
 			where: { id: milestoneId },
 			data: {
@@ -132,9 +125,6 @@ export async function PATCH(
 				status: status || milestone.status,
 				dueDate: dueDate ? new Date(dueDate) : milestone.dueDate,
 				progress: progress !== undefined ? progress : milestone.progress,
-				completedAt:
-					status === "COMPLETED" ? new Date() : milestone.completedAt,
-				updatedBy: session.user.id,
 			},
 		});
 
@@ -148,17 +138,18 @@ export async function PATCH(
 	}
 }
 
-export async function DELETE(
-	request: NextRequest,
-	{ params }: { params: { id: string; milestoneId: string } },
-) {
+export async function DELETE(request: NextRequest) {
 	try {
 		const session = await getServerSession(authOptions);
 		if (!session) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		const { id: projectId, milestoneId } = params;
+		// Extract route params from the URL
+		const pathnameParts = request.nextUrl.pathname.split("/");
+		const projectId = pathnameParts[pathnameParts.indexOf("projects") + 1];
+		const milestoneId = pathnameParts[pathnameParts.indexOf("milestones") + 1];
+
 		if (!projectId || !milestoneId) {
 			return NextResponse.json(
 				{ error: "Project ID and Milestone ID are required" },
@@ -166,7 +157,6 @@ export async function DELETE(
 			);
 		}
 
-		// Check if project exists and user has permission
 		const project = await prisma.project.findUnique({
 			where: { id: projectId },
 			include: {
@@ -180,7 +170,6 @@ export async function DELETE(
 			return NextResponse.json({ error: "Project not found" }, { status: 404 });
 		}
 
-		// Check if user is the project owner or a team member
 		const isTeamMember =
 			project.userId === session.user.id || project.teamMembers.length > 0;
 		if (!isTeamMember) {
@@ -193,7 +182,6 @@ export async function DELETE(
 			);
 		}
 
-		// Get the milestone
 		const milestone = await prisma.milestone.findUnique({
 			where: { id: milestoneId },
 		});
@@ -205,7 +193,6 @@ export async function DELETE(
 			);
 		}
 
-		// Check if milestone belongs to the project
 		if (milestone.projectId !== projectId) {
 			return NextResponse.json(
 				{ error: "Milestone does not belong to this project" },
@@ -213,7 +200,6 @@ export async function DELETE(
 			);
 		}
 
-		// Delete the milestone
 		await prisma.milestone.delete({
 			where: { id: milestoneId },
 		});
