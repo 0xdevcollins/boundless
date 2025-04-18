@@ -42,7 +42,7 @@ export function MilestoneTracker({
 
 	useEffect(() => {
 		fetchMilestones();
-	}, [projectId]);
+	}, [projectId, fetchMilestones]);
 
 	const getStatusIcon = (status: Milestone["status"]) => {
 		switch (status) {

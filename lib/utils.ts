@@ -171,12 +171,12 @@ export function sortComments(
 	});
 }
 export function calculateDaysLeft(createdAt: string): number {
-  const createdDate = new Date(createdAt);
-  const deadline = new Date(createdDate);
-  deadline.setDate(createdDate.getDate() + 30); // 30-day campaign
-  const now = new Date();
-  const diff = deadline.getTime() - now.getTime();
-  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+	const createdDate = new Date(createdAt);
+	const deadline = new Date(createdDate);
+	deadline.setDate(createdDate.getDate() + 30); // 30-day campaign
+	const now = new Date();
+	const diff = deadline.getTime() - now.getTime();
+	return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
 }
 
 export function calculateFundingPercentage(project: Project): number {
@@ -184,5 +184,8 @@ export function calculateFundingPercentage(project: Project): number {
 	// Assuming you have a way to calculate current funding
 	// This is a placeholder - replace with your actual funding calculation
 	const currentFunding = project._count.votes * 10; // Example: each vote = $10
-	return Math.min(100, Math.round((currentFunding / project.fundingGoal) * 100));
-  }
+	return Math.min(
+		100,
+		Math.round((currentFunding / project.fundingGoal) * 100),
+	);
+}

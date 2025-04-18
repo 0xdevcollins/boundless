@@ -1,49 +1,43 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { PublicProjectCard } from "@/components/shared/public-project-card";
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-} from "@/components/ui/card";
+import { useProjects } from "@/store/useProjectStore";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import AnimatedUnderline from "../components/AnimatedUnderline";
 import PageTransition from "../components/PageTransition";
-import { PublicProjectCard } from "@/components/shared/public-project-card";
-import { useProjects } from "@/store/useProjectStore";
-
 
 export default function TrendingProjects() {
 	const ref = useRef<HTMLDivElement>(null);
 	const isInView = useInView(ref, { margin: "-100px" });
-	const [hasAttemptedFetch, setHasAttemptedFetch] = useState(false)
-	  const { projects, isLoading, error, fetchProjects } = useProjects()
+	const [hasAttemptedFetch, setHasAttemptedFetch] = useState(false);
+	const { projects, isLoading, error, fetchProjects } = useProjects();
 
 	useEffect(() => {
 		const loadProjects = async () => {
-		  await fetchProjects(false);
-		  setHasAttemptedFetch(true);
+			await fetchProjects(false);
+			setHasAttemptedFetch(true);
 		};
-		
-		loadProjects();
-	  }, [fetchProjects]);
 
-	  if (isLoading || !hasAttemptedFetch) {
-		return <div className="text-center py-10">Loading projects...</div>
-	  }
-	
-	  if (error) {
-		return <div className="text-center py-10 text-destructive">Error: {error}</div>
-	  }
-	
-	  if (!projects.length) {
-		return <div className="text-center py-10">No projects found</div>
-	  }
+		loadProjects();
+	}, [fetchProjects]);
+
+	if (isLoading || !hasAttemptedFetch) {
+		return <div className="text-center py-10">Loading projects...</div>;
+	}
+
+	if (error) {
+		return (
+			<div className="text-center py-10 text-destructive">Error: {error}</div>
+		);
+	}
+
+	if (!projects.length) {
+		return <div className="text-center py-10">No projects found</div>;
+	}
 
 	return (
 		<PageTransition>
@@ -76,7 +70,6 @@ export default function TrendingProjects() {
 						{projects.slice(0, 4).map((project) => (
 							<PublicProjectCard key={project.id} project={project} />
 						))}
-
 					</motion.div>
 
 					<motion.div

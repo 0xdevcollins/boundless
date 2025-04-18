@@ -6,7 +6,7 @@ import { toast } from "sonner";
 interface UseProjectAuthProps {
 	projectId: string;
 	projectUserId: string;
-	teamMembers: {
+	teamMembers?: {
 		id: string;
 		fullName: string;
 		role: string;
@@ -55,7 +55,7 @@ export function useProjectAuth({
 
 				// Check if user is owner or team member
 				const ownerStatus = isProjectOwner(projectUserId);
-				const teamMemberStatus = isProjectTeamMember(projectId, teamMembers);
+				const teamMemberStatus = teamMembers ? isProjectTeamMember(projectId, teamMembers) : false;
 
 				setIsOwner(ownerStatus);
 				setIsTeamMember(teamMemberStatus);

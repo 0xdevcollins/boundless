@@ -114,8 +114,8 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 									/>
 									<h3 className="font-semibold">Become a creator</h3>
 									<p className="mt-1 text-sm text-white/80">
-										Validate your concept and secure initial funding to kickstart
-										your project.
+										Validate your concept and secure initial funding to
+										kickstart your project.
 									</p>
 								</CardContent>
 								<CardFooter className="p-4 pt-0">
@@ -128,8 +128,6 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 									</Button>
 								</CardFooter>
 							</Card>
-
-
 						</div>
 					)}
 

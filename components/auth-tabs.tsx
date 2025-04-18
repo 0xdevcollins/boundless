@@ -57,7 +57,7 @@ interface AuthTabsProps {
 
 export default function AuthTabs({ providers }: AuthTabsProps) {
 	const [activeTab, setActiveTab] = useState<"signin" | "register">("signin");
-	const { data: session, status } = useSession();
+	const { status } = useSession();
 	const router = useRouter();
 
 	useEffect(() => {
