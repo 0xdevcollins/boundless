@@ -55,7 +55,9 @@ export function useProjectAuth({
 
 				// Check if user is owner or team member
 				const ownerStatus = isProjectOwner(projectUserId);
-				const teamMemberStatus = teamMembers ? isProjectTeamMember(projectId, teamMembers) : false;
+				const teamMemberStatus = teamMembers
+					? isProjectTeamMember(projectId, teamMembers)
+					: false;
 
 				setIsOwner(ownerStatus);
 				setIsTeamMember(teamMemberStatus);

@@ -1,11 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import {
-	Card,
-	CardContent,
-	CardFooter,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useProjectAuth } from "@/hooks/useProjectAuth";
 import { cn, formatValidationStatus } from "@/lib/utils";
 import Image from "next/image";

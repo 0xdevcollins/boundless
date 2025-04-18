@@ -25,13 +25,16 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
 	const [isTyping, setIsTyping] = useState<boolean>(true);
 
 	// Categories for the rotating text
-	const categories = useMemo<CryptoCategoryType[]>(() => [
-		"DeFi Protocol",
-		"NFT Marketplace",
-		"Data DAOs",
-		"AI Agents",
-		"Web3 Storage",
-	  ], []);
+	const categories = useMemo<CryptoCategoryType[]>(
+		() => [
+			"DeFi Protocol",
+			"NFT Marketplace",
+			"Data DAOs",
+			"AI Agents",
+			"Web3 Storage",
+		],
+		[],
+	);
 
 	// Animation variants for text elements
 	const titleVariants = {
