@@ -36,12 +36,13 @@ jobs:
           PUBLIC_STELLAR_RPC_URL: https://soroban-testnet.stellar.org/
         run: |
           npm ci
-          STELLAR_NETWORK=$STELLAR_NETWORK \
-          STELLAR_ACCOUNT=$STELLAR_ACCOUNT \
-          STELLAR_SECRET_KEY=$STELLAR_SECRET_KEY \
-          SOROBAN_SECRET_KEY=$SOROBAN_SECRET_KEY \
-          PUBLIC_STELLAR_NETWORK_PASSPHRASE=$PUBLIC_STELLAR_NETWORK_PASSPHRASE \
-          PUBLIC_STELLAR_RPC_URL=$PUBLIC_STELLAR_RPC_URL \
+          # Create a temporary file with the secret key
+          echo "$SOROBAN_SECRET_KEY" > /tmp/soroban_secret.key
+          # Add the key with a proper name
+          stellar keys add --secret-key /tmp/soroban_secret.key $STELLAR_ACCOUNT
+          # Clean up the temporary file
+          rm /tmp/soroban_secret.key
+          # Run the initialization script
           npm run init
 
       - name: Build Next.js app
