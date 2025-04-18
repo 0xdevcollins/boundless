@@ -10,32 +10,9 @@ for (const key in process.env) {
   }
 }
 export const loadAccount = () => {
-  const accountName = process.env.STELLAR_ACCOUNT;
-  const secretKey = process.env.SOROBAN_SECRET_KEY;
-  
-  if (!accountName) {
-    console.error("STELLAR_ACCOUNT environment variable is not set");
-    process.exit(1);
-  }
-  
-  if (!secretKey) {
-    console.error("SOROBAN_SECRET_KEY environment variable is not set");
-    process.exit(1);
-  }
-  
-  console.log(`Adding Stellar key for account: ${accountName}`);
-  
-  // Create a temporary file with the secret key
-  const tempKeyFile = '/tmp/soroban_secret.key';
-  writeFileSync(tempKeyFile, secretKey);
-  
-  try {
-    // Add the key with a proper name
-    exe(`stellar keys add --secret-key ${tempKeyFile} ${accountName}`);
-  } finally {
-    // Clean up the temporary file
-    rmSync(tempKeyFile);
-  }
+  console.log(process.env.STELLAR_ACCOUNT)
+  // This takes the secret key from SOROBAN_SECRET_KEY env-variable, so make sure you have that set.
+  exe(`stellar keys add ${process.env.STELLAR_ACCOUNT || 'alice'}`);
 };
 
 // Function to execute and log shell commands
