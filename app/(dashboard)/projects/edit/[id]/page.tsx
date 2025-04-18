@@ -210,64 +210,36 @@ export default function ProjectPage() {
 					</div>
 				</div>
 
-				<Tabs defaultValue="description" className="mt-6">
-					<TabsList className="w-full justify-start overflow-x-auto">
-						<TabsTrigger value="description">Description</TabsTrigger>
+				<Tabs defaultValue="milestones" className="mt-6">
+					<TabsList className="grid w-full grid-cols-2 lg:grid-cols-5">
 						<TabsTrigger value="milestones">Milestones</TabsTrigger>
-						<TabsTrigger value="voting">Voting</TabsTrigger>
 						<TabsTrigger value="funding">Funding</TabsTrigger>
 						<TabsTrigger value="team">Team</TabsTrigger>
+						<TabsTrigger value="voting">Voting</TabsTrigger>
 						<TabsTrigger value="comments">Comments</TabsTrigger>
 					</TabsList>
 
-					<TabsContent value="description" className="mt-6 space-y-6">
-						<Card>
-							<CardContent className="pt-6">
-								<div className="prose max-w-none dark:prose-invert">
-									<h3 className="font-semibold">About the Project</h3>
-									<p>{project.description}</p>
-									<div className="not-prose grid gap-4 md:grid-cols-2 mt-4">
-										<Button variant="outline" className="w-full">
-											View Pitch Deck
-										</Button>
-										<Button variant="outline" className="w-full">
-											View Whitepaper
-										</Button>
-									</div>
-								</div>
-							</CardContent>
-						</Card>
+					<TabsContent value="funding">
+						<FundingSection project={project} />
 					</TabsContent>
 
-					<TabsContent value="milestones" className="mt-6">
-						<MilestoneTracker isTeamMember={!!isTeamMember} />
+					<TabsContent value="team">
+						<TeamSection project={project} />
 					</TabsContent>
 
-					<TabsContent value="voting" className="mt-6">
-						<VotingSection
-							projectId={project.id}
-							initialVoteCount={project._count.votes}
-							initialUserVoted={project.votes.some(
-								(vote) => vote.userId === session?.user?.id,
-							)}
-							ideaValidation={project.ideaValidation}
-						/>
+					<TabsContent value="voting">
+						<VotingSection project={project} />
 					</TabsContent>
 
-					<TabsContent value="funding" className="mt-6">
-						<FundingSection projectId={project.id} />
+					<TabsContent value="comments">
+						<CommentsSection project={project} />
 					</TabsContent>
 
-					<TabsContent value="team" className="mt-6">
-						<TeamSection
-							projectId={project.id}
-							teamMembers={project.teamMembers}
+					<TabsContent value="milestones">
+						<MilestoneTracker
 							isTeamMember={!!isTeamMember}
+							projectId={project.id}
 						/>
-					</TabsContent>
-
-					<TabsContent value="comments" className="mt-6">
-						<CommentsSection projectId={project.id} />
 					</TabsContent>
 				</Tabs>
 			</div>

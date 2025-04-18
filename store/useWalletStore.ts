@@ -41,10 +41,13 @@ export const useWalletStore = create<WalletStore>()(
 						set({
 							isConnected: false,
 							publicKey: null,
+							connecting: false,
 						});
 					});
 				} catch (error) {
 					console.error("Failed to disconnect wallet:", error);
+					// Ensure state is reset even on disconnect failure
+					set({ connecting: false });
 				}
 			},
 

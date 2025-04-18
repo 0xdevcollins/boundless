@@ -25,11 +25,15 @@ export async function GET() {
 		}
 
 		const profile = await getUserProfile(session.user.id);
+		if (!profile) {
+			return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+		}
+
 		return NextResponse.json(profile);
 	} catch (error) {
 		console.error("Error fetching profile:", error);
 		return NextResponse.json(
-			{ error: "Failed to fetch profile" },
+			{ error: "Internal server error" },
 			{ status: 500 },
 		);
 	}
@@ -43,25 +47,14 @@ export async function PUT(request: Request) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		const body = await request.json();
-		const validatedData = profileSchema.parse(body);
+		const data = await request.json();
+		const profile = await updateUserProfile(session.user.id, data);
 
-		const updatedProfile = await updateUserProfile(
-			session.user.id,
-			validatedData,
-		);
-		return NextResponse.json(updatedProfile);
+		return NextResponse.json(profile);
 	} catch (error) {
-		if (error instanceof z.ZodError) {
-			return NextResponse.json(
-				{ error: "Invalid data", details: error.errors },
-				{ status: 400 },
-			);
-		}
-
 		console.error("Error updating profile:", error);
 		return NextResponse.json(
-			{ error: "Failed to update profile" },
+			{ error: "Internal server error" },
 			{ status: 500 },
 		);
 	}

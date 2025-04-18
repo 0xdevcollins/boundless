@@ -16,6 +16,7 @@ const ConnectWalletButton = ({ className = "" }) => {
 
 	const [isChecking, setIsChecking] = useState(true);
 	const [isCopied, setIsCopied] = useState(false);
+	const [isConnecting, setIsConnecting] = useState(false);
 
 	useEffect(() => {
 		const checkConnection = async () => {
@@ -35,8 +36,13 @@ const ConnectWalletButton = ({ className = "" }) => {
 		checkConnection();
 	}, [publicKey]);
 
+	useEffect(() => {
+		setIsConnecting(connecting);
+	}, [connecting]);
+
 	const handleConnectWallet = async () => {
 		try {
+			setIsConnecting(true);
 			await connectWallet();
 			if (publicKey) {
 				toast.success("Wallet Connected", {
@@ -48,6 +54,10 @@ const ConnectWalletButton = ({ className = "" }) => {
 			toast.error("Connection Failed", {
 				description: "Failed to connect to the wallet.",
 			});
+		} finally {
+			setTimeout(() => {
+				setIsConnecting(false);
+			}, 1000);
 		}
 	};
 
@@ -82,7 +92,7 @@ const ConnectWalletButton = ({ className = "" }) => {
 				<Button disabled className={className}>
 					<Loader2 className="mr-2 h-4 w-4 animate-spin" /> Checking...
 				</Button>
-			) : connecting ? (
+			) : isConnecting ? (
 				<Button disabled className={className}>
 					<Loader2 className="mr-2 h-4 w-4 animate-spin" /> Connecting...
 				</Button>
