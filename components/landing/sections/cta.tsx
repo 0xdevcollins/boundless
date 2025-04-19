@@ -48,7 +48,7 @@ export default function BoundlessCTA() {
 
 								<div className="flex flex-col sm:flex-row gap-4">
 									<Button className="group" size="lg">
-										<Link href="/create-project" className="flex items-center">
+										<Link href="/projects/new" className="flex items-center">
 											Start a project
 											<ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
 										</Link>

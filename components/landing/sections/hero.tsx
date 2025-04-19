@@ -2,8 +2,9 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
+import Link from "next/link";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "../../ui/button";
 
 type CryptoCategoryType =
@@ -24,13 +25,16 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
 	const [isTyping, setIsTyping] = useState<boolean>(true);
 
 	// Categories for the rotating text
-	const categories: CryptoCategoryType[] = [
-		"DeFi Protocol",
-		"NFT Marketplace",
-		"Data DAOs",
-		"AI Agents",
-		"Web3 Storage",
-	];
+	const categories = useMemo<CryptoCategoryType[]>(
+		() => [
+			"DeFi Protocol",
+			"NFT Marketplace",
+			"Data DAOs",
+			"AI Agents",
+			"Web3 Storage",
+		],
+		[],
+	);
 
 	// Animation variants for text elements
 	const titleVariants = {
@@ -270,17 +274,24 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
 					>
 						{/* Wrap Button with motion.div to use whileHover */}
 						<motion.div whileHover={{ scale: 1.05 }}>
-							<Button size="lg" className="group relative overflow-hidden px-8">
-								Get Started
-								<ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-							</Button>
+							<Link href="/auth/signin">
+								<Button
+									size="lg"
+									className="group relative overflow-hidden px-8"
+								>
+									Get Started
+									<ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+								</Button>
+							</Link>
 						</motion.div>
 
 						<motion.div whileHover={{ scale: 1.05 }}>
-							<Button size="lg" variant="outline" className="group">
-								<Sparkles className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform" />
-								Browse Projects
-							</Button>
+							<Link href="/explore">
+								<Button size="lg" variant="outline" className="group">
+									<Sparkles className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform" />
+									Browse Projects
+								</Button>
+							</Link>
 						</motion.div>
 					</motion.div>
 				</div>

@@ -5,9 +5,11 @@ import SignInForm from "@/components/signin-form";
 import { AnimatePresence, type Variants, motion } from "framer-motion";
 import type { BuiltInProviderType } from "next-auth/providers/index";
 import type { ClientSafeProvider, LiteralUnion } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import RegistrationForm from "./registeration-form";
 
 const tabVariants: Variants = {
@@ -55,19 +57,48 @@ interface AuthTabsProps {
 
 export default function AuthTabs({ providers }: AuthTabsProps) {
 	const [activeTab, setActiveTab] = useState<"signin" | "register">("signin");
+	const { status } = useSession();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (status === "authenticated") {
+			router.push("/dashboard");
+		}
+	}, [status, router]);
+
+	if (status === "loading") {
+		return (
+			<div className="min-h-screen flex items-center justify-center bg-[#dffce8]">
+				<div className="text-center">
+					<p className="text-[#194247]">Loading...</p>
+				</div>
+			</div>
+		);
+	}
+
+	if (status === "authenticated") {
+		return (
+			<div className="min-h-screen flex items-center justify-center bg-[#dffce8]">
+				<div className="text-center">
+					<p className="text-[#194247]">Redirecting to dashboard...</p>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-[#dffce8] py-12 px-4 sm:px-6 lg:px-8">
-			{/* Changed space-y-8 to space-y-6 here */}
 			<div className="max-w-md w-full space-y-6 bg-white p-8 rounded-lg shadow-lg">
 				<div className="flex flex-col items-center">
-					<Image
-						src="/logo.svg"
-						alt="Boundless"
-						width={180}
-						height={180}
-						className="mb-4"
-					/>
+					<Link href="/">
+						<Image
+							src="/logo.svg"
+							alt="Boundless"
+							width={180}
+							height={180}
+							className="mb-4"
+						/>
+					</Link>
 					<h2 className="mt-2 text-center text-3xl font-extrabold text-[#194247]">
 						{activeTab === "signin"
 							? "Sign in to your account"
@@ -75,7 +106,6 @@ export default function AuthTabs({ providers }: AuthTabsProps) {
 					</h2>
 				</div>
 
-				{/* Added -mb-2 here to reduce space between tabs and form */}
 				<fieldset className="flex rounded-md shadow-sm -mb-2">
 					<motion.button
 						variants={tabVariants}
@@ -95,7 +125,6 @@ export default function AuthTabs({ providers }: AuthTabsProps) {
 					</motion.button>
 				</fieldset>
 
-				{/* Added mt-4 here to control space after tabs */}
 				<motion.div
 					className="relative overflow-hidden mt-0"
 					layout
