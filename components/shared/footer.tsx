@@ -14,7 +14,7 @@ const quickLinks = [
 ];
 
 const essentialLinks = [
-	{ label: "Discover Projects", href: "/projects" },
+	{ label: "Discover Projects", href: "/explore" },
 	{ label: "Start a Project", href: "/projects/new" },
 	{ label: "Stellar Ecosystem", href: "/stellar" },
 	{ label: "Blog", href: "/blog" },
