@@ -100,7 +100,7 @@ const ConnectWalletButton = ({ className = "" }) => {
 				<Button
 					variant="outline"
 					onClick={copyToClipboard}
-					className={`${className} flex items-center gap-2 cursor-pointer bg-primary text-white`}
+					className={`${className} flex items-center dark:bg-secondary gap-2 cursor-pointer bg-primary text-white`}
 				>
 					{formatAddress(publicKey)}
 					{isCopied ? (
