@@ -1,5 +1,6 @@
 // "use server"
 // import Image from "next/image";
+import Link from "next/link";
 import type * as React from "react";
 
 interface EmailTemplateProps {
@@ -69,7 +70,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
 						Click the button below to reset your password:
 					</p>
 					<div style={{ textAlign: "center", marginTop: "10px" }}>
-						<a
+						<Link
 							href={resetUrl}
 							style={{
 								display: "inline-block",
@@ -83,7 +84,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
 							}}
 						>
 							Reset Password
-						</a>
+						</Link>
 					</div>
 					<p
 						style={{

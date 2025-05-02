@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 			},
 		});
 		try {
-			await resendOTP(user.email, user.name, otp);
+			await resendOTP(user.email || "", user.name || "", otp);
 			return NextResponse.json({
 				success: true,
 				message: "OTP code succesfully resent",
