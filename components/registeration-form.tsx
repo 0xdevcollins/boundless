@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+// import { toast } from "sonner"
 
 export default function RegistrationForm() {
 	const [name, setName] = useState("");
@@ -27,11 +28,15 @@ export default function RegistrationForm() {
 			} else {
 				const data = await response.json();
 				setError(data.message || "An error occurred during registration.");
+				// toast.error(data.message || "An error occurred during registration.");
 			}
 		} catch (error) {
 			setError(
 				`An error occurred during registration: ${error instanceof Error ? error.message : String(error)}`,
 			);
+			// toast.error(
+			// 	`An error occurred during registration: ${error instanceof Error ? error.message : String(error)}`,
+			// );
 		}
 	};
 

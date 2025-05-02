@@ -17,7 +17,6 @@ const deployProjectContract = () => {
   mkdirSync(contractsDir, { recursive: true });
 
   deploy(`./target/wasm32-unknown-unknown/release/boundless_contract.wasm`);
-  // deploy(`./target/wasm32-unknown-unknown/release/project_contract.wasm`);
 };
 
 

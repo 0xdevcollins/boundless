@@ -103,7 +103,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 				<section>
 					{showCreatorCard && (
 						<div className="border-t p-4">
-							<Card className="bg-primary text-white">
+							<Card className="bg-primary text-white dark:bg-secondary">
 								<CardContent className="p-4">
 									<Image
 										height={128}
@@ -121,7 +121,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 								<CardFooter className="p-4 pt-0">
 									<Button
 										onClick={handleCreate}
-										className="w-full bg-secondary hover:bg-secondary/30"
+										className="w-full bg-secondary dark:bg-white dark:text-secondary hover:bg-secondary/30"
 										variant="secondary"
 									>
 										Create now
