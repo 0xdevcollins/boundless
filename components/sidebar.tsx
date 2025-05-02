@@ -83,7 +83,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 				<div className="flex-1 overflow-y-auto">
 					<nav className="space-y-1 p-4">
 						{navItems.map((item) => (
-							<a
+							<Link
 								key={item.label}
 								href={item.href}
 								className={cn(
@@ -95,7 +95,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 							>
 								<item.icon className="h-4 w-4" />
 								{item.label}
-							</a>
+							</Link>
 						))}
 					</nav>
 				</div>

@@ -116,7 +116,7 @@ const ConnectWalletButton = ({ className = "" }) => {
 			)}
 			{publicKey && (
 				<Button onClick={handleDisconnectWallet} variant="outline">
-					<LogOut className="mr-2 h-4 w-4" /> Disconnect
+					<LogOut className="mr-2 h-4 w-4" /> <span className="hidden md:block">Disconnect</span>
 				</Button>
 			)}
 		</div>
