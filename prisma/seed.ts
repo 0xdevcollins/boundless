@@ -1,35 +1,35 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 const notificationTypes = [
   {
-    title: "Project Created",
-    description: "Your project has been successfully created and is pending validation.",
+    title: 'Project Created',
+    description: 'Your project has been successfully created and is pending validation.',
   },
   {
-    title: "Project Validated",
-    description: "Congratulations! Your project has been validated by our team.",
+    title: 'Project Validated',
+    description: 'Congratulations! Your project has been validated by our team.',
   },
   {
-    title: "New Contribution",
-    description: "Your project received a new contribution of 2 ETH.",
+    title: 'New Contribution',
+    description: 'Your project received a new contribution of 2 ETH.',
   },
   {
-    title: "Project Milestone",
-    description: "Your project has reached 50% of its funding goal!",
+    title: 'Project Milestone',
+    description: 'Your project has reached 50% of its funding goal!',
   },
   {
-    title: "Team Member Added",
-    description: "A new team member has been added to your project.",
+    title: 'Team Member Added',
+    description: 'A new team member has been added to your project.',
   },
   {
-    title: "Comment Received",
-    description: "Someone commented on your project.",
+    title: 'Comment Received',
+    description: 'Someone commented on your project.',
   },
   {
-    title: "Vote Received",
-    description: "Your project received a new vote.",
+    title: 'Vote Received',
+    description: 'Your project received a new vote.',
   },
 ];
 
@@ -43,7 +43,7 @@ async function main() {
     });
 
     if (users.length === 0) {
-      console.log("No users found. Please seed users first.");
+      console.log('No users found. Please seed users first.');
       return;
     }
 
@@ -71,13 +71,13 @@ async function main() {
       }
     }
 
-    console.log("Successfully seeded notifications!");
+    console.log('Successfully seeded notifications!');
   } catch (error) {
-    console.error("Error seeding notifications:", error);
+    console.error('Error seeding notifications:', error);
     throw error;
   } finally {
     await prisma.$disconnect();
   }
 }
 
-main(); 
+main();

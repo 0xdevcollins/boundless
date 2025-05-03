@@ -1,6 +1,14 @@
 import 'dotenv/config';
-import { mkdirSync } from "fs";
-import { buildContracts, createContractBindings, createContractImports, exe, filenameNoExtension, installContracts, loadAccount } from "./util";
+import { mkdirSync } from 'fs';
+import {
+  buildContracts,
+  createContractBindings,
+  createContractImports,
+  exe,
+  filenameNoExtension,
+  installContracts,
+  loadAccount,
+} from './util';
 
 const account = process.env.STELLAR_ACCOUNT;
 
@@ -18,7 +26,6 @@ const deployProjectContract = () => {
 
   deploy(`./target/wasm32-unknown-unknown/release/boundless_contract.wasm`);
 };
-
 
 loadAccount();
 buildContracts();

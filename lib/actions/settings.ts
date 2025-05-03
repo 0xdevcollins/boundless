@@ -1,31 +1,29 @@
 type UserSettings = {
-	theme?: string;
-	language?: string;
-	notificationsEnabled?: boolean;
+  theme?: string;
+  language?: string;
+  notificationsEnabled?: boolean;
 };
 
 export async function getUserSettings(): Promise<UserSettings> {
-	const res = await fetch("/api/user/settings");
+  const res = await fetch('/api/user/settings');
 
-	if (!res.ok) {
-		throw new Error("Failed to fetch settings");
-	}
+  if (!res.ok) {
+    throw new Error('Failed to fetch settings');
+  }
 
-	return res.json();
+  return res.json();
 }
 
-export async function updateUserSettings(
-	data: UserSettings,
-): Promise<UserSettings> {
-	const res = await fetch("/api/user/settings", {
-		method: "PUT",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify(data),
-	});
+export async function updateUserSettings(data: UserSettings): Promise<UserSettings> {
+  const res = await fetch('/api/user/settings', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
 
-	if (!res.ok) {
-		throw new Error("Failed to update settings");
-	}
+  if (!res.ok) {
+    throw new Error('Failed to update settings');
+  }
 
-	return res.json();
+  return res.json();
 }
