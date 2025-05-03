@@ -1,8 +1,8 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+// import { toast } from "sonner"
 
 export default function RegistrationForm() {
   const [name, setName] = useState('');
@@ -20,28 +20,23 @@ export default function RegistrationForm() {
         body: JSON.stringify({ name, email, password }),
       });
 
-      if (response.ok) {
-        // Redirect to OTP verification page with the user's email
-        router.push(`/auth/verify-otp?email=${encodeURIComponent(email)}`);
-      } else {
-        // const data = await response.json();
-        // Use generic error messages that don't expose sensitive details
-        if (response.status === 409) {
-          toast.error('This email is already registered. Please use a different email.');
-        } else if (response.status === 400) {
-          toast.error('Please check your information and try again.');
-        } else {
-          toast.error('Registration failed. Please try again later.');
-        }
-      }
-    } catch (error) {
-      // Use generic error message that doesn't expose error details
-      toast.error('Unable to connect to the server. Please check your connection and try again.');
-
-      // Log the actual error to the console for debugging purposes
-      console.error('Registration error:', error);
-    }
-  };
+			if (response.ok) {
+				// Redirect to OTP verification page with the user's email
+				router.push(`/auth/verify-otp?email=${encodeURIComponent(email)}`);
+			} else {
+				const data = await response.json();
+				setError(data.message || "An error occurred during registration.");
+				// toast.error(data.message || "An error occurred during registration.");
+			}
+		} catch (error) {
+			setError(
+				`An error occurred during registration: ${error instanceof Error ? error.message : String(error)}`,
+			);
+			// toast.error(
+			// 	`An error occurred during registration: ${error instanceof Error ? error.message : String(error)}`,
+			// );
+		}
+	};
 
   return (
     <form onSubmit={handleSubmit} className="mt-2 space-y-6">

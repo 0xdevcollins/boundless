@@ -32,19 +32,22 @@ export async function POST(req: Request) {
       },
     });
 
-    try {
-      await sendPasswordResetEmail(user.email, user.name, otp);
-      return NextResponse.json({
-        success: true,
-        message: 'Password reset email sent',
-        status: 200,
-      });
-    } catch (emailError) {
-      console.error('Error sending password reset email:', emailError);
-      return NextResponse.json({ error: 'Failed to send password reset email' }, { status: 500 });
-    }
-  } catch (error) {
-    console.error('Forgot Password API Error:', error);
+		try {
+			await sendPasswordResetEmail(user.email || "", user.name || "", otp);
+			return NextResponse.json({
+				success: true,
+				message: "Password reset email sent",
+				status: 200,
+			});
+		} catch (emailError) {
+			console.error("Error sending password reset email:", emailError);
+			return NextResponse.json(
+				{ error: "Failed to send password reset email" },
+				{ status: 500 },
+			);
+		}
+	} catch (error) {
+		console.error("Forgot Password API Error:", error);
 
     return NextResponse.json(
       {
