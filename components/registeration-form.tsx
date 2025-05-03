@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 // import { toast } from "sonner"
 
 export default function RegistrationForm() {
@@ -25,16 +26,16 @@ export default function RegistrationForm() {
 				router.push(`/auth/verify-otp?email=${encodeURIComponent(email)}`);
 			} else {
 				const data = await response.json();
-				setError(data.message || "An error occurred during registration.");
-				// toast.error(data.message || "An error occurred during registration.");
+				// setError(data.message || "An error occurred during registration.");
+				toast.error(data.message || "An error occurred during registration.");
 			}
 		} catch (error) {
-			setError(
-				`An error occurred during registration: ${error instanceof Error ? error.message : String(error)}`,
-			);
-			// toast.error(
+			// setError(
 			// 	`An error occurred during registration: ${error instanceof Error ? error.message : String(error)}`,
 			// );
+			toast.error(
+				`An error occurred during registration: ${error instanceof Error ? error.message : String(error)}`,
+			);
 		}
 	};
 
