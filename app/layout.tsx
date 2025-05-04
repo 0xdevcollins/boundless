@@ -5,6 +5,8 @@ import { SessionProvider } from "@/components/session-provider";
 import { authOptions } from "@/lib/auth.config";
 import { getServerSession } from "next-auth";
 import { Toaster } from "sonner";
+import Navbar from "@/components/shared/navbar";
+import Footer from "@/components/shared/footer";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -30,12 +32,14 @@ export default async function RootLayout({
 	const session = await getServerSession(authOptions);
 
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<SessionProvider session={session}>
 				<body
 					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 				>
+					<Navbar />
 					{children}
+					<Footer />
 				</body>
 				<Toaster theme="dark" />
 			</SessionProvider>
