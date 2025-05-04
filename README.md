@@ -13,7 +13,7 @@ Welcome to the **Boundless** project! Boundless is a crowdfunding platform built
 7. [Testing](#testing)
 8. [Deployment & CI/CD](#deployment--cicd)
 9. [Reporting Issues](#reporting-issues)
-10. [Community & Support](#community--support)
+10.[Community & Support](#community--support)
 
 ---
 
