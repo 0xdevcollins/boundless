@@ -24,7 +24,7 @@ export default function Layout({
 			{/* Main Content */}
 			<div className="flex w-full flex-1 flex-col md:pl-[280px]">
 				{/* Mobile Header with Menu */}
-				<header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 lg:px-6">
+				<header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-2 lg:px-6">
 					<div className="flex items-center gap-2">
 						<MobileSidebar />
 					</div>
