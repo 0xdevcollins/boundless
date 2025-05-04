@@ -77,7 +77,7 @@ export default function Dashboard() {
 
 	return (
 		<div className="flex min-h-screen">
-			<main className="flex-1 p-8">
+			<div className="flex-1">
 				<div className="flex items-center justify-between mb-6">
 					<h1 className="text-3xl font-bold">Dashboard</h1>
 					{/* <ConnectWalletButton /> */}
@@ -142,7 +142,7 @@ export default function Dashboard() {
 						</TabsContent>
 					</AnimatePresence>
 				</Tabs>
-			</main>
+			</div>
 		</div>
 	);
 }

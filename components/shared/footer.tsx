@@ -71,7 +71,7 @@ export default function Footer() {
 						<h4 className="text-lg font-semibold mb-4">Follow Us</h4>
 						<div className="flex space-x-4">
 							{socialLinks.map((link) => (
-								<a
+								<Link
 									key={link.href}
 									href={link.href}
 									target="_blank"
@@ -79,7 +79,7 @@ export default function Footer() {
 									className="text-muted-foreground hover:text-primary transition-colors"
 								>
 									<link.icon className="h-5 w-5" />
-								</a>
+								</Link>
 							))}
 						</div>
 					</div>
