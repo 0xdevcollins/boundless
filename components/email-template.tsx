@@ -1,5 +1,6 @@
-// "use server"
-// import Image from "next/image";
+"use server";
+
+import Image from "next/image";
 import Link from "next/link";
 import type * as React from "react";
 
@@ -33,11 +34,11 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
 			}}
 		>
 			<div style={{ textAlign: "center", marginBottom: "20px" }}>
-				<img
+				<Image
 					src="https://i.postimg.cc/RZtm3Zct/project.png"
 					alt="Boundless Logo"
-					width={"150"}
-					height={"100"}
+					width={150}
+					height={100}
 					style={{ maxWidth: "150px" }}
 				/>
 			</div>
