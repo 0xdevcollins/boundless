@@ -85,20 +85,18 @@ export default function ProfileEditForm({
 							<div>
 								<Label>Banner Image</Label>
 								<ImageUpload
-									value={initialData.bannerImage}
+									value={initialData.bannerImage || ""}
 									onChange={(url) => form.setValue("bannerImage", url)}
 									onRemove={() => form.setValue("bannerImage", "")}
-									aspectRatio="21:9"
 								/>
 							</div>
 
 							<div>
 								<Label>Profile Picture</Label>
 								<ImageUpload
-									value={initialData.image}
+									value={initialData.image || ""}
 									onChange={(url) => form.setValue("image", url)}
 									onRemove={() => form.setValue("image", "")}
-									aspectRatio="1:1"
 								/>
 							</div>
 						</div>

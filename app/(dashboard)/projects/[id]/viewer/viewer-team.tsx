@@ -8,6 +8,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Github, Linkedin, MessageSquare, Twitter } from "lucide-react";
+import Link from "next/link";
 
 type TeamMember = {
 	id: string;
@@ -61,46 +62,46 @@ export function ViewerTeam({ teamMembers }: ViewerTeamProps) {
 								<div className="flex flex-wrap gap-2">
 									{member.github && (
 										<Button variant="outline" size="sm" asChild>
-											<a
+											<Link
 												href={member.github}
 												target="_blank"
 												rel="noopener noreferrer"
 											>
 												<Github className="h-4 w-4 mr-1" /> GitHub
-											</a>
+											</Link>
 										</Button>
 									)}
 									{member.twitter && (
 										<Button variant="outline" size="sm" asChild>
-											<a
+											<Link
 												href={member.twitter}
 												target="_blank"
 												rel="noopener noreferrer"
 											>
 												<Twitter className="h-4 w-4 mr-1" /> Twitter
-											</a>
+											</Link>
 										</Button>
 									)}
 									{member.linkedin && (
 										<Button variant="outline" size="sm" asChild>
-											<a
+											<Link
 												href={member.linkedin}
 												target="_blank"
 												rel="noopener noreferrer"
 											>
 												<Linkedin className="h-4 w-4 mr-1" /> LinkedIn
-											</a>
+											</Link>
 										</Button>
 									)}
 									{member.discord && (
 										<Button variant="outline" size="sm" asChild>
-											<a
+											<Link
 												href={`https://discord.com/users/${member.discord}`}
 												target="_blank"
 												rel="noopener noreferrer"
 											>
 												<MessageSquare className="h-4 w-4 mr-1" /> Discord
-											</a>
+											</Link>
 										</Button>
 									)}
 								</div>

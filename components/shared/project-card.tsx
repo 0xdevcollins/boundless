@@ -60,7 +60,7 @@ export function ProjectCard({
 	return (
 		<Card
 			className={cn(
-				"h-full relative transition-all hover:shadow-md hover:-translate-y-1 overflow-hidden",
+				"h-fsull relative transition-all hover:shadow-md hover:-translate-y-1 overflow-hidden",
 				"border-border/50 dark:border-border/80",
 				className,
 			)}
@@ -87,7 +87,7 @@ export function ProjectCard({
 
 				{/* Profile Image */}
 				{project.profileUrl && (
-					<div className="absolute top-6 left-4 w-12 h-12 rounded-full overflow-hidden border-2 border-background z-10">
+					<div className="absolute top-6 left-4 w-12 h-12 rounded-full overflow-hidden border-2 border-background z-10 bg-black/50">
 						<Image
 							src={project.profileUrl}
 							alt={`${project.title} profile`}
@@ -152,7 +152,7 @@ export function ProjectCard({
 
 				{/* Vote Button */}
 				{project.ideaValidation === "PENDING" && (
-					<div className="w-full mt-2 pt-3 border-t">
+					<div className={cn("w-full mt-2 pt-3 border-t", isOwner && "hidden")}>
 						{isLoading ? (
 							<div className="flex justify-center py-1">
 								<span className="text-xs text-muted-foreground">

@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, Check, Clock } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MilestoneForm } from "./milestone-form";
 
 interface Milestone {
@@ -27,7 +27,7 @@ export function MilestoneTracker({
 	const [milestones, setMilestones] = useState<Milestone[]>([]);
 	const [loading, setLoading] = useState(true);
 
-	const fetchMilestones = async () => {
+	const fetchMilestones = useCallback(async () => {
 		try {
 			const response = await fetch(`/api/projects/${projectId}/milestones`);
 			if (!response.ok) throw new Error("Failed to fetch milestones");
@@ -38,11 +38,11 @@ export function MilestoneTracker({
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, [projectId]);
 
 	useEffect(() => {
 		fetchMilestones();
-	}, [projectId, fetchMilestones]);
+	}, [fetchMilestones]);
 
 	const getStatusIcon = (status: Milestone["status"]) => {
 		switch (status) {
