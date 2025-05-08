@@ -76,28 +76,26 @@ export default function ProfileEditForm({ initialData, onSuccess, onCancel }: Pr
             </Alert>
           )}
 
-          <div className="grid gap-6 max-w-2xl">
-            <div className="space-y-4">
-              <div>
-                <Label>Banner Image</Label>
-                <ImageUpload
-                  value={initialData.bannerImage}
-                  onChange={(url) => form.setValue('bannerImage', url)}
-                  onRemove={() => form.setValue('bannerImage', '')}
-                  aspectRatio="21:9"
-                />
-              </div>
+					<div className="grid gap-6 max-w-2xl">
+						<div className="space-y-4">
+							<div>
+								<Label>Banner Image</Label>
+								<ImageUpload
+									value={initialData.bannerImage || ""}
+									onChange={(url) => form.setValue("bannerImage", url)}
+									onRemove={() => form.setValue("bannerImage", "")}
+								/>
+							</div>
 
-              <div>
-                <Label>Profile Picture</Label>
-                <ImageUpload
-                  value={initialData.image}
-                  onChange={(url) => form.setValue('image', url)}
-                  onRemove={() => form.setValue('image', '')}
-                  aspectRatio="1:1"
-                />
-              </div>
-            </div>
+							<div>
+								<Label>Profile Picture</Label>
+								<ImageUpload
+									value={initialData.image || ""}
+									onChange={(url) => form.setValue("image", url)}
+									onRemove={() => form.setValue("image", "")}
+								/>
+							</div>
+						</div>
 
             <div className="grid gap-4">
               <div className="space-y-2">

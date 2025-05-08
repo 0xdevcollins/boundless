@@ -1,7 +1,14 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Github, Linkedin, MessageSquare, Twitter } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { Github, Linkedin, MessageSquare, Twitter } from "lucide-react";
+import Link from "next/link";
 
 type TeamMember = {
   id: string;
@@ -45,41 +52,57 @@ export function ViewerTeam({ teamMembers }: ViewerTeamProps) {
               <CardContent className="p-6">
                 {member.bio && <p className="text-sm mb-4">{member.bio}</p>}
 
-                <div className="flex flex-wrap gap-2">
-                  {member.github && (
-                    <Button variant="outline" size="sm" asChild>
-                      <a href={member.github} target="_blank" rel="noopener noreferrer">
-                        <Github className="h-4 w-4 mr-1" /> GitHub
-                      </a>
-                    </Button>
-                  )}
-                  {member.twitter && (
-                    <Button variant="outline" size="sm" asChild>
-                      <a href={member.twitter} target="_blank" rel="noopener noreferrer">
-                        <Twitter className="h-4 w-4 mr-1" /> Twitter
-                      </a>
-                    </Button>
-                  )}
-                  {member.linkedin && (
-                    <Button variant="outline" size="sm" asChild>
-                      <a href={member.linkedin} target="_blank" rel="noopener noreferrer">
-                        <Linkedin className="h-4 w-4 mr-1" /> LinkedIn
-                      </a>
-                    </Button>
-                  )}
-                  {member.discord && (
-                    <Button variant="outline" size="sm" asChild>
-                      <a href={`https://discord.com/users/${member.discord}`} target="_blank" rel="noopener noreferrer">
-                        <MessageSquare className="h-4 w-4 mr-1" /> Discord
-                      </a>
-                    </Button>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  );
+								<div className="flex flex-wrap gap-2">
+									{member.github && (
+										<Button variant="outline" size="sm" asChild>
+											<Link
+												href={member.github}
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<Github className="h-4 w-4 mr-1" /> GitHub
+											</Link>
+										</Button>
+									)}
+									{member.twitter && (
+										<Button variant="outline" size="sm" asChild>
+											<Link
+												href={member.twitter}
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<Twitter className="h-4 w-4 mr-1" /> Twitter
+											</Link>
+										</Button>
+									)}
+									{member.linkedin && (
+										<Button variant="outline" size="sm" asChild>
+											<Link
+												href={member.linkedin}
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<Linkedin className="h-4 w-4 mr-1" /> LinkedIn
+											</Link>
+										</Button>
+									)}
+									{member.discord && (
+										<Button variant="outline" size="sm" asChild>
+											<Link
+												href={`https://discord.com/users/${member.discord}`}
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<MessageSquare className="h-4 w-4 mr-1" /> Discord
+											</Link>
+										</Button>
+									)}
+								</div>
+							</CardContent>
+						</Card>
+					))}
+				</div>
+			</CardContent>
+		</Card>
+	);
 }

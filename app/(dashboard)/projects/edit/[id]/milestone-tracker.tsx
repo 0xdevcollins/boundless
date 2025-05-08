@@ -1,10 +1,10 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle, Check, Clock } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
-import { MilestoneForm } from './milestone-form';
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AlertCircle, Check, Clock } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { MilestoneForm } from "./milestone-form";
 
 interface Milestone {
   id: string;
@@ -24,22 +24,22 @@ export function MilestoneTracker({ isTeamMember, projectId }: MilestoneTrackerPr
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchMilestones = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/projects/${projectId}/milestones`);
-      if (!response.ok) throw new Error('Failed to fetch milestones');
-      const data = await response.json();
-      setMilestones(data);
-    } catch (error) {
-      console.error('Error fetching milestones:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [projectId]);
+	const fetchMilestones = useCallback(async () => {
+		try {
+			const response = await fetch(`/api/projects/${projectId}/milestones`);
+			if (!response.ok) throw new Error("Failed to fetch milestones");
+			const data = await response.json();
+			setMilestones(data);
+		} catch (error) {
+			console.error("Error fetching milestones:", error);
+		} finally {
+			setLoading(false);
+		}
+	}, [projectId]);
 
-  useEffect(() => {
-    fetchMilestones();
-  }, [projectId, fetchMilestones]);
+	useEffect(() => {
+		fetchMilestones();
+	}, [fetchMilestones]);
 
   const getStatusIcon = (status: Milestone['status']) => {
     switch (status) {
