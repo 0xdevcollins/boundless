@@ -60,31 +60,21 @@ export default function Dashboard({ username }: { username?: string }) {
       return a.category.localeCompare(b.category);
     }
 
-    return 0;
-  });
-  const refreshAnalytics = async () => {
-    try {
-      await fetchUserProfile();
-    } catch (error) {
-      toast.error('Error refreshing analytics:', {
-        description: error instanceof Error ? error.message : 'Failed to refresh analytics',
-      });
-    }
-  };
-  return (
-    <div className="flex min-h-screen">
-      <main className="flex-1 p-8">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">{username ? `Hi, ${username.split(' ')[0]}` : 'Dashboard'}</h1>
-          <Button
-            onClick={refreshAnalytics}
-            disabled={isLoading}
-            className="px-2 flex items-center gap-2 py-2 border rounded-md transition disabled:opacity-50"
-          >
-            <RefreshCcw size="20" className={isLoading ? 'animate-spin' : ''} />
-            {isLoading ? 'Refreshing...' : 'Refresh'}
-          </Button>
-        </div>
+		return 0;
+	});
+
+	return (
+		<div className="flex min-h-screen">
+			<div className="flex-1">
+				<div className="flex items-center justify-between mb-6">
+					<h1 className="text-3xl font-bold">Dashboard</h1>
+					{/* <ConnectWalletButton /> */}
+
+					{/* <Button>
+						<Wallet className="mr-2 h-4 w-4" />
+						Connect Wallet
+					</Button> */}
+				</div>
 
         <StatsCards analytics={analytics} isLoading={isLoading} />
         <ActivityOverview />
@@ -122,12 +112,16 @@ export default function Dashboard({ username }: { username?: string }) {
               <ExploreTab projects={filteredExploreProjects} filter={exploreFilter} setFilter={setExploreFilter} />
             </TabsContent>
 
-            <TabsContent value="completed" key="completed">
-              <CompletedTab projects={sortedCompletedProjects} sort={completedSort} setSort={setCompletedSort} />
-            </TabsContent>
-          </AnimatePresence>
-        </Tabs>
-      </main>
-    </div>
-  );
+						<TabsContent value="completed" key="completed">
+							<CompletedTab
+								projects={sortedCompletedProjects}
+								sort={completedSort}
+								setSort={setCompletedSort}
+							/>
+						</TabsContent>
+					</AnimatePresence>
+				</Tabs>
+			</div>
+		</div>
+	);
 }

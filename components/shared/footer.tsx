@@ -60,23 +60,23 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Social Media */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Follow Us</h4>
-            <div className="flex space-x-4">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <link.icon className="h-5 w-5" />
-                </a>
-              ))}
-            </div>
-          </div>
+					{/* Social Media */}
+					<div>
+						<h4 className="text-lg font-semibold mb-4">Follow Us</h4>
+						<div className="flex space-x-4">
+							{socialLinks.map((link) => (
+								<Link
+									key={link.href}
+									href={link.href}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-muted-foreground hover:text-primary transition-colors"
+								>
+									<link.icon className="h-5 w-5" />
+								</Link>
+							))}
+						</div>
+					</div>
 
           {/* Newsletter Subscription */}
           <div className="md:col-span-1">

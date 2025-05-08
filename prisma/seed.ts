@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -107,30 +107,30 @@ async function main() {
     // Create categories
     const categories = await Promise.all([
       prisma.category.upsert({
-        where: { slug: "technology" },
-        update: {},
-        create: {
-          name: "Technology",
-          slug: "technology",
-          description: "Latest news and updates from the tech world",
-        },
-      }),
-      prisma.category.upsert({
         where: { slug: "blockchain" },
         update: {},
         create: {
           name: "Blockchain",
           slug: "blockchain",
-          description: "Everything about blockchain technology and cryptocurrencies",
+          description: "Articles about blockchain technology and its applications.",
         },
       }),
       prisma.category.upsert({
-        where: { slug: "development" },
+        where: { slug: "crowdfunding" },
         update: {},
         create: {
-          name: "Development",
-          slug: "development",
-          description: "Software development tips, tricks, and tutorials",
+          name: "Crowdfunding",
+          slug: "crowdfunding",
+          description: "Articles about crowdfunding and fundraising.",
+        },
+      }),
+      prisma.category.upsert({
+        where: { slug: "technology" },
+        update: {},
+        create: {
+          name: "Technology",
+          slug: "technology",
+          description: "General technology articles and updates.",
         },
       }),
     ]);
@@ -146,241 +146,133 @@ async function main() {
         },
       }),
       prisma.tag.upsert({
-        where: { slug: "ai" },
+        where: { slug: "defi" },
         update: {},
         create: {
-          name: "Artificial Intelligence",
-          slug: "ai",
+          name: "DeFi",
+          slug: "defi",
         },
       }),
       prisma.tag.upsert({
-        where: { slug: "react" },
+        where: { slug: "nft" },
         update: {},
         create: {
-          name: "React",
-          slug: "react",
+          name: "NFT",
+          slug: "nft",
         },
       }),
       prisma.tag.upsert({
-        where: { slug: "nextjs" },
+        where: { slug: "startup" },
         update: {},
         create: {
-          name: "Next.js",
-          slug: "nextjs",
+          name: "Startup",
+          slug: "startup",
         },
       }),
     ]);
 
     // Create blog posts
-    const posts = [
-      {
-        title: "Getting Started with Web3 Development",
-        slug: "getting-started-with-web3-development",
-        content: `# Getting Started with Web3 Development
+    const posts = await Promise.all([
+      prisma.post.upsert({
+        where: { slug: "introduction-to-blockchain" },
+        update: {},
+        create: {
+          title: "Introduction to Blockchain Technology",
+          slug: "introduction-to-blockchain",
+          content: `# Introduction to Blockchain Technology
 
-Web3 development is revolutionizing the way we build applications. In this comprehensive guide, we'll explore the fundamentals of Web3 development and how to get started.
-
-## What is Web3?
-
-Web3 represents the next generation of the internet, where applications are decentralized and powered by blockchain technology. This new paradigm enables:
-
-- Decentralized data storage
-- Transparent transactions
-- User-owned data
-- Smart contracts
-
-## Getting Started
-
-To begin your Web3 development journey, you'll need to:
-
-1. Learn the basics of blockchain technology
-2. Understand smart contracts
-3. Choose a blockchain platform
-4. Set up your development environment
-
-## Development Tools
-
-Some essential tools for Web3 development include:
-
-- MetaMask for wallet integration
-- Hardhat for smart contract development
-- Web3.js or Ethers.js for blockchain interaction
-- IPFS for decentralized storage
-
-## Next Steps
-
-Stay tuned for more detailed tutorials on Web3 development, including:
-
-- Smart contract development
-- DApp architecture
-- Security best practices
-- Testing and deployment`,
-        excerpt: "A comprehensive guide to getting started with Web3 development, covering the basics of blockchain technology and essential development tools.",
-        published: true,
-        publishedAt: new Date(),
-        authorId: admin.id,
-        categoryId: categories[1].id, // Blockchain category
-        tags: {
-          connect: [
-            { id: tags[0].id }, // Web3
-            { id: tags[2].id }, // React
-          ],
-        },
-      },
-      {
-        title: "Building Modern Web Applications with Next.js",
-        slug: "building-modern-web-applications-with-nextjs",
-        content: `# Building Modern Web Applications with Next.js
-
-Next.js has become one of the most popular frameworks for building modern web applications. Let's explore why it's so powerful and how to leverage its features.
-
-## Why Next.js?
-
-Next.js offers several advantages for web development:
-
-- Server-side rendering
-- Static site generation
-- API routes
-- File-based routing
-- Built-in optimizations
+Blockchain technology has revolutionized the way we think about data storage and transfer. At its core, a blockchain is a distributed ledger that records transactions across multiple computers in a way that ensures security, transparency, and immutability.
 
 ## Key Features
 
-### 1. Server-Side Rendering
+- **Decentralization**: No single entity controls the network
+- **Transparency**: All transactions are visible to network participants
+- **Security**: Cryptographic techniques ensure data integrity
+- **Immutability**: Once recorded, data cannot be altered
 
-Next.js enables server-side rendering out of the box, improving:
+## Applications
 
-- Initial page load performance
-- SEO
-- User experience
+Blockchain technology has found applications in various fields:
+- Cryptocurrencies
+- Supply chain management
+- Smart contracts
+- Digital identity
+- Voting systems
 
-### 2. API Routes
-
-Create API endpoints within your Next.js application:
-
-\`\`\`typescript
-// pages/api/hello.ts
-export default function handler(req, res) {
-  res.status(200).json({ name: 'John Doe' })
-}
-\`\`\`
-
-### 3. Image Optimization
-
-Next.js provides automatic image optimization:
-
-\`\`\`jsx
-import Image from 'next/image'
-
-export default function Page() {
-  return (
-    <Image
-      src="/profile.jpg"
-      alt="Profile"
-      width={500}
-      height={300}
-    />
-  )
-}
-\`\`\`
-
-## Best Practices
-
-1. Use TypeScript for type safety
-2. Implement proper error handling
-3. Optimize for performance
-4. Follow the file-based routing convention
-
-## Conclusion
-
-Next.js is a powerful framework that simplifies modern web development. Its features make it an excellent choice for building scalable applications.`,
-        excerpt: "Learn how to build modern web applications with Next.js, exploring its key features and best practices for optimal performance and developer experience.",
-        published: true,
-        publishedAt: new Date(),
-        authorId: user.id,
-        categoryId: categories[2].id, // Development category
-        tags: {
-          connect: [
-            { id: tags[2].id }, // React
-            { id: tags[3].id }, // Next.js
-          ],
+The potential of blockchain technology is vast, and we're only beginning to scratch the surface of its capabilities.`,
+          excerpt: "A comprehensive introduction to blockchain technology, its key features, and applications.",
+          featuredImage: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80",
+          published: true,
+          publishedAt: new Date(),
+          authorId: admin.id,
+          categoryId: categories[0].id,
+          tags: {
+            connect: [tags[0], tags[1]],
+          },
         },
-      },
-      {
-        title: "The Future of AI in Web Development",
-        slug: "future-of-ai-in-web-development",
-        content: `# The Future of AI in Web Development
+      }),
+      prisma.post.upsert({
+        where: { slug: "the-future-of-crowdfunding" },
+        update: {},
+        create: {
+          title: "The Future of Crowdfunding",
+          slug: "the-future-of-crowdfunding",
+          content: `# The Future of Crowdfunding
 
-Artificial Intelligence is transforming web development in unprecedented ways. Let's explore how AI is shaping the future of web development.
+Crowdfunding has transformed the way projects and businesses raise capital. With the advent of blockchain technology, we're witnessing the next evolution of crowdfunding platforms.
 
-## Current Applications
+## Traditional vs. Blockchain-based Crowdfunding
 
-AI is already being used in web development for:
+Traditional crowdfunding platforms have limitations:
+- High fees
+- Centralized control
+- Limited transparency
+- Geographic restrictions
 
-- Code generation
-- Bug detection
-- Performance optimization
-- User experience personalization
+Blockchain-based crowdfunding offers solutions:
+- Lower fees through smart contracts
+- Decentralized governance
+- Transparent fund allocation
+- Global accessibility
 
 ## Emerging Trends
 
-### 1. AI-Powered Development Tools
+1. **Tokenization of Assets**: Projects can issue digital tokens representing ownership or rewards
+2. **Smart Contract Automation**: Automated fund distribution based on predefined conditions
+3. **Community Governance**: Token holders can participate in project decisions
+4. **Cross-border Funding**: Global access to investment opportunities
 
-Modern development tools are incorporating AI to:
-
-- Suggest code completions
-- Detect potential bugs
-- Optimize performance
-- Generate documentation
-
-### 2. Intelligent User Interfaces
-
-AI enables more intuitive user interfaces through:
-
-- Natural language processing
-- Predictive analytics
-- Personalized content delivery
-- Adaptive layouts
-
-### 3. Automated Testing
-
-AI is revolutionizing testing with:
-
-- Automated test generation
-- Bug prediction
-- Performance analysis
-- Security vulnerability detection
-
-## Future Implications
-
-The integration of AI in web development will lead to:
-
-1. Faster development cycles
-2. More reliable applications
-3. Better user experiences
-4. Reduced development costs
-
-## Conclusion
-
-AI is not just a trend in web development; it's becoming an essential tool for building modern web applications. As AI technology continues to evolve, we can expect even more innovative applications in web development.`,
-        excerpt: "Explore how Artificial Intelligence is transforming web development and what the future holds for AI-powered development tools and applications.",
-        published: true,
-        publishedAt: new Date(),
-        authorId: admin.id,
-        categoryId: categories[0].id, // Technology category
-        tags: {
-          connect: [{ id: tags[1].id }], // AI tag
+The future of crowdfunding is bright, with blockchain technology enabling more efficient, transparent, and inclusive fundraising mechanisms.`,
+          excerpt: "Exploring how blockchain technology is revolutionizing the crowdfunding landscape.",
+          featuredImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+          published: true,
+          publishedAt: new Date(),
+          authorId: admin.id,
+          categoryId: categories[1].id,
+          tags: {
+            connect: [tags[2], tags[3]],
+          },
         },
-      },
-    ];
+      }),
+    ]);
 
-    for (const post of posts) {
-      await prisma.post.upsert({
-        where: { slug: post.slug },
-        update: {},
-        create: post,
-      });
-    }
+    // Create sample comments
+    await Promise.all([
+      prisma.postComment.create({
+        data: {
+          content: "Great introduction to blockchain! Looking forward to more articles.",
+          postId: posts[0].id,
+          authorId: admin.id,
+        },
+      }),
+      prisma.postComment.create({
+        data: {
+          content: "The future of crowdfunding looks promising with blockchain technology.",
+          postId: posts[1].id,
+          authorId: admin.id,
+        },
+      }),
+    ]);
 
     console.log("Database has been seeded. 🌱");
   } catch (error) {
