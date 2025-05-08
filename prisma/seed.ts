@@ -77,10 +77,10 @@ async function main() {
     // Create admin user
     const adminPassword = await bcrypt.hash("admin123", 12);
     const admin = await prisma.user.upsert({
-      where: { email: "admin@boundless.com" },
+      where: { email: "admin@boundlessfi.xyz" },
       update: {},
       create: {
-        email: "admin@boundless.com",
+        email: "admin@boundlessfi.xyz",
         name: "Admin User",
         password: adminPassword,
         role: "ADMIN",
@@ -92,10 +92,10 @@ async function main() {
     // Create regular user
     const userPassword = await bcrypt.hash("user123", 12);
     const user = await prisma.user.upsert({
-      where: { email: "user@boundless.com" },
+      where: { email: "user@boundlessfi.xyz" },
       update: {},
       create: {
-        email: "user@boundless.com",
+        email: "user@boundlessfi.xyz",
         name: "Regular User",
         password: userPassword,
         role: "USER",
