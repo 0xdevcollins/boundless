@@ -2,15 +2,13 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AnimatePresence } from 'framer-motion';
-import { CheckCircle, Compass, RefreshCcw, TrendingUp, Wallet } from 'lucide-react';
+import { CheckCircle, Compass, TrendingUp, Wallet } from 'lucide-react';
 import { useState } from 'react';
 
 import { completedProjects, exploreProjects, myProjects, trendingProjects } from '@/data/mock-data';
 import type { CompletedSort, ExploreFilter } from '@/types/project';
 
 import { useDashboardAnalytics } from '@/hooks/use-dashboard-analytics';
-import { toast } from 'sonner';
-import { Button } from '../ui/button';
 import ActivityOverview from './activity-overview';
 import StatsCards from './stats-cards';
 import CompletedTab from './tabs/completed-tab';
@@ -18,11 +16,11 @@ import ExploreTab from './tabs/explore-tab';
 import MyProjectsTab from './tabs/my-projects-tab';
 import TrendingTab from './tabs/trending-tab';
 
-export default function Dashboard({ username }: { username?: string }) {
+export default function Dashboard() {
   const [exploreFilter, setExploreFilter] = useState<ExploreFilter>('newest');
   const [completedSort, setCompletedSort] = useState<CompletedSort>('date');
   const [activeTab, setActiveTab] = useState('myprojects');
-  const { analytics, isLoading, fetchUserProfile } = useDashboardAnalytics();
+  const { analytics, isLoading} = useDashboardAnalytics();
 
   const allExploreProjects = [...myProjects, ...trendingProjects, ...exploreProjects];
 

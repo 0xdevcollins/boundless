@@ -10,7 +10,7 @@ interface EmailTemplateProps {
   resetUrl?: string;
 }
 
-export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
+ const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = async ({
 	name,
 	otp,
 	resetUrl,

@@ -16,7 +16,7 @@ const Page = () => {
     return <p>Loading...</p>;
   }
   return (
-    <>{hasCreatedProject() ? <Dashboard username={user?.name} /> : <MyContributionsPage username={user?.name} />}</>
+    <>{hasCreatedProject() ? <Dashboard /> : <MyContributionsPage username={user?.name} />}</>
   );
 };
 

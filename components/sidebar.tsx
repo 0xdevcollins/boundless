@@ -59,7 +59,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
     user,
     // isLoading,
     fetchUserProfile,
-    hasCreatedProject,
+    // hasCreatedProject,
   } = useUserStore();
 
   React.useEffect(() => {
