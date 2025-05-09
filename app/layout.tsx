@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { SessionProvider } from "@/components/session-provider";
-import Footer from "@/components/shared/footer";
 import { authOptions } from "@/lib/auth.config";
 import { getServerSession } from "next-auth";
 import { Toaster } from "sonner";
@@ -94,7 +93,6 @@ export default async function RootLayout({
 					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 				>
 					{children}
-					<Footer />
 				</body>
 				<Toaster theme="dark" />
 			</SessionProvider>
