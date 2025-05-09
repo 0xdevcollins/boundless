@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { Button } from "@/components/ui/button";
 import type { UserProfile } from "@/types/user";
@@ -9,35 +9,31 @@ import React from "react";
 // import { cn } from "@/lib/utils";
 
 interface ProfileDisplayProps {
-	userData: UserProfile;
-	onEdit: () => void;
-	isLoading?: boolean;
+  userData: UserProfile;
+  onEdit: () => void;
+  isLoading?: boolean;
 }
 
-export default function ProfileDisplay({
-	userData,
-	onEdit,
-	isLoading = false,
-}: ProfileDisplayProps) {
-	const {
-		name,
-		bio,
-		bannerImage,
-		image,
-		twitter,
-		linkedin,
-		totalContributions = 0,
-		votes = 0,
-		fundedProjects = 0,
-	} = userData;
+export default function ProfileDisplay({ userData, onEdit, isLoading = false }: ProfileDisplayProps) {
+  const {
+    name,
+    bio,
+    bannerImage,
+    image,
+    twitter,
+    linkedin,
+    totalContributions = 0,
+    votes = 0,
+    fundedProjects = 0,
+  } = userData;
 
-	if (isLoading) {
-		return (
-			<div className="w-full h-96 flex items-center justify-center">
-				<Loader2 className="w-8 h-8 animate-spin text-primary" />
-			</div>
-		);
-	}
+  if (isLoading) {
+    return (
+      <div className="w-full h-96 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
 	return (
 		<div className="space-y-6">

@@ -2,20 +2,19 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { SessionProvider } from "@/components/session-provider";
-import Footer from "@/components/shared/footer";
 import { authOptions } from "@/lib/auth.config";
 import { getServerSession } from "next-auth";
 import { Toaster } from "sonner";
 
 const geistSans = localFont({
-	src: "./fonts/GeistVF.woff",
-	variable: "--font-geist-sans",
-	weight: "100 900",
+  src: './fonts/GeistVF.woff',
+  variable: '--font-geist-sans',
+  weight: '100 900',
 });
 const geistMono = localFont({
-	src: "./fonts/GeistMonoVF.woff",
-	variable: "--font-geist-mono",
-	weight: "100 900",
+  src: './fonts/GeistMonoVF.woff',
+  variable: '--font-geist-mono',
+  weight: '100 900',
 });
 
 export const metadata: Metadata = {
@@ -81,11 +80,11 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({
-	children,
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-	const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
 
 	return (
 		<html lang="en" suppressHydrationWarning>
@@ -94,7 +93,6 @@ export default async function RootLayout({
 					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 				>
 					{children}
-					<Footer />
 				</body>
 				<Toaster theme="dark" />
 			</SessionProvider>
