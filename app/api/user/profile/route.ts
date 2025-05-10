@@ -1,8 +1,8 @@
-import { authOptions } from '@/lib/auth.config';
-import { getUserProfile, updateUserProfile } from '@/lib/db/profile';
-import { getServerSession } from 'next-auth';
+import { authOptions } from "@/lib/auth.config";
+import { getUserProfile, updateUserProfile } from "@/lib/db/profile";
+import { getServerSession } from "next-auth";
 // app/api/user/profile/route.ts
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 // import { z } from "zod";
 // import { authOptions } from '@/lib/auth';
 
@@ -17,39 +17,45 @@ import { NextResponse } from 'next/server';
 // });
 
 export async function GET() {
-  try {
-    const session = await getServerSession(authOptions);
+	try {
+		const session = await getServerSession(authOptions);
 
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+		if (!session?.user?.id) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
 
-    const profile = await getUserProfile(session.user.id);
-    if (!profile) {
-      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
-    }
+		const profile = await getUserProfile(session.user.id);
+		if (!profile) {
+			return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+		}
 
-    return NextResponse.json(profile);
-  } catch (error) {
-    console.error('Error fetching profile:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
+		return NextResponse.json(profile);
+	} catch (error) {
+		console.error("Error fetching profile:", error);
+		return NextResponse.json(
+			{ error: "Internal server error" },
+			{ status: 500 },
+		);
+	}
 }
 
 export async function PUT(request: Request) {
-  try {
-    const session = await getServerSession(authOptions);
+	try {
+		const session = await getServerSession(authOptions);
 
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+		if (!session?.user?.id) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
 
-    const data = await request.json();
-    const profile = await updateUserProfile(session.user.id, data);
+		const data = await request.json();
+		const profile = await updateUserProfile(session.user.id, data);
 
-    return NextResponse.json(profile);
-  } catch (error) {
-    console.error('Error updating profile:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
+		return NextResponse.json(profile);
+	} catch (error) {
+		console.error("Error updating profile:", error);
+		return NextResponse.json(
+			{ error: "Internal server error" },
+			{ status: 500 },
+		);
+	}
 }

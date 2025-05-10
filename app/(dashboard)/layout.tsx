@@ -1,21 +1,21 @@
-import ConnectWalletButton from '@/components/connect-wallet';
-import { MobileSidebar } from '@/components/mobile-sidebar';
-import { NotificationDropdown } from '@/components/notifications/NotificationDropdown';
-import { Sidebar } from '@/components/sidebar';
-import type React from 'react';
+import ConnectWalletButton from "@/components/connect-wallet";
+import { MobileSidebar } from "@/components/mobile-sidebar";
+import { NotificationDropdown } from "@/components/notifications/NotificationDropdown";
+import { Sidebar } from "@/components/sidebar";
+import type React from "react";
 
 export const metadata = {
-  title: 'Dashboard',
-  description: 'User dashboard layout',
+	title: "Dashboard",
+	description: "User dashboard layout",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex min-h-screen">
-      {/* Desktop Sidebar */}
-      <div className="hidden md:block">
-        <Sidebar />
-      </div>
+	return (
+		<div className="flex min-h-screen">
+			{/* Desktop Sidebar */}
+			<div className="hidden md:block">
+				<Sidebar />
+			</div>
 
 			{/* Main Content */}
 			<div className="flex w-full flex-1 flex-col md:pl-[280px]">
@@ -30,8 +30,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 					</div>
 				</header>
 
-        <main className="flex-1 p-5">{children}</main>
-      </div>
-    </div>
-  );
+				<main className="flex-1 p-5">{children}</main>
+			</div>
+		</div>
+	);
 }

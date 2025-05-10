@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { ProjectForm } from '@/components/project-form';
-import { WithWalletProtection } from '@/components/with-wallet-protection';
+import { ProjectForm } from "@/components/project-form";
+import { WithWalletProtection } from "@/components/with-wallet-protection";
 
 interface ProjectFormWrapperProps {
-  userId?: string;
+	userId?: string;
 }
 
 export const ProjectFormWrapper = ({ userId }: ProjectFormWrapperProps) => {
-  return (
-    <WithWalletProtection redirectPath="/projects">
-      <ProjectForm userId={userId} />
-    </WithWalletProtection>
-  );
+	return (
+		<WithWalletProtection redirectPath="/projects">
+			<ProjectForm />
+		</WithWalletProtection>
+	);
 };
