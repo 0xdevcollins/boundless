@@ -1,6 +1,6 @@
-import { execSync } from "child_process";
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
-import path from "path";
+import { execSync } from 'child_process';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
+import path from 'path';
 
 // Load environment variables starting with PUBLIC_ into the environment,
 // so we don't need to specify duplicate variables in .env
@@ -10,7 +10,7 @@ for (const key in process.env) {
   }
 }
 export const loadAccount = () => {
-  console.log(process.env.STELLAR_ACCOUNT)
+  console.log(process.env.STELLAR_ACCOUNT);
   // This takes the secret key from SOROBAN_SECRET_KEY env-variable, so make sure you have that set.
   exe(`stellar keys add ${process.env.STELLAR_ACCOUNT}`);
 };

@@ -12,4 +12,4 @@ export async function getXLMPrice(): Promise<number> {
 export function convertUSDToStroops(usdAmount: number, xlmPrice: number): bigint {
   const xlmAmount = usdAmount / xlmPrice;
   return BigInt(Math.floor(xlmAmount * 10_000_000));
-} 
+}

@@ -1,20 +1,20 @@
-import { resendOTP } from "@/lib/email";
-import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { resendOTP } from '@/lib/email';
+import { PrismaClient } from '@prisma/client';
+import { NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
-	try {
-		const { email } = await req.json();
+  try {
+    const { email } = await req.json();
 
-		const user = await prisma.user.findUnique({
-			where: { email },
-		});
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
-		if (!user) {
-			return NextResponse.json({ message: "User not found" }, { status: 400 });
-		}
+    if (!user) {
+      return NextResponse.json({ message: 'User not found' }, { status: 400 });
+    }
 
 		// Generate new OTP
 		const otp = Math.floor(100000 + Math.random() * 900000).toString();

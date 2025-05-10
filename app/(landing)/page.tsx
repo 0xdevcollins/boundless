@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import AboutUs from "@/components/landing/sections/about-us";
 import CTA from "@/components/landing/sections/cta";

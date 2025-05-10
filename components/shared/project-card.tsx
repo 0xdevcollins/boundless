@@ -1,46 +1,46 @@
-"use client";
+'use client';
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { useProjectAuth } from "@/hooks/useProjectAuth";
-import { cn, formatValidationStatus } from "@/lib/utils";
-import Image from "next/image";
-import Link from "next/link";
-import { VoteButton } from "../shared/vote-button";
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { useProjectAuth } from '@/hooks/useProjectAuth';
+import { cn, formatValidationStatus } from '@/lib/utils';
+import Image from 'next/image';
+import Link from 'next/link';
+import { VoteButton } from '../shared/vote-button';
 
-type ValidationStatus = "PENDING" | "REJECTED" | "VALIDATED";
+type ValidationStatus = 'PENDING' | 'REJECTED' | 'VALIDATED';
 
 type Project = {
-	id: string;
-	userId: string;
-	title: string;
-	description: string;
-	fundingGoal: number;
-	category: string;
-	bannerUrl: string | null;
-	profileUrl: string | null;
-	blockchainTx: string | null;
-	ideaValidation: ValidationStatus;
-	createdAt: string;
-	user: {
-		id: string;
-		name: string | null;
-		image: string | null;
-	};
-	votes: {
-		id: string;
-		userId: string;
-	}[];
-	_count: {
-		votes: number;
-	};
+  id: string;
+  userId: string;
+  title: string;
+  description: string;
+  fundingGoal: number;
+  category: string;
+  bannerUrl: string | null;
+  profileUrl: string | null;
+  blockchainTx: string | null;
+  ideaValidation: ValidationStatus;
+  createdAt: string;
+  user: {
+    id: string;
+    name: string | null;
+    image: string | null;
+  };
+  votes: {
+    id: string;
+    userId: string;
+  }[];
+  _count: {
+    votes: number;
+  };
 };
 
 interface ProjectCardProps {
-	project: Project;
-	userVoted: boolean;
-	linkPath?: string;
-	className?: string;
+  project: Project;
+  userVoted: boolean;
+  linkPath?: string;
+  className?: string;
 }
 
 export function ProjectCard({
@@ -99,56 +99,50 @@ export function ProjectCard({
 				)}
 			</Link>
 
-			<CardContent className="p-4 pt-3">
-				<div className="space-y-2">
-					<div className="flex justify-between items-start gap-2">
-						<h3 className="font-semibold text-lg line-clamp-2 leading-tight">
-							{project.title}
-						</h3>
-					</div>
-					<p className="text-sm text-muted-foreground line-clamp-2">
-						{project.description}
-					</p>
-				</div>
-			</CardContent>
+      <CardContent className="p-4 pt-3">
+        <div className="space-y-2">
+          <div className="flex justify-between items-start gap-2">
+            <h3 className="font-semibold text-lg line-clamp-2 leading-tight">{project.title}</h3>
+          </div>
+          <p className="text-sm text-muted-foreground line-clamp-2">{project.description}</p>
+        </div>
+      </CardContent>
 
-			<CardFooter className="flex flex-col items-start gap-3 p-4 pt-0">
-				{/* Badges */}
-				<div className="flex flex-wrap gap-2 w-full">
-					<Badge variant="secondary" className="text-xs px-2 py-1 capitalize">
-						{project.category.toLowerCase()}
-					</Badge>
-					<Badge
-						variant={
-							project.ideaValidation === "VALIDATED"
-								? "default"
-								: project.ideaValidation === "REJECTED"
-									? "destructive"
-									: "secondary"
-						}
-						className="text-xs px-2 py-1"
-					>
-						{formatValidationStatus(project.ideaValidation)}
-					</Badge>
-				</div>
+      <CardFooter className="flex flex-col items-start gap-3 p-4 pt-0">
+        {/* Badges */}
+        <div className="flex flex-wrap gap-2 w-full">
+          <Badge variant="secondary" className="text-xs px-2 py-1 capitalize">
+            {project.category.toLowerCase()}
+          </Badge>
+          <Badge
+            variant={
+              project.ideaValidation === 'VALIDATED'
+                ? 'default'
+                : project.ideaValidation === 'REJECTED'
+                  ? 'destructive'
+                  : 'secondary'
+            }
+            className="text-xs px-2 py-1"
+          >
+            {formatValidationStatus(project.ideaValidation)}
+          </Badge>
+        </div>
 
-				{/* Progress Bar (optional - if you have funding data) */}
-				{/* <Progress value={50} className="h-2 w-full" /> */}
+        {/* Progress Bar (optional - if you have funding data) */}
+        {/* <Progress value={50} className="h-2 w-full" /> */}
 
-				{/* Status & Creator */}
-				<div className="flex justify-between items-center w-full text-xs">
-					<span className="font-medium text-foreground/80">
-						{project.ideaValidation === "VALIDATED"
-							? "Funding Stage"
-							: "Validation Stage"}
-					</span>
-					{isOwner && project.user.name && (
-						<div className="flex items-center gap-1">
-							<span className="text-muted-foreground">By</span>
-							<span className="font-medium">{project.user.name}</span>
-						</div>
-					)}
-				</div>
+        {/* Status & Creator */}
+        <div className="flex justify-between items-center w-full text-xs">
+          <span className="font-medium text-foreground/80">
+            {project.ideaValidation === 'VALIDATED' ? 'Funding Stage' : 'Validation Stage'}
+          </span>
+          {isOwner && project.user.name && (
+            <div className="flex items-center gap-1">
+              <span className="text-muted-foreground">By</span>
+              <span className="font-medium">{project.user.name}</span>
+            </div>
+          )}
+        </div>
 
 				{/* Vote Button */}
 				{project.ideaValidation === "PENDING" && (

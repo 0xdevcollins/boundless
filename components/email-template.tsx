@@ -5,12 +5,12 @@ import Link from "next/link";
 import type * as React from "react";
 
 interface EmailTemplateProps {
-	name: string;
-	otp?: string;
-	resetUrl?: string;
+  name: string;
+  otp?: string;
+  resetUrl?: string;
 }
 
-export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
+ const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = async ({
 	name,
 	otp,
 	resetUrl,

@@ -1,9 +1,11 @@
 # Boundless Contribution Guide
 
 ## Introduction
+
 Welcome to the **Boundless** project! Boundless is a crowdfunding platform built on the **Stellar blockchain**, using **Soroban smart contracts** to facilitate transparent and decentralized project funding. This document outlines how to contribute to the project, including setting up your development environment, best practices, and contribution guidelines.
 
 ## Table of Contents
+
 1. [Project Overview](#project-overview)
 2. [Technology Stack](#technology-stack)
 3. [Getting Started](#getting-started)
@@ -18,7 +20,9 @@ Welcome to the **Boundless** project! Boundless is a crowdfunding platform built
 ---
 
 ## 1. Project Overview
+
 Boundless enables users to create, support, and manage projects in a decentralized and trustless manner. **Key features include:**
+
 - User Authentication (email & social login, KYC verification)
 - Project Creation & Discovery
 - Voting & Feedback Mechanism
@@ -26,26 +30,33 @@ Boundless enables users to create, support, and manage projects in a decentraliz
 - Milestone-Based Fund Releases
 
 ## 2. Technology Stack
+
 ### Backend:
+
 - **Next.js API Routes** (for server-side logic)
 - **Prisma ORM** (for database interactions)
 - **PostgreSQL** (for storage)
 - **Stellar SDK** (for blockchain interactions)
 
 ### Frontend:
+
 - **Next.js (App Router)** (for the main web application)
 - **Shadcn** (for UI development)
 - **Tailwind CSS** (for styling)
 - **Zustand** (for state management)
 
 ### Infrastructure:
+
 - **Vercel** (for frontend hosting & deployment)
 - **Docker** (for containerization)
 - **GitHub Actions** (for CI/CD pipelines)
 
 ## 3. Getting Started
+
 ### Prerequisites
+
 Before contributing, ensure you have the following installed:
+
 - **Node.js** & **npm**
 - **Docker** (for containerized development)
 - **PostgreSQL** (for database setup)
@@ -53,6 +64,7 @@ Before contributing, ensure you have the following installed:
 - **Git** (for version control)
 
 ### Setup
+
 1. **Fork the repository https://github.com/0xdevcollins/boundless and clone your fork:**
    ```sh
    git clone https://github.com/YOUR_USERNAME/boundless.git
@@ -72,7 +84,9 @@ Before contributing, ensure you have the following installed:
 ---
 
 ## 4. How to Contribute
+
 ### 1. Fork & Clone the Repository
+
 - Fork the repository to your GitHub account.
 - Clone it locally using:
   ```sh
@@ -80,12 +94,14 @@ Before contributing, ensure you have the following installed:
   ```
 
 ### 2. Create a Feature Branch
+
 - Use descriptive branch names:
   ```sh
   git checkout -b feature/add-user-profile
   ```
 
 ### 3. Make Changes & Commit
+
 - Follow the coding standards (see next section).
 - Commit with meaningful messages:
   ```sh
@@ -93,6 +109,7 @@ Before contributing, ensure you have the following installed:
   ```
 
 ### 4. Push Changes & Create a Pull Request (PR)
+
 - Push your branch:
   ```sh
   git push origin feature/add-user-profile
@@ -100,12 +117,14 @@ Before contributing, ensure you have the following installed:
 - Create a pull request on GitHub and describe your changes.
 
 ### 5. Review & Merge
+
 - Maintainers will review your PR and request changes if necessary.
 - Once approved, it will be merged.
 
 ---
 
 ## 5. Code Standards & Best Practices
+
 - Use **ESLint & Prettier** for formatting.
 - Follow **Conventional Commits** (`feat:`, `fix:`, `chore:`, etc.).
 - Use **TypeScript**.
@@ -114,8 +133,11 @@ Before contributing, ensure you have the following installed:
 ---
 
 ## 6. Smart Contract Development
+
 Boundless uses **Soroban smart contracts** for funding and milestone tracking.
+
 ### Key Contracts:
+
 1. `create_project(project_id, creator_address, metadata_uri, funding_target, milestone_count)`
 2. `vote_project(project_id, vote_value)`
 3. `fund_project(project_id, amount)`
@@ -123,6 +145,7 @@ Boundless uses **Soroban smart contracts** for funding and milestone tracking.
 5. `refund(project_id)`
 
 ### Developing Smart Contracts
+
 1. **Install Soroban CLI:**
    https://developers.stellar.org/docs/build/smart-contracts/getting-started/setup
 2. **Write a new contract in Rust:**
@@ -141,6 +164,7 @@ Boundless uses **Soroban smart contracts** for funding and milestone tracking.
 ---
 
 ## 7. Testing
+
 - **Test smart contracts:**
   ```sh
   cargo test
@@ -149,8 +173,11 @@ Boundless uses **Soroban smart contracts** for funding and milestone tracking.
 ---
 
 ## 8. Deployment & CI/CD
+
 Boundless uses **GitHub Actions** for deployment.
+
 ### Deployment Steps:
+
 1. **Push to `main` branch**
 2. **GitHub Actions** runs tests & builds the project
 3. **Vercel** automatically deploys frontend
@@ -159,23 +186,28 @@ Boundless uses **GitHub Actions** for deployment.
 ---
 
 ## 9. Reporting Issues
+
 Found a bug? Have a feature request? Open an **issue** on GitHub:
+
 - Go to [Issues](https://github.com/0xdevcollins/boundless/issues)
 - Provide clear details & screenshots (if applicable).
 
 ---
 
 ## 10. Community & Support
+
 ### Join Our Channels:
-* [Join Here](https://discord.gg/juUmBmwC3s)
-- **GitHub Discussions:** [Boundless Discussions](https://github.com/0xdevcollins/boundless/discussions)
-- **Twitter:** [Follow @boundless_fi](https://x.com/boundless_fi)
+
+- [Join Here](https://discord.gg/juUmBmwC3s)
+
+* **GitHub Discussions:** [Boundless Discussions](https://github.com/0xdevcollins/boundless/discussions)
+* **Twitter:** [Follow @boundless_fi](https://x.com/boundless_fi)
 
 ### Support
+
 - **Benjamin:** [https://t.me/kitch_the_dev](https://t.me/kitch_the_dev)
 - **Collins:** [https://t.me/devcollinss](https://t.me/devcollinss)
 
 ---
 
 Thank you for contributing to Boundless! 🚀
-
