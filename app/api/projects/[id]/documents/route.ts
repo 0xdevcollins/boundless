@@ -32,7 +32,7 @@ async function uploadToCloudinary(file: File, folder: string) {
 
 export async function POST(
 	request: Request,
-	{ params }: { params: { id: string } },
+	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
 		const session = await getServerSession(authOptions);
@@ -40,7 +40,8 @@ export async function POST(
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		const projectId = params.id;
+		const { id } = await params;
+		const projectId = id;
 
 		// Check if project exists and user has access
 		const project = await prisma.project.findUnique({
@@ -95,7 +96,7 @@ export async function POST(
 
 export async function GET(
 	request: Request,
-	{ params }: { params: { id: string } },
+	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
 		const session = await getServerSession(authOptions);
@@ -103,7 +104,8 @@ export async function GET(
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		const projectId = params.id;
+		const { id } = await params;
+		const projectId = id;
 
 		// Check if project exists and user has access
 		const project = await prisma.project.findUnique({

@@ -2,9 +2,9 @@
 
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
-export default function ResetPassword() {
+function ResetPasswordContent() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
@@ -131,5 +131,21 @@ export default function ResetPassword() {
 				</form>
 			</div>
 		</div>
+	);
+}
+
+export default function ResetPassword() {
+	return (
+		<Suspense
+			fallback={
+				<div className="min-h-screen flex items-center justify-center bg-[#dffce8]">
+					<div className="max-w-md w-full space-y-6 bg-white p-8 rounded-lg shadow-lg">
+						<div className="animate-pulse">Loading...</div>
+					</div>
+				</div>
+			}
+		>
+			<ResetPasswordContent />
+		</Suspense>
 	);
 }
