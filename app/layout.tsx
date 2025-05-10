@@ -5,8 +5,6 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth.config";
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -20,16 +18,15 @@ const geistMono = localFont({
   weight: '100 900',
 });
 
-export default async function RootLayout({
+export default function RootLayout({
 	children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
 
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<SessionProvider session={session}>
+			<SessionProvider>
 				<body
 					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 				>
