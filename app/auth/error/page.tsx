@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 import { AlertCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function AuthErrorPage() {
+function AuthErrorContent() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const error =
@@ -28,5 +29,19 @@ export default function AuthErrorPage() {
 				</motion.button>
 			</div>
 		</div>
+	);
+}
+
+export default function AuthErrorPage() {
+	return (
+		<Suspense
+			fallback={
+				<div className="min-h-screen flex items-center justify-center bg-[#dffce8]">
+					<div className="animate-pulse">Loading...</div>
+				</div>
+			}
+		>
+			<AuthErrorContent />
+		</Suspense>
 	);
 }

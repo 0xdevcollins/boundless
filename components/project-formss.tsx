@@ -541,7 +541,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 									<div className="mt-4 grid gap-4 md:grid-cols-2">
 										<FormField
 											control={form.control}
-											name={`teamMembers.${members.indexOf(member)}.fullName`}
+											name={`teamMembers.${form.watch("teamMembers").indexOf(member)}.fullName`}
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Full Name</FormLabel>
@@ -555,7 +555,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 										<FormField
 											control={form.control}
-											name={`teamMembers.${members.indexOf(member)}.role`}
+											name={`teamMembers.${form.watch("teamMembers").indexOf(member)}.role`}
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Role</FormLabel>
@@ -569,7 +569,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 										<FormField
 											control={form.control}
-											name={`teamMembers.${members.indexOf(member)}.bio`}
+											name={`teamMembers.${form.watch("teamMembers").indexOf(member)}.bio`}
 											render={({ field }) => (
 												<FormItem className="md:col-span-2">
 													<FormLabel>Bio</FormLabel>
@@ -586,7 +586,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 										<FormField
 											control={form.control}
-											name={`teamMembers.${members.indexOf(member)}.profileImage`}
+											name={`teamMembers.${form.watch("teamMembers").indexOf(member)}.profileImage`}
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Profile Image</FormLabel>
@@ -622,7 +622,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 										<div className="grid gap-4 md:grid-cols-2">
 											<FormField
 												control={form.control}
-												name={`teamMembers.${members.indexOf(member)}.github`}
+												name={`teamMembers.${form.watch("teamMembers").indexOf(member)}.github`}
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>GitHub</FormLabel>
@@ -636,7 +636,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 											<FormField
 												control={form.control}
-												name={`teamMembers.${members.indexOf(member)}.twitter`}
+												name={`teamMembers.${form.watch("teamMembers").indexOf(member)}.twitter`}
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>Twitter</FormLabel>
@@ -650,7 +650,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 											<FormField
 												control={form.control}
-												name={`teamMembers.${members.indexOf(member)}.discord`}
+												name={`teamMembers.${form.watch("teamMembers").indexOf(member)}.discord`}
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>Discord</FormLabel>
@@ -664,7 +664,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 											<FormField
 												control={form.control}
-												name={`teamMembers.${members.indexOf(member)}.linkedin`}
+												name={`teamMembers.${form.watch("teamMembers").indexOf(member)}.linkedin`}
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>LinkedIn</FormLabel>
@@ -685,9 +685,8 @@ export function ProjectForm({ userId }: { userId?: string }) {
 								variant="outline"
 								className="w-full"
 								onClick={() => {
-									const members = form.getValues("teamMembers");
 									form.setValue("teamMembers", [
-										...members,
+										...form.watch("teamMembers"),
 										{
 											id: crypto.randomUUID(),
 											fullName: "",
