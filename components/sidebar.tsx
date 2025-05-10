@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useThemeStore } from "@/store/useThemeStore";
 import {
 	BarChart2,
 	Bell,
@@ -19,8 +20,7 @@ import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import * as React from "react";
-import { useThemeStore } from "@/store/useThemeStore";
+import type * as React from "react";
 
 interface NavItem {
 	icon: React.ElementType;

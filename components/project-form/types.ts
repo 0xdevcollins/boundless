@@ -14,40 +14,49 @@ export const projectFormSchema = z.object({
 		z.object({
 			userId: z.string(),
 			role: z.string(),
-			user: z.object({
-				id: z.string(),
-				name: z.string(),
-				image: z.string().optional(),
-				email: z.string(),
-				github: z.string().optional(),
-				twitter: z.string().optional(),
-				linkedin: z.string().optional(),
-			}).optional(),
-		})
+			user: z
+				.object({
+					id: z.string(),
+					name: z.string(),
+					image: z.string().optional(),
+					email: z.string(),
+					github: z.string().optional(),
+					twitter: z.string().optional(),
+					linkedin: z.string().optional(),
+				})
+				.optional(),
+		}),
 	),
 	// Milestones
 	milestones: z.array(
 		z.object({
+			id: z.string(),
 			title: z.string().min(1, "Title is required"),
-			description: z.string().min(10, "Description must be at least 10 characters"),
+			description: z
+				.string()
+				.min(10, "Description must be at least 10 characters"),
 			dueDate: z.string().optional(),
 			color: z.string().optional(),
 			progress: z.number().min(0).max(100).default(0),
-		})
+		}),
 	),
 	// Documents
-	pitchDeck: z.union([
-		z.instanceof(File),
-		z.string().url(),
-		z.string().min(1).optional(),
-		z.undefined()
-	]).optional(),
-	whitepaper: z.union([
-		z.instanceof(File),
-		z.string().url(),
-		z.string().min(1).optional(),
-		z.undefined()
-	]).optional(),
+	pitchDeck: z
+		.union([
+			z.instanceof(File),
+			z.string().url(),
+			z.string().min(1).optional(),
+			z.undefined(),
+		])
+		.optional(),
+	whitepaper: z
+		.union([
+			z.instanceof(File),
+			z.string().url(),
+			z.string().min(1).optional(),
+			z.undefined(),
+		])
+		.optional(),
 });
 
 export type ProjectFormValues = z.infer<typeof projectFormSchema>;
@@ -87,4 +96,4 @@ export const steps: { id: Step; title: string; description: string }[] = [
 		title: "Review",
 		description: "Review and submit your project",
 	},
-]; 
+];

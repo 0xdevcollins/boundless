@@ -1,5 +1,6 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -27,13 +28,21 @@ import { contractClient } from "@/src/contracts/boundless_contract";
 import { useWalletStore } from "@/store/useWalletStore";
 import { convertUSDToStroops, getXLMPrice } from "@/utils/price";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DollarSign, FileImage, Loader2, Upload, FileText, ArrowRight, ArrowLeft, Plus } from "lucide-react";
+import {
+	ArrowLeft,
+	ArrowRight,
+	DollarSign,
+	FileImage,
+	FileText,
+	Loader2,
+	Plus,
+	Upload,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const projectFormSchema = z.object({
 	userId: z.string().min(1, "User ID is required"),
@@ -49,24 +58,36 @@ const projectFormSchema = z.object({
 	profileImage: z.union([z.string().url(), z.instanceof(File)]).optional(),
 	walletAddress: z.string(),
 	// Team members
-	teamMembers: z.array(z.object({
-		fullName: z.string().min(1, "Full name is required"),
-		role: z.string().min(1, "Role is required"),
-		bio: z.string().optional(),
-		profileImage: z.union([z.string().url(), z.instanceof(File)]).optional(),
-		github: z.string().url().optional(),
-		twitter: z.string().url().optional(),
-		discord: z.string().optional(),
-		linkedin: z.string().url().optional(),
-	})).default([]),
+	teamMembers: z
+		.array(
+			z.object({
+				id: z.string().default(() => crypto.randomUUID()),
+				fullName: z.string().min(1, "Full name is required"),
+				role: z.string().min(1, "Role is required"),
+				bio: z.string().optional(),
+				profileImage: z
+					.union([z.string().url(), z.instanceof(File)])
+					.optional(),
+				github: z.string().url().optional(),
+				twitter: z.string().url().optional(),
+				discord: z.string().optional(),
+				linkedin: z.string().url().optional(),
+			}),
+		)
+		.default([]),
 	// Milestones
-	milestones: z.array(z.object({
-		title: z.string().min(1, "Title is required"),
-		description: z.string().min(1, "Description is required"),
-		dueDate: z.string().optional(),
-		progress: z.number().min(0).max(100).default(0),
-		color: z.string().default("#3b82f6"), // Default blue color
-	})).default([]),
+	milestones: z
+		.array(
+			z.object({
+				id: z.string().default(() => crypto.randomUUID()),
+				title: z.string().min(1, "Title is required"),
+				description: z.string().min(1, "Description is required"),
+				dueDate: z.string().optional(),
+				progress: z.number().min(0).max(100).default(0),
+				color: z.string().default("#3b82f6"), // Default blue color
+			}),
+		)
+		.default([]),
 	// Documents
 	pitchDeck: z.union([z.string().url(), z.instanceof(File)]).optional(),
 	whitepaper: z.union([z.string().url(), z.instanceof(File)]).optional(),
@@ -171,7 +192,9 @@ export function ProjectForm({ userId }: { userId?: string }) {
 		}
 	};
 
-	async function handleUploadMetadata(data: ProjectFormValues): Promise<string> {
+	async function handleUploadMetadata(
+		data: ProjectFormValues,
+	): Promise<string> {
 		setStatus("Uploading metadata...");
 		setProgress(25);
 
@@ -242,13 +265,13 @@ export function ProjectForm({ userId }: { userId?: string }) {
 			formData.append("projectId", projectId);
 			formData.append("signedTx", getTransactionResponse?.txHash ?? "");
 			formData.append("metadataUri", metadataUri);
-			
+
 			// Append team members
 			formData.append("teamMembers", JSON.stringify(data.teamMembers));
-			
+
 			// Append milestones
 			formData.append("milestones", JSON.stringify(data.milestones));
-			
+
 			// Append documents
 			if (data.pitchDeck instanceof File) {
 				formData.append("pitchDeck", data.pitchDeck);
@@ -302,180 +325,179 @@ export function ProjectForm({ userId }: { userId?: string }) {
 	const renderStepContent = () => {
 		switch (currentStep) {
 			case "basic":
-	return (
-						<div className="space-y-6">
-							<div>
-								<h3 className="text-lg font-medium">Project Details</h3>
-								<p className="text-sm text-muted-foreground">
-									Basic information about your project
-								</p>
-								<Separator className="my-4" />
-							</div>
+				return (
+					<div className="space-y-6">
+						<div>
+							<h3 className="text-lg font-medium">Project Details</h3>
+							<p className="text-sm text-muted-foreground">
+								Basic information about your project
+							</p>
+							<Separator className="my-4" />
+						</div>
 
+						<FormField
+							control={form.control}
+							name="title"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Project Title</FormLabel>
+									<FormControl>
+										<Input placeholder="Enter your project title" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="description"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Description</FormLabel>
+									<FormControl>
+										<Textarea
+											placeholder="Describe your project..."
+											className="min-h-[150px] resize-none"
+											{...field}
+										/>
+									</FormControl>
+									<FormDescription>
+										Provide a clear and compelling description of your project
+									</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<div className="grid gap-6 md:grid-cols-2">
 							<FormField
 								control={form.control}
-								name="title"
+								name="fundingGoal"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Project Title</FormLabel>
+										<FormLabel>Funding Goal</FormLabel>
 										<FormControl>
-											<Input
-												placeholder="Enter your project title"
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							<FormField
-								control={form.control}
-								name="description"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Description</FormLabel>
-										<FormControl>
-											<Textarea
-												placeholder="Describe your project..."
-												className="min-h-[150px] resize-none"
-												{...field}
-											/>
+											<div className="relative">
+												<DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+												<Input
+													type="number"
+													placeholder="Amount in USD"
+													className="pl-9"
+													{...field}
+												/>
+											</div>
 										</FormControl>
 										<FormDescription>
-											Provide a clear and compelling description of your project
+											{xlmPrice && field.value && (
+												<span className="text-sm text-muted-foreground">
+													≈ {(Number(field.value) / xlmPrice).toFixed(2)} XLM
+												</span>
+											)}
 										</FormDescription>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
 
-							<div className="grid gap-6 md:grid-cols-2">
-								<FormField
-									control={form.control}
-									name="fundingGoal"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Funding Goal</FormLabel>
+							<FormField
+								control={form.control}
+								name="category"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Category</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
 											<FormControl>
-												<div className="relative">
-													<DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+												<SelectTrigger>
+													<SelectValue placeholder="Select a category" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{categories.map((category) => (
+													<SelectItem key={category.id} value={category.id}>
+														{category.name}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+
+						<div className="grid gap-6 md:grid-cols-2">
+							<FormField
+								control={form.control}
+								name="bannerImage"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Banner Image</FormLabel>
+										<FormControl>
+											<div className="space-y-3">
+												<div className="flex items-center gap-2 rounded-md border border-dashed p-4">
+													<FileImage className="h-5 w-5 text-muted-foreground" />
 													<Input
-														type="number"
-														placeholder="Amount in USD"
-														className="pl-9"
-														{...field}
+														type="file"
+														accept="image/*"
+														className="border-0 p-0 shadow-none"
+														onChange={(e) =>
+															field.onChange(e.target.files?.[0])
+														}
 													/>
 												</div>
-											</FormControl>
-											<FormDescription>
-												{xlmPrice && field.value && (
-													<span className="text-sm text-muted-foreground">
-														≈ {(Number(field.value) / xlmPrice).toFixed(2)} XLM
-													</span>
-												)}
-											</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<FormField
-									control={form.control}
-									name="category"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Category</FormLabel>
-											<Select
-												onValueChange={field.onChange}
-												defaultValue={field.value}
-											>
-												<FormControl>
-													<SelectTrigger>
-														<SelectValue placeholder="Select a category" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{categories.map((category) => (
-														<SelectItem key={category.id} value={category.id}>
-															{category.name}
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<div className="grid gap-6 md:grid-cols-2">
-								<FormField
-									control={form.control}
-									name="bannerImage"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Banner Image</FormLabel>
-											<FormControl>
-												<div className="space-y-3">
-													<div className="flex items-center gap-2 rounded-md border border-dashed p-4">
-														<FileImage className="h-5 w-5 text-muted-foreground" />
-														<Input
-															type="file"
-															accept="image/*"
-															className="border-0 p-0 shadow-none"
-															onChange={(e) =>
-																field.onChange(e.target.files?.[0])
-															}
-														/>
-													</div>
-													<div className="relative">
-														<Input
-															type="url"
-															placeholder="Or enter image URL"
-															onChange={(e) => field.onChange(e.target.value)}
-														/>
-													</div>
+												<div className="relative">
+													<Input
+														type="url"
+														placeholder="Or enter image URL"
+														onChange={(e) => field.onChange(e.target.value)}
+													/>
 												</div>
-											</FormControl>
-											<FormDescription>
-											Banner image will be displayed at the top of your project page
-											</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+											</div>
+										</FormControl>
+										<FormDescription>
+											Banner image will be displayed at the top of your project
+											page
+										</FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 
-								<FormField
-									control={form.control}
-									name="profileImage"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Profile Image</FormLabel>
-											<FormControl>
-												<div className="space-y-3">
-													<div className="flex items-center gap-2 rounded-md border border-dashed p-4">
-														<FileImage className="h-5 w-5 text-muted-foreground" />
-														<Input
-															type="file"
-															accept="image/*"
-															className="border-0 p-0 shadow-none"
-															onChange={(e) =>
-																field.onChange(e.target.files?.[0])
-															}
-														/>
-													</div>
-													<div className="relative">
-														<Input
-															type="url"
-															placeholder="Or enter image URL"
-															onChange={(e) => field.onChange(e.target.value)}
-														/>
-													</div>
+							<FormField
+								control={form.control}
+								name="profileImage"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Profile Image</FormLabel>
+										<FormControl>
+											<div className="space-y-3">
+												<div className="flex items-center gap-2 rounded-md border border-dashed p-4">
+													<FileImage className="h-5 w-5 text-muted-foreground" />
+													<Input
+														type="file"
+														accept="image/*"
+														className="border-0 p-0 shadow-none"
+														onChange={(e) =>
+															field.onChange(e.target.files?.[0])
+														}
+													/>
 												</div>
-											</FormControl>
-											<FormDescription>
-											Profile image will be displayed in project cards and headers
+												<div className="relative">
+													<Input
+														type="url"
+														placeholder="Or enter image URL"
+														onChange={(e) => field.onChange(e.target.value)}
+													/>
+												</div>
+											</div>
+										</FormControl>
+										<FormDescription>
+											Profile image will be displayed in project cards and
+											headers
 										</FormDescription>
 										<FormMessage />
 									</FormItem>
@@ -497,16 +519,18 @@ export function ProjectForm({ userId }: { userId?: string }) {
 						</div>
 
 						<div className="space-y-4">
-							{form.watch("teamMembers").map((_, index) => (
-								<Card key={index} className="p-4">
+							{form.watch("teamMembers").map((member) => (
+								<Card key={member.id} className="p-4">
 									<div className="flex items-center justify-between">
-										<h4 className="font-medium">Team Member {index + 1}</h4>
+										<h4 className="font-medium">
+											Team Member {member.fullName}
+										</h4>
 										<Button
 											variant="ghost"
 											size="sm"
 											onClick={() => {
 												const members = form.getValues("teamMembers");
-												members.splice(index, 1);
+												members.splice(members.indexOf(member), 1);
 												form.setValue("teamMembers", members);
 											}}
 										>
@@ -517,7 +541,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 									<div className="mt-4 grid gap-4 md:grid-cols-2">
 										<FormField
 											control={form.control}
-											name={`teamMembers.${index}.fullName`}
+											name={`teamMembers.${members.indexOf(member)}.fullName`}
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Full Name</FormLabel>
@@ -531,7 +555,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 										<FormField
 											control={form.control}
-											name={`teamMembers.${index}.role`}
+											name={`teamMembers.${members.indexOf(member)}.role`}
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Role</FormLabel>
@@ -545,7 +569,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 										<FormField
 											control={form.control}
-											name={`teamMembers.${index}.bio`}
+											name={`teamMembers.${members.indexOf(member)}.bio`}
 											render={({ field }) => (
 												<FormItem className="md:col-span-2">
 													<FormLabel>Bio</FormLabel>
@@ -562,7 +586,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 										<FormField
 											control={form.control}
-											name={`teamMembers.${index}.profileImage`}
+											name={`teamMembers.${members.indexOf(member)}.profileImage`}
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Profile Image</FormLabel>
@@ -583,7 +607,9 @@ export function ProjectForm({ userId }: { userId?: string }) {
 																<Input
 																	type="url"
 																	placeholder="Or enter image URL"
-																	onChange={(e) => field.onChange(e.target.value)}
+																	onChange={(e) =>
+																		field.onChange(e.target.value)
+																	}
 																/>
 															</div>
 														</div>
@@ -596,7 +622,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 										<div className="grid gap-4 md:grid-cols-2">
 											<FormField
 												control={form.control}
-												name={`teamMembers.${index}.github`}
+												name={`teamMembers.${members.indexOf(member)}.github`}
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>GitHub</FormLabel>
@@ -610,7 +636,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 											<FormField
 												control={form.control}
-												name={`teamMembers.${index}.twitter`}
+												name={`teamMembers.${members.indexOf(member)}.twitter`}
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>Twitter</FormLabel>
@@ -624,7 +650,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 											<FormField
 												control={form.control}
-												name={`teamMembers.${index}.discord`}
+												name={`teamMembers.${members.indexOf(member)}.discord`}
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>Discord</FormLabel>
@@ -638,7 +664,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 											<FormField
 												control={form.control}
-												name={`teamMembers.${index}.linkedin`}
+												name={`teamMembers.${members.indexOf(member)}.linkedin`}
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>LinkedIn</FormLabel>
@@ -663,6 +689,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 									form.setValue("teamMembers", [
 										...members,
 										{
+											id: crypto.randomUUID(),
 											fullName: "",
 											role: "",
 											bio: "",
@@ -693,24 +720,28 @@ export function ProjectForm({ userId }: { userId?: string }) {
 						</div>
 
 						<div className="space-y-4">
-							{form.watch("milestones").map((_, index) => (
-								<Card key={index} className="p-4">
+							{form.watch("milestones").map((milestone) => (
+								<Card key={milestone.id} className="p-4">
 									<div className="flex items-center justify-between">
 										<div className="flex items-center gap-2">
 											<div
 												className="h-4 w-4 rounded-full"
 												style={{
-													backgroundColor: form.watch(`milestones.${index}.color`),
+													backgroundColor: form.watch(
+														`milestones.${form.watch("milestones").indexOf(milestone)}.color`,
+													),
 												}}
 											/>
-											<h4 className="font-medium">Milestone {index + 1}</h4>
+											<h4 className="font-medium">
+												Milestone {milestone.title}
+											</h4>
 										</div>
 										<Button
 											variant="ghost"
 											size="sm"
 											onClick={() => {
 												const milestones = form.getValues("milestones");
-												milestones.splice(index, 1);
+												milestones.splice(milestones.indexOf(milestone), 1);
 												form.setValue("milestones", milestones);
 											}}
 										>
@@ -721,7 +752,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 									<div className="mt-4 space-y-4">
 										<FormField
 											control={form.control}
-											name={`milestones.${index}.title`}
+											name={`milestones.${form.watch("milestones").indexOf(milestone)}.title`}
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Title</FormLabel>
@@ -735,7 +766,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 										<FormField
 											control={form.control}
-											name={`milestones.${index}.description`}
+											name={`milestones.${form.watch("milestones").indexOf(milestone)}.description`}
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Description</FormLabel>
@@ -753,7 +784,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 										<div className="grid gap-4 md:grid-cols-2">
 											<FormField
 												control={form.control}
-												name={`milestones.${index}.dueDate`}
+												name={`milestones.${form.watch("milestones").indexOf(milestone)}.dueDate`}
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>Due Date</FormLabel>
@@ -767,7 +798,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 											<FormField
 												control={form.control}
-												name={`milestones.${index}.color`}
+												name={`milestones.${form.watch("milestones").indexOf(milestone)}.color`}
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>Color</FormLabel>
@@ -795,7 +826,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 
 										<FormField
 											control={form.control}
-											name={`milestones.${index}.progress`}
+											name={`milestones.${form.watch("milestones").indexOf(milestone)}.progress`}
 											render={({ field }) => (
 												<FormItem>
 													<div className="flex items-center justify-between">
@@ -818,7 +849,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 																className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-secondary"
 																style={{
 																	background: `linear-gradient(to right, ${form.watch(
-																		`milestones.${index}.color`
+																		`milestones.${form.watch("milestones").indexOf(milestone)}.color`,
 																	)} ${field.value}%, var(--secondary) ${field.value}%)`,
 																}}
 															/>
@@ -846,6 +877,7 @@ export function ProjectForm({ userId }: { userId?: string }) {
 									form.setValue("milestones", [
 										...milestones,
 										{
+											id: crypto.randomUUID(),
 											title: "",
 											description: "",
 											dueDate: "",
@@ -939,13 +971,13 @@ export function ProjectForm({ userId }: { userId?: string }) {
 										</FormControl>
 										<FormDescription>
 											Upload your project whitepaper (PDF)
-											</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
+										</FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 						</div>
+					</div>
 				);
 
 			case "review":
@@ -1000,8 +1032,8 @@ export function ProjectForm({ userId }: { userId?: string }) {
 								</CardHeader>
 								<CardContent>
 									<div className="space-y-4">
-										{form.watch("teamMembers").map((member, index) => (
-											<div key={index} className="flex items-start gap-4">
+										{form.watch("teamMembers").map((member) => (
+											<div key={member.id} className="flex items-start gap-4">
 												<Avatar className="h-10 w-10">
 													<AvatarImage
 														src={
@@ -1035,8 +1067,8 @@ export function ProjectForm({ userId }: { userId?: string }) {
 								</CardHeader>
 								<CardContent>
 									<div className="space-y-4">
-										{form.watch("milestones").map((milestone, index) => (
-											<div key={index} className="space-y-2">
+										{form.watch("milestones").map((milestone) => (
+											<div key={milestone.id} className="space-y-2">
 												<div className="flex items-center gap-2">
 													<div
 														className="h-3 w-3 rounded-full"
@@ -1052,7 +1084,8 @@ export function ProjectForm({ userId }: { userId?: string }) {
 												<div className="flex items-center gap-4 text-sm text-muted-foreground">
 													{milestone.dueDate && (
 														<span>
-															Due: {new Date(milestone.dueDate).toLocaleDateString()}
+															Due:{" "}
+															{new Date(milestone.dueDate).toLocaleDateString()}
 														</span>
 													)}
 													<div className="flex items-center gap-2">
@@ -1156,24 +1189,24 @@ export function ProjectForm({ userId }: { userId?: string }) {
 							</Button>
 
 							{isLastStep ? (
-							<Button
-								type="submit"
-								disabled={isLoading}
-								className="w-full md:w-auto"
-								size="lg"
-							>
-								{isLoading ? (
-									<>
-										<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-										Creating Project...
-									</>
-								) : (
-									<>
-										<Upload className="mr-2 h-4 w-4" />
-										Create Project
-									</>
-								)}
-							</Button>
+								<Button
+									type="submit"
+									disabled={isLoading}
+									className="w-full md:w-auto"
+									size="lg"
+								>
+									{isLoading ? (
+										<>
+											<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+											Creating Project...
+										</>
+									) : (
+										<>
+											<Upload className="mr-2 h-4 w-4" />
+											Create Project
+										</>
+									)}
+								</Button>
 							) : (
 								<Button
 									type="button"

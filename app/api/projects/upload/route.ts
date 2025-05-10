@@ -1,18 +1,16 @@
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
+import { writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import { authOptions } from "@/lib/auth.config";
-import { writeFile } from "fs/promises";
-import { join } from "path";
+import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
 	try {
 		const session = await getServerSession(authOptions);
 		if (!session?.user?.id) {
-			return NextResponse.json(
-				{ error: "Unauthorized" },
-				{ status: 401 }
-			);
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
 		const formData = await request.formData();
@@ -23,7 +21,7 @@ export async function POST(request: Request) {
 		if (!projectId) {
 			return NextResponse.json(
 				{ error: "Project ID is required" },
-				{ status: 400 }
+				{ status: 400 },
 			);
 		}
 
@@ -38,12 +36,18 @@ export async function POST(request: Request) {
 		if (!project) {
 			return NextResponse.json(
 				{ error: "Project not found or unauthorized" },
-				{ status: 404 }
+				{ status: 404 },
 			);
 		}
 
-		const uploadsDir = join(process.cwd(), "public", "uploads", "projects", projectId);
-		const updateData: { pitchDeck?: string; whitepaper?: string } = {};
+		const uploadsDir = join(
+			process.cwd(),
+			"public",
+			"uploads",
+			"projects",
+			projectId,
+		);
+		const updateData: Prisma.ProjectUpdateInput = {};
 
 		// Handle pitch deck upload
 		if (pitchDeck) {
@@ -65,8 +69,7 @@ export async function POST(request: Request) {
 		if (Object.keys(updateData).length > 0) {
 			await prisma.project.update({
 				where: { id: projectId },
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				data: updateData as any,
+				data: updateData,
 			});
 		}
 
@@ -75,7 +78,7 @@ export async function POST(request: Request) {
 		console.error("Error uploading project documents:", error);
 		return NextResponse.json(
 			{ error: "Failed to upload project documents" },
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
-} 
+}

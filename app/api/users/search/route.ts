@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
 	try {
@@ -7,7 +7,10 @@ export async function GET(request: Request) {
 		const query = searchParams.get("q");
 
 		if (!query) {
-			return NextResponse.json({ error: "Search query is required" }, { status: 400 });
+			return NextResponse.json(
+				{ error: "Search query is required" },
+				{ status: 400 },
+			);
 		}
 
 		// Search users by name, email, or username
@@ -30,7 +33,7 @@ export async function GET(request: Request) {
 		});
 
 		// Transform the data to match the expected format
-		const formattedUsers = users.map(user => ({
+		const formattedUsers = users.map((user) => ({
 			id: user.id,
 			name: user.name || user.username || "Unknown User",
 			email: user.email || "",
@@ -42,7 +45,7 @@ export async function GET(request: Request) {
 		console.error("Error searching users:", error);
 		return NextResponse.json(
 			{ error: "Failed to search users" },
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
-} 
+}

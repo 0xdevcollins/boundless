@@ -107,6 +107,8 @@ model Project {
   isApproved     Boolean          @default(false)
   ideaValidation ValidationStatus @default(PENDING)
   createdAt      DateTime         @default(now())
+  pitchDeck      String?
+  whitepaper     String?
   votes          Vote[]
   teamMembers    TeamMember[]
   comments       Comment[]
