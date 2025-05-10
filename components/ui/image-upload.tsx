@@ -1,62 +1,38 @@
 "use client";
 
-import { Loader2, Upload, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
-import { Button } from "./button";
 
 interface ImageUploadProps {
-	value?: string;
+	value: string;
 	onChange: (value: string) => void;
 	onRemove: () => void;
-	aspectRatio?: string;
 }
 
-export function ImageUpload({
-	value,
-	onChange,
-	onRemove,
-	aspectRatio = "1:1",
-}: ImageUploadProps) {
-	const [isUploading, setIsUploading] = useState(false);
-
+export function ImageUpload({ value, onChange, onRemove }: ImageUploadProps) {
 	const onDrop = useCallback(
 		async (acceptedFiles: File[]) => {
 			try {
-				setIsUploading(true);
 				const file = acceptedFiles[0];
-
-				if (!file) return;
-
-				// Create a FormData instance
 				const formData = new FormData();
 				formData.append("file", file);
 
-				// Upload through our API route
 				const response = await fetch("/api/upload", {
 					method: "POST",
 					body: formData,
 				});
 
-				if (!response.ok) {
-					throw new Error("Upload failed");
-				}
+				if (!response.ok) throw new Error("Upload failed");
 
 				const data = await response.json();
-
-				if (data.error) {
-					throw new Error(data.error);
-				}
-
 				onChange(data.url);
 				toast.success("Image uploaded successfully");
-			} catch (error) {
-				console.error("Error uploading file:", error);
+			} catch {
 				toast.error("Failed to upload image");
-			} finally {
-				setIsUploading(false);
 			}
 		},
 		[onChange],
@@ -68,60 +44,50 @@ export function ImageUpload({
 			"image/*": [".png", ".jpg", ".jpeg", ".gif"],
 		},
 		maxFiles: 1,
-		disabled: isUploading,
 	});
 
-	// Calculate height based on aspect ratio
-	const [width, height] = aspectRatio.split(":").map(Number);
-	const paddingTop = `${(height / width) * 100}%`;
-
 	return (
-		<div className="space-y-4 w-full max-w-[300px]">
-			<div
-				style={{ paddingTop }}
-				className="relative w-full bg-muted border-2 border-dashed rounded-lg overflow-hidden"
-			>
-				{value ? (
-					<div className="absolute inset-0">
-						<Image
-							src={value}
-							alt="Uploaded image"
-							fill
-							className="object-cover"
-						/>
-						<div className="absolute top-2 right-2">
-							<Button
-								type="button"
-								onClick={onRemove}
-								variant="destructive"
-								size="icon"
-								className="h-6 w-6"
-							>
-								<X className="h-4 w-4" />
-							</Button>
-						</div>
-					</div>
-				) : (
-					<div
-						{...getRootProps()}
-						className="absolute inset-0 flex items-center justify-center cursor-pointer hover:bg-muted/80 transition-colors"
+		<div className="space-y-4">
+			{value ? (
+				<div className="relative aspect-video w-full overflow-hidden rounded-lg">
+					<Image
+						src={value}
+						alt="Uploaded image"
+						fill
+						className="object-cover"
+					/>
+					<Button
+						type="button"
+						variant="destructive"
+						size="icon"
+						className="absolute right-2 top-2"
+						onClick={onRemove}
 					>
-						<input {...getInputProps()} />
-						<div className="text-center p-4">
-							{isUploading ? (
-								<Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
-							) : (
-								<>
-									<Upload className="mx-auto h-6 w-6 text-muted-foreground" />
-									<p className="mt-2 text-sm text-muted-foreground">
-										{isDragActive ? "Drop it here" : "Upload image"}
-									</p>
-								</>
-							)}
-						</div>
+						<X className="h-4 w-4" />
+					</Button>
+				</div>
+			) : (
+				<div
+					{...getRootProps()}
+					className={`flex cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed p-8 transition-colors ${
+						isDragActive
+							? "border-primary bg-primary/5"
+							: "border-muted-foreground/25"
+					}`}
+				>
+					<input {...getInputProps()} />
+					<div className="text-center">
+						<p className="text-sm text-muted-foreground">
+							{isDragActive
+								? "Drop the image here"
+								: "Drag & drop an image here, or click to select"}
+						</p>
+						<p className="mt-1 text-xs text-muted-foreground">
+							PNG, JPG, JPEG or GIF (max. 5MB)
+						</p>
 					</div>
-				)}
-			</div>
+				</div>
+			)}
 		</div>
 	);
 }

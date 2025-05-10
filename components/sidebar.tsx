@@ -20,6 +20,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
+import { useThemeStore } from "@/store/useThemeStore";
 
 interface NavItem {
 	icon: React.ElementType;
@@ -43,13 +44,12 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function Sidebar({ className, ...props }: SidebarProps) {
-	const [theme, setTheme] = React.useState<"light" | "dark">("light");
+	const { theme, toggleTheme } = useThemeStore();
 	const router = useRouter();
 	const pathname = usePathname();
 
-	const toggleTheme = () => {
-		const newTheme = theme === "light" ? "dark" : "light";
-		setTheme(newTheme);
+	const handleThemeToggle = () => {
+		toggleTheme();
 		document.documentElement.classList.toggle("dark");
 	};
 
@@ -140,7 +140,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 									"h-8 w-8",
 									theme === "light" ? "text-primary" : "text-muted-foreground",
 								)}
-								onClick={toggleTheme}
+								onClick={handleThemeToggle}
 							>
 								<Sun className="h-4 w-4" />
 								<span className="sr-only">Light mode</span>
@@ -152,7 +152,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 									"h-8 w-8",
 									theme === "dark" ? "text-primary" : "text-muted-foreground",
 								)}
-								onClick={toggleTheme}
+								onClick={handleThemeToggle}
 							>
 								<Moon className="h-4 w-4" />
 								<span className="sr-only">Dark mode</span>

@@ -104,6 +104,7 @@ model Project {
   bannerUrl      String?
   profileUrl     String?
   blockchainTx   String?
+  isApproved     Boolean          @default(false)
   ideaValidation ValidationStatus @default(PENDING)
   createdAt      DateTime         @default(now())
   votes          Vote[]

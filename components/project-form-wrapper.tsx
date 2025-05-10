@@ -10,7 +10,7 @@ interface ProjectFormWrapperProps {
 export const ProjectFormWrapper = ({ userId }: ProjectFormWrapperProps) => {
 	return (
 		<WithWalletProtection redirectPath="/projects">
-			<ProjectForm userId={userId} />
+			<ProjectForm />
 		</WithWalletProtection>
 	);
 };
