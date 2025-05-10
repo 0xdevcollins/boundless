@@ -54,7 +54,7 @@ export async function createNotification({
 						emailTemplate ||
 						`
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h2>${title}</h2>
+              <h2>${title} ${type}</h2>
               <p>${description}</p>
               <p>Best regards,<br>The Boundless Team</p>
             </div>

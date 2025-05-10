@@ -1,10 +1,6 @@
 import { ProjectFormWrapper } from "@/components/project-form-wrapper";
-import { authOptions } from "@/lib/auth.config";
-import { getServerSession } from "next-auth/next";
 
 const Page = async () => {
-	const session = await getServerSession(authOptions);
-
 	return (
 		<div className="container max-w-3sxl py-8">
 			<div className="mb-8">
@@ -13,7 +9,7 @@ const Page = async () => {
 					Submit your project for funding on the Stellar blockchain
 				</p>
 			</div>
-			<ProjectFormWrapper userId={session?.user?.id} />
+			<ProjectFormWrapper />
 		</div>
 	);
 };
