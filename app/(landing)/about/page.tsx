@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import AnimatedUnderline from "@/components/landing/components/AnimatedUnderline";
 import PageTransition from "@/components/landing/components/PageTransition";
