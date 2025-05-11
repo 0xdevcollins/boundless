@@ -1,6 +1,6 @@
 "use client";
 
-import { ProjectForm } from "@/components/project-form";
+import { ProjectForm } from "@/components/project-form/index";
 import { WithWalletProtection } from "@/components/with-wallet-protection";
 
 export const ProjectFormWrapper = () => {

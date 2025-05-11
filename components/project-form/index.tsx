@@ -1,8 +1,9 @@
-"use client";
+"use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import {
 	Dialog,
 	DialogContent,
@@ -10,24 +11,19 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "@/components/ui/dialog";
-import { Form } from "@/components/ui/form";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { formatCurrency } from "@/utils/format";
-import { getXLMPrice } from "@/utils/price";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { AnimatePresence, motion } from "framer-motion";
+} from "@/components/ui/dialog"
+import { Form } from "@/components/ui/form"
+import { Progress } from "@/components/ui/progress"
+import { Separator } from "@/components/ui/separator"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { formatCurrency } from "@/utils/format"
+import { getXLMPrice } from "@/utils/price"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { AnimatePresence, motion } from "framer-motion"
 import {
 	Calendar,
-	CheckCircle2,
-	Circle,
+	ChevronDown,
+	ChevronUp,
 	ExternalLink,
 	Eye,
 	FileText,
@@ -36,34 +32,29 @@ import {
 	Maximize2,
 	Minimize2,
 	Twitter,
-} from "lucide-react";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { nanoid } from "nanoid";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { BasicInfoStep } from "./steps/basic-info-step";
-import { DocumentsStep } from "./steps/documents-step";
-import { MilestonesStep } from "./steps/milestones-step";
-import { ReviewStep } from "./steps/review-step";
-import { TeamStep } from "./steps/team-step";
-import {
-	type ProjectFormValues,
-	categories,
-	projectFormSchema,
-	steps,
-} from "./types";
+} from "lucide-react"
+import { nanoid } from "nanoid"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { BasicInfoStep } from "./steps/basic-info-step"
+import { DocumentsStep } from "./steps/documents-step"
+import { MilestonesStep } from "./steps/milestones-step"
+import { ReviewStep } from "./steps/review-step"
+import { TeamStep } from "./steps/team-step"
+import { type ProjectFormValues, categories, projectFormSchema, steps } from "./types"
+import { StepButton } from "./step-button"
 
 // const AUTOSAVE_INTERVAL = 30000 // 30 seconds
 
 export function ProjectForm() {
-	const [currentStep, setCurrentStep] = useState(0);
-	const [xlmPrice, setXLMPrice] = useState<number | null>(null);
-	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [showPreview, setShowPreview] = useState(false);
-	const router = useRouter();
+	const [currentStep, setCurrentStep] = useState(1)
+	const [xlmPrice, setXLMPrice] = useState<number | null>(null)
+	const [isSubmitting, setIsSubmitting] = useState(false)
+	const [showPreview, setShowPreview] = useState(false)
+	const router = useRouter()
 
 	const form = useForm<ProjectFormValues>({
 		resolver: zodResolver(projectFormSchema),
@@ -76,157 +67,112 @@ export function ProjectForm() {
 			whitepaper: undefined,
 		},
 		mode: "onChange",
-	});
-
-	// Track form changes
-	// useEffect(() => {
-	//   const subscription = form.watch(() => {
-	//     setIsDirty(true);
-	//   });
-	//   return () => subscription.unsubscribe();
-	// }, [form]);
-
-	// Auto-save functionality
-	// useEffect(() => {
-	//   if (!isDirty) return
-
-	//   const autosaveTimer = setInterval(() => {
-	//     saveDraft()
-	//   }, AUTOSAVE_INTERVAL)
-
-	//   return () => clearInterval(autosaveTimer)
-	// }, [isDirty])
-
-	// Keyboard shortcuts
-	// useEffect(() => {
-	//   const handleKeyPress = (e: KeyboardEvent) => {
-	//     // Ctrl/Cmd + S to save draft
-	//     if ((e.ctrlKey || e.metaKey) && e.key === "s") {
-	//       e.preventDefault()
-	//       saveDraft()
-	//     }
-	//     // Ctrl/Cmd + Arrow Right to next step
-	//     if ((e.ctrlKey || e.metaKey) && e.key === "ArrowRight") {
-	//       e.preventDefault()
-	//       handleNavigation(currentStep + 1)
-	//     }
-	//     // Ctrl/Cmd + Arrow Left to previous step
-	//     if ((e.ctrlKey || e.metaKey) && e.key === "ArrowLeft") {
-	//       e.preventDefault()
-	//       handleNavigation(currentStep - 1)
-	//     }
-	//   }
-
-	//   window.addEventListener("keydown", handleKeyPress)
-	//   return () => window.removeEventListener("keydown", handleKeyPress)
-	// }, [currentStep])
-
-	// Calculate step completion
-	const getStepCompletion = (step: number): boolean => {
-		const fields = getFieldsForStep(step);
-		const values = form.getValues();
-		return fields.every((field) => {
-			const value = values[field];
-			if (Array.isArray(value)) {
-				return value.length > 0;
-			}
-			return !!value;
-		});
-	};
-
-	// Calculate overall progress
-	const calculateProgress = () => {
-		const totalSteps = steps.length - 1; // Exclude review step
-		const completedSteps = steps
-			.slice(0, -1)
-			.filter((_, index) => getStepCompletion(index)).length;
-		return (completedSteps / totalSteps) * 100;
-	};
+	})
 
 	// Fetch XLM price on component mount
 	useEffect(() => {
 		const fetchXLMPrice = async () => {
 			try {
-				const price = await getXLMPrice();
-				setXLMPrice(price);
+				const price = await getXLMPrice()
+				setXLMPrice(price)
 			} catch (error) {
-				console.error("Failed to fetch XLM price:", error);
+				console.error("Failed to fetch XLM price:", error)
 			}
-		};
-		fetchXLMPrice();
-	}, []);
+		}
+		fetchXLMPrice()
+	}, [])
+
+	// Calculate step completion
+	const getStepCompletion = (step: number): boolean => {
+		const fields = getFieldsForStep(step - 1)
+		const values = form.getValues()
+		return fields.every((field) => {
+			const value = values[field]
+			if (Array.isArray(value)) {
+				return value.length > 0
+			}
+			return !!value
+		})
+	}
+
+	// Calculate overall progress
+	const calculateProgress = () => {
+		const totalSteps = steps.length - 1 // Exclude review step
+		const completedSteps = steps.slice(0, -1).filter((_, index) => getStepCompletion(index + 1)).length
+		return (completedSteps / totalSteps) * 100
+	}
 
 	const handleNavigation = async (step: number) => {
-		if (step < 0 || step >= steps.length) return;
+		if (step < 1 || step > steps.length) return
 
 		// If moving to review step, just update the step without validation
-		if (step === steps.length - 1) {
-			setCurrentStep(step);
-			return;
+		if (step === steps.length) {
+			setCurrentStep(step)
+			return
 		}
 
-		const fields = getFieldsForStep(currentStep);
-		const isValid = await form.trigger(fields);
+		const fields = getFieldsForStep(currentStep - 1)
+		const isValid = await form.trigger(fields)
 		if (isValid) {
-			setCurrentStep(step);
+			setCurrentStep(step)
 		} else {
 			// Show error toast if validation fails
-			toast.error("Please fill in all required fields before proceeding");
+			toast.error("Please fill in all required fields before proceeding")
 		}
-	};
+	}
 
 	const onSubmit = async (data: ProjectFormValues) => {
 		try {
-			setIsSubmitting(true);
+			setIsSubmitting(true)
 
-			const projectId = nanoid();
+			const projectId = nanoid()
 
 			// Create form data for file uploads
-			const formData = new FormData();
-			formData.append("projectId", projectId);
-			formData.append("title", data.title);
-			formData.append("description", data.description);
-			formData.append("fundingGoal", String(data.fundingGoal));
-			formData.append("category", data.category);
+			const formData = new FormData()
+			formData.append("projectId", projectId)
+			formData.append("title", data.title)
+			formData.append("description", data.description)
+			formData.append("fundingGoal", String(data.fundingGoal))
+			formData.append("category", data.category)
 
 			// Handle image uploads
 			if (data.bannerImage instanceof File) {
-				formData.append("bannerImage", data.bannerImage);
+				formData.append("bannerImage", data.bannerImage)
 			} else if (typeof data.bannerImage === "string") {
-				formData.append("bannerImageUrl", data.bannerImage);
+				formData.append("bannerImageUrl", data.bannerImage)
 			}
 
 			if (data.profileImage instanceof File) {
-				formData.append("profileImage", data.profileImage);
+				formData.append("profileImage", data.profileImage)
 			} else if (typeof data.profileImage === "string") {
-				formData.append("profileImageUrl", data.profileImage);
+				formData.append("profileImageUrl", data.profileImage)
 			}
 
 			// Handle document uploads
 			if (data.pitchDeck instanceof File) {
-				formData.append("pitchDeck", data.pitchDeck);
+				formData.append("pitchDeck", data.pitchDeck)
 			} else if (typeof data.pitchDeck === "string") {
-				formData.append("pitchDeckUrl", data.pitchDeck);
+				formData.append("pitchDeckUrl", data.pitchDeck)
 			}
 
 			if (data.whitepaper instanceof File) {
-				formData.append("whitepaper", data.whitepaper);
+				formData.append("whitepaper", data.whitepaper)
 			} else if (typeof data.whitepaper === "string") {
-				formData.append("whitepaperUrl", data.whitepaper);
+				formData.append("whitepaperUrl", data.whitepaper)
 			}
 
 			// Create the project first
 			const response = await fetch("/api/projects/create", {
 				method: "POST",
 				body: formData,
-			});
+			})
 
 			if (!response.ok) {
-				const error = await response.json();
-				throw new Error(error.message || "Failed to create project");
+				const error = await response.json()
+				throw new Error(error.message || "Failed to create project")
 			}
 
-			const { project } = await response.json();
+			const { project } = await response.json()
 
 			// Create team members if any
 			if (data.teamMembers.length > 0) {
@@ -243,108 +189,118 @@ export function ProjectForm() {
 								fullName: member.user?.name || "Team Member", // Use user's name or default
 							})),
 						}),
-					});
+					})
 
 					if (!teamResponse.ok) {
-						const error = await teamResponse.json();
-						throw new Error(error.message || "Failed to add team members");
+						const error = await teamResponse.json()
+						throw new Error(error.message || "Failed to add team members")
 					}
 				} catch (error) {
-					console.error("Failed to add team members:", error);
+					console.error("Failed to add team members:", error)
 					// Continue with project creation even if team member addition fails
 					toast.warning("Project created but failed to add team members", {
-						description:
-							"You can add team members later from the project settings.",
-					});
+						description: "You can add team members later from the project settings.",
+					})
 				}
 			}
 
 			// Create milestones if any
 			if (data.milestones.length > 0) {
 				try {
-					const milestonesResponse = await fetch(
-						`/api/projects/${project.id}/milestones`,
-						{
-							method: "POST",
-							headers: {
-								"Content-Type": "application/json",
-							},
-							body: JSON.stringify({
-								milestones: data.milestones.map((milestone) => ({
-									title: milestone.title,
-									description: milestone.description,
-									dueDate: milestone.dueDate,
-									color: milestone.color,
-									progress: milestone.progress || 0,
-								})),
-							}),
+					const milestonesResponse = await fetch(`/api/projects/${project.id}/milestones`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
 						},
-					);
+						body: JSON.stringify({
+							milestones: data.milestones.map((milestone) => ({
+								title: milestone.title,
+								description: milestone.description,
+								dueDate: milestone.dueDate,
+								color: milestone.color,
+								progress: milestone.progress || 0,
+							})),
+						}),
+					})
 
 					if (!milestonesResponse.ok) {
-						const error = await milestonesResponse.json();
-						throw new Error(error.message || "Failed to add milestones");
+						const error = await milestonesResponse.json()
+						throw new Error(error.message || "Failed to add milestones")
 					}
 				} catch (error) {
-					console.error("Failed to add milestones:", error);
+					console.error("Failed to add milestones:", error)
 					// Continue with project creation even if milestone addition fails
 					toast.warning("Project created but failed to add milestones", {
-						description:
-							"You can add milestones later from the project settings.",
-					});
+						description: "You can add milestones later from the project settings.",
+					})
 				}
 			}
 
-			// // Clear the draft after successful submission
-			// localStorage.removeItem("projectDraft")
-
 			toast.success("Project created successfully", {
 				description: "Your project has been created and is now live.",
-			});
-			router.push(`/projects/${project.id}`);
+			})
+			router.push(`/projects/${project.id}`)
 		} catch (error: unknown) {
-			console.error("Failed to create project:", error);
+			console.error("Failed to create project:", error)
 			toast.error("Failed to create project", {
-				description:
-					error instanceof Error ? error.message : "Please try again.",
-			});
+				description: error instanceof Error ? error.message : "Please try again.",
+			})
 		} finally {
-			setIsSubmitting(false);
+			setIsSubmitting(false)
 		}
-	};
+	}
 
 	// Helper function to get fields to validate for each step
 	const getFieldsForStep = (step: number): (keyof ProjectFormValues)[] => {
 		switch (step) {
 			case 0: // Basic Info
-				return ["title", "description", "fundingGoal", "category"];
+				return ["title", "description", "fundingGoal", "category"]
 			case 1: // Team
-				return ["teamMembers"];
+				return ["teamMembers"]
 			case 2: // Milestones
-				return ["milestones"];
+				return ["milestones"]
 			case 3: // Documents
-				return ["pitchDeck", "whitepaper"];
+				return ["pitchDeck", "whitepaper"]
 			default:
-				return [];
+				return []
 		}
-	};
+	}
+
+	// Get the current step component
+	const getCurrentStepComponent = () => {
+		const stepIndex = currentStep - 1
+		switch (stepIndex) {
+			case 0:
+				return <BasicInfoStep form={form} xlmPrice={xlmPrice} />
+			case 1:
+				return <TeamStep form={form} />
+			case 2:
+				return <MilestonesStep form={form} />
+			case 3:
+				return <DocumentsStep form={form} />
+			case 4:
+				return <ReviewStep formData={form.getValues()} />
+			default:
+				return null
+		}
+	}
 
 	const PreviewContent = () => {
-		const data = form.getValues();
-		const category = categories.find((cat) => cat.id === data.category);
+		const data = form.getValues()
+		const category = categories.find((cat) => cat.id === data.category)
 		const [expandedSections, setExpandedSections] = useState({
 			description: true,
 			team: true,
 			milestones: true,
 			documents: true,
-		});
+		})
 
 		const toggleSection = (section: keyof typeof expandedSections) => {
 			setExpandedSections((prev) => ({
 				...prev,
 				[section]: !prev[section],
-			}));
-		};
+			}))
+		}
 
 		const toggleAllSections = (expand: boolean) => {
 			setExpandedSections({
@@ -352,11 +308,10 @@ export function ProjectForm() {
 				team: expand,
 				milestones: expand,
 				documents: expand,
-			});
-		};
+			})
+		}
 
-		const isAllExpanded = Object.values(expandedSections).every((v) => v);
-		// const isAllCollapsed = Object.values(expandedSections).every((v) => !v)
+		const isAllExpanded = Object.values(expandedSections).every((v) => v)
 
 		return (
 			<motion.div
@@ -390,11 +345,7 @@ export function ProjectForm() {
 									)}
 								</Button>
 							</TooltipTrigger>
-							<TooltipContent>
-								{isAllExpanded
-									? "Collapse all sections"
-									: "Expand all sections"}
-							</TooltipContent>
+							<TooltipContent>{isAllExpanded ? "Collapse all sections" : "Expand all sections"}</TooltipContent>
 						</Tooltip>
 					</TooltipProvider>
 				</div>
@@ -411,9 +362,7 @@ export function ProjectForm() {
 							<Image
 								width={100}
 								height={100}
-								src={
-									URL.createObjectURL(data.bannerImage) || "/placeholder.svg"
-								}
+								src={URL.createObjectURL(data.bannerImage) || "/placeholder.svg"}
 								alt="Project banner"
 								className="w-full h-full object-cover"
 							/>
@@ -438,10 +387,7 @@ export function ProjectForm() {
 									<Image
 										width={100}
 										height={100}
-										src={
-											URL.createObjectURL(data.profileImage) ||
-											"/placeholder.svg"
-										}
+										src={URL.createObjectURL(data.profileImage) || "/placeholder.svg" || "/placeholder.svg"}
 										alt="Project profile"
 										className="w-20 h-20 rounded-lg border-4 border-background object-cover"
 									/>
@@ -464,16 +410,10 @@ export function ProjectForm() {
 							<div className="flex-1">
 								<h2 className="text-2xl font-bold text-white">{data.title}</h2>
 								<div className="flex items-center gap-2 mt-1">
-									<Badge
-										variant="secondary"
-										className="bg-white/20 text-white hover:bg-white/30"
-									>
+									<Badge variant="secondary" className="bg-white/20 text-white hover:bg-white/30">
 										{category?.name || data.category}
 									</Badge>
-									<Badge
-										variant="secondary"
-										className="bg-white/20 text-white hover:bg-white/30"
-									>
+									<Badge variant="secondary" className="bg-white/20 text-white hover:bg-white/30">
 										{formatCurrency(data.fundingGoal)} Goal
 									</Badge>
 								</div>
@@ -506,9 +446,7 @@ export function ProjectForm() {
 								className="overflow-hidden"
 							>
 								<div className="prose prose-sm max-w-none">
-									<p className="text-muted-foreground whitespace-pre-wrap">
-										{data.description}
-									</p>
+									<p className="text-muted-foreground whitespace-pre-wrap">{data.description}</p>
 								</div>
 							</motion.div>
 						)}
@@ -554,9 +492,7 @@ export function ProjectForm() {
 											className="group relative flex items-center gap-4 p-4 border rounded-lg hover:border-primary/50 transition-all duration-200 bg-card hover:shadow-md"
 										>
 											<Avatar className="h-12 w-12 border-2 border-primary/20 group-hover:border-primary/40 transition-colors">
-												<AvatarImage
-													src={member.user?.image || "/placeholder.svg"}
-												/>
+												<AvatarImage src={member.user?.image || "/placeholder.svg"} />
 												<AvatarFallback className="bg-primary/10 text-primary">
 													{member.user?.name?.charAt(0) || "U"}
 												</AvatarFallback>
@@ -565,9 +501,7 @@ export function ProjectForm() {
 												<h4 className="font-medium truncate group-hover:text-primary transition-colors">
 													{member.user?.name || "Team Member"}
 												</h4>
-												<p className="text-sm text-muted-foreground truncate">
-													{member.role}
-												</p>
+												<p className="text-sm text-muted-foreground truncate">{member.role}</p>
 												<div className="flex gap-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
 													{member.user?.github && (
 														<TooltipProvider>
@@ -616,9 +550,7 @@ export function ProjectForm() {
 																		<Linkedin className="h-4 w-4" />
 																	</a>
 																</TooltipTrigger>
-																<TooltipContent>
-																	LinkedIn Profile
-																</TooltipContent>
+																<TooltipContent>LinkedIn Profile</TooltipContent>
 															</Tooltip>
 														</TooltipProvider>
 													)}
@@ -643,9 +575,7 @@ export function ProjectForm() {
 					>
 						<div className="flex items-center gap-2">
 							<h3 className="text-lg font-semibold">Project Roadmap</h3>
-							<Badge variant="outline">
-								{data.milestones.length} milestones
-							</Badge>
+							<Badge variant="outline">{data.milestones.length} milestones</Badge>
 						</div>
 						{expandedSections.milestones ? (
 							<ChevronUp className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -679,23 +609,14 @@ export function ProjectForm() {
 												whileHover={{ scale: 1.2 }}
 												className="absolute left-0 top-0 w-6 h-6 rounded-full border-2 border-primary bg-background flex items-center justify-center group-hover:border-primary/80 transition-colors"
 											>
-												<span className="text-xs font-medium text-primary">
-													{index + 1}
-												</span>
+												<span className="text-xs font-medium text-primary">{index + 1}</span>
 											</motion.div>
 											<div className="p-4 border rounded-lg bg-card hover:border-primary/50 hover:shadow-md transition-all duration-200">
-												<h4 className="font-medium group-hover:text-primary transition-colors">
-													{milestone.title}
-												</h4>
-												<p className="text-sm text-muted-foreground mt-1">
-													{milestone.description}
-												</p>
+												<h4 className="font-medium group-hover:text-primary transition-colors">{milestone.title}</h4>
+												<p className="text-sm text-muted-foreground mt-1">{milestone.description}</p>
 												{milestone.dueDate && (
 													<div className="mt-2 flex items-center gap-2">
-														<Badge
-															variant="outline"
-															className="gap-1 group-hover:bg-primary/10 transition-colors"
-														>
+														<Badge variant="outline" className="gap-1 group-hover:bg-primary/10 transition-colors">
 															<Calendar className="h-3 w-3" />
 															{new Date(milestone.dueDate).toLocaleDateString()}
 														</Badge>
@@ -703,13 +624,10 @@ export function ProjectForm() {
 														<Badge variant="secondary" className="gap-1">
 															{(() => {
 																const days = Math.ceil(
-																	(new Date(milestone.dueDate).getTime() -
-																		new Date().getTime()) /
-																		(1000 * 60 * 60 * 24),
-																);
-																return days > 0
-																	? `${days} days left`
-																	: "Due today";
+																	(new Date(milestone.dueDate).getTime() - new Date().getTime()) /
+																	(1000 * 60 * 60 * 24),
+																)
+																return days > 0 ? `${days} days left` : "Due today"
 															})()}
 														</Badge>
 													</div>
@@ -765,9 +683,7 @@ export function ProjectForm() {
 														Pitch Deck
 													</h4>
 													<p className="text-sm text-muted-foreground truncate">
-														{data.pitchDeck instanceof File
-															? data.pitchDeck.name
-															: "Uploaded"}
+														{data.pitchDeck instanceof File ? data.pitchDeck.name : "Uploaded"}
 													</p>
 												</div>
 												<Button
@@ -797,9 +713,7 @@ export function ProjectForm() {
 														Whitepaper
 													</h4>
 													<p className="text-sm text-muted-foreground truncate">
-														{data.whitepaper instanceof File
-															? data.whitepaper.name
-															: "Uploaded"}
+														{data.whitepaper instanceof File ? data.whitepaper.name : "Uploaded"}
 													</p>
 												</div>
 												<Button
@@ -819,35 +733,42 @@ export function ProjectForm() {
 					</AnimatePresence>
 				</motion.div>
 			</motion.div>
-		);
-	};
+		)
+	}
+
+	// Create step items for the side stepper
+	const stepItems = steps.map((step) => ({
+		title: step.title,
+		description: step.description,
+		component: null, // We'll handle this separately
+	}))
 
 	return (
 		<Form {...form}>
 			<form
 				onKeyDown={(e) => {
 					// Prevent form submission on Enter key when not on review step
-					if (e.key === "Enter" && currentStep !== steps.length - 1) {
-						e.preventDefault();
+					if (e.key === "Enter" && currentStep !== steps.length) {
+						e.preventDefault()
 					}
 				}}
 				onSubmit={(e) => {
 					// Prevent form submission when not on review step
-					if (currentStep !== steps.length - 1) {
-						e.preventDefault();
-						return;
+					if (currentStep !== steps.length) {
+						e.preventDefault()
+						return
 					}
 					form.handleSubmit(async (data) => {
-						console.log("Form submit event triggered");
+						console.log("Form submit event triggered")
 						try {
-							setIsSubmitting(true);
-							await onSubmit(data);
+							setIsSubmitting(true)
+							await onSubmit(data)
 						} catch (error) {
-							console.error("Form submission error:", error);
+							console.error("Form submission error:", error)
 						} finally {
-							setIsSubmitting(false);
+							setIsSubmitting(false)
 						}
-					})(e);
+					})(e)
 				}}
 				className="space-y-8"
 			>
@@ -860,106 +781,111 @@ export function ProjectForm() {
 						</div>
 						<Progress value={calculateProgress()} className="h-1.5" />
 					</div>
-
-					{/* Steps Progress */}
-					<div className="flex items-center justify-between bg-muted/30 p-1 rounded-lg">
-						{steps.map((step, index) => (
-							<Button
-								type="button"
-								key={step.id}
-								variant={index === currentStep ? "default" : "ghost"}
-								size="sm"
-								className={`h-auto py-1 px-2 text-xs flex items-center gap-1.5 ${
-									index === currentStep
-										? ""
-										: getStepCompletion(index)
-											? "text-green-600"
-											: "text-muted-foreground"
-								}`}
-								onClick={() => handleNavigation(index)}
-							>
-								{getStepCompletion(index) ? (
-									<CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
-								) : (
-									<Circle className="h-3.5 w-3.5" />
-								)}
-								<span className="font-medium">{step.title}</span>
-							</Button>
-						))}
-					</div>
 				</div>
 
-				<div className="space-y-6">
-					{currentStep === 0 && (
-						<BasicInfoStep form={form} xlmPrice={xlmPrice} />
-					)}
-					{currentStep === 1 && <TeamStep form={form} />}
-					{currentStep === 2 && <MilestonesStep form={form} />}
-					{currentStep === 3 && <DocumentsStep form={form} />}
-					{currentStep === 4 && <ReviewStep formData={form.getValues()} />}
-				</div>
+				<div className="flex flex-col md:flex-row gap-6">
+					{/* Step Navigation Cards */}
+					<Card className="overflow-hidden md:w-1/3 w-full h-auto">
+						<CardContent className="p-6 space-y-4">
+							{steps.map((step, index) => {
+								const stepNumber = index + 1
+								const isActive = stepNumber === currentStep
+								const isCompleted = getStepCompletion(stepNumber)
 
-				<div className="flex justify-between items-center">
-					<div className="flex gap-1.5">
-						<Button
-							type="button"
-							variant="outline"
-							size="sm"
-							onClick={() => handleNavigation(currentStep - 1)}
-							disabled={currentStep === 0 || isSubmitting}
-							className="h-8"
-						>
-							Previous
-						</Button>
-						<Dialog open={showPreview} onOpenChange={setShowPreview}>
-							<DialogTrigger asChild>
-								<Button
-									type="button"
-									variant="outline"
-									size="sm"
-									className="h-8 gap-1.5"
-									disabled={isSubmitting}
-								>
-									<Eye className="h-3.5 w-3.5" />
-									<span>Preview</span>
-								</Button>
-							</DialogTrigger>
-							<DialogContent className="max-w-3xl">
-								<DialogHeader>
-									<DialogTitle>Project Preview</DialogTitle>
-									<DialogDescription>
-										This is how your project will appear to others
-									</DialogDescription>
-								</DialogHeader>
-								<PreviewContent />
-							</DialogContent>
-						</Dialog>
-					</div>
+								return (
+									<div
+										key={index}
+										className={`relative flex items-start gap-3 ${index < steps.length - 1
+												? "before:absolute before:left-5 before:top-[2.9rem] before:h-[calc(100%-2rem)] before:w-[2px] " +
+												(isCompleted ? "before:bg-primary" : "before:bg-zinc-200 dark:before:bg-zinc-800")
+												: ""
+											}`}
+									>
+										<StepButton
+											number={stepNumber}
+											isActive={isActive}
+											isCompleted={isCompleted}
+											onClick={() => handleNavigation(stepNumber)}
+										/>
 
-					<div className="flex items-center gap-3">
-						{currentStep === steps.length - 1 ? (
-							<Button
-								type="submit"
-								size="sm"
-								className="h-8"
-								disabled={isSubmitting}
-							>
-								{isSubmitting ? "Creating..." : "Create Project"}
-							</Button>
-						) : (
-							<Button
-								type="button"
-								size="sm"
-								className="h-8"
-								onClick={() => handleNavigation(currentStep + 1)}
-								disabled={isSubmitting}
-							>
-								Next
-							</Button>
-						)}
-					</div>
+										<div className="flex-1">
+											<div className="bg-muted rounded-lg px-6 py-4">
+												<h3
+													className={`text-lg font-medium ${isActive ? "text-primary" : "text-zinc-900 dark:text-zinc-200"
+														}`}
+												>
+													{step.title}
+												</h3>
+												{step.description && (
+													<p className="text-sm text-zinc-600 dark:text-zinc-500">{step.description}</p>
+												)}
+											</div>
+										</div>
+									</div>
+								)
+							})}
+						</CardContent>
+					</Card>
+
+					{/* Form Content */}
+					<Card className="overflow-hidden md:w-2/3 w-full h-auto">
+						<CardContent className="p-6 space-y-4">
+							<div className="rounded-lg p-6 transition-all duration-200" key={currentStep}>
+								{getCurrentStepComponent()}
+							</div>
+
+							<div className="flex justify-between items-center pt-4">
+								<div className="flex gap-1.5">
+									<Button
+										type="button"
+										variant="outline"
+										size="sm"
+										onClick={() => handleNavigation(currentStep - 1)}
+										disabled={currentStep === 1 || isSubmitting}
+										className="h-8"
+									>
+										Previous
+									</Button>
+									<Dialog open={showPreview} onOpenChange={setShowPreview}>
+										<DialogTrigger asChild>
+											<Button type="button" variant="outline" size="sm" className="h-8 gap-1.5" disabled={isSubmitting}>
+												<Eye className="h-3.5 w-3.5" />
+												<span>Preview</span>
+											</Button>
+										</DialogTrigger>
+										<DialogContent className="max-w-3xl">
+											<DialogHeader>
+												<DialogTitle>Project Preview</DialogTitle>
+												<DialogDescription>This is how your project will appear to others</DialogDescription>
+											</DialogHeader>
+											<PreviewContent />
+										</DialogContent>
+									</Dialog>
+								</div>
+
+								<div className="flex items-center gap-3">
+									{currentStep === steps.length ? (
+										<Button type="submit" size="sm" className="h-8" disabled={isSubmitting}
+											onClick={(e) => e.preventDefault()}>
+											{isSubmitting ? "Creating..." : "Create Project"}
+										</Button>
+									) : (
+										<Button
+											type="button"
+											size="sm"
+											className="h-8"
+											onClick={() => handleNavigation(currentStep + 1)}
+											disabled={isSubmitting}
+										>
+											Next
+										</Button>
+									)}
+								</div>
+							</div>
+						</CardContent>
+					</Card>
 				</div>
 			</form>
 		</Form>
-	);
+	)
 }
