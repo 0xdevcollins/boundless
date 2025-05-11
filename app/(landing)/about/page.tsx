@@ -73,7 +73,7 @@ const TEAM: TeamMember[] = [
 		image: "/api/placeholder/100/100",
 	},
 	{
-		name: "Nnaji Chinedu",
+		name: "Nnaji Benjamin",
 		role: "ROLE",
 		description:
 			"Community builder with a passion for connecting creators with their supporters.",
