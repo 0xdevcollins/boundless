@@ -1,240 +1,668 @@
 "use client";
 
-import PageTransition from "@/components/landing/components/PageTransition";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
 import {
-	ArrowRight,
-	Award,
-	Code,
-	Coins,
-	Shield,
-	Target,
+	Banknote,
+	BarChart4,
+	CheckCircle,
+	Globe,
+	Lightbulb,
+	Rocket,
+	Sparkles,
+	Star,
 	Users,
-	Wallet,
+	Vote,
+	Zap,
 } from "lucide-react";
-import Link from "next/link";
+import React from "react";
 
 export default function HowItWorksPage() {
-	const steps = [
-		{
-			id: "connect-verify",
-			icon: <Wallet className="w-8 h-8" />,
-			title: "Connect & Verify",
-			description:
-				"Start by connecting your Stellar wallet and completing KYC verification. This ensures a secure and compliant platform for all users.",
-		},
-		{
-			id: "create-support",
-			icon: <Target className="w-8 h-8" />,
-			title: "Create or Support Projects",
-			description:
-				"Create your own crowdfunding project with clear milestones, or discover and support innovative projects from the community.",
-		},
-		{
-			id: "milestone-funding",
-			icon: <Award className="w-8 h-8" />,
-			title: "Milestone-Based Funding",
-			description:
-				"Funds are released based on project milestones, ensuring transparency and accountability. Project creators can only access funds when milestones are achieved.",
-		},
-		{
-			id: "vote-feedback",
-			icon: <Users className="w-8 h-8" />,
-			title: "Vote & Provide Feedback",
-			description:
-				"Participate in project governance through our voting mechanism. Your feedback helps shape the future of projects you support.",
-		},
-	];
-
-	const features = [
-		{
-			id: "smart-contract",
-			icon: <Shield className="w-8 h-8" />,
-			title: "Smart Contract Security",
-			description:
-				"Built with Soroban smart contracts to automate milestone releases and protect all parties involved.",
-		},
-		{
-			id: "decentralized",
-			icon: <Code className="w-8 h-8" />,
-			title: "Decentralized Funding",
-			description:
-				"All transactions are processed through Stellar blockchain, ensuring transparency and security.",
-		},
-		{
-			id: "community",
-			icon: <Coins className="w-8 h-8" />,
-			title: "Community-Driven",
-			description:
-				"Active community participation through voting and feedback mechanisms shapes project development.",
-		},
-	];
-
 	return (
-		<PageTransition>
-			<div className="min-h-screen bg-background">
-				{/* Hero Section */}
-				<section className="relative py-24 md:py-32 overflow-hidden">
-					{/* Background Pattern */}
-					<div className="absolute inset-0">
-						<div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-background to-background" />
-						<div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
-						<div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-					</div>
+		<div className="min-h-screen bg-background">
+			{/* Hero Section with Animated Gradients */}
+			<section className="relative pt-24 pb-24 overflow-hidden">
+				{/* Animated background elements */}
+				<div className="absolute top-0 right-0 w-1/3 h-1/3 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+				<div
+					className="absolute bottom-0 left-0 w-1/2 h-1/3 bg-primary/5 rounded-full blur-3xl animate-pulse"
+					style={{ animationDelay: "1s" }}
+				/>
 
-					<div className="container max-w-6xl mx-auto px-4 md:px-6 relative">
-						<motion.div
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.6 }}
-							className="text-center max-w-3xl mx-auto"
-						>
-							<motion.div
-								initial={{ opacity: 0, scale: 0.95 }}
-								animate={{ opacity: 1, scale: 1 }}
-								transition={{ duration: 0.5, delay: 0.2 }}
-								className="inline-block bg-primary/10 px-4 py-2 rounded-full mb-6"
+				<div className="container max-w-6xl mx-auto px-4 relative z-10">
+					<div className="flex flex-col items-center text-center">
+						<div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 border border-primary/20">
+							<Sparkles className="h-4 w-4 mr-2" />
+							<span className="text-sm font-medium">
+								Exclusively for Stellar Projects
+							</span>
+						</div>
+
+						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+							How Boundless Works
+						</h1>
+
+						<div className="h-1.5 w-32 bg-gradient-to-r from-primary to-primary/50 rounded-full mb-8" />
+
+						<p className="text-xl text-muted-foreground max-w-2xl mb-10">
+							From idea to reality: Our community-powered funding platform for
+							innovative projects.
+						</p>
+
+						<div className="flex flex-wrap gap-5 justify-center">
+							<Button
+								size="lg"
+								className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all duration-300 hover:translate-y-[-2px]"
 							>
-								<span className="text-primary font-medium">How It Works</span>
-							</motion.div>
-
-							<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter mb-6">
-								Decentralized{" "}
-								<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
-									Crowdfunding
-								</span>
-							</h1>
-
-							<motion.p
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ duration: 0.6, delay: 0.3 }}
-								className="text-lg md:text-xl text-muted-foreground mb-8"
+								<Rocket className="mr-2 h-5 w-5" /> Launch Your Project
+							</Button>
+							<Button
+								size="lg"
+								variant="outline"
+								className="border-primary/20 hover:border-primary/50 transition-all duration-300 hover:translate-y-[-2px]"
 							>
-								A transparent and trustless platform built on Stellar
-								blockchain, enabling milestone-based project funding with
-								community governance.
-							</motion.p>
-						</motion.div>
-					</div>
-				</section>
-
-				{/* Steps Section */}
-				<section className="py-16 md:py-24 bg-muted/30">
-					<div className="container max-w-6xl mx-auto px-4 md:px-6">
-						<motion.div
-							className="text-center max-w-3xl mx-auto mb-16"
-							initial={{ opacity: 0, y: 20 }}
-							whileInView={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.6 }}
-						>
-							<h2 className="text-3xl font-bold tracking-tighter mb-6">
-								Getting Started
-							</h2>
-							<p className="text-lg text-muted-foreground">
-								Follow these simple steps to begin your journey with Boundless
-							</p>
-						</motion.div>
-
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-							{steps.map((step) => (
-								<motion.div
-									key={step.id}
-									initial={{ opacity: 0, y: 20 }}
-									whileInView={{ opacity: 1, y: 0 }}
-									transition={{ duration: 0.5, delay: 0.1 }}
-									className="bg-card border border-border p-6 rounded-lg"
-								>
-									<div className="flex items-start space-x-4">
-										<div className="mt-1 bg-primary/10 p-3 rounded-full">
-											{step.icon}
-										</div>
-										<div>
-											<h3 className="text-xl font-semibold mb-2">
-												{step.title}
-											</h3>
-											<p className="text-muted-foreground">
-												{step.description}
-											</p>
-										</div>
-									</div>
-								</motion.div>
-							))}
+								<Globe className="mr-2 h-5 w-5" /> Explore Projects
+							</Button>
 						</div>
 					</div>
-				</section>
+				</div>
+			</section>
 
-				{/* Features Section */}
-				<section className="py-16 md:py-24 bg-background">
-					<div className="container max-w-6xl mx-auto px-4 md:px-6">
-						<motion.div
-							className="text-center max-w-3xl mx-auto mb-16"
-							initial={{ opacity: 0, y: 20 }}
-							whileInView={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.6 }}
-						>
-							<h2 className="text-3xl font-bold tracking-tighter mb-6">
-								Key Features
-							</h2>
-							<p className="text-lg text-muted-foreground">
-								What makes Boundless unique in the crowdfunding space
-							</p>
-						</motion.div>
-
-						<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-							{features.map((feature) => (
-								<motion.div
-									key={feature.id}
-									initial={{ opacity: 0, y: 20 }}
-									whileInView={{ opacity: 1, y: 0 }}
-									transition={{ duration: 0.5, delay: 0.1 }}
-									className="bg-card border border-border p-6 rounded-lg text-center"
-								>
-									<div className="w-16 h-16 mx-auto mb-6 bg-primary/10 rounded-full flex items-center justify-center">
-										{feature.icon}
+			{/* Stellar Banner - More Prominent */}
+			<section className="py-8 bg-gradient-to-r from-primary/5 to-primary/10">
+				<div className="container max-w-6xl mx-auto px-4">
+					<div className="rounded-2xl border border-primary/20 bg-card/70 shadow-lg p-6 backdrop-blur-sm">
+						<div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+							<div className="flex items-center gap-5">
+								<div className="relative">
+									<div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
+										<div className="w-12 h-12 rounded-full bg-card flex items-center justify-center shadow-md">
+											<div className="w-8 h-8 rounded-full border-2 border-primary flex items-center justify-center">
+												<Star className="h-4 w-4 text-primary" />
+											</div>
+										</div>
 									</div>
-									<h3 className="text-xl font-semibold mb-2">
-										{feature.title}
+									<div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold shadow-lg">
+										<Zap className="h-3 w-3" />
+									</div>
+								</div>
+								<div>
+									<h3 className="text-xl font-bold mb-1">
+										Built Exclusively for Stellar
 									</h3>
-									<p className="text-muted-foreground">{feature.description}</p>
-								</motion.div>
-							))}
+									<p className="text-muted-foreground">
+										We&apos;re dedicated to supporting innovations in the
+										Stellar ecosystem
+									</p>
+								</div>
+							</div>
+							<Button className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-md">
+								Learn About Stellar
+							</Button>
 						</div>
 					</div>
-				</section>
+				</div>
+			</section>
 
-				{/* CTA Section */}
-				<section className="py-16 md:py-24 bg-muted/30">
-					<div className="container max-w-6xl mx-auto px-4 md:px-6">
-						<motion.div
-							className="text-center max-w-3xl mx-auto"
-							initial={{ opacity: 0, y: 20 }}
-							whileInView={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.6 }}
-						>
-							<h2 className="text-3xl font-bold tracking-tighter mb-6">
-								Ready to Get Started?
-							</h2>
-							<p className="text-lg text-muted-foreground mb-8">
-								Join our community of creators and supporters in building the
-								future of decentralized crowdfunding.
-							</p>
-							<div className="flex flex-col sm:flex-row gap-4 justify-center">
-								<Button size="lg" className="group">
-									<Link href="/auth/signin" className="flex items-center">
-										Get Started
-										<ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-									</Link>
-								</Button>
-								<Button size="lg" variant="outline">
-									<Link href="/explore">Explore Projects</Link>
-								</Button>
-							</div>
-						</motion.div>
+			{/* Process Steps - More Dynamic */}
+			<section className="py-24 bg-background relative overflow-hidden">
+				{/* Background pattern */}
+				<div className="absolute inset-0 opacity-5 pattern-dots pattern-bg-white pattern-size-4 pattern-primary" />
+
+				<div className="container max-w-6xl mx-auto px-4 relative z-10">
+					<div className="text-center max-w-2xl mx-auto mb-20">
+						<div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 border border-primary/20">
+							<Zap className="h-4 w-4 mr-2" />
+							<span className="text-sm font-medium">The Boundless Journey</span>
+						</div>
+
+						<h2 className="text-3xl md:text-4xl font-bold mb-6">Our Process</h2>
+						<div className="h-1.5 w-24 bg-gradient-to-r from-primary to-primary/50 rounded-full mx-auto mb-6" />
+						<p className="text-lg text-muted-foreground">
+							A proven pathway to bring Stellar innovations to life
+						</p>
 					</div>
-				</section>
-			</div>
-		</PageTransition>
+
+					{/* Steps - Card Hover Effects */}
+					<div className="space-y-20">
+						{/* Step 1 */}
+						<div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
+							<div className="md:w-1/4 relative">
+								<div className="sticky top-24 flex flex-col items-center md:items-start text-center md:text-left">
+									<div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/70 text-white flex items-center justify-center font-bold text-2xl mb-4 shadow-lg shadow-primary/20 rotate-3">
+										1
+									</div>
+									<h3 className="text-2xl font-bold mb-3">Submit Your Idea</h3>
+									<p className="text-muted-foreground max-w-xs">
+										Share your innovative vision
+									</p>
+								</div>
+							</div>
+
+							<div className="md:w-3/4">
+								<div className="bg-gradient-to-br from-card to-card/80 rounded-2xl border border-primary/10 p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:translate-y-[-5px] group">
+									<div className="flex items-center gap-5 mb-6">
+										<div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-all duration-300">
+											<Lightbulb className="h-8 w-8 text-primary" />
+										</div>
+										<p className="text-xl font-semibold">
+											Start with your inspiration
+										</p>
+									</div>
+
+									<p className="text-lg mb-8 leading-relaxed">
+										Tell us about your project idea. We&apos;ll guide you
+										through outlining your concept, setting realistic goals, and
+										showcasing why your innovation matters.
+									</p>
+
+									<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Guided submission templates</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Add descriptive media</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Technical validation</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Technical integration support</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						{/* Step 2 */}
+						<div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
+							<div className="md:w-1/4 relative">
+								<div className="sticky top-24 flex flex-col items-center md:items-start text-center md:text-left">
+									<div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/70 text-white flex items-center justify-center font-bold text-2xl mb-4 shadow-lg shadow-primary/20 -rotate-3">
+										2
+									</div>
+									<h3 className="text-2xl font-bold mb-3">
+										Community Feedback
+									</h3>
+									<p className="text-muted-foreground max-w-xs">
+										Get valuable insights from experts
+									</p>
+								</div>
+							</div>
+
+							<div className="md:w-3/4">
+								<div className="bg-gradient-to-br from-card to-card/80 rounded-2xl border border-primary/10 p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:translate-y-[-5px] group">
+									<div className="flex items-center gap-5 mb-6">
+										<div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-all duration-300">
+											<Users className="h-8 w-8 text-primary" />
+										</div>
+										<p className="text-xl font-semibold">
+											Refine with community wisdom
+										</p>
+									</div>
+
+									<p className="text-lg mb-8 leading-relaxed">
+										Our community of developers, investors, and enthusiasts
+										provides feedback to help strengthen your project. Learn
+										what resonates, what needs improvement, and how to maximize
+										your project&apos;s impact.
+									</p>
+
+									<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Direct expert conversations</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Moderated discussion boards</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Technical mentors</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Market validation insights</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						{/* Step 3 */}
+						<div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
+							<div className="md:w-1/4 relative">
+								<div className="sticky top-24 flex flex-col items-center md:items-start text-center md:text-left">
+									<div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/70 text-white flex items-center justify-center font-bold text-2xl mb-4 shadow-lg shadow-primary/20 rotate-3">
+										3
+									</div>
+									<h3 className="text-2xl font-bold mb-3">Community Voting</h3>
+									<p className="text-muted-foreground max-w-xs">
+										Let the community discover your vision
+									</p>
+								</div>
+							</div>
+
+							<div className="md:w-3/4">
+								<div className="bg-gradient-to-br from-card to-card/80 rounded-2xl border border-primary/10 p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:translate-y-[-5px] group">
+									<div className="flex items-center gap-5 mb-6">
+										<div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-all duration-300">
+											<Vote className="h-8 w-8 text-primary" />
+										</div>
+										<p className="text-xl font-semibold">
+											Win community support
+										</p>
+									</div>
+
+									<p className="text-lg mb-8 leading-relaxed">
+										Projects are voted on by our community of supporters. This
+										democratic process ensures quality projects stand out and
+										demonstrates genuine interest in what you&apos;re building.
+									</p>
+
+									<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Transparent voting system</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Sybil-resistant protection</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>XLM-weighted voting</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Real-time voting analytics</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						{/* Step 4 */}
+						<div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
+							<div className="md:w-1/4 relative">
+								<div className="sticky top-24 flex flex-col items-center md:items-start text-center md:text-left">
+									<div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/70 text-white flex items-center justify-center font-bold text-2xl mb-4 shadow-lg shadow-primary/20 -rotate-3">
+										4
+									</div>
+									<h3 className="text-2xl font-bold mb-3">Set Milestones</h3>
+									<p className="text-muted-foreground max-w-xs">
+										Break your journey into achievable steps
+									</p>
+								</div>
+							</div>
+
+							<div className="md:w-3/4">
+								<div className="bg-gradient-to-br from-card to-card/80 rounded-2xl border border-primary/10 p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:translate-y-[-5px] group">
+									<div className="flex items-center gap-5 mb-6">
+										<div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-all duration-300">
+											<BarChart4 className="h-8 w-8 text-primary" />
+										</div>
+										<p className="text-xl font-semibold">
+											Chart your development path
+										</p>
+									</div>
+
+									<p className="text-lg mb-8 leading-relaxed">
+										Break your project into 3-12 achievable milestones based on
+										your project&apos;s scope. Each completed milestone unlocks
+										funding to sustain your development and momentum.
+									</p>
+
+									<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Flexible milestone planning</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Interactive timeline tools</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Clear delivery criteria</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Technical validation points</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						{/* Step 5 */}
+						<div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
+							<div className="md:w-1/4 relative">
+								<div className="sticky top-24 flex flex-col items-center md:items-start text-center md:text-left">
+									<div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/70 text-white flex items-center justify-center font-bold text-2xl mb-4 shadow-lg shadow-primary/20 rotate-3">
+										5
+									</div>
+									<h3 className="text-2xl font-bold mb-3">Secure Funding</h3>
+									<p className="text-muted-foreground max-w-xs">
+										Get backed by the community
+									</p>
+								</div>
+							</div>
+
+							<div className="md:w-3/4">
+								<div className="bg-gradient-to-br from-card to-card/80 rounded-2xl border border-primary/10 p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:translate-y-[-5px] group">
+									<div className="flex items-center gap-5 mb-6">
+										<div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-all duration-300">
+											<Banknote className="h-8 w-8 text-primary" />
+										</div>
+										<p className="text-xl font-semibold">
+											Get the resources you need
+										</p>
+									</div>
+
+									<p className="text-lg mb-8 leading-relaxed">
+										Launch your funding campaign and collect support from people
+										who believe in your vision. Our platform makes transactions
+										safe, fast, and transparent.
+									</p>
+
+									<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>XLM and USDC support</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Fraud-resistant system</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Stellar smart contracts</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Real-time funding dashboard</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						{/* Step 6 */}
+						<div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
+							<div className="md:w-1/4 relative">
+								<div className="sticky top-24 flex flex-col items-center md:items-start text-center md:text-left">
+									<div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primary/70 text-white flex items-center justify-center font-bold text-2xl mb-4 shadow-lg shadow-primary/20 -rotate-3">
+										6
+									</div>
+									<h3 className="text-2xl font-bold mb-3">Build & Deliver</h3>
+									<p className="text-muted-foreground max-w-xs">
+										Bring your innovation to life
+									</p>
+								</div>
+							</div>
+
+							<div className="md:w-3/4">
+								<div className="bg-gradient-to-br from-card to-card/80 rounded-2xl border border-primary/10 p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:translate-y-[-5px] group">
+									<div className="flex items-center gap-5 mb-6">
+										<div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-all duration-300">
+											<Rocket className="h-8 w-8 text-primary" />
+										</div>
+										<p className="text-xl font-semibold">
+											Make your vision reality
+										</p>
+									</div>
+
+									<p className="text-lg mb-8 leading-relaxed">
+										Start building your project! As you complete each milestone,
+										funding is automatically released to your wallet. Keep your
+										backers engaged with regular progress updates and
+										demonstrations.
+									</p>
+
+									<div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Automatic milestone payments</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Verified technical deliverables</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Builder update tools</span>
+										</div>
+										<div className="flex items-center gap-3 bg-background/50 p-4 rounded-xl border border-primary/5">
+											<CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+											<span>Ongoing technical support</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* FAQ Section - More Interactive */}
+			<section className="py-24 bg-gradient-to-b from-primary/5 to-background relative overflow-hidden">
+				<div className="absolute top-0 right-0 w-1/3 h-1/3 bg-primary/5 rounded-full blur-3xl" />
+				<div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-primary/5 rounded-full blur-3xl" />
+
+				<div className="container max-w-4xl mx-auto px-4 relative z-10">
+					<div className="text-center mb-16">
+						<div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 border border-primary/20">
+							<Sparkles className="h-4 w-4 mr-2" />
+							<span className="text-sm font-medium">Questions Answered</span>
+						</div>
+
+						<h2 className="text-3xl font-bold mb-4">
+							Frequently Asked Questions
+						</h2>
+						<div className="h-1.5 w-24 bg-gradient-to-r from-primary to-primary/50 rounded-full mx-auto mb-6" />
+						<p className="text-muted-foreground">
+							Everything you need to know about building with Boundless
+						</p>
+					</div>
+
+					<div className="space-y-6">
+						{/* FAQ Item 1 */}
+						<div className="bg-card rounded-xl border border-primary/10 overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+							<details className="group">
+								<summary className="flex justify-between items-center p-6 cursor-pointer">
+									<h3 className="text-lg font-semibold">
+										How long does it take to submit a project?
+									</h3>
+									<div className="w-8 h-8 rounded-full border border-primary/20 flex items-center justify-center bg-primary/5 group-open:rotate-45 transition-transform duration-300">
+										<span className="block w-4 h-0.5 bg-primary absolute" />
+										<span className="block w-0.5 h-4 bg-primary absolute group-open:opacity-0 transition-opacity" />
+									</div>
+								</summary>
+								<div className="p-6 pt-0 text-muted-foreground bg-gradient-to-b from-transparent to-primary/5">
+									<p className="leading-relaxed">
+										Most creators complete the submission process in under an
+										hour. Our specialized templates make it easy to include all
+										the important information and technical details about your
+										project.
+									</p>
+								</div>
+							</details>
+						</div>
+
+						{/* FAQ Item 2 */}
+						<div className="bg-card rounded-xl border border-primary/10 overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+							<details className="group">
+								<summary className="flex justify-between items-center p-6 cursor-pointer">
+									<h3 className="text-lg font-semibold">
+										What happens if my project doesn&apos;t get enough votes?
+									</h3>
+									<div className="w-8 h-8 rounded-full border border-primary/20 flex items-center justify-center bg-primary/5 group-open:rotate-45 transition-transform duration-300">
+										<span className="block w-4 h-0.5 bg-primary absolute" />
+										<span className="block w-0.5 h-4 bg-primary absolute group-open:opacity-0 transition-opacity" />
+									</div>
+								</summary>
+								<div className="p-6 pt-0 text-muted-foreground bg-gradient-to-b from-transparent to-primary/5">
+									<p className="leading-relaxed">
+										Don&apos;t worry! You can update your project based on the
+										community feedback and resubmit it after 14 days. Many
+										successful projects weren&apos;t approved on their first
+										submission. Our mentors will help you refine your approach
+										to better resonate with the community.
+									</p>
+								</div>
+							</details>
+						</div>
+
+						{/* FAQ Item 3 */}
+						<div className="bg-card rounded-xl border border-primary/10 overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+							<details className="group">
+								<summary className="flex justify-between items-center p-6 cursor-pointer">
+									<h3 className="text-lg font-semibold">
+										How many milestones should my project have?
+									</h3>
+									<div className="w-8 h-8 rounded-full border border-primary/20 flex items-center justify-center bg-primary/5 group-open:rotate-45 transition-transform duration-300">
+										<span className="block w-4 h-0.5 bg-primary absolute" />
+										<span className="block w-0.5 h-4 bg-primary absolute group-open:opacity-0 transition-opacity" />
+									</div>
+								</summary>
+								<div className="p-6 pt-0 text-muted-foreground bg-gradient-to-b from-transparent to-primary/5">
+									<p className="leading-relaxed">
+										Your project can have between 3 to 12 milestones depending
+										on its complexity and scope. Larger technical builds usually
+										need more milestones, while smaller apps or integrations
+										might only need 3-5. Each milestone should represent
+										meaningful progress in your project&apos;s development
+										journey and include specific technical deliverables.
+									</p>
+								</div>
+							</details>
+						</div>
+
+						{/* FAQ Item 4 */}
+						<div className="bg-card rounded-xl border border-primary/10 overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+							<details className="group">
+								<summary className="flex justify-between items-center p-6 cursor-pointer">
+									<h3 className="text-lg font-semibold">
+										What currencies does Boundless accept?
+									</h3>
+									<div className="w-8 h-8 rounded-full border border-primary/20 flex items-center justify-center bg-primary/5 group-open:rotate-45 transition-transform duration-300">
+										<span className="block w-4 h-0.5 bg-primary absolute" />
+										<span className="block w-0.5 h-4 bg-primary absolute group-open:opacity-0 transition-opacity" />
+									</div>
+								</summary>
+								<div className="p-6 pt-0 text-muted-foreground bg-gradient-to-b from-transparent to-primary/5">
+									<p className="leading-relaxed">
+										We support XLM (Stellar Lumens) and USDC on Stellar.
+										Projects building on Stellar can also accept custom Stellar
+										assets. Using the Stellar network means transactions are
+										fast, secure, and have minimal fees.
+									</p>
+								</div>
+							</details>
+						</div>
+
+						{/* FAQ Item 5 */}
+						<div className="bg-card rounded-xl border border-primary/10 overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+							<details className="group">
+								<summary className="flex justify-between items-center p-6 cursor-pointer">
+									<h3 className="text-lg font-semibold">
+										Does Boundless support projects outside the Stellar
+										ecosystem?
+									</h3>
+									<div className="w-8 h-8 rounded-full border border-primary/20 flex items-center justify-center bg-primary/5 group-open:rotate-45 transition-transform duration-300">
+										<span className="block w-4 h-0.5 bg-primary absolute" />
+										<span className="block w-0.5 h-4 bg-primary absolute group-open:opacity-0 transition-opacity" />
+									</div>
+								</summary>
+								<div className="p-6 pt-0 text-muted-foreground bg-gradient-to-b from-transparent to-primary/5">
+									<p className="leading-relaxed">
+										Boundless is dedicated exclusively to supporting projects
+										building on the Stellar ecosystem. We specialize in helping
+										developers who are creating applications, services, tools,
+										and infrastructure that enhance and expand Stellar&apos;s
+										capabilities and adoption.
+									</p>
+								</div>
+							</details>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* CTA Section - More Dynamic */}
+			<section className="py-20 bg-background">
+				<div className="container max-w-6xl mx-auto px-4">
+					<div className="bg-gradient-to-r from-primary/5 via-card to-primary/5 rounded-2xl border border-primary/20 p-8 md:p-12 shadow-xl relative overflow-hidden">
+						{/* Background elements */}
+						<div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl opacity-70" />
+						<div className="absolute -bottom-20 -left-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl opacity-70" />
+
+						<div className="relative flex flex-col md:flex-row gap-10 items-center justify-between">
+							<div className="w-full md:w-2/3">
+								<div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 border border-primary/20">
+									<Rocket className="h-4 w-4 mr-2" />
+									<span className="text-sm font-medium">
+										Ready for Liftoff?
+									</span>
+								</div>
+
+								<h2 className="text-3xl md:text-4xl font-bold mb-6">
+									Launch Your Project
+								</h2>
+								<p className="text-xl text-muted-foreground mb-8">
+									Join our community of innovators and bring your vision to life
+									with backing from people who believe in building the future.
+								</p>
+
+								<div className="flex flex-wrap gap-6">
+									<Button
+										size="lg"
+										className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 px-8 py-6 text-lg"
+									>
+										<Rocket className="mr-2 h-5 w-5" /> Start Your Project
+									</Button>
+									<Button
+										size="lg"
+										variant="outline"
+										className="border-primary/20 hover:border-primary/50 px-8 py-6 text-lg"
+									>
+										<Globe className="mr-2 h-5 w-5" /> Explore Projects
+									</Button>
+								</div>
+							</div>
+
+							<div className="w-full md:w-1/3 flex justify-center md:justify-end">
+								{/* Stellar-themed decoration */}
+								<div className="relative w-48 h-48 flex items-center justify-center">
+									<div className="absolute inset-0 rounded-full bg-primary/10 animate-pulse" />
+									<div className="absolute inset-4 rounded-full bg-primary/5 border border-primary/20 flex items-center justify-center">
+										<div className="w-16 h-16 relative">
+											{/* Stylized Stellar-inspired logo */}
+											<div className="absolute inset-0 flex items-center justify-center">
+												<Star className="h-10 w-10 text-primary" />
+											</div>
+											<div
+												className="absolute inset-0 animate-spin"
+												style={{ animationDuration: "10s" }}
+											>
+												<div className="h-3 w-3 bg-primary rounded-full absolute -top-1 left-1/2 transform -translate-x-1/2" />
+												<div className="h-3 w-3 bg-primary/60 rounded-full absolute top-1/2 -right-1 transform -translate-y-1/2" />
+												<div className="h-3 w-3 bg-primary/40 rounded-full absolute -bottom-1 left-1/2 transform -translate-x-1/2" />
+												<div className="h-3 w-3 bg-primary/20 rounded-full absolute top-1/2 -left-1 transform -translate-y-1/2" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
 	);
 }
