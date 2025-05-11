@@ -11,7 +11,7 @@ export async function GET(request: Request) {
 		const status = searchParams.get("status");
 
 		const where: Prisma.ProjectWhereInput = {
-			isApproved: true
+			isApproved: true,
 		};
 
 		if (category) {
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
 		const session = await getServerSession(authOptions);
 
 		const where: Prisma.ProjectWhereInput = {
-			isApproved: true
+			isApproved: true,
 		};
 
 		if (forUser && session?.user?.id) {
