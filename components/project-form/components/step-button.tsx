@@ -14,6 +14,7 @@ export const StepButton = React.memo(function StepButton({ number, isActive, isC
   return (
     <button
       onClick={onClick}
+      type="button"
       className={cn(
         "relative flex size-10 shrink-0 items-center justify-center rounded-full border-2 transition-colors z-10",
         isCompleted ? "border-primary bg-primary" : "border-zinc-200 dark:border-zinc-800",
