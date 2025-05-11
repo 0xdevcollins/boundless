@@ -3,14 +3,10 @@
 import { ProjectForm } from "@/components/project-form";
 import { WithWalletProtection } from "@/components/with-wallet-protection";
 
-interface ProjectFormWrapperProps {
-	userId?: string;
-}
-
-export const ProjectFormWrapper = ({ userId }: ProjectFormWrapperProps) => {
+export const ProjectFormWrapper = () => {
 	return (
 		<WithWalletProtection redirectPath="/projects">
-			<ProjectForm userId={userId} />
+			<ProjectForm />
 		</WithWalletProtection>
 	);
 };

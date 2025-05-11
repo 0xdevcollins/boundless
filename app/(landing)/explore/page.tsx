@@ -1,7 +1,6 @@
 "use client";
 
 import PageTransition from "@/components/landing/components/PageTransition";
-import Navbar from "@/components/shared/navbar";
 import { PublicProjectCard } from "@/components/shared/public-project-card";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -76,7 +75,6 @@ export default function ExplorePage() {
 
 	return (
 		<PageTransition>
-			<Navbar />
 			<div className="container max-w-7xl mx-auto px-4 md:px-6 py-12">
 				<div className="mb-12">
 					<h1 className="text-3xl md:text-4xl font-bold tracking-tighter mb-2">

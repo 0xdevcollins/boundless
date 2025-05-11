@@ -59,6 +59,7 @@ export async function POST(request: Request) {
 				bannerUrl,
 				profileUrl,
 				blockchainTx: signedTx || null,
+				isApproved: false,
 			},
 		});
 

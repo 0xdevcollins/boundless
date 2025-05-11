@@ -12,9 +12,9 @@ import {
 import { useWalletStore } from "@/store/useWalletStore";
 import { Wallet } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
-export default function ConnectWalletPage() {
+function ConnectWalletContent() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const redirectPath = searchParams.get("redirect") || "/";
@@ -91,5 +91,23 @@ export default function ConnectWalletPage() {
 				</CardFooter>
 			</Card>
 		</div>
+	);
+}
+
+export default function ConnectWalletPage() {
+	return (
+		<Suspense
+			fallback={
+				<div className="container flex items-center justify-center min-h-[80vh] py-12">
+					<Card className="w-full max-w-md">
+						<CardHeader className="text-center">
+							<div className="animate-pulse">Loading...</div>
+						</CardHeader>
+					</Card>
+				</div>
+			}
+		>
+			<ConnectWalletContent />
+		</Suspense>
 	);
 }

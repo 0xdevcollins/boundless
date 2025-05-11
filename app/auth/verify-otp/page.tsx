@@ -3,9 +3,9 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { type FormEvent, useEffect, useState } from "react";
+import { type FormEvent, Suspense, useEffect, useState } from "react";
 
-export default function VerifyOTP() {
+function VerifyOTPContent() {
 	const [otp, setOtp] = useState(["", "", "", "", "", ""]);
 	const [error, setError] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
@@ -190,5 +190,19 @@ export default function VerifyOTP() {
 				</form>
 			</div>
 		</div>
+	);
+}
+
+export default function VerifyOTP() {
+	return (
+		<Suspense
+			fallback={
+				<div className="min-h-screen flex items-center justify-center bg-[#dffce8]">
+					<div className="animate-pulse">Loading...</div>
+				</div>
+			}
+		>
+			<VerifyOTPContent />
+		</Suspense>
 	);
 }
