@@ -87,29 +87,48 @@ export async function POST(request: NextRequest) {
 		}
 
 		const body = await request.json();
-		const { title, description, dueDate, progress } = body;
+		const { milestones } = body;
 
-		if (!title) {
-			return NextResponse.json({ error: "Title is required" }, { status: 400 });
+		if (!Array.isArray(milestones)) {
+			return NextResponse.json(
+				{ error: "Milestones must be an array" },
+				{ status: 400 },
+			);
 		}
 
-		const milestone = await prisma.milestone.create({
-			data: {
-				title,
-				description: description || "",
-				dueDate: dueDate ? new Date(dueDate) : null,
-				progress: progress || 0,
-				projectId,
-				createdAt: new Date(),
-				updatedAt: new Date(),
-			},
-		});
+		const createdMilestones = await Promise.all(
+			milestones.map(async (milestone) => {
+				const { title, description, dueDate, progress, color } = milestone;
 
-		return NextResponse.json(milestone, { status: 201 });
+				if (!title) {
+					throw new Error("Title is required for each milestone");
+				}
+
+				return prisma.milestone.create({
+					data: {
+						title,
+						description: description || "",
+						dueDate: dueDate ? new Date(dueDate) : null,
+						progress: progress || 0,
+						color: color || null,
+						projectId,
+						createdAt: new Date(),
+						updatedAt: new Date(),
+					},
+				});
+			}),
+		);
+
+		return NextResponse.json(createdMilestones, { status: 201 });
 	} catch (error) {
-		console.error("Error creating milestone:", error);
+		console.error("Error creating milestones:", error);
 		return NextResponse.json(
-			{ error: "Failed to create milestone" },
+			{
+				error:
+					error instanceof Error
+						? error.message
+						: "Failed to create milestones",
+			},
 			{ status: 500 },
 		);
 	}

@@ -227,6 +227,7 @@ model Milestone {
   status      MilestoneStatus @default(PENDING)
   dueDate     DateTime?
   progress    Int      @default(0)
+  color       String?
   projectId   String
   project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   attachments MilestoneAttachment[]
