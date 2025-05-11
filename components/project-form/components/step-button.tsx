@@ -7,6 +7,7 @@ interface StepButtonProps {
 	number: number;
 	isActive: boolean;
 	isCompleted: boolean;
+	isDisabled?: boolean;
 	onClick: () => void;
 }
 
@@ -14,19 +15,23 @@ export const StepButton = React.memo(function StepButton({
 	number,
 	isActive,
 	isCompleted,
+	isDisabled = false,
 	onClick,
 }: StepButtonProps) {
 	return (
 		<button
-			onClick={onClick}
 			type="button"
+			onClick={onClick}
+			disabled={isDisabled}
 			className={cn(
 				"relative flex size-10 shrink-0 items-center justify-center rounded-full border-2 transition-colors z-10",
 				isCompleted
 					? "border-primary bg-primary"
 					: "border-zinc-200 dark:border-zinc-800",
 				isActive ? "border-primary" : "",
-				"hover:border-primary/80 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-zinc-900",
+				isDisabled
+					? "opacity-50 cursor-not-allowed"
+					: "hover:border-primary/80 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-zinc-900",
 			)}
 		>
 			<span

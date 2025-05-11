@@ -72,19 +72,38 @@ export function ProjectForm() {
 	const handleNavigation = async (step: number) => {
 		if (step < 1 || step > steps.length) return;
 
-		// If moving to review step, just update the step without validation
+		// If moving to review step, check if all previous steps are completed
 		if (step === steps.length) {
-			setCurrentStep(step);
+			let allStepsCompleted = true;
+			for (let i = 1; i < step; i++) {
+				if (!getStepCompletion(i)) {
+					allStepsCompleted = false;
+					break;
+				}
+			}
+
+			if (allStepsCompleted) {
+				setCurrentStep(step);
+			} else {
+				toast.error(
+					"Please complete all previous steps before proceeding to review",
+				);
+			}
 			return;
 		}
 
-		const fields = getFieldsForStep(currentStep - 1);
-		const isValid = await form.trigger(fields);
-		if (isValid) {
-			setCurrentStep(step);
+		// If moving forward, validate current step
+		if (step > currentStep) {
+			const fields = getFieldsForStep(currentStep - 1);
+			const isValid = await form.trigger(fields);
+			if (isValid) {
+				setCurrentStep(step);
+			} else {
+				toast.error("Please fill in all required fields before proceeding");
+			}
 		} else {
-			// Show error toast if validation fails
-			toast.error("Please fill in all required fields before proceeding");
+			// Moving backward is always allowed
+			setCurrentStep(step);
 		}
 	};
 

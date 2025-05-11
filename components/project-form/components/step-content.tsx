@@ -5,15 +5,22 @@ interface StepContentProps {
 	title: string;
 	description?: string;
 	isActive: boolean;
+	isDisabled?: boolean;
 }
 
 export const StepContent = React.memo(function StepContent({
 	title,
 	description,
 	isActive,
+	isDisabled = false,
 }: StepContentProps) {
 	return (
-		<div className="bg-muted rounded-lg px-6 py-4">
+		<div
+			className={cn(
+				"bg-muted rounded-lg px-6 py-4",
+				isDisabled && "opacity-50",
+			)}
+		>
 			<h3
 				className={cn(
 					"text-lg font-medium",

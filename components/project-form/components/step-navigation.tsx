@@ -23,6 +23,26 @@ export function StepNavigation({
 	getStepCompletion,
 	onNavigate,
 }: StepNavigationProps) {
+	const isStepNavigable = (stepNumber: number) => {
+		if (stepNumber <= currentStep) return true;
+		if (stepNumber === currentStep + 1 && getStepCompletion(currentStep))
+			return true;
+		if (stepNumber > currentStep + 1) {
+			for (let i = 1; i < stepNumber; i++) {
+				if (!getStepCompletion(i)) return false;
+			}
+			return true;
+		}
+
+		return false;
+	};
+
+	const handleStepNavigation = (stepNumber: number) => {
+		if (isStepNavigable(stepNumber)) {
+			onNavigate(stepNumber);
+		}
+	};
+
 	return (
 		<Card className="overflow-hidden md:w-1/3 w-full h-auto">
 			<CardContent className="p-6 space-y-4">
@@ -30,23 +50,27 @@ export function StepNavigation({
 					const stepNumber = index + 1;
 					const isActive = stepNumber === currentStep;
 					const isCompleted = getStepCompletion(stepNumber);
+					const canNavigate = isStepNavigable(stepNumber);
 
 					return (
 						<div
 							key={step.id}
-							className={`relative flex items-start gap-3 ${index < steps.length - 1
-									? `before:absolute before:left-5 before:top-[2.9rem] before:h-[calc(100%-2rem)] before:w-[2px] ${isCompleted
-										? "before:bg-primary"
-										: "before:bg-zinc-200 dark:before:bg-zinc-800"
-									}`
+							className={`relative flex items-start gap-3 ${
+								index < steps.length - 1
+									? `before:absolute before:left-5 before:top-[2.9rem] before:h-[calc(100%-2rem)] before:w-[2px] ${
+											isCompleted
+												? "before:bg-primary"
+												: "before:bg-zinc-200 dark:before:bg-zinc-800"
+										}`
 									: ""
-								}`}
+							}`}
 						>
 							<StepButton
 								number={stepNumber}
 								isActive={isActive}
 								isCompleted={isCompleted}
-								onClick={() => onNavigate(stepNumber)}
+								isDisabled={!canNavigate}
+								onClick={() => handleStepNavigation(stepNumber)}
 							/>
 
 							<div className="flex-1">
@@ -54,6 +78,7 @@ export function StepNavigation({
 									title={step.title}
 									description={step.description}
 									isActive={isActive}
+									isDisabled={!canNavigate}
 								/>
 							</div>
 						</div>
