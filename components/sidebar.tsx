@@ -117,32 +117,26 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 
 				<section>
 					{showCreatorCard && (
-						<div className="border-t p-3">
+						<div className="border-t p-4">
 							<Card className="bg-primary text-white dark:bg-secondary">
-								<CardContent className="p-3">
-									<div className="flex items-center gap-3">
-										<Image
-											height={64}
-											width={64}
-											src="/soroban.png"
-											alt=""
-											className="h-16 w-16 rounded-lg object-cover"
-										/>
-										<div>
-											<h3 className="font-semibold text-sm">
-												Become a creator
-											</h3>
-											<p className="mt-0.5 text-xs text-white/80 line-clamp-2">
-												Validate your concept and secure initial funding to
-												kickstart your project.
-											</p>
-										</div>
-									</div>
+								<CardContent className="p-4">
+									<Image
+										height={128}
+										width={128}
+										src="/soroban.png"
+										alt=""
+										className="mb-4 h-32 w-full rounded-lg object-cover"
+									/>
+									<h3 className="font-semibold">Become a creator</h3>
+									<p className="mt-1 text-sm text-white/80">
+										Validate your concept and secure initial funding to
+										kickstart your project.
+									</p>
 								</CardContent>
-								<CardFooter className="p-3 pt-0">
+								<CardFooter className="p-4 pt-0">
 									<Button
 										onClick={handleCreate}
-										className="w-full bg-secondary dark:bg-white dark:text-secondary hover:bg-secondary/30 text-sm h-8"
+										className="w-full bg-secondary dark:bg-white dark:text-secondary hover:bg-secondary/30"
 										variant="secondary"
 									>
 										Create now
