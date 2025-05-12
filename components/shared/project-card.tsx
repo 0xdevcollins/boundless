@@ -75,7 +75,7 @@ export function ProjectCard({
 							fill
 							className="object-cover transition-transform duration-300 group-hover:scale-105"
 						/>
-						<div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+						<div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
 					</div>
 				) : (
 					<div className="w-full h-40 bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center">
@@ -87,13 +87,13 @@ export function ProjectCard({
 
 				{/* Profile Image */}
 				{project.profileUrl && (
-					<div className="absolute top-6 left-4 w-12 h-12 rounded-full overflow-hidden border-2 border-background z-10 bg-black/50">
+					<div className="absolute top-6 left-4 w-12 h-12 rounded-full overflow-hidden border-2 border-background z-10">
 						<Image
 							src={project.profileUrl}
 							alt={`${project.title} profile`}
 							width={60}
 							height={60}
-							className="object-cover"
+							className="object-cover w-full h-full"
 						/>
 					</div>
 				)}

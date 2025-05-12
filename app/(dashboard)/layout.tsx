@@ -1,6 +1,7 @@
 import ConnectWalletButton from "@/components/connect-wallet";
 import { MobileSidebar } from "@/components/mobile-sidebar";
 import { NotificationDropdown } from "@/components/notifications/NotificationDropdown";
+import { PageTitle } from "@/components/page-title";
 import { Sidebar } from "@/components/sidebar";
 import type React from "react";
 
@@ -21,8 +22,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 			<div className="flex w-full flex-1 flex-col md:pl-[280px]">
 				{/* Mobile Header with Menu */}
 				<header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-2 lg:px-6">
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-4">
 						<MobileSidebar />
+						<PageTitle />
 					</div>
 					<div className="flex items-center gap-2">
 						<ConnectWalletButton />

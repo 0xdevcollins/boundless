@@ -159,11 +159,7 @@ export const useUserStore = create<UserState>((set, get) => ({
 	hasCreatedProject: () => {
 		const { user } = get();
 		if (!user) return false;
-
-		return (
-			!!user.hasCreatedProject ||
-			(Array.isArray(user.projects) && user.projects.length > 0)
-		);
+		return Array.isArray(user.projects) && user.projects.length > 0;
 	},
 
 	// Get the number of projects created by the user

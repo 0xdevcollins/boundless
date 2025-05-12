@@ -10,5 +10,4 @@ if (!pool) {
 		},
 	});
 }
-
 export default pool;

@@ -1,10 +1,7 @@
-"use client";
-
 import localFont from "next/font/local";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { SessionProvider } from "next-auth/react";
-import { Toaster } from "sonner";
+import { metadata } from "./metadata";
+import { Providers } from "./providers";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -18,6 +15,8 @@ const geistMono = localFont({
 	weight: "100 900",
 });
 
+export { metadata };
+
 export default function RootLayout({
 	children,
 }: Readonly<{
@@ -25,14 +24,19 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<SessionProvider>
-				<body
-					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-				>
-					<ThemeProvider>{children}</ThemeProvider>
-				</body>
-				<Toaster theme="dark" />
-			</SessionProvider>
+			<head>
+				<meta
+					httpEquiv="Cache-Control"
+					content="no-cache, no-store, must-revalidate"
+				/>
+				<meta httpEquiv="Pragma" content="no-cache" />
+				<meta httpEquiv="Expires" content="0" />
+			</head>
+			<body
+				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+			>
+				<Providers>{children}</Providers>
+			</body>
 		</html>
 	);
 }

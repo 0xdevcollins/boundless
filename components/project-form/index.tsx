@@ -134,19 +134,6 @@ export function ProjectForm() {
 				formData.append("profileImageUrl", data.profileImage);
 			}
 
-			// Handle document uploads
-			if (data.pitchDeck instanceof File) {
-				formData.append("pitchDeck", data.pitchDeck);
-			} else if (typeof data.pitchDeck === "string") {
-				formData.append("pitchDeckUrl", data.pitchDeck);
-			}
-
-			if (data.whitepaper instanceof File) {
-				formData.append("whitepaper", data.whitepaper);
-			} else if (typeof data.whitepaper === "string") {
-				formData.append("whitepaperUrl", data.whitepaper);
-			}
-
 			// Create the project first
 			const response = await fetch("/api/projects/create", {
 				method: "POST",
@@ -206,8 +193,8 @@ export function ProjectForm() {
 									title: milestone.title,
 									description: milestone.description,
 									dueDate: milestone.dueDate,
-									color: milestone.color,
 									progress: milestone.progress || 0,
+									color: milestone.color,
 								})),
 							}),
 						},
@@ -227,6 +214,61 @@ export function ProjectForm() {
 				}
 			}
 
+			if (data.pitchDeck || data.whitepaper) {
+				const documentsFormData = new FormData();
+				if (data.pitchDeck instanceof File) {
+					documentsFormData.append("pitchDeck", data.pitchDeck);
+				} else if (typeof data.pitchDeck === "string") {
+					documentsFormData.append("pitchDeckUrl", data.pitchDeck);
+				}
+
+				if (data.whitepaper instanceof File) {
+					documentsFormData.append("whitepaper", data.whitepaper);
+				} else if (typeof data.whitepaper === "string") {
+					documentsFormData.append("whitepaperUrl", data.whitepaper);
+				}
+
+				let retryCount = 0;
+				let documentsUploaded = false;
+
+				while (retryCount < 3 && !documentsUploaded) {
+					try {
+						const documentsResponse = await fetch(
+							`/api/projects/${project.id}/documents`,
+							{
+								method: "POST",
+								body: documentsFormData,
+							},
+						);
+
+						if (!documentsResponse.ok) {
+							const error = await documentsResponse.json();
+							throw new Error(error.message || "Failed to upload documents");
+						}
+
+						documentsUploaded = true;
+					} catch (error) {
+						console.error(
+							`Failed to upload documents (attempt ${retryCount + 1}):`,
+							error,
+						);
+						retryCount++;
+
+						if (retryCount === 3) {
+							toast.error(
+								"Failed to upload documents after multiple attempts",
+								{
+									description:
+										"Please try uploading the documents again from the project settings.",
+								},
+							);
+						} else {
+							await new Promise((resolve) => setTimeout(resolve, 1000));
+						}
+					}
+				}
+			}
+
 			toast.success("Project created successfully", {
 				description: "Your project has been created and is now live.",
 			});
@@ -242,7 +284,6 @@ export function ProjectForm() {
 		}
 	};
 
-	// Helper function to get fields to validate for each step
 	const getFieldsForStep = (step: number): (keyof ProjectFormValues)[] => {
 		switch (step) {
 			case 0: // Basic Info

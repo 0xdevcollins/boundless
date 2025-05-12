@@ -1,4 +1,5 @@
 import { authOptions } from "@/lib/auth.config";
+import { notifyProjectCreated } from "@/lib/notifications/project";
 import prisma from "@/lib/prisma";
 import { v2 as cloudinary } from "cloudinary";
 import { getServerSession } from "next-auth/next";
@@ -61,6 +62,13 @@ export async function POST(request: Request) {
 				blockchainTx: signedTx || null,
 				isApproved: false,
 			},
+		});
+
+		// Create notification for project creator
+		await notifyProjectCreated({
+			projectId,
+			projectTitle: title,
+			userId: session.user.id,
 		});
 
 		return NextResponse.json({ success: true, project }, { status: 201 });

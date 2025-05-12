@@ -10,7 +10,9 @@ export async function GET(request: Request) {
 		const category = searchParams.get("category");
 		const status = searchParams.get("status");
 
-		const where: Prisma.ProjectWhereInput = {};
+		const where: Prisma.ProjectWhereInput = {
+			isApproved: true,
+		};
 
 		if (category) {
 			where.category = category;
@@ -62,7 +64,9 @@ export async function POST(request: Request) {
 
 		const session = await getServerSession(authOptions);
 
-		const where: Prisma.ProjectWhereInput = {};
+		const where: Prisma.ProjectWhereInput = {
+			isApproved: true,
+		};
 
 		if (forUser && session?.user?.id) {
 			where.userId = session.user.id;
