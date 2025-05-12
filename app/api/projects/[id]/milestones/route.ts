@@ -1,4 +1,5 @@
 import { authOptions } from "@/lib/auth.config";
+import { notifyNewMilestones } from "@/lib/notifications/project";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { type NextRequest, NextResponse } from "next/server";
@@ -87,29 +88,95 @@ export async function POST(request: NextRequest) {
 		}
 
 		const body = await request.json();
-		const { title, description, dueDate, progress } = body;
+		const { milestones } = body;
 
-		if (!title) {
-			return NextResponse.json({ error: "Title is required" }, { status: 400 });
+		if (!Array.isArray(milestones)) {
+			return NextResponse.json(
+				{ error: "Milestones must be an array" },
+				{ status: 400 },
+			);
 		}
 
-		const milestone = await prisma.milestone.create({
-			data: {
-				title,
-				description: description || "",
-				dueDate: dueDate ? new Date(dueDate) : null,
-				progress: progress || 0,
-				projectId,
-				createdAt: new Date(),
-				updatedAt: new Date(),
-			},
-		});
+		const createdMilestones = await Promise.all(
+			milestones.map(async (milestone) => {
+				const { title, description, dueDate, progress, color } = milestone;
 
-		return NextResponse.json(milestone, { status: 201 });
+				if (!title) {
+					throw new Error("Title is required for each milestone");
+				}
+
+				return prisma.milestone.create({
+					data: {
+						title,
+						description: description || "",
+						dueDate: dueDate ? new Date(dueDate) : null,
+						progress: progress || 0,
+						color: color || null,
+						projectId,
+						createdAt: new Date(),
+						updatedAt: new Date(),
+					},
+				});
+			}),
+		);
+
+		// Notify team members about new milestones
+		if (createdMilestones.length > 0) {
+			// Get project details for notification
+			const projectDetails = await prisma.project.findUnique({
+				where: { id: projectId },
+				select: {
+					title: true,
+					userId: true,
+					teamMembers: {
+						select: {
+							userId: true,
+						},
+					},
+				},
+			});
+
+			if (projectDetails) {
+				// Collect all team member IDs who should receive notifications
+				const teamMemberIds = [
+					projectDetails.userId,
+					...projectDetails.teamMembers
+						.filter((member) => member.userId !== null)
+						.map((member) => member.userId as string),
+				];
+
+				// Remove duplicates and the current user
+				const uniqueRecipients = [...new Set(teamMemberIds)].filter(
+					(id) => id !== session.user.id,
+				);
+
+				// Create notifications for each team member
+				await Promise.all(
+					uniqueRecipients.map(async (userId) => {
+						await notifyNewMilestones({
+							projectId,
+							projectTitle: projectDetails.title,
+							userId,
+							milestones: createdMilestones.map((m) => ({
+								title: m.title,
+								description: m.description,
+							})),
+						});
+					}),
+				);
+			}
+		}
+
+		return NextResponse.json(createdMilestones, { status: 201 });
 	} catch (error) {
-		console.error("Error creating milestone:", error);
+		console.error("Error creating milestones:", error);
 		return NextResponse.json(
-			{ error: "Failed to create milestone" },
+			{
+				error:
+					error instanceof Error
+						? error.message
+						: "Failed to create milestones",
+			},
 			{ status: 500 },
 		);
 	}

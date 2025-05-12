@@ -29,57 +29,33 @@ type ViewerMilestonesProps = {
 export function ViewerMilestones({ projectId }: ViewerMilestonesProps) {
 	const [milestones, setMilestones] = useState<Milestone[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		// Mock data - in a real app, you would fetch from API
-		const mockMilestones: Milestone[] = [
-			{
-				id: "1",
-				title: "Project Validation",
-				description: "Gather community support and validate the project idea",
-				dueDate: "2023-12-01",
-				completedDate: "2023-11-28",
-				status: "COMPLETED",
-			},
-			{
-				id: "2",
-				title: "Initial Funding Round",
-				description: "Secure initial funding to begin development",
-				dueDate: "2024-01-15",
-				completedDate: "2024-01-10",
-				status: "COMPLETED",
-			},
-			{
-				id: "3",
-				title: "MVP Development",
-				description: "Develop the minimum viable product",
-				dueDate: "2024-04-30",
-				completedDate: null,
-				status: "IN_PROGRESS",
-			},
-			{
-				id: "4",
-				title: "Beta Testing",
-				description: "Release beta version for community testing",
-				dueDate: "2024-06-15",
-				completedDate: null,
-				status: "PENDING",
-			},
-			{
-				id: "5",
-				title: "Public Launch",
-				description: "Official public launch of the project",
-				dueDate: "2024-08-01",
-				completedDate: null,
-				status: "PENDING",
-			},
-		];
+		async function fetchMilestones() {
+			try {
+				setLoading(true);
+				const response = await fetch(`/api/projects/${projectId}/milestones`);
 
-		// Simulate API fetch
-		setTimeout(() => {
-			setMilestones(mockMilestones);
-			setLoading(false);
-		}, 500);
+				if (!response.ok) {
+					throw new Error(`Failed to fetch milestones: ${response.status}`);
+				}
+
+				const data = await response.json();
+				setMilestones(data);
+			} catch (err) {
+				console.error("Error fetching milestones:", err);
+				setError(
+					err instanceof Error ? err.message : "Failed to load milestones",
+				);
+			} finally {
+				setLoading(false);
+			}
+		}
+
+		if (projectId) {
+			fetchMilestones();
+		}
 	}, [projectId]);
 
 	// Calculate overall progress
@@ -128,6 +104,42 @@ export function ViewerMilestones({ projectId }: ViewerMilestonesProps) {
 				<CardContent>
 					<div className="flex justify-center py-8">
 						<div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
+					</div>
+				</CardContent>
+			</Card>
+		);
+	}
+
+	if (error) {
+		return (
+			<Card className="h-[320px]">
+				<CardHeader>
+					<CardTitle>Project Milestones</CardTitle>
+					<CardDescription className="text-destructive">
+						Error loading milestones
+					</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<div className="flex justify-center py-8 text-muted-foreground">
+						<p>{error}</p>
+					</div>
+				</CardContent>
+			</Card>
+		);
+	}
+
+	if (milestones.length === 0) {
+		return (
+			<Card className="h-[320px]">
+				<CardHeader>
+					<CardTitle>Project Milestones</CardTitle>
+					<CardDescription>
+						No milestones found for this project
+					</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<div className="flex justify-center py-8 text-muted-foreground">
+						<p>This project hasn&apos;t defined any milestones yet.</p>
 					</div>
 				</CardContent>
 			</Card>

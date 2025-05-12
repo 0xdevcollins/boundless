@@ -1,4 +1,8 @@
 import { authOptions } from "@/lib/auth.config";
+import {
+	notifyMilestoneCompleted,
+	notifyMilestoneUpdated,
+} from "@/lib/notifications/project";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { type NextRequest, NextResponse } from "next/server";
@@ -73,8 +77,11 @@ export async function PATCH(request: NextRequest) {
 		const project = await prisma.project.findUnique({
 			where: { id: projectId },
 			include: {
+				user: {
+					select: { id: true, name: true },
+				},
 				teamMembers: {
-					where: { userId: session.user.id },
+					select: { userId: true, fullName: true },
 				},
 			},
 		});
@@ -84,7 +91,8 @@ export async function PATCH(request: NextRequest) {
 		}
 
 		const isTeamMember =
-			project.userId === session.user.id || project.teamMembers.length > 0;
+			project.userId === session.user.id ||
+			project.teamMembers.some((member) => member.userId === session.user.id);
 		if (!isTeamMember) {
 			return NextResponse.json(
 				{
@@ -116,6 +124,15 @@ export async function PATCH(request: NextRequest) {
 		const body = await request.json();
 		const { title, description, status, dueDate, progress } = body;
 
+		// Check if the milestone is being marked as completed
+		const isCompletionUpdate =
+			(status === "COMPLETED" && milestone.status !== "COMPLETED") ||
+			(progress === 100 && milestone.progress !== 100);
+
+		// Keep track of old status for notifications
+		const oldStatus = milestone.status;
+		const oldProgress = milestone.progress;
+
 		const updatedMilestone = await prisma.milestone.update({
 			where: { id: milestoneId },
 			data: {
@@ -127,6 +144,66 @@ export async function PATCH(request: NextRequest) {
 				progress: progress !== undefined ? progress : milestone.progress,
 			},
 		});
+
+		// Generate notification data
+		// Collect team member IDs (excluding the current user who made the update)
+		const teamMemberIds = [
+			project.userId,
+			...project.teamMembers
+				.filter((member) => member.userId !== null)
+				.map((member) => member.userId as string),
+		].filter((id) => id !== session.user.id);
+
+		// Get user name who made the update
+		const updaterName = session.user.name || "A team member";
+
+		// Create milestone update notification
+		const significantChange =
+			status !== oldStatus ||
+			(progress !== undefined && Math.abs(progress - oldProgress) >= 20);
+
+		if (significantChange && teamMemberIds.length > 0) {
+			// Notification for regular update
+			await Promise.all(
+				teamMemberIds.map((userId) =>
+					notifyMilestoneUpdated({
+						projectId,
+						projectTitle: project.title,
+						userId,
+						milestoneTitle: title || milestone.title,
+						updaterName,
+					}),
+				),
+			);
+		}
+
+		// Special notification for milestone completion
+		if (isCompletionUpdate && teamMemberIds.length > 0) {
+			// Notification for completion to all team members
+			await Promise.all(
+				teamMemberIds.map((userId) =>
+					notifyMilestoneCompleted({
+						projectId,
+						projectTitle: project.title,
+						userId,
+						milestoneTitle: title || milestone.title,
+						updaterName,
+					}),
+				),
+			);
+
+			// Special notification for project owner if they're not the one updating
+			if (project.userId !== session.user.id) {
+				await notifyMilestoneCompleted({
+					projectId,
+					projectTitle: project.title,
+					userId: project.userId,
+					milestoneTitle: title || milestone.title,
+					updaterName,
+					isOwner: true,
+				});
+			}
+		}
 
 		return NextResponse.json(updatedMilestone);
 	} catch (error) {

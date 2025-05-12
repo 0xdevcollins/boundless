@@ -65,26 +65,59 @@ export async function POST(
 
 		// Handle pitch deck upload
 		if (pitchDeck) {
-			const result = await uploadToCloudinary(pitchDeck, "pitch_decks");
-			updateData.pitchDeck = result.secure_url;
+			try {
+				const result = await uploadToCloudinary(pitchDeck, "pitch_decks");
+				updateData.pitchDeck = result.secure_url;
+			} catch (error) {
+				console.error(
+					"[PROJECT_DOCUMENTS_POST] Failed to upload pitch deck:",
+					error,
+				);
+				return NextResponse.json(
+					{ error: "Failed to upload pitch deck" },
+					{ status: 500 },
+				);
+			}
 		} else if (pitchDeckUrl) {
 			updateData.pitchDeck = pitchDeckUrl;
 		}
 
 		// Handle whitepaper upload
 		if (whitepaper) {
-			const result = await uploadToCloudinary(whitepaper, "whitepapers");
-			updateData.whitepaper = result.secure_url;
+			try {
+				const result = await uploadToCloudinary(whitepaper, "whitepapers");
+				updateData.whitepaper = result.secure_url;
+			} catch (error) {
+				console.error(
+					"[PROJECT_DOCUMENTS_POST] Failed to upload whitepaper:",
+					error,
+				);
+				return NextResponse.json(
+					{ error: "Failed to upload whitepaper" },
+					{ status: 500 },
+				);
+			}
 		} else if (whitepaperUrl) {
 			updateData.whitepaper = whitepaperUrl;
 		}
 
 		// Update project with document URLs
 		if (Object.keys(updateData).length > 0) {
-			await prisma.project.update({
-				where: { id: projectId },
-				data: updateData,
-			});
+			try {
+				await prisma.project.update({
+					where: { id: projectId },
+					data: updateData,
+				});
+			} catch (error) {
+				console.error(
+					"[PROJECT_DOCUMENTS_POST] Failed to update project:",
+					error,
+				);
+				return NextResponse.json(
+					{ error: "Failed to update project with document URLs" },
+					{ status: 500 },
+				);
+			}
 		}
 
 		return NextResponse.json({ success: true });

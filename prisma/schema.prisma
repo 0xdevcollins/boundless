@@ -66,6 +66,7 @@ model User {
   notifications Notification[]
   posts         Post[]
   postComments  PostComment[]
+  fundings      Funding[]
 
   @@index([username])
 }
@@ -113,6 +114,7 @@ model Project {
   teamMembers    TeamMember[]
   comments       Comment[]
   milestones     Milestone[]
+  fundings       Funding[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -227,6 +229,7 @@ model Milestone {
   status      MilestoneStatus @default(PENDING)
   dueDate     DateTime?
   progress    Int      @default(0)
+  color       String?
   projectId   String
   project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   attachments MilestoneAttachment[]
@@ -310,4 +313,28 @@ model PostComment {
   @@index([postId])
   @@index([authorId])
   @@index([parentId])
+}
+
+model Funding {
+  id        String   @id @default(cuid())
+  amount    Int
+  status    FundingStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  @@index([projectId])
+  @@index([userId])
+}
+
+enum FundingStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
 }

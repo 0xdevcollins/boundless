@@ -1,7 +1,14 @@
 import { authOptions } from "@/lib/auth.config";
+import {
+	notifyNewVote,
+	notifyProjectValidated,
+	notifyVoteMilestone,
+} from "@/lib/notifications/project";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { type NextRequest, NextResponse } from "next/server";
+
+const VOTE_THRESHOLDS = [10, 25, 50, 100];
 
 export async function POST(request: Request) {
 	try {
@@ -23,6 +30,11 @@ export async function POST(request: Request) {
 		// Check if project exists
 		const project = await prisma.project.findUnique({
 			where: { id: projectId },
+			include: {
+				user: {
+					select: { id: true, name: true },
+				},
+			},
 		});
 
 		if (!project) {
@@ -66,9 +78,55 @@ export async function POST(request: Request) {
 			},
 		});
 
+		// Get updated vote count
 		const count = await prisma.vote.count({
 			where: { projectId },
 		});
+
+		// Notify project creator about the new vote
+		if (project.user.id !== userId) {
+			const voter = await prisma.user.findUnique({
+				where: { id: userId },
+				select: { name: true },
+			});
+
+			await notifyNewVote({
+				projectId,
+				projectTitle: project.title,
+				userId: project.user.id,
+				voterName: voter?.name || "Someone",
+				voteCount: count,
+			});
+		}
+
+		// Check if a vote threshold has been reached
+		for (const threshold of VOTE_THRESHOLDS) {
+			if (count === threshold) {
+				await notifyVoteMilestone({
+					projectId,
+					projectTitle: project.title,
+					userId: project.user.id,
+					threshold,
+				});
+
+				// If the project reaches a significant vote count and is still pending validation,
+				// automatically validate it (optional feature)
+				if (threshold >= 50 && project.ideaValidation === "PENDING") {
+					await prisma.project.update({
+						where: { id: projectId },
+						data: { ideaValidation: "VALIDATED" },
+					});
+
+					// Notify about automatic validation
+					await notifyProjectValidated({
+						projectId,
+						projectTitle: project.title,
+						userId: project.user.id,
+						voteCount: threshold,
+					});
+				}
+			}
+		}
 
 		return NextResponse.json({ success: true, voted: true, count });
 	} catch (error) {

@@ -5,7 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CreditCard, DollarSign, Users } from "lucide-react";
-import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+type FundingData = {
+	raised: number;
+	backers: number;
+	daysLeft: number;
+};
 
 type ViewerFundingHorizontalProps = {
 	projectId: string;
@@ -16,14 +24,58 @@ export function ViewerFundingHorizontal({
 	projectId,
 	fundingGoal,
 }: ViewerFundingHorizontalProps) {
-	// In a real app, you would fetch this data from an API
-	const [fundingData, setFundingData] = useState({
-		raised: Math.floor(fundingGoal * 0.65), // Example: 65% funded
-		backers: 48,
-		daysLeft: 14,
+	const { data: session } = useSession();
+	const [fundingData, setFundingData] = useState<FundingData>({
+		raised: 0,
+		backers: 0,
+		daysLeft: 0,
 	});
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		async function fetchFundingData() {
+			try {
+				const response = await fetch(`/api/projects/${projectId}/funding`);
+				if (!response.ok) throw new Error("Failed to fetch funding data");
+
+				const data = await response.json();
+				setFundingData(data);
+			} catch (error) {
+				console.error("Error fetching funding data:", error);
+				toast.error("Failed to load funding data");
+			} finally {
+				setIsLoading(false);
+			}
+		}
+
+		fetchFundingData();
+	}, [projectId]);
 
 	const percentFunded = (fundingData.raised / fundingGoal) * 100;
+
+	const handleBackProject = async () => {
+		if (!session) {
+			toast.error("Please sign in to back this project");
+			return;
+		}
+
+		// Here you would typically open a modal or navigate to a funding page
+		toast.info("Funding functionality coming soon!");
+	};
+
+	if (isLoading) {
+		return (
+			<Card>
+				<CardContent className="p-6">
+					<div className="animate-pulse space-y-4">
+						<div className="h-8 bg-muted rounded w-1/3" />
+						<div className="h-2 bg-muted rounded" />
+						<div className="h-4 bg-muted rounded w-1/4" />
+					</div>
+				</CardContent>
+			</Card>
+		);
+	}
 
 	return (
 		<Card>
@@ -67,7 +119,7 @@ export function ViewerFundingHorizontal({
 
 					{/* Action Button */}
 					<div className="flex justify-center">
-						<Button className="w-full md:w-auto">
+						<Button className="w-full md:w-auto" onClick={handleBackProject}>
 							<DollarSign className="mr-2 h-4 w-4" /> Back This Project
 						</Button>
 					</div>

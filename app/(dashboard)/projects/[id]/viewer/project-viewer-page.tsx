@@ -1,17 +1,38 @@
 "use client";
 
+import { generateProjectMetadata } from "@/app/components/metadata/project-metadata";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Vote } from "@prisma/client";
-import { Calendar, FileText, Heart, Share2, Users, Wallet } from "lucide-react";
+import {
+	Calendar,
+	Copy,
+	Facebook,
+	FileText,
+	Heart,
+	Linkedin,
+	MessageCircle,
+	Share2,
+	Twitter,
+	Users,
+	Wallet,
+} from "lucide-react";
+import type { Metadata } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { ViewerComments } from "./viewer-comments";
 import { ViewerFundingHorizontal } from "./viewer-funding";
 import { ViewerMilestones } from "./viewer-milestones";
@@ -31,6 +52,8 @@ type Project = {
 	bannerUrl: string | null;
 	profileUrl: string | null;
 	blockchainTx: string | null;
+	pitchDeck: string | null;
+	whitepaper: string | null;
 	ideaValidation: ValidationStatus;
 	createdAt: string;
 	user: {
@@ -56,6 +79,35 @@ type Project = {
 		teamMembers: number;
 	};
 };
+
+type Props = {
+	params: { id: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	try {
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_SITE_URL}/api/projects/${params.id}`,
+		);
+		if (!response.ok) throw new Error("Failed to fetch project");
+
+		const project = await response.json();
+
+		return generateProjectMetadata({
+			title: project.title,
+			description: project.description,
+			image: project.bannerUrl,
+			category: project.category,
+			fundingGoal: project.fundingGoal,
+			creator: project.user,
+		});
+	} catch {
+		return {
+			title: "Project Not Found | Boundless",
+			description: "The requested project could not be found.",
+		};
+	}
+}
 
 export function ProjectViewerPage() {
 	const params = useParams();
@@ -94,6 +146,65 @@ export function ProjectViewerPage() {
 
 		fetchProject();
 	}, [params, router]);
+
+	const handleShare = async (platform?: string) => {
+		if (!project) return;
+
+		const url = encodeURIComponent(window.location.href);
+		const text = encodeURIComponent(`Check out ${project.title} on Boundless!`);
+		const hashtags = encodeURIComponent("boundless,web3,blockchain");
+
+		try {
+			switch (platform) {
+				case "twitter":
+					window.open(
+						`https://twitter.com/intent/tweet?url=${url}&text=${text}&hashtags=${hashtags}`,
+						"_blank",
+					);
+					break;
+				case "facebook":
+					window.open(
+						`https://www.facebook.com/dialog/share?app_id=YOUR_FB_APP_ID&href=${url}&quote=${text}`,
+						"_blank",
+					);
+					break;
+				case "linkedin":
+					window.open(
+						`https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+						"_blank",
+					);
+					break;
+				case "whatsapp":
+					window.open(`https://wa.me/?text=${text}%20${url}`, "_blank");
+					break;
+				case "telegram":
+					window.open(
+						`https://t.me/share/url?url=${url}&text=${text}`,
+						"_blank",
+					);
+					break;
+				case "copy":
+					await navigator.clipboard.writeText(window.location.href);
+					toast.success("Link copied to clipboard!");
+					break;
+				default:
+					if (navigator.share) {
+						await navigator.share({
+							title: project.title,
+							text: `Check out ${project.title} on Boundless!`,
+							url: window.location.href,
+						});
+					} else {
+						await navigator.clipboard.writeText(window.location.href);
+						toast.success("Link copied to clipboard!");
+					}
+			}
+		} catch (err) {
+			if (err instanceof Error && err.name !== "AbortError") {
+				toast.error("Failed to share project");
+			}
+		}
+	};
 
 	if (loading) {
 		return (
@@ -174,68 +285,8 @@ export function ProjectViewerPage() {
 				</div>
 			</div>
 
-			{/* Project Header */}
-			<div className="bg-muted">
-				<div className="container px-4 py-8">
-					<div className="flex flex-col md:flex-row md:items-center gap-6">
-						<Avatar className="h-24 w-24 border-4 border-background">
-							<AvatarImage
-								src={project.profileUrl || "/project.svg"}
-								alt={project.title}
-							/>
-							<AvatarFallback>
-								{project.title.substring(0, 2).toUpperCase()}
-							</AvatarFallback>
-						</Avatar>
-
-						<div className="flex-1">
-							<div className="flex flex-wrap gap-2 mb-2">
-								<Badge>{project.category}</Badge>
-								<Badge
-									variant={
-										project.ideaValidation === "VALIDATED"
-											? "default"
-											: project.ideaValidation === "REJECTED"
-												? "destructive"
-												: "secondary"
-									}
-								>
-									{project.ideaValidation}
-								</Badge>
-							</div>
-
-							<h1 className="text-3xl font-bold">{project.title}</h1>
-
-							<div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-2 text-sm text-muted-foreground">
-								<div className="flex items-center">
-									<Calendar className="h-4 w-4 mr-1" />
-									{formatDate(project.createdAt)}
-								</div>
-								<div className="flex items-center">
-									<Users className="h-4 w-4 mr-1" />
-									{project._count.votes} Supporters
-								</div>
-								<div className="flex items-center">
-									<Wallet className="h-4 w-4 mr-1" />$
-									{project.fundingGoal.toLocaleString()} Goal
-								</div>
-							</div>
-						</div>
-
-						<div className="flex flex-col sm:flex-row gap-3 mt-4 md:mt-0">
-							<Button>
-								<Heart className="mr-2 h-4 w-4" /> Support
-							</Button>
-							<Button variant="outline">
-								<Share2 className="mr-2 h-4 w-4" /> Share
-							</Button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			{/* Project Banner */}
-			<div className="w-full h-[300px] relative">
+			{/* Project Banner with Overlay */}
+			<div className="relative w-full h-[400px]">
 				<Image
 					src={project.bannerUrl || "/banner.png"}
 					alt={`${project.title} Banner`}
@@ -243,10 +294,112 @@ export function ProjectViewerPage() {
 					className="object-cover"
 					priority
 				/>
+				<div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
+
+				{/* Project Header Overlay */}
+				<div className="absolute inset-0">
+					<div className="container h-full px-4">
+						<div className="flex flex-col justify-end h-full pb-8 gap-6">
+							<div className="flex flex-col md:flex-row md:items-end gap-6">
+								<Avatar className="h-24 w-24 border-4 border-background">
+									<AvatarImage
+										src={project.profileUrl || "/project.svg"}
+										alt={project.title}
+									/>
+									<AvatarFallback>
+										{project.title.substring(0, 2).toUpperCase()}
+									</AvatarFallback>
+								</Avatar>
+
+								<div className="flex-1 text-white">
+									<div className="flex flex-wrap gap-2 mb-2">
+										<Badge
+											variant="secondary"
+											className="bg-white hover:bg-white/30"
+										>
+											{project.category}
+										</Badge>
+										<Badge
+											variant={
+												project.ideaValidation === "VALIDATED"
+													? "default"
+													: project.ideaValidation === "REJECTED"
+														? "destructive"
+														: "secondary"
+											}
+											className="bg-white hover:bg-white/30"
+										>
+											{project.ideaValidation}
+										</Badge>
+									</div>
+
+									<h1 className="text-4xl font-bold mb-4">{project.title}</h1>
+
+									<div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/80">
+										<div className="flex items-center">
+											<Calendar className="h-4 w-4 mr-1" />
+											{formatDate(project.createdAt)}
+										</div>
+										<div className="flex items-center">
+											<Users className="h-4 w-4 mr-1" />
+											{project._count.votes} Supporters
+										</div>
+										<div className="flex items-center">
+											<Wallet className="h-4 w-4 mr-1" />$
+											{project.fundingGoal.toLocaleString()} Goal
+										</div>
+									</div>
+								</div>
+
+								<div className="flex flex-col sm:flex-row gap-3">
+									<Button className="bg-white text-black hover:bg-white/90">
+										<Heart className="mr-2 h-4 w-4" /> Support
+									</Button>
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild>
+											<Button
+												variant="outline"
+												className="border-white hover:bg-white/10"
+											>
+												<Share2 className="mr-2 h-4 w-4" /> Share
+											</Button>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent align="end" className="w-48">
+											<DropdownMenuItem onClick={() => handleShare("twitter")}>
+												<Twitter className="mr-2 h-4 w-4" />
+												Share on X
+											</DropdownMenuItem>
+											<DropdownMenuItem onClick={() => handleShare("facebook")}>
+												<Facebook className="mr-2 h-4 w-4" />
+												Share on Facebook
+											</DropdownMenuItem>
+											<DropdownMenuItem onClick={() => handleShare("linkedin")}>
+												<Linkedin className="mr-2 h-4 w-4" />
+												Share on LinkedIn
+											</DropdownMenuItem>
+											<DropdownMenuItem onClick={() => handleShare("whatsapp")}>
+												<MessageCircle className="mr-2 h-4 w-4" />
+												Share on WhatsApp
+											</DropdownMenuItem>
+											<DropdownMenuItem onClick={() => handleShare("telegram")}>
+												<MessageCircle className="mr-2 h-4 w-4" />
+												Share on Telegram
+											</DropdownMenuItem>
+											<DropdownMenuItem onClick={() => handleShare("copy")}>
+												<Copy className="mr-2 h-4 w-4" />
+												Copy Link
+											</DropdownMenuItem>
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 
 			{/* Project Status */}
-			<div className="container px-4 -mt-8 relative z-10">
+			<div className="container px-4 -mt-4 relative z-10">
 				<Card className="border-t-4 border-t-primary">
 					<CardContent className="p-6">
 						<ViewerProjectStatus project={project} />
@@ -278,12 +431,38 @@ export function ProjectViewerPage() {
 								</div>
 
 								<div className="mt-6">
-									<Button variant="outline" className="mr-4">
-										<FileText className="mr-2 h-4 w-4" /> View Pitch Deck
-									</Button>
-									<Button variant="outline">
-										<FileText className="mr-2 h-4 w-4" /> View Whitepaper
-									</Button>
+									{project.pitchDeck ? (
+										<Button
+											variant="outline"
+											className="mr-4"
+											onClick={() =>
+												window.open(project.pitchDeck || "", "_blank")
+											}
+										>
+											<FileText className="mr-2 h-4 w-4" /> View Pitch Deck
+										</Button>
+									) : (
+										<Button variant="outline" className="mr-4" disabled>
+											<FileText className="mr-2 h-4 w-4" /> Pitch Deck
+											Unavailable
+										</Button>
+									)}
+
+									{project.whitepaper ? (
+										<Button
+											variant="outline"
+											onClick={() =>
+												window.open(project.whitepaper || "", "_blank")
+											}
+										>
+											<FileText className="mr-2 h-4 w-4" /> View Whitepaper
+										</Button>
+									) : (
+										<Button variant="outline" disabled>
+											<FileText className="mr-2 h-4 w-4" /> Whitepaper
+											Unavailable
+										</Button>
+									)}
 								</div>
 							</CardContent>
 						</Card>
