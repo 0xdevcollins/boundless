@@ -18,6 +18,20 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+	CommandList,
+} from "@/components/ui/command";
+import { Input } from "@/components/ui/input";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 import type { TeamMember } from "@/types/project";
 import {
 	ChevronDown,
@@ -25,14 +39,14 @@ import {
 	Github,
 	Linkedin,
 	MessageSquare,
-	Plus,
 	Search,
 	Trash2,
 	Twitter,
 	UserPlus,
+	UserPlus,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import {  useRef, useState } from "react";
 import { toast } from "sonner";
 
 interface User {
@@ -50,9 +64,156 @@ interface TeamSectionProps {
 
 export function TeamSection({
 	teamMembers: initialTeamMembers,
+	teamMembers: initialTeamMembers,
 	isTeamMember,
 	projectId,
 }: TeamSectionProps) {
+	const [searchQuery, setSearchQuery] = useState("");
+	const [isSearching, setIsSearching] = useState(false);
+	const [searchResults, setSearchResults] = useState<User[]>([]);
+	const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+	const [teamMembers, setTeamMembers] =
+		useState<TeamMember[]>(initialTeamMembers);
+	const [openMembers, setOpenMembers] = useState<Record<number, boolean>>({});
+	const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+	const searchUsers = async (query: string) => {
+		if (searchTimeoutRef.current) {
+			clearTimeout(searchTimeoutRef.current);
+		}
+
+		if (!query.trim()) {
+			setSearchResults([]);
+			setIsSearching(false);
+			return;
+		}
+
+		setIsSearching(true);
+
+		searchTimeoutRef.current = setTimeout(async () => {
+			try {
+				const response = await fetch(
+					`/api/users/search?q=${encodeURIComponent(query)}`,
+				);
+
+				if (!response.ok) throw new Error("Search failed");
+
+				const data = await response.json();
+
+				// Filter out users that are already team members
+				const filteredResults = data.filter(
+					(user: User) =>
+						!teamMembers.some((member) => member.userId === user.id),
+				);
+
+				setSearchResults(filteredResults);
+			} catch (error) {
+				console.error("Failed to search users:", error);
+				toast.error("Failed to retrieve users. Please try again.");
+				setSearchResults([]);
+			} finally {
+				setIsSearching(false);
+			}
+		}, 300);
+	};
+
+	const addTeamMember = async (user: User) => {
+		try {
+			const response = await fetch(`/api/projects/${projectId}/team`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					teamMembers: [
+						{
+							userId: user.id,
+							role: "",
+							fullName: user.name,
+						},
+					],
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error("Failed to add team member");
+			}
+
+			const { teamMembers: newTeamMembers } = await response.json();
+			setTeamMembers((prev) => [...prev, ...newTeamMembers]);
+
+			// Open the newly added member's collapsible
+			setOpenMembers((prev) => ({
+				...prev,
+				[teamMembers.length]: true,
+			}));
+
+			setSearchQuery("");
+			setSearchResults([]);
+			setIsPopoverOpen(false);
+			toast.success("Team member added successfully");
+		} catch (error) {
+			console.error("Failed to add team member:", error);
+			toast.error("Failed to add team member");
+		}
+	};
+
+	const removeTeamMember = async (memberId: string) => {
+		try {
+			const response = await fetch(
+				`/api/projects/${projectId}/team?teamMemberId=${memberId}`,
+				{
+					method: "DELETE",
+				},
+			);
+
+			if (!response.ok) {
+				throw new Error("Failed to remove team member");
+			}
+
+			setTeamMembers((prev) => prev.filter((member) => member.id !== memberId));
+			toast.success("Team member removed successfully");
+		} catch (error) {
+			console.error("Failed to remove team member:", error);
+			toast.error("Failed to remove team member");
+		}
+	};
+
+	const updateMemberRole = async (memberId: string, role: string) => {
+		try {
+			const response = await fetch(
+				`/api/projects/${projectId}/team/${memberId}`,
+				{
+					method: "PATCH",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ role }),
+				},
+			);
+
+			if (!response.ok) {
+				throw new Error("Failed to update role");
+			}
+
+			setTeamMembers((prev) =>
+				prev.map((member) =>
+					member.id === memberId ? { ...member, role } : member,
+				),
+			);
+		} catch (error) {
+			console.error("Failed to update role:", error);
+			toast.error("Failed to update team member role");
+		}
+	};
+
+	const toggleMember = (index: number) => {
+		setOpenMembers((prev) => ({
+			...prev,
+			[index]: !prev[index],
+		}));
+	};
+
 	const [searchQuery, setSearchQuery] = useState("");
 	const [isSearching, setIsSearching] = useState(false);
 	const [searchResults, setSearchResults] = useState<User[]>([]);
@@ -288,6 +449,89 @@ export function TeamSection({
 								<UserPlus className="h-4 w-4" />
 							</Button>
 						</div>
+						<div className="flex items-center gap-2">
+							<Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+								<PopoverTrigger asChild>
+									<Button
+										type="button"
+										variant="outline"
+										aria-haspopup="listbox"
+										aria-controls="search-results"
+										aria-expanded={isPopoverOpen}
+										className="w-[200px] justify-between h-9"
+									>
+										<Search className="mr-2 h-4 w-4" />
+										{searchQuery || "Search for team members..."}
+									</Button>
+								</PopoverTrigger>
+								<PopoverContent className="w-[300px] p-0" align="end">
+									<Command shouldFilter={false}>
+										<CommandInput
+											placeholder="Search by name or email..."
+											value={searchQuery}
+											onValueChange={(value: string) => {
+												setSearchQuery(value);
+												searchUsers(value);
+											}}
+											aria-label="Search for team members"
+										/>
+										<CommandList id="search-results">
+											<CommandEmpty>
+												{isSearching ? (
+													<div className="flex items-center justify-center py-6">
+														<span className="text-sm text-muted-foreground">
+															Searching...
+														</span>
+													</div>
+												) : searchQuery.trim() ? (
+													"No users found."
+												) : (
+													"Start typing to search for users."
+												)}
+											</CommandEmpty>
+											<CommandGroup heading="Results">
+												{searchResults.map((user) => (
+													<CommandItem
+														key={user.id}
+														onSelect={() => addTeamMember(user)}
+														className="flex items-center gap-2 cursor-pointer hover:bg-accent"
+													>
+														<Avatar className="h-6 w-6 flex-shrink-0">
+															<AvatarImage
+																src={user.image || "/placeholder.svg"}
+																alt={user.name}
+															/>
+															<AvatarFallback className="bg-primary/10 text-primary text-xs">
+																{user.name.charAt(0).toUpperCase()}
+															</AvatarFallback>
+														</Avatar>
+														<div className="flex flex-col overflow-hidden">
+															<span className="font-medium truncate text-sm">
+																{user.name}
+															</span>
+															<span className="text-xs text-muted-foreground truncate">
+																{user.email}
+															</span>
+														</div>
+													</CommandItem>
+												))}
+											</CommandGroup>
+										</CommandList>
+									</Command>
+								</PopoverContent>
+							</Popover>
+
+							<Button
+								onClick={() => setIsPopoverOpen(true)}
+								variant="secondary"
+								size="icon"
+								type="button"
+								className="flex-shrink-0 h-9 w-9"
+								aria-label="Add team member"
+							>
+								<UserPlus className="h-4 w-4" />
+							</Button>
+						</div>
 					)}
 				</div>
 			</CardHeader>
@@ -295,10 +539,16 @@ export function TeamSection({
 				<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					{teamMembers.length > 0 ? (
 						teamMembers.map((member, index) => (
+						teamMembers.map((member, index) => (
 							<TeamMemberCard
+								key={member.id}
 								key={member.id}
 								member={member}
 								isTeamMember={isTeamMember}
+								onRemove={() => removeTeamMember(member.id)}
+								onUpdateRole={(role) => updateMemberRole(member.id, role)}
+								isExpanded={openMembers[index]}
+								onToggle={() => toggleMember(index)}
 								onRemove={() => removeTeamMember(member.id)}
 								onUpdateRole={(role) => updateMemberRole(member.id, role)}
 								isExpanded={openMembers[index]}
@@ -325,9 +575,23 @@ interface TeamMemberCardProps {
 	onToggle: () => void;
 }
 
+interface TeamMemberCardProps {
+	member: TeamMember;
+	isTeamMember: boolean;
+	onRemove: () => void;
+	onUpdateRole: (role: string) => void;
+	isExpanded: boolean;
+	onToggle: () => void;
+}
+
 function TeamMemberCard({
 	member,
 	isTeamMember,
+	onRemove,
+	onUpdateRole,
+	isExpanded,
+	onToggle,
+}: TeamMemberCardProps) {
 	onRemove,
 	onUpdateRole,
 	isExpanded,
@@ -351,6 +615,16 @@ function TeamMemberCard({
 				</Avatar>
 				<div className="flex-1 min-w-0">
 					<div className="font-medium truncate">{member.fullName}</div>
+					{isTeamMember ? (
+						<Input
+							value={member.role}
+							onChange={(e) => onUpdateRole(e.target.value)}
+							placeholder="Enter role"
+							className="h-7 mt-1 text-sm"
+						/>
+					) : (
+						<div className="text-sm text-muted-foreground">{member.role}</div>
+					)}
 					{isTeamMember ? (
 						<Input
 							value={member.role}
@@ -444,9 +718,38 @@ function TeamMemberCard({
 						</Button>
 					)}
 				</div>
+				{/* Action buttons */}
+				<div className="flex items-center gap-1">
+					{isTeamMember && (
+						<Button
+							variant="ghost"
+							size="sm"
+							className="h-7 w-7 p-0 text-destructive"
+							onClick={onRemove}
+							aria-label="Remove team member"
+						>
+							<Trash2 className="h-4 w-4" />
+						</Button>
+					)}
+					{member.bio && (
+						<Button
+							variant="ghost"
+							size="sm"
+							className="h-7 w-7 p-0"
+							onClick={onToggle}
+						>
+							{isExpanded ? (
+								<ChevronUp className="h-4 w-4" />
+							) : (
+								<ChevronDown className="h-4 w-4" />
+							)}
+						</Button>
+					)}
+				</div>
 			</div>
 
 			{/* Bio section (expandable) */}
+			{member.bio && isExpanded && (
 			{member.bio && isExpanded && (
 				<div className="px-4 pb-4 pt-0 text-sm border-t">
 					<p className="text-muted-foreground">{member.bio}</p>
