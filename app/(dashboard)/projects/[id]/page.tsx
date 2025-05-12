@@ -11,7 +11,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	try {
 		const response = await fetch(
 			`https://www.boundlessfi.xyz/api/projects/${id}`,
-			{ next: { revalidate: 3600 } }, // Revalidate every hour
+			{
+				next: { revalidate: 0 }, // Disable caching
+				headers: {
+					"Cache-Control": "no-cache, no-store, must-revalidate",
+					Pragma: "no-cache",
+					Expires: "0",
+				},
+			},
 		);
 		if (!response.ok) throw new Error("Failed to fetch project");
 
@@ -23,13 +30,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 			openGraph: {
 				title: project.title,
 				description: project.description,
-				images: project.bannerUrl ? [project.bannerUrl] : [],
+				images: project.bannerUrl
+					? [`${project.bannerUrl}?t=${Date.now()}`]
+					: [],
 			},
 			twitter: {
 				card: "summary_large_image",
 				title: project.title,
 				description: project.description,
-				images: project.bannerUrl ? [project.bannerUrl] : [],
+				images: project.bannerUrl
+					? [`${project.bannerUrl}?t=${Date.now()}`]
+					: [],
 			},
 		};
 	} catch {
