@@ -13,6 +13,26 @@ export async function getUserProfile(userId: string) {
 			twitter: true,
 			linkedin: true,
 			totalContributions: true,
+			projects: {
+				select: {
+					id: true,
+					title: true,
+					description: true,
+					category: true,
+					bannerUrl: true,
+					ideaValidation: true,
+					createdAt: true,
+					fundingGoal: true,
+					blockchainTx: true,
+					milestones: {
+						select: {
+							id: true,
+							title: true,
+							status: true,
+						},
+					},
+				},
+			},
 			_count: {
 				select: {
 					Vote: true,

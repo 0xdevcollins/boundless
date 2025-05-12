@@ -2,7 +2,6 @@
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { UserProfile } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -59,8 +58,10 @@ export default function ProfileEditForm({
 		try {
 			const response = await axios.put("/api/user/profile", data);
 			onSuccess(response.data);
+			toast.success("Profile updated successfully");
 		} catch (error) {
 			console.error("Error updating profile:", error);
+			setError("Failed to update profile. Please try again.");
 			toast.error("Failed to update profile");
 		} finally {
 			setIsSubmitting(false);
@@ -68,124 +69,171 @@ export default function ProfileEditForm({
 	};
 
 	return (
-		<Card className="w-full bg-card">
-			<CardHeader>
-				<CardTitle>Edit Profile</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-					{error && (
-						<Alert variant="destructive">
-							<AlertDescription>{error}</AlertDescription>
-						</Alert>
-					)}
+		<div className="bg-white rounded-xl shadow-sm">
+			<div className="px-8 py-6 border-b border-gray-100">
+				<div className="flex items-center justify-between">
+					<h2 className="text-xl font-semibold text-gray-900">Edit Profile</h2>
+					<Button
+						variant="ghost"
+						size="icon"
+						onClick={onCancel}
+						className="text-gray-500 hover:text-gray-700"
+					>
+						<X className="w-5 h-5" />
+					</Button>
+				</div>
+			</div>
 
-					<div className="grid gap-6 max-w-2xl">
+			<form onSubmit={form.handleSubmit(onSubmit)} className="p-8">
+				{error && (
+					<Alert variant="destructive" className="mb-6">
+						<AlertDescription>{error}</AlertDescription>
+					</Alert>
+				)}
+
+				<div className="space-y-8">
+					{/* Images Section */}
+					<div className="grid gap-8 md:grid-cols-2">
 						<div className="space-y-4">
-							<div>
-								<Label>Banner Image</Label>
+							<Label className="text-sm font-medium text-gray-700">
+								Banner Image
+							</Label>
+							<div className="rounded-lg border border-gray-200 p-4">
 								<ImageUpload
-									value={initialData.bannerImage || ""}
+									value={form.watch("bannerImage") || ""}
 									onChange={(url) => form.setValue("bannerImage", url)}
 									onRemove={() => form.setValue("bannerImage", "")}
 								/>
 							</div>
+						</div>
 
-							<div>
-								<Label>Profile Picture</Label>
+						<div className="space-y-4">
+							<Label className="text-sm font-medium text-gray-700">
+								Profile Picture
+							</Label>
+							<div className="rounded-lg border border-gray-200 p-4">
 								<ImageUpload
-									value={initialData.image || ""}
+									value={form.watch("image") || ""}
 									onChange={(url) => form.setValue("image", url)}
 									onRemove={() => form.setValue("image", "")}
 								/>
 							</div>
 						</div>
+					</div>
 
-						<div className="grid gap-4">
-							<div className="space-y-2">
-								<Label htmlFor="name">Display Name</Label>
-								<Input
-									id="name"
-									{...form.register("name")}
-									className="bg-background max-w-md"
-								/>
-								{form.formState.errors.name && (
-									<p className="text-sm text-destructive">
-										{form.formState.errors.name.message}
-									</p>
-								)}
-							</div>
+					{/* Basic Info Section */}
+					<div className="space-y-6">
+						<div>
+							<Label
+								htmlFor="name"
+								className="text-sm font-medium text-gray-700"
+							>
+								Display Name
+							</Label>
+							<Input
+								id="name"
+								{...form.register("name")}
+								className="mt-2 bg-white"
+								placeholder="Enter your display name"
+							/>
+							{form.formState.errors.name && (
+								<p className="mt-1 text-sm text-red-600">
+									{form.formState.errors.name.message}
+								</p>
+							)}
+						</div>
 
-							<div className="space-y-2">
-								<Label htmlFor="bio">Bio</Label>
-								<Textarea
-									id="bio"
-									{...form.register("bio")}
-									rows={4}
-									className="bg-background resize-none"
-								/>
-								{form.formState.errors.bio && (
-									<p className="text-sm text-destructive">
-										{form.formState.errors.bio.message}
-									</p>
-								)}
-							</div>
+						<div>
+							<Label
+								htmlFor="bio"
+								className="text-sm font-medium text-gray-700"
+							>
+								Bio
+							</Label>
+							<Textarea
+								id="bio"
+								{...form.register("bio")}
+								rows={4}
+								className="mt-2 bg-white resize-none"
+								placeholder="Tell us about yourself"
+							/>
+							{form.formState.errors.bio && (
+								<p className="mt-1 text-sm text-red-600">
+									{form.formState.errors.bio.message}
+								</p>
+							)}
+						</div>
+					</div>
 
-							<div className="space-y-2">
-								<Label htmlFor="twitter">Twitter URL</Label>
+					{/* Social Links Section */}
+					<div className="space-y-6">
+						<h3 className="text-sm font-medium text-gray-900">Social Links</h3>
+						<div className="grid gap-6 md:grid-cols-2">
+							<div>
+								<Label
+									htmlFor="twitter"
+									className="text-sm font-medium text-gray-700"
+								>
+									Twitter URL
+								</Label>
 								<Input
 									id="twitter"
 									{...form.register("twitter")}
+									className="mt-2 bg-white"
 									placeholder="https://twitter.com/yourusername"
-									className="bg-background max-w-md"
 								/>
 								{form.formState.errors.twitter && (
-									<p className="text-sm text-destructive">
+									<p className="mt-1 text-sm text-red-600">
 										{form.formState.errors.twitter.message}
 									</p>
 								)}
 							</div>
 
-							<div className="space-y-2">
-								<Label htmlFor="linkedin">LinkedIn URL</Label>
+							<div>
+								<Label
+									htmlFor="linkedin"
+									className="text-sm font-medium text-gray-700"
+								>
+									LinkedIn URL
+								</Label>
 								<Input
 									id="linkedin"
 									{...form.register("linkedin")}
+									className="mt-2 bg-white"
 									placeholder="https://linkedin.com/in/yourusername"
-									className="bg-background max-w-md"
 								/>
 								{form.formState.errors.linkedin && (
-									<p className="text-sm text-destructive">
+									<p className="mt-1 text-sm text-red-600">
 										{form.formState.errors.linkedin.message}
 									</p>
 								)}
 							</div>
 						</div>
 					</div>
+				</div>
 
-					<div className="flex justify-end space-x-2">
-						<Button
-							type="button"
-							variant="outline"
-							onClick={onCancel}
-							disabled={isSubmitting}
-							className="bg-background"
-						>
-							Cancel
-						</Button>
-						<Button type="submit" disabled={isSubmitting}>
-							{isSubmitting ? (
-								<>
-									<Loader2 className="w-4 h-4 mr-2 animate-spin" />
-									Saving...
-								</>
-							) : (
-								"Save Changes"
-							)}
-						</Button>
-					</div>
-				</form>
-			</CardContent>
-		</Card>
+				<div className="mt-8 flex justify-end space-x-4">
+					<Button
+						type="button"
+						variant="outline"
+						onClick={onCancel}
+						disabled={isSubmitting}
+						className="bg-white"
+					>
+						Cancel
+					</Button>
+					<Button type="submit" disabled={isSubmitting}>
+						{isSubmitting ? (
+							<>
+								<Loader2 className="w-4 h-4 mr-2 animate-spin" />
+								Saving...
+							</>
+						) : (
+							"Save Changes"
+						)}
+					</Button>
+				</div>
+			</form>
+		</div>
 	);
 }

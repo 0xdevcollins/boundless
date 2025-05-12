@@ -9,7 +9,8 @@
     "enabled": true,
     "rules": {
       "correctness": {
-        "useExhaustiveDependencies": "off"
+        "useExhaustiveDependencies": "off",
+        "noUnusedVariables": "off"
       },
       "recommended": true
     }

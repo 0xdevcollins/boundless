@@ -2,7 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import type { UserProfile } from "@/types/user";
-import { Loader2 } from "lucide-react";
+import {
+	Award,
+	Linkedin,
+	Loader2,
+	ThumbsUp,
+	Twitter,
+	Wallet,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -40,68 +47,118 @@ export default function ProfileDisplay({
 	}
 
 	return (
-		<div className="space-y-6">
-			<div className="relative h-48 w-full overflow-hidden rounded-t-lg">
-				{bannerImage ? (
-					<Image src={bannerImage} alt="Banner" fill className="object-cover" />
-				) : (
-					<div className="h-full w-full bg-gray-200" />
+		<div className="bg-white rounded-xl shadow-sm overflow-hidden max-w-5xl mx-auto">
+			{/* Banner Section */}
+			<div className="relative h-32 sm:h-40 md:h-48 lg:h-56 w-full bg-gradient-to-r from-blue-500 to-purple-600">
+				{bannerImage && (
+					<Image
+						src={bannerImage}
+						alt="Banner"
+						fill
+						className="object-cover opacity-90"
+						priority
+					/>
 				)}
 			</div>
-			<div className="relative px-6">
-				<div className="absolute -top-16">
-					{image ? (
-						<Image
-							src={image}
-							alt={name}
-							width={128}
-							height={128}
-							className="rounded-full border-4 border-white"
-						/>
-					) : (
-						<div className="h-32 w-32 rounded-full border-4 border-white bg-gray-200" />
-					)}
-				</div>
-				<div className="mt-16">
-					<div className="flex items-center justify-between">
-						<div>
-							<h2 className="text-2xl font-bold">{name}</h2>
-							{bio && <p className="mt-2 text-gray-600">{bio}</p>}
+
+			<div className="px-4 sm:px-6 md:px-8 lg:px-12 pb-6 sm:pb-8 lg:pb-12">
+				<div className="flex flex-col sm:flex-row sm:items-end -mt-12 sm:-mt-16 md:-mt-20 lg:-mt-24 mb-6 sm:mb-8 lg:mb-12">
+					<div className="relative mx-auto sm:mx-0">
+						<div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-xl border-4 border-white bg-white shadow-lg overflow-hidden">
+							{image ? (
+								<Image
+									src={image}
+									alt={name}
+									fill
+									className="object-cover"
+									priority
+								/>
+							) : (
+								<div className="w-full h-full bg-gray-100 flex items-center justify-center">
+									<span className="text-3xl sm:text-4xl lg:text-5xl text-gray-400">
+										{name.charAt(0)}
+									</span>
+								</div>
+							)}
 						</div>
-						<Button onClick={onEdit}>Edit Profile</Button>
 					</div>
-					<div className="mt-6 grid grid-cols-3 gap-4">
-						<div className="rounded-lg bg-gray-50 p-4">
-							<p className="text-sm text-gray-500">Total Contributions</p>
-							<p className="mt-1 text-2xl font-semibold">
+					<div className="mt-4 sm:mt-0 sm:ml-6 lg:ml-8 flex-1 text-center sm:text-left">
+						<div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0">
+							<div className="max-w-2xl">
+								<h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+									{name}
+								</h1>
+								{bio && (
+									<p className="mt-2 text-sm sm:text-base lg:text-lg text-gray-600">
+										{bio}
+									</p>
+								)}
+							</div>
+							<Button
+								onClick={onEdit}
+								className="bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 w-full sm:w-auto px-6 py-2 text-sm sm:text-base"
+							>
+								Edit Profile
+							</Button>
+						</div>
+					</div>
+				</div>
+
+				{/* Stats Section */}
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8 lg:mb-12">
+					<div className="bg-gray-50 rounded-xl p-4 sm:p-6 lg:p-8 flex items-center space-x-4 lg:space-x-6">
+						<div className="p-2 sm:p-3 lg:p-4 bg-blue-100 rounded-lg">
+							<Award className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-blue-600" />
+						</div>
+						<div>
+							<p className="text-sm sm:text-base lg:text-lg font-medium text-gray-600">
+								Total Contributions
+							</p>
+							<p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
 								{totalContributions}
 							</p>
 						</div>
-						<div className="rounded-lg bg-gray-50 p-4">
-							<p className="text-sm text-gray-500">Votes</p>
-							<p className="mt-1 text-2xl font-semibold">{votes}</p>
+					</div>
+					<div className="bg-gray-50 rounded-xl p-4 sm:p-6 lg:p-8 flex items-center space-x-4 lg:space-x-6">
+						<div className="p-2 sm:p-3 lg:p-4 bg-green-100 rounded-lg">
+							<ThumbsUp className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-green-600" />
 						</div>
-						<div className="rounded-lg bg-gray-50 p-4">
-							<p className="text-sm text-gray-500">Funded Projects</p>
-							<p className="mt-1 text-2xl font-semibold">{fundedProjects}</p>
+						<div>
+							<p className="text-sm sm:text-base lg:text-lg font-medium text-gray-600">
+								Votes
+							</p>
+							<p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+								{votes}
+							</p>
 						</div>
 					</div>
-					<div className="mt-6 flex space-x-4">
+					<div className="bg-gray-50 rounded-xl p-4 sm:p-6 lg:p-8 flex items-center space-x-4 lg:space-x-6">
+						<div className="p-2 sm:p-3 lg:p-4 bg-purple-100 rounded-lg">
+							<Wallet className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-purple-600" />
+						</div>
+						<div>
+							<p className="text-sm sm:text-base lg:text-lg font-medium text-gray-600">
+								Funded Projects
+							</p>
+							<p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+								{fundedProjects}
+							</p>
+						</div>
+					</div>
+				</div>
+
+				{/* Social Links */}
+				{(twitter || linkedin) && (
+					<div className="flex items-center justify-center sm:justify-start space-x-4 lg:space-x-6">
 						{twitter && (
 							<Link
 								href={twitter}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="text-gray-600 hover:text-gray-900"
+								className="p-2 sm:p-3 lg:p-4 rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
+								aria-label="Twitter Profile"
 							>
-								<svg
-									className="h-6 w-6"
-									fill="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<title>Twitter Icon</title>
-									<path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-								</svg>
+								<Twitter className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7" />
 							</Link>
 						)}
 						{linkedin && (
@@ -109,20 +166,14 @@ export default function ProfileDisplay({
 								href={linkedin}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="text-gray-600 hover:text-gray-900"
+								className="p-2 sm:p-3 lg:p-4 rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
+								aria-label="LinkedIn Profile"
 							>
-								<svg
-									className="h-6 w-6"
-									fill="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<title>LinkedIn Icon</title>
-									<path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-.88-.06-1.601-1-1.601-1 0-1.16.781-1.16 1.601v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-								</svg>
+								<Linkedin className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7" />
 							</Link>
 						)}
 					</div>
-				</div>
+				)}
 			</div>
 		</div>
 	);

@@ -235,23 +235,25 @@ export function ProjectViewerPage({ id }: { id: string }) {
 	return (
 		<div className="min-h-screen bg-background">
 			{/* Navigation breadcrumb */}
-			<div className="bg-background border-b">
-				<div className="container py-3 px-4">
-					<div className="flex items-center text-sm text-muted-foreground">
-						<Link
-							href="/projects"
-							className="hover:text-foreground transition-colors"
-						>
-							Projects
-						</Link>
-						<span className="mx-2">/</span>
-						<span className="font-medium text-foreground">{project.title}</span>
-					</div>
-				</div>
-			</div>
 
 			{/* Project Banner with Overlay */}
-			<div className="relative w-full h-[400px]">
+			<div className="relative w-full h-[400px] rounded-lg overflow-hidden">
+				<div className=" absolute left-0 top-0 z-10">
+					<div className="container py-3 px-4">
+						<div className="flex items-center text-sm text-muted-foreground">
+							<Link
+								href="/projects"
+								className="text-white hover:text-foreground font-bold transition-colors"
+							>
+								Projects
+							</Link>
+							<span className="mx-2">/</span>
+							<span className="font-semibold text-white/80">
+								{project.title}
+							</span>
+						</div>
+					</div>
+				</div>
 				<Image
 					src={project.bannerUrl || "/banner.png"}
 					alt={`${project.title} Banner`}
