@@ -28,7 +28,7 @@ import {
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ViewerComments } from "./viewer-comments";
@@ -78,8 +78,7 @@ type Project = {
 	};
 };
 
-export function ProjectViewerPage() {
-	const params = useParams();
+export function ProjectViewerPage({ id }: { id: string }) {
 	const router = useRouter();
 	const { data: session } = useSession();
 	const [project, setProject] = useState<Project | null>(null);
@@ -89,9 +88,6 @@ export function ProjectViewerPage() {
 	useEffect(() => {
 		async function fetchProject() {
 			try {
-				const id = params?.id as string;
-				if (!id) return;
-
 				const response = await fetch(`/api/projects/${id}`);
 
 				if (response.status === 404) {
@@ -114,7 +110,7 @@ export function ProjectViewerPage() {
 		}
 
 		fetchProject();
-	}, [params, router]);
+	}, [id, router]);
 
 	const handleShare = async (platform?: string) => {
 		if (!project) return;

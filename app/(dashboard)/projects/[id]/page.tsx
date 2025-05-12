@@ -1,56 +1,49 @@
-import type { Metadata } from "next";
-import { ProjectViewerPage } from "./viewer/project-viewer-page";
+import type { Metadata } from 'next';
+import { ProjectViewerPage } from './viewer/project-viewer-page';
 
 type Props = {
-	params: Promise<{ id: string }>;
-	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-	const { id } = await params;
-	try {
-		const response = await fetch(
-			`https://www.boundlessfi.xyz/api/projects/${id}`,
-			{
-				next: { revalidate: 0 }, // Disable caching
-				headers: {
-					"Cache-Control": "no-cache, no-store, must-revalidate",
-					Pragma: "no-cache",
-					Expires: "0",
-				},
-			},
-		);
-		if (!response.ok) throw new Error("Failed to fetch project");
+  const { id } = await params;
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/projects/${id}`);
 
-		const project = await response.json();
+    const project = await response.json();
 
-		return {
-			title: project.title,
-			description: project.description,
-			openGraph: {
-				title: project.title,
-				description: project.description,
-				images: project.bannerUrl
-					? [`${project.bannerUrl}?t=${Date.now()}`]
-					: [],
-			},
-			twitter: {
-				card: "summary_large_image",
-				title: project.title,
-				description: project.description,
-				images: project.bannerUrl
-					? [`${project.bannerUrl}?t=${Date.now()}`]
-					: [],
-			},
-		};
-	} catch {
-		return {
-			title: "Project Not Found | Boundless",
-			description: "The requested project could not be found",
-		};
-	}
+    if (!project) {
+      return {
+        title: 'Project Not Found | Boundless',
+        description: 'The requested project could not be found',
+      };
+    }
+
+    return {
+      title: project.title,
+      description: project.description,
+      openGraph: {
+        title: project.title,
+        description: project.description,
+        images: project.bannerUrl ? [project.bannerUrl] : [],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: project.title,
+        description: project.description,
+        images: project.bannerUrl ? [project.bannerUrl] : [],
+      },
+    };
+  } catch {
+    return {
+      title: 'Project Not Found | Boundless',
+      description: 'The requested project could not be found',
+    };
+  }
 }
 
-export default async function ProjectPage() {
-	return <ProjectViewerPage />;
+export default async function ProjectPage({ params }: Props) {
+  const { id } = await params;
+  return <ProjectViewerPage id={id} />;
 }
