@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
-import { ProjectViewerPage } from "./viewer/project-viewer-page";
+import type { Metadata } from 'next';
+import { ProjectViewerPage } from './viewer/project-viewer-page';
 
 type Props = {
-	params: Promise<{ id: string }>;
-	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
