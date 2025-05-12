@@ -55,7 +55,8 @@ export function TeamSection({
 	const [isSearching, setIsSearching] = useState(false);
 	const [searchResults, setSearchResults] = useState<User[]>([]);
 	const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-	const [teamMembers, setTeamMembers] = useState<TeamMember[]>(initialTeamMembers);
+	const [teamMembers, setTeamMembers] =
+		useState<TeamMember[]>(initialTeamMembers);
 	const [openMembers, setOpenMembers] = useState<Record<number, boolean>>({});
 	const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 

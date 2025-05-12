@@ -25,10 +25,10 @@ export function generateProjectMetadata({
 
 	return {
 		title: `${title} | Boundless`,
-		description: description,
+		description,
 		openGraph: {
 			title: `${title} | Boundless`,
-			description: description,
+			description,
 			url: `${siteUrl}/projects/${title}`,
 			siteName: "Boundless",
 			images: [
@@ -45,7 +45,7 @@ export function generateProjectMetadata({
 		twitter: {
 			card: "summary_large_image",
 			title: `${title} | Boundless`,
-			description: description,
+			description,
 			images: [imageUrl],
 			creator: creator?.name || "@boundless",
 		},
