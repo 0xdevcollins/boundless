@@ -1,4 +1,5 @@
 import { authOptions } from "@/lib/auth.config";
+import { notifyTeamMemberAdded } from "@/lib/notifications/project";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -37,6 +38,11 @@ export async function POST(
 				id: projectId,
 				userId: session.user.id,
 			},
+			select: {
+				id: true,
+				title: true,
+				userId: true,
+			},
 		});
 
 		if (!project) {
@@ -54,6 +60,20 @@ export async function POST(
 						projectId,
 					},
 				});
+			}),
+		);
+
+		// Send notifications to new team members
+		await Promise.all(
+			teamMembers.map(async (member) => {
+				if (member.userId) {
+					await notifyTeamMemberAdded({
+						projectId,
+						projectTitle: project.title,
+						userId: member.userId,
+						role: member.role,
+					});
+				}
 			}),
 		);
 
