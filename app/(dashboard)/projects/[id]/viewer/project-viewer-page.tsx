@@ -1,6 +1,5 @@
 "use client";
 
-import { generateProjectMetadata } from "@/app/components/metadata/project-metadata";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,7 +25,6 @@ import {
 	Users,
 	Wallet,
 } from "lucide-react";
-import type { Metadata } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -79,35 +77,6 @@ type Project = {
 		teamMembers: number;
 	};
 };
-
-type Props = {
-	params: { id: string };
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-	try {
-		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_SITE_URL}/api/projects/${params.id}`,
-		);
-		if (!response.ok) throw new Error("Failed to fetch project");
-
-		const project = await response.json();
-
-		return generateProjectMetadata({
-			title: project.title,
-			description: project.description,
-			image: project.bannerUrl,
-			category: project.category,
-			fundingGoal: project.fundingGoal,
-			creator: project.user,
-		});
-	} catch {
-		return {
-			title: "Project Not Found | Boundless",
-			description: "The requested project could not be found.",
-		};
-	}
-}
 
 export function ProjectViewerPage() {
 	const params = useParams();
