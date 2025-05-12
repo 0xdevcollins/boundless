@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	} catch {
 		return {
 			title: "Project Not Found | Boundless",
-			description: "The requested project could not be found.",
+			description: "The requested project could not be found",
 		};
 	}
 }
