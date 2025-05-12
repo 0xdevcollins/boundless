@@ -1,6 +1,6 @@
 import { generateProjectMetadata } from "@/app/components/metadata/project-metadata";
+import type { Metadata } from "next";
 import { ProjectViewerPage } from "./viewer/project-viewer-page";
-import type { Metadata } from 'next';
 
 type Props = {
 	params: Promise<{ id: string }>;
