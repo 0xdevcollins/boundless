@@ -24,10 +24,10 @@ export function generateProjectMetadata({
 	const imageUrl = image ? `${siteUrl}${image}` : `${siteUrl}/og-image.png`;
 
 	return {
-		title: `${title} | Boundless`,
+		title,
 		description,
 		openGraph: {
-			title: `${title} | Boundless`,
+			title,
 			description,
 			url: `${siteUrl}/projects/${title}`,
 			siteName: "Boundless",
@@ -44,7 +44,7 @@ export function generateProjectMetadata({
 		},
 		twitter: {
 			card: "summary_large_image",
-			title: `${title} | Boundless`,
+			title,
 			description,
 			images: [imageUrl],
 			creator: creator?.name || "@boundless",
