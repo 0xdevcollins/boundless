@@ -1,15 +1,17 @@
 import { generateProjectMetadata } from "@/app/components/metadata/project-metadata";
+import type { Metadata } from "next";
 import { ProjectViewerPage } from "./viewer/project-viewer-page";
 
-export async function generateMetadata({
-	params,
-}: {
+type Props = {
 	params: Promise<{ id: string }>;
-}) {
-	const { id } = await params;
+	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	try {
+		const { id } = await params;
 		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_SITE_URL}/api/projects/${id}`,
+			`https://www.boundlessfi.xyz/api/projects/${id}`,
 			{ next: { revalidate: 3600 } }, // Revalidate every hour
 		);
 		if (!response.ok) throw new Error("Failed to fetch project");
