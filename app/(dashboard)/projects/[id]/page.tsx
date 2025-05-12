@@ -1,4 +1,3 @@
-import { generateProjectMetadata } from "@/app/components/metadata/project-metadata";
 import type { Metadata } from "next";
 import { ProjectViewerPage } from "./viewer/project-viewer-page";
 
@@ -8,8 +7,8 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	const { id } = await params;
 	try {
-		const { id } = await params;
 		const response = await fetch(
 			`https://www.boundlessfi.xyz/api/projects/${id}`,
 			{ next: { revalidate: 3600 } }, // Revalidate every hour
@@ -18,22 +17,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 		const project = await response.json();
 
-		return generateProjectMetadata({
+		return {
 			title: project.title,
 			description: project.description,
-			image: project.bannerUrl,
-			category: project.category,
-			fundingGoal: project.fundingGoal,
-			creator: project.user,
-		});
+			openGraph: {
+				title: project.title,
+				description: project.description,
+				images: project.bannerUrl ? [project.bannerUrl] : [],
+			},
+			twitter: {
+				card: "summary_large_image",
+				title: project.title,
+				description: project.description,
+				images: project.bannerUrl ? [project.bannerUrl] : [],
+			},
+		};
 	} catch {
 		return {
 			title: "Project Not Found | Boundless",
-			description: "The requested project could not be found.",
+			description: "The requested project could not be found",
 		};
 	}
 }
 
-export default function ProjectPage() {
+export default async function ProjectPage() {
 	return <ProjectViewerPage />;
 }
