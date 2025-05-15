@@ -25,14 +25,12 @@ mkdir -p \
     packages \
     src/contracts
 
-# Copy the generated files from the container
 echo "Copying generated files from container..."
 docker cp $container_id:/app/target/wasm32-unknown-unknown/release/boundless_contract.wasm ./target/wasm32-unknown-unknown/release/
 docker cp "$container_id:/app/.stellar/." "./.stellar/"
 docker cp "$container_id:/app/packages/." "./packages/"
 docker cp "$container_id:/app/src/contracts/." "./src/contracts/"
 
-# Stop and remove the temporary container
 docker stop $container_id
 docker rm $container_id
 

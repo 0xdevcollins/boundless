@@ -1,34 +1,82 @@
-import { authOptions } from "@/lib/auth.config";
 import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
+import { authOptions } from "@/lib/auth.config";
+import prisma from "@/lib/prisma";
+import { DashboardStats } from "@/components/admin/dashboard/DashboardStats";
+import { RecentProjects } from "@/components/admin/dashboard/RecentProjects";
+import { RecentUsers } from "@/components/admin/dashboard/RecentUsers";
+import { FundingOverview } from "@/components/admin/dashboard/FundingOverview";
 
 export default async function AdminDashboard() {
 	const session = await getServerSession(authOptions);
 
-	if (!session || session.user.role !== "ADMIN") {
-		redirect("/unauthorized");
-	}
+	// Fetch dashboard statistics
+	const projectCount = await prisma.project.count();
+	const userCount = await prisma.user.count();
+	const pendingProjects = await prisma.project.count({
+		where: { isApproved: false }
+	});
+	const totalFunding = await prisma.funding.aggregate({
+		_sum: {
+			amount: true
+		},
+		where: {
+			status: "COMPLETED"
+		}
+	});
+
+	// Fetch recent projects
+	const recentProjects = await prisma.project.findMany({
+		take: 5,
+		orderBy: { createdAt: "desc" },
+		include: {
+			user: {
+				select: {
+					name: true,
+					image: true
+				}
+			}
+		}
+	});
+
+	// Fetch recent users
+	const recentUsers = await prisma.user.findMany({
+		take: 5,
+		// orderBy: { createdAt: "desc" },
+		select: {
+			id: true,
+			name: true,
+			email: true,
+			image: true,
+			role: true,
+			// createdAt: true
+		}
+	});
+
+	// Fetch funding overview
+	const fundingOverview = await prisma.funding.groupBy({
+		by: ['status'],
+		_sum: {
+			amount: true
+		}
+	});
 
 	return (
-		<div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-			<div className="relative py-3 sm:max-w-xl sm:mx-auto">
-				<div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl" />
-				<div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-					<div className="max-w-md mx-auto">
-						<div>
-							<h1 className="text-2xl font-semibold">
-								Welcome to the Admin Dashboard!
-							</h1>
-						</div>
-						<div className="divide-y divide-gray-200">
-							<div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-								<p>You are signed in as an admin: {session.user.email}</p>
-								<p>Your role is: {session.user.role}</p>
-							</div>
-						</div>
-					</div>
-				</div>
+		<div className="space-y-8">
+			<h1 className="text-3xl font-bold">{session && session.user.name ? `Welcome, ${session.user?.name.split(" ")[0]}` : "Dashoard"}</h1>
+
+			<DashboardStats
+				projectCount={projectCount}
+				userCount={userCount}
+				pendingProjects={pendingProjects}
+				totalFunding={totalFunding._sum.amount || 0}
+			/>
+
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+				<RecentProjects projects={recentProjects} />
+				<RecentUsers users={recentUsers} />
 			</div>
+
+			<FundingOverview fundingData={fundingOverview} />
 		</div>
 	);
 }

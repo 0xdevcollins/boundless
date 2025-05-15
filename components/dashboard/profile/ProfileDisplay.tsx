@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useIsAdmin } from "@/hooks/use-is-admin";
 import type { UserProfile } from "@/types/user";
 import {
 	Award,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 // import { cn } from "@/lib/utils";
 
@@ -45,7 +47,8 @@ export default function ProfileDisplay({
 			</div>
 		);
 	}
-
+	const router = useRouter()
+	const isAdmin = useIsAdmin();
 	return (
 		<div className="bg-white rounded-xl shadow-sm overflow-hidden max-w-5xl mx-auto">
 			{/* Banner Section */}
@@ -94,12 +97,20 @@ export default function ProfileDisplay({
 									</p>
 								)}
 							</div>
-							<Button
-								onClick={onEdit}
-								className="bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 w-full sm:w-auto px-6 py-2 text-sm sm:text-base"
-							>
-								Edit Profile
-							</Button>
+							<div className="space-x-5">
+								<Button
+									onClick={onEdit}
+									className="bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 w-full sm:w-auto px-6 py-2 text-sm sm:text-base"
+								>
+									Edit Profile
+								</Button>
+								{isAdmin && <Button
+									onClick={() => router.push("/admin")}
+									className="bg-primary text-white border border-gray-200 hover:bg-gray-50 hover:text-gray-900 w-full sm:w-auto px-6 py-2 text-sm sm:text-base"
+								>
+									Admin
+								</Button>}
+							</div>
 						</div>
 					</div>
 				</div>
