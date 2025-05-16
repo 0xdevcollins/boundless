@@ -1,74 +1,115 @@
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth.config";
-import prisma from "@/lib/prisma";
-import { DashboardStats } from "@/components/admin/dashboard/DashboardStats";
-import { RecentProjects } from "@/components/admin/dashboard/RecentProjects";
-import { RecentUsers } from "@/components/admin/dashboard/RecentUsers";
-import { FundingOverview } from "@/components/admin/dashboard/FundingOverview";
+"use client"
 
-export default async function AdminDashboard() {
-	const session = await getServerSession(authOptions);
+import { useEffect, useState, useCallback } from "react"
+import { useSession } from "next-auth/react"
+import { RefreshCw } from "lucide-react"
+import { DashboardStats } from "@/components/admin/dashboard/DashboardStats"
+import { RecentProjects } from "@/components/admin/dashboard/RecentProjects"
+import { RecentUsers } from "@/components/admin/dashboard/RecentUsers"
+import { FundingOverview } from "@/components/admin/dashboard/FundingOverview"
+import { DashboardLoadingState } from "@/components/admin/dashboard/LoadingState"
+import { ErrorState } from "@/components/admin/dashboard/ErrorState"
+import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 
-	// Fetch dashboard statistics
-	const projectCount = await prisma.project.count();
-	const userCount = await prisma.user.count();
-	const pendingProjects = await prisma.project.count({
-		where: { isApproved: false }
-	});
-	const totalFunding = await prisma.funding.aggregate({
-		_sum: {
-			amount: true
-		},
-		where: {
-			status: "COMPLETED"
-		}
-	});
+export default function AdminDashboard() {
+	const { data: session } = useSession()
+	const [loading, setLoading] = useState(true)
+	const [error, setError] = useState<string | null>(null)
+	const [refreshing, setRefreshing] = useState(false)
+	const [stats, setStats] = useState({
+		projectCount: 0,
+		userCount: 0,
+		pendingProjects: 0,
+		totalFunding: 0,
+	})
+	const [recentProjects, setRecentProjects] = useState([])
+	const [recentUsers, setRecentUsers] = useState([])
+	const [fundingOverview, setFundingOverview] = useState([])
 
-	// Fetch recent projects
-	const recentProjects = await prisma.project.findMany({
-		take: 5,
-		orderBy: { createdAt: "desc" },
-		include: {
-			user: {
-				select: {
-					name: true,
-					image: true
-				}
+	const fetchDashboardData = useCallback(async (showRefreshing = false) => {
+		try {
+			if (showRefreshing) {
+				setRefreshing(true)
+			} else {
+				setLoading(true)
 			}
-		}
-	});
+			setError(null)
 
-	// Fetch recent users
-	const recentUsers = await prisma.user.findMany({
-		take: 5,
-		// orderBy: { createdAt: "desc" },
-		select: {
-			id: true,
-			name: true,
-			email: true,
-			image: true,
-			role: true,
-			// createdAt: true
-		}
-	});
+			const [statsRes, projectsRes, usersRes, fundingRes] = await Promise.all([
+				fetch("/api/admin/dashboard"),
+				fetch("/api/admin/dashboard/recent-projects"),
+				fetch("/api/admin/dashboard/recent-users"),
+				fetch("/api/admin/dashboard/funding-overview"),
+			])
 
-	// Fetch funding overview
-	const fundingOverview = await prisma.funding.groupBy({
-		by: ['status'],
-		_sum: {
-			amount: true
+			if (!statsRes.ok) throw new Error(`Stats error: ${statsRes.status}`)
+			if (!projectsRes.ok) throw new Error(`Projects error: ${projectsRes.status}`)
+			if (!usersRes.ok) throw new Error(`Users error: ${usersRes.status}`)
+			if (!fundingRes.ok) throw new Error(`Funding error: ${fundingRes.status}`)
+
+			const [statsData, projectsData, usersData, fundingData] = await Promise.all([
+				statsRes.json(),
+				projectsRes.json(),
+				usersRes.json(),
+				fundingRes.json(),
+			])
+
+			setStats(statsData)
+			setRecentProjects(projectsData)
+			setRecentUsers(usersData)
+			setFundingOverview(fundingData)
+		} catch (err) {
+			console.error("Error fetching dashboard data:", err)
+			setError(err instanceof Error ? err.message : "Failed to fetch dashboard data")
+			toast.error("Error", {
+				description: error,
+			})
+		} finally {
+			setLoading(false)
+			setRefreshing(false)
 		}
-	});
+	}, [])
+
+	useEffect(() => {
+		fetchDashboardData()
+	}, [fetchDashboardData])
+
+	const handleRefresh = () => {
+		fetchDashboardData(true)
+	}
+
+	if (loading) {
+		return <DashboardLoadingState />
+	}
+
+	if (error) {
+		return <ErrorState message={error} onRetry={fetchDashboardData} />
+	}
 
 	return (
 		<div className="space-y-8">
-			<h1 className="text-3xl font-bold">{session && session.user.name ? `Welcome, ${session.user?.name.split(" ")[0]}` : "Dashoard"}</h1>
+			<div className="flex justify-between items-center">
+				<h1 className="text-3xl font-bold">
+					{session && session.user.name ? `Welcome, ${session.user.name.split(" ")[0]}` : "Dashboard"}
+				</h1>
+				<Button
+					variant="outline"
+					size="sm"
+					onClick={handleRefresh}
+					disabled={refreshing}
+					className="flex items-center gap-2"
+				>
+					<RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
+					{refreshing ? "Refreshing..." : "Refresh"}
+				</Button>
+			</div>
 
 			<DashboardStats
-				projectCount={projectCount}
-				userCount={userCount}
-				pendingProjects={pendingProjects}
-				totalFunding={totalFunding._sum.amount || 0}
+				projectCount={stats.projectCount}
+				userCount={stats.userCount}
+				pendingProjects={stats.pendingProjects}
+				totalFunding={stats.totalFunding}
 			/>
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -78,5 +119,5 @@ export default async function AdminDashboard() {
 
 			<FundingOverview fundingData={fundingOverview} />
 		</div>
-	);
+	)
 }

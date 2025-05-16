@@ -80,7 +80,7 @@ export default function AdminSidebar() {
   ]
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col min-h-screen">
       <div className="p-4 border-b border-border">
         <h2 className="text-xl text-foreground font-bold">Boundless Admin</h2>
       </div>
