@@ -47,7 +47,7 @@ export default function ProfileDisplay({
 			</div>
 		);
 	}
-	const router = useRouter()
+	const router = useRouter();
 	const isAdmin = useIsAdmin();
 	return (
 		<div className="bg-white rounded-xl shadow-sm overflow-hidden max-w-5xl mx-auto">
@@ -104,12 +104,14 @@ export default function ProfileDisplay({
 								>
 									Edit Profile
 								</Button>
-								{isAdmin && <Button
-									onClick={() => router.push("/admin")}
-									className="bg-primary text-white border border-gray-200 hover:bg-gray-50 hover:text-gray-900 w-full sm:w-auto px-6 py-2 text-sm sm:text-base"
-								>
-									Admin
-								</Button>}
+								{isAdmin && (
+									<Button
+										onClick={() => router.push("/admin")}
+										className="bg-primary text-white border border-gray-200 hover:bg-gray-50 hover:text-gray-900 w-full sm:w-auto px-6 py-2 text-sm sm:text-base"
+									>
+										Admin
+									</Button>
+								)}
 							</div>
 						</div>
 					</div>

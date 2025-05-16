@@ -1,97 +1,104 @@
-"use client"
+"use client";
 
-import { useEffect, useState, useCallback } from "react"
-import { useSession } from "next-auth/react"
-import { RefreshCw } from "lucide-react"
-import { DashboardStats } from "@/components/admin/dashboard/DashboardStats"
-import { RecentProjects } from "@/components/admin/dashboard/RecentProjects"
-import { RecentUsers } from "@/components/admin/dashboard/RecentUsers"
-import { FundingOverview } from "@/components/admin/dashboard/FundingOverview"
-import { DashboardLoadingState } from "@/components/admin/dashboard/LoadingState"
-import { ErrorState } from "@/components/admin/dashboard/ErrorState"
-import { Button } from "@/components/ui/button"
-import { toast } from "sonner"
+import { DashboardStats } from "@/components/admin/dashboard/DashboardStats";
+import { ErrorState } from "@/components/admin/dashboard/ErrorState";
+import { FundingOverview } from "@/components/admin/dashboard/FundingOverview";
+import { DashboardLoadingState } from "@/components/admin/dashboard/LoadingState";
+import { RecentProjects } from "@/components/admin/dashboard/RecentProjects";
+import { RecentUsers } from "@/components/admin/dashboard/RecentUsers";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function AdminDashboard() {
-	const { data: session } = useSession()
-	const [loading, setLoading] = useState(true)
-	const [error, setError] = useState<string | null>(null)
-	const [refreshing, setRefreshing] = useState(false)
+	const { data: session } = useSession();
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+	const [refreshing, setRefreshing] = useState(false);
 	const [stats, setStats] = useState({
 		projectCount: 0,
 		userCount: 0,
 		pendingProjects: 0,
 		totalFunding: 0,
-	})
-	const [recentProjects, setRecentProjects] = useState([])
-	const [recentUsers, setRecentUsers] = useState([])
-	const [fundingOverview, setFundingOverview] = useState([])
+	});
+	const [recentProjects, setRecentProjects] = useState([]);
+	const [recentUsers, setRecentUsers] = useState([]);
+	const [fundingOverview, setFundingOverview] = useState([]);
 
 	const fetchDashboardData = useCallback(async (showRefreshing = false) => {
 		try {
 			if (showRefreshing) {
-				setRefreshing(true)
+				setRefreshing(true);
 			} else {
-				setLoading(true)
+				setLoading(true);
 			}
-			setError(null)
+			setError(null);
 
 			const [statsRes, projectsRes, usersRes, fundingRes] = await Promise.all([
 				fetch("/api/admin/dashboard"),
 				fetch("/api/admin/dashboard/recent-projects"),
 				fetch("/api/admin/dashboard/recent-users"),
 				fetch("/api/admin/dashboard/funding-overview"),
-			])
+			]);
 
-			if (!statsRes.ok) throw new Error(`Stats error: ${statsRes.status}`)
-			if (!projectsRes.ok) throw new Error(`Projects error: ${projectsRes.status}`)
-			if (!usersRes.ok) throw new Error(`Users error: ${usersRes.status}`)
-			if (!fundingRes.ok) throw new Error(`Funding error: ${fundingRes.status}`)
+			if (!statsRes.ok) throw new Error(`Stats error: ${statsRes.status}`);
+			if (!projectsRes.ok)
+				throw new Error(`Projects error: ${projectsRes.status}`);
+			if (!usersRes.ok) throw new Error(`Users error: ${usersRes.status}`);
+			if (!fundingRes.ok)
+				throw new Error(`Funding error: ${fundingRes.status}`);
 
-			const [statsData, projectsData, usersData, fundingData] = await Promise.all([
-				statsRes.json(),
-				projectsRes.json(),
-				usersRes.json(),
-				fundingRes.json(),
-			])
+			const [statsData, projectsData, usersData, fundingData] =
+				await Promise.all([
+					statsRes.json(),
+					projectsRes.json(),
+					usersRes.json(),
+					fundingRes.json(),
+				]);
 
-			setStats(statsData)
-			setRecentProjects(projectsData)
-			setRecentUsers(usersData)
-			setFundingOverview(fundingData)
+			setStats(statsData);
+			setRecentProjects(projectsData);
+			setRecentUsers(usersData);
+			setFundingOverview(fundingData);
 		} catch (err) {
-			console.error("Error fetching dashboard data:", err)
-			setError(err instanceof Error ? err.message : "Failed to fetch dashboard data")
+			console.error("Error fetching dashboard data:", err);
+			setError(
+				err instanceof Error ? err.message : "Failed to fetch dashboard data",
+			);
 			toast.error("Error", {
 				description: error,
-			})
+			});
 		} finally {
-			setLoading(false)
-			setRefreshing(false)
+			setLoading(false);
+			setRefreshing(false);
 		}
-	}, [])
+	}, []);
 
 	useEffect(() => {
-		fetchDashboardData()
-	}, [fetchDashboardData])
+		fetchDashboardData();
+	}, [fetchDashboardData]);
 
 	const handleRefresh = () => {
-		fetchDashboardData(true)
-	}
+		fetchDashboardData(true);
+	};
 
 	if (loading) {
-		return <DashboardLoadingState />
+		return <DashboardLoadingState />;
 	}
 
 	if (error) {
-		return <ErrorState message={error} onRetry={fetchDashboardData} />
+		return <ErrorState message={error} onRetry={fetchDashboardData} />;
 	}
 
 	return (
 		<div className="space-y-8">
 			<div className="flex justify-between items-center">
 				<h1 className="text-3xl font-bold">
-					{session && session.user.name ? `Welcome, ${session.user.name.split(" ")[0]}` : "Dashboard"}
+					{session && session.user.name
+						? `Welcome, ${session?.user?.name.split(" ")[0]}`
+						: "Dashboard"}
 				</h1>
 				<Button
 					variant="outline"
@@ -100,7 +107,9 @@ export default function AdminDashboard() {
 					disabled={refreshing}
 					className="flex items-center gap-2"
 				>
-					<RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
+					<RefreshCw
+						className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
+					/>
 					{refreshing ? "Refreshing..." : "Refresh"}
 				</Button>
 			</div>
@@ -119,5 +128,5 @@ export default function AdminDashboard() {
 
 			<FundingOverview fundingData={fundingOverview} />
 		</div>
-	)
+	);
 }

@@ -10,8 +10,8 @@ export const transporter = nodemailer.createTransport({
 		pass: process.env.SMTP_PASSWORD,
 	},
 	tls: {
-		rejectUnauthorized: false
-	}
+		rejectUnauthorized: false,
+	},
 });
 
 export async function sendVerificationEmail(
