@@ -67,8 +67,10 @@ export default function AdminDashboard() {
 			setError(
 				err instanceof Error ? err.message : "Failed to fetch dashboard data",
 			);
+
 			toast.error("Error", {
-				description: error,
+				description:
+					err instanceof Error ? err.message : "Failed to fetch dashboard data",
 			});
 		} finally {
 			setLoading(false);
@@ -96,7 +98,7 @@ export default function AdminDashboard() {
 		<div className="space-y-8">
 			<div className="flex justify-between items-center">
 				<h1 className="text-3xl font-bold">
-					{session && session.user.name
+					{session?.user?.name
 						? `Welcome, ${session?.user?.name.split(" ")[0]}`
 						: "Dashboard"}
 				</h1>

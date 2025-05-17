@@ -1,11 +1,25 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDistanceToNow } from "date-fns";
+import Image from "next/image";
+// import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 
+interface ProjectUser {
+	id: string;
+	name: string | undefined;
+	image: string | null;
+}
+interface Project {
+	id: string;
+	title: string;
+	bannerUrl: string | null;
+	isApproved: boolean;
+	createdAt: string | Date;
+	user: ProjectUser | null;
+}
 interface RecentProjectsProps {
-	projects: any[];
+	projects: Project[];
 }
 
 export function RecentProjects({ projects }: RecentProjectsProps) {
@@ -25,10 +39,12 @@ export function RecentProjects({ projects }: RecentProjectsProps) {
 							<div key={project.id} className="flex items-center gap-4">
 								<div className="w-10 h-10 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
 									{project.bannerUrl ? (
-										<img
+										<Image
 											src={project.bannerUrl || "/placeholder.svg"}
 											alt={project.title}
 											className="w-full h-full object-cover"
+											width={100}
+											height={100}
 										/>
 									) : (
 										<div className="w-full h-full flex items-center justify-center text-gray-400">

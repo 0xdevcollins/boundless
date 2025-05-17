@@ -7,8 +7,18 @@ import {
 	XCircle,
 } from "lucide-react";
 
+type FundingStatus = "COMPLETED" | "PENDING" | "FAILED" | "REFUNDED";
+
+interface FundingDataItem {
+	status: FundingStatus;
+	_sum: {
+		amount: number | null;
+	};
+	_count: number;
+}
+
 interface FundingSummaryProps {
-	data: any[];
+	data: FundingDataItem[];
 }
 
 export function FundingSummary({ data }: FundingSummaryProps) {

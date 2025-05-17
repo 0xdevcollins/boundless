@@ -15,7 +15,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
-// import { cn } from "@/lib/utils";
 
 interface ProfileDisplayProps {
 	userData: UserProfile;
@@ -28,6 +27,9 @@ export default function ProfileDisplay({
 	onEdit,
 	isLoading = false,
 }: ProfileDisplayProps) {
+	const router = useRouter();
+	const isAdmin = useIsAdmin();
+
 	const {
 		name,
 		bio,
@@ -47,8 +49,7 @@ export default function ProfileDisplay({
 			</div>
 		);
 	}
-	const router = useRouter();
-	const isAdmin = useIsAdmin();
+
 	return (
 		<div className="bg-white rounded-xl shadow-sm overflow-hidden max-w-5xl mx-auto">
 			{/* Banner Section */}

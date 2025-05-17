@@ -26,12 +26,43 @@ import {
 	MoreHorizontal,
 	X,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+interface User {
+	id: string;
+	name?: string;
+	image?: string;
+}
+
+interface ProjectCounts {
+	fundings: number;
+	votes: number;
+}
+
+type ProjectCategory =
+	| "TECHNOLOGY"
+	| "ART"
+	| "SCIENCE"
+	| "EDUCATION"
+	| "COMMUNITY"
+	| "OTHER";
+
+interface Project {
+	id: string;
+	title: string;
+	bannerUrl?: string;
+	category: ProjectCategory;
+	isApproved: boolean;
+	createdAt: string;
+	user?: User;
+	_count: ProjectCounts;
+}
+
 interface ProjectsTableProps {
-	projects: any[];
+	projects: Project[];
 	currentPage: number;
 	totalPages: number;
 }
@@ -113,10 +144,12 @@ export function ProjectsTable({
 										<div className="flex items-center gap-3">
 											<div className="w-10 h-10 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
 												{project.bannerUrl ? (
-													<img
+													<Image
 														src={project.bannerUrl || "/placeholder.svg"}
 														alt={project.title}
 														className="w-full h-full object-cover"
+														width={100}
+														height={100}
 													/>
 												) : (
 													<div className="w-full h-full flex items-center justify-center text-gray-400">

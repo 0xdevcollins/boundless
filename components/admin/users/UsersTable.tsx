@@ -27,7 +27,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { formatDistanceToNow } from "date-fns";
+// import { formatDistanceToNow } from "date-fns";
 import {
 	Check,
 	ChevronLeft,
@@ -42,8 +42,24 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+type UserRole = "USER" | "ADMIN";
+
+interface User {
+	id: string;
+	name: string | null;
+	email: string;
+	image: string | null;
+	role: UserRole;
+	emailVerified: boolean;
+	createdAt: string;
+	_count: {
+		projects: number;
+		fundings: number;
+	};
+}
+
 interface UsersTableProps {
-	users: any[];
+	users: User[];
 	currentPage: number;
 	totalPages: number;
 }
@@ -57,7 +73,7 @@ export function UsersTable({
 	const [isLoading, setIsLoading] = useState<string | null>(null);
 	const [showBanDialog, setShowBanDialog] = useState(false);
 	const [showRoleDialog, setShowRoleDialog] = useState(false);
-	const [selectedUser, setSelectedUser] = useState<any>(null);
+	const [selectedUser, setSelectedUser] = useState<User | null>(null);
 	const [newRole, setNewRole] = useState<"USER" | "ADMIN">("USER");
 
 	const handleBanUser = async () => {
@@ -142,7 +158,7 @@ export function UsersTable({
 											<Avatar>
 												<AvatarImage
 													src={user.image || "/placeholder.svg"}
-													alt={user.name}
+													alt={`${user.name}`}
 												/>
 												<AvatarFallback>
 													{user.name?.charAt(0) || "U"}
@@ -324,7 +340,7 @@ export function UsersTable({
 						<AlertDialogTitle>Change User Role</AlertDialogTitle>
 						<AlertDialogDescription>
 							Are you sure you want to change{" "}
-							{selectedUser?.name || "this user"}'s role to {newRole}?
+							{selectedUser?.name || "this user"}&apos;s role to {newRole}?
 							{newRole === "ADMIN" &&
 								" This will give them full administrative access to the platform."}
 						</AlertDialogDescription>

@@ -11,10 +11,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import type { Project } from "@/types/project";
 import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Project } from "@/types/project";
 
 interface FundingFiltersProps {
 	projects: Project[];

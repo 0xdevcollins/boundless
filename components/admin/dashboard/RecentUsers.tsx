@@ -1,18 +1,17 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDistanceToNow } from "date-fns";
+// import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 
-
 interface User {
-    id: string;
-    name: string | undefined;
-    email: string;
-    image: string | null;
-    role: "USER" | "ADMIN"
-    createdAt: string | Date;
-  }
+	id: string;
+	name: string | undefined;
+	email: string;
+	image: string | null;
+	role: "USER" | "ADMIN";
+	createdAt: string | Date;
+}
 
 interface RecentUsersProps {
 	users: User[];

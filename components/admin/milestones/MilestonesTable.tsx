@@ -25,6 +25,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import type { Project } from "@/types/project";
 import { format } from "date-fns";
 import {
 	AlertCircle,
@@ -40,12 +41,33 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+interface Attachment {
+	id: string;
+	fileName: string;
+	fileSize: number;
+	fileType: string;
+	fileUrl: string;
+}
+
+type MilestoneStatus = "COMPLETED" | "IN_PROGRESS" | "REJECTED" | "PENDING";
+
+interface Milestone {
+	id: string;
+	title: string;
+	description: string;
+	status: MilestoneStatus;
+	progress: number;
+	dueDate?: string;
+	createdAt: string;
+	project: Project;
+	attachments: Attachment[];
+}
+
 interface MilestonesTableProps {
-	milestones: any[];
+	milestones: Milestone[];
 	currentPage: number;
 	totalPages: number;
 }
-
 export function MilestonesTable({
 	milestones,
 	currentPage,
@@ -53,7 +75,9 @@ export function MilestonesTable({
 }: MilestonesTableProps) {
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState<string | null>(null);
-	const [selectedMilestone, setSelectedMilestone] = useState<any>(null);
+	const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(
+		null,
+	);
 	const [showAttachments, setShowAttachments] = useState(false);
 
 	const getStatusIcon = (status: string) => {
@@ -150,7 +174,7 @@ export function MilestonesTable({
 															milestone.project.user?.image ||
 															"/placeholder.svg"
 														}
-														alt={milestone.project.user?.name}
+														alt={`${milestone.project.user?.name}`}
 													/>
 													<AvatarFallback>
 														{milestone.project.user?.name?.charAt(0) || "U"}
@@ -434,33 +458,35 @@ export function MilestonesTable({
 								</div>
 							) : (
 								<div className="space-y-2">
-									{selectedMilestone.attachments.map((attachment: any) => (
-										<div
-											key={attachment.id}
-											className="flex items-center justify-between p-3 border rounded-md"
-										>
-											<div className="flex items-center gap-3">
-												<FileText className="h-5 w-5 text-muted-foreground" />
-												<div>
-													<div className="font-medium">
-														{attachment.fileName}
-													</div>
-													<div className="text-xs text-muted-foreground">
-														{(attachment.fileSize / 1024).toFixed(2)} KB •{" "}
-														{attachment.fileType}
+									{selectedMilestone.attachments.map(
+										(attachment: Attachment) => (
+											<div
+												key={attachment.id}
+												className="flex items-center justify-between p-3 border rounded-md"
+											>
+												<div className="flex items-center gap-3">
+													<FileText className="h-5 w-5 text-muted-foreground" />
+													<div>
+														<div className="font-medium">
+															{attachment.fileName}
+														</div>
+														<div className="text-xs text-muted-foreground">
+															{(attachment.fileSize / 1024).toFixed(2)} KB •{" "}
+															{attachment.fileType}
+														</div>
 													</div>
 												</div>
+												<a
+													href={attachment.fileUrl}
+													target="_blank"
+													rel="noopener noreferrer"
+													className="text-primary hover:text-primary/80"
+												>
+													<Eye className="h-4 w-4" />
+												</a>
 											</div>
-											<a
-												href={attachment.fileUrl}
-												target="_blank"
-												rel="noopener noreferrer"
-												className="text-primary hover:text-primary/80"
-											>
-												<Eye className="h-4 w-4" />
-											</a>
-										</div>
-									))}
+										),
+									)}
 								</div>
 							)}
 

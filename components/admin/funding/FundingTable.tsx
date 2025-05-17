@@ -17,14 +17,25 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import type { Project } from "@/types/project";
+import type { User } from "@prisma/client";
 import { format, formatDistanceToNow } from "date-fns";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+interface Funding {
+	id: string;
+	project: Project;
+	user: User;
+	amount: number;
+	status: "COMPLETED" | "PENDING" | "FAILED" | "REFUNDED";
+	createdAt: string;
+}
 interface FundingTableProps {
-	fundings: any[];
+	fundings: Funding[];
 	currentPage: number;
 	totalPages: number;
 }
@@ -106,12 +117,14 @@ export function FundingTable({
 										<div className="flex items-center gap-3">
 											<div className="w-10 h-10 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-800">
 												{funding.project.bannerUrl ? (
-													<img
+													<Image
 														src={
 															funding.project.bannerUrl || "/placeholder.svg"
 														}
 														alt={funding.project.title}
 														className="w-full h-full object-cover"
+														width={100}
+														height={100}
 													/>
 												) : (
 													<div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -134,7 +147,7 @@ export function FundingTable({
 											<Avatar className="h-6 w-6">
 												<AvatarImage
 													src={funding.user?.image || "/placeholder.svg"}
-													alt={funding.user?.name}
+													alt={`${funding.user?.name}`}
 												/>
 												<AvatarFallback>
 													{funding.user?.name?.charAt(0) || "U"}

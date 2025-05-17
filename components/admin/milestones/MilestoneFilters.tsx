@@ -11,12 +11,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import type { Project } from "@/types/project";
 import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface MilestoneFiltersProps {
-	projects: any[];
+	projects: Project[];
 	currentStatus?: string;
 	currentProject?: string;
 	searchQuery?: string;
