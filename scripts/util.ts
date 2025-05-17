@@ -1,5 +1,10 @@
 import { execSync } from 'child_process';
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
+import {
+  mkdirSync,
+  readFileSync,
+  //rmSync,
+  writeFileSync,
+} from 'fs';
 import path from 'path';
 
 // Load environment variables starting with PUBLIC_ into the environment,
@@ -54,13 +59,12 @@ export const readTextFile = (path: string): string => readFileSync(path, { encod
 
 // This is a function so its value can update during init.
 // export const projectContractAddress = (): string =>
-//   process.env.CONTRACT_ID_LOAN_MANAGER || readTextFile('./.stellar/contract-ids/project_contract.txt');
+//   process.env.BOUNDLESS_CONTRACT_ID || readTextFile('./.stellar/contract-ids/project_contract.txt');
 export const boundlessContract = (): string =>
-  process.env.CONTRACT_ID_LOAN_MANAGER || readTextFile('./.stellar/contract-ids/boundless_contract.txt');
+  process.env.BOUNDLESS_CONTRACT_ID || readTextFile('./.stellar/contract-ids/boundless_contract.txt');
 
 export const createContractBindings = () => {
-  bind('boundless_contract', process.env.CONTRACT_ID_LOAN_MANAGER);
-  // bind('project_contract', process.env.CONTRACT_ID_LOAN_MANAGER);
+  bind('boundless_contract', process.env.BOUNDLESS_CONTRACT_ID);
 };
 
 const bind = (contractName: string, address: string | undefined) => {

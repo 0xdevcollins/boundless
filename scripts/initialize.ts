@@ -1,36 +1,36 @@
 import 'dotenv/config';
-import { mkdirSync } from 'fs';
+// import { mkdirSync } from 'fs';
 import {
-  buildContracts,
+  // buildContracts,
   createContractBindings,
   createContractImports,
-  exe,
-  filenameNoExtension,
-  installContracts,
-  loadAccount,
+  // exe,
+  // filenameNoExtension,
+  // installContracts,
+  // loadAccount,
 } from './util';
 
-const account = process.env.STELLAR_ACCOUNT;
+// const account = process.env.STELLAR_ACCOUNT;
 
 console.log('######################Initializing contracts ########################');
 
-const deploy = (wasm: string) => {
-  exe(
-    `stellar contract deploy --wasm ${wasm} --ignore-checks > ./.stellar/contract-ids/${filenameNoExtension(wasm)}.txt`,
-  );
-};
+// const deploy = (wasm: string) => {
+//   exe(
+//     `stellar contract deploy --wasm ${wasm} --ignore-checks > ./.stellar/contract-ids/${filenameNoExtension(wasm)}.txt`,
+//   );
+// };
 
-const deployProjectContract = () => {
-  const contractsDir = `.stellar/contract-ids`;
-  mkdirSync(contractsDir, { recursive: true });
+// const deployProjectContract = () => {
+//   const contractsDir = `.stellar/contract-ids`;
+//   mkdirSync(contractsDir, { recursive: true });
 
-  deploy(`./target/wasm32-unknown-unknown/release/boundless_contract.wasm`);
-};
+//   deploy(`./target/wasm32-unknown-unknown/release/boundless_contract.wasm`);
+// };
 
-loadAccount();
-buildContracts();
-installContracts();
-deployProjectContract();
+// loadAccount();
+// buildContracts();
+// installContracts();
+// deployProjectContract();
 createContractBindings();
 createContractImports();
 

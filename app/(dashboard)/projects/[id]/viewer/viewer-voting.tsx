@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ThumbsUp, Users } from "lucide-react";
 import { useState } from "react";
+import { invokeContract } from "@/src/utils/contract";
+import { useWalletStore } from "@/store/useWalletStore";
+import { toast } from "sonner";
 
 type ValidationStatus = "PENDING" | "REJECTED" | "VALIDATED";
 
@@ -26,23 +29,35 @@ export function ViewerVoting({
 	const [votes, setVotes] = useState(voteCount);
 	const [hasVoted, setHasVoted] = useState(userVoted);
 	const [isVoting, setIsVoting] = useState(false);
+	const { publicKey } = useWalletStore();
 
 	const handleVote = async () => {
 		if (hasVoted || status !== "PENDING") return;
+		if (!publicKey) {
+			toast.error("Please connect your wallet first");
+			return;
+		}
 
 		setIsVoting(true);
 
 		try {
-			// In a real app, you would make an API call here
-			// const response = await fetch(`/api/projects/${projectId}/vote`, {
-			//   method: 'POST',
-			// })
+			const success = await invokeContract({
+				method: "vote_project",
+				params: {
+					project_id: projectId,
+					voter: publicKey,
+					vote_value: 1
+				},
+				successMessage: "Vote recorded successfully!",
+				onError: (error) => {
+					toast.error(error.message);
+				}
+			});
 
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 500));
-
-			setVotes((prev) => prev + 1);
-			setHasVoted(true);
+			if (success) {
+				setVotes((prev) => prev + 1);
+				setHasVoted(true);
+			}
 		} catch (error) {
 			console.error("Failed to vote:", error);
 		} finally {
@@ -99,7 +114,6 @@ export function ViewerVoting({
 					disabled={hasVoted || status !== "PENDING" || isVoting}
 					className="gap-2"
 				>
-					<ThumbsUp className="h-4 w-4" />
 					{isVoting ? "Voting..." : hasVoted ? "Voted" : "Vote"}
 				</Button>
 			</div>

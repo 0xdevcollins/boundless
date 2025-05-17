@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type FormEvent, Suspense, useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 function VerifyOTPContent() {
 	const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -30,12 +32,32 @@ function VerifyOTPContent() {
 	}, [resendTimer]);
 
 	const handleChange = (index: number, value: string) => {
-		if (value.length > 1) return;
+		// Handle paste event
+		if (value.length > 1) {
+			const pastedValue = value.slice(0, 6).split('');
+			const newOTP = [...otp];
+			pastedValue.forEach((char, i) => {
+				if (i < 6) {
+					newOTP[i] = char;
+				}
+			});
+			setOtp(newOTP);
+			// Focus the next empty input or the last input
+			const nextEmptyIndex = pastedValue.findIndex(char => !char) - 1;
+			const focusIndex = nextEmptyIndex >= 0 ? nextEmptyIndex : 5;
+			const nextInput = document.getElementById(`otp-${focusIndex}`);
+			nextInput?.focus();
+			return;
+		}
+
+		// Only allow numbers
+		if (!/^\d*$/.test(value)) return;
 
 		const newOTP = [...otp];
 		newOTP[index] = value;
 		setOtp(newOTP);
 
+		// Move to next input if value is entered
 		if (value && index < 5) {
 			const nextInput = document.getElementById(`otp-${index + 1}`);
 			nextInput?.focus();
@@ -43,10 +65,46 @@ function VerifyOTPContent() {
 	};
 
 	const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-		if (e.key === "Backspace" && !otp[index] && index > 0) {
+		// Handle backspace
+		if (e.key === "Backspace") {
+			if (!otp[index] && index > 0) {
+				// If current input is empty and backspace is pressed, move to previous input
+				const prevInput = document.getElementById(`otp-${index - 1}`);
+				prevInput?.focus();
+			} else {
+				// Clear current input
+				const newOTP = [...otp];
+				newOTP[index] = "";
+				setOtp(newOTP);
+			}
+		}
+		// Handle arrow keys
+		else if (e.key === "ArrowLeft" && index > 0) {
 			const prevInput = document.getElementById(`otp-${index - 1}`);
 			prevInput?.focus();
 		}
+		else if (e.key === "ArrowRight" && index < 5) {
+			const nextInput = document.getElementById(`otp-${index + 1}`);
+			nextInput?.focus();
+		}
+	};
+
+	const handlePaste = (e: React.ClipboardEvent) => {
+		e.preventDefault();
+		const pastedData = e.clipboardData.getData('text').slice(0, 6);
+		const pastedValue = pastedData.split('');
+		const newOTP = [...otp];
+		pastedValue.forEach((char, i) => {
+			if (i < 6) {
+				newOTP[i] = char;
+			}
+		});
+		setOtp(newOTP);
+		// Focus the next empty input or the last input
+		const nextEmptyIndex = pastedValue.findIndex(char => !char) - 1;
+		const focusIndex = nextEmptyIndex >= 0 ? nextEmptyIndex : 5;
+		const nextInput = document.getElementById(`otp-${focusIndex}`);
+		nextInput?.focus();
 	};
 
 	const handleResendOTP = async () => {
@@ -137,16 +195,23 @@ function VerifyOTPContent() {
 				<form onSubmit={handleSubmit} className="mt-8 space-y-6">
 					<div className="flex justify-center space-x-2">
 						{otp.map((digit, index) => (
-							<motion.input
-								key={`otp-${index}-${Date.now()}`}
+							<Input
+								key={`otp-${index}`}
 								id={`otp-${index}`}
 								type="text"
+								inputMode="numeric"
+								pattern="[0-9]*"
 								maxLength={1}
 								value={digit}
 								onChange={(e) => handleChange(index, e.target.value)}
 								onKeyDown={(e) => handleKeyDown(index, e)}
-								className="w-12 h-12 text-center text-xl font-semibold border-2 border-[#194247] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#194247] focus:border-transparent"
-								whileFocus={{ scale: 1.05 }}
+								onPaste={handlePaste}
+								className={cn(
+									"w-12 h-12 text-center text-xl font-semibold",
+									"focus-visible:ring-[#194247] focus-visible:ring-offset-0",
+									"border-2 border-[#194247] rounded-lg",
+									"disabled:opacity-50 disabled:cursor-not-allowed"
+								)}
 								required
 								disabled={isLoading}
 							/>
