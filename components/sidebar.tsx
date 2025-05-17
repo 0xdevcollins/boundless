@@ -175,7 +175,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 						</div>
 						<Button
 							variant="ghost"
-							className="text-muted-foreground hover:text-destructive"
+							className="text-muted-foreground  hover:text-destructive dark:hover:text-white"
 							onClick={handleLogout}
 						>
 							<LogOut className="mr-2 h-4 w-4" />

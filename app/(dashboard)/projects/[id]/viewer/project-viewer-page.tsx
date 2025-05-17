@@ -272,6 +272,7 @@ export function ProjectViewerPage({ id }: { id: string }) {
 									<AvatarImage
 										src={project.profileUrl || "/project.svg"}
 										alt={project.title}
+										className="object-cover object-center"
 									/>
 									<AvatarFallback>
 										{project.title.substring(0, 2).toUpperCase()}

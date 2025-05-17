@@ -18,6 +18,7 @@
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:seed": "npx prisma db seed",
+    "prisma:reset":"npx prisma migrate reset",
     "prepare": "husky"
   },
   "lint-staged": {
