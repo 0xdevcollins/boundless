@@ -18,6 +18,7 @@ import {
 import { format } from "date-fns"
 import { Check, MoreHorizontal, X, FileText } from "lucide-react"
 import { toast } from "sonner"
+import { Milestone } from "@prisma/client"
 
 interface Attachment {
   id: string
@@ -26,26 +27,19 @@ interface Attachment {
   fileType: string
 }
 
-interface Milestone {
-  id: string
-  title: string
-  description: string
-  status: string
-  dueDate: string | null
-  progress: number
-  color: string | null
+interface MilestoneProp extends Milestone  {
   attachments: Attachment[]
 }
 
 interface ProjectMilestonesProps {
   projectId: string
-  milestones: Milestone[]
+  milestones: MilestoneProp[]
 }
 
 export function ProjectMilestones({ projectId, milestones }: ProjectMilestonesProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<string | null>(null)
-  const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(null)
+  const [selectedMilestone, setSelectedMilestone] = useState<MilestoneProp | null>(null)
   const [showDetailsDialog, setShowDetailsDialog] = useState(false)
 
   const handleUpdateStatus = async (milestoneId: string, status: string) => {

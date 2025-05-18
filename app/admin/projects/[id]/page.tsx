@@ -13,7 +13,6 @@ export default async function AdminProjectPage({
 }: {
   params: { id: string }
 }) {
-  const session = await getServerSession(authOptions)
   const { id } = params
 
   // Fetch project with related data
