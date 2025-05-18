@@ -1,17 +1,11 @@
-"use client"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
-import { cn } from "@/lib/utils"
+"use client";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface MarkdownProps {
-    children: string
-    className?: string
+	children: string;
 }
 
-export function Markdown({ children, className }: MarkdownProps) {
-    return (
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {children}
-        </ReactMarkdown>
-    )
+export function Markdown({ children }: MarkdownProps) {
+	return <ReactMarkdown remarkPlugins={[remarkGfm]}>{children}</ReactMarkdown>;
 }
