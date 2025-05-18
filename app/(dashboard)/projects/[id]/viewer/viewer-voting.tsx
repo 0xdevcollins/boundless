@@ -3,10 +3,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ThumbsUp, Users } from "lucide-react";
-import { useState } from "react";
 import { invokeContract } from "@/src/utils/contract";
 import { useWalletStore } from "@/store/useWalletStore";
+import { ThumbsUp, Users } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 type ValidationStatus = "PENDING" | "REJECTED" | "VALIDATED";
@@ -46,12 +46,12 @@ export function ViewerVoting({
 				params: {
 					project_id: projectId,
 					voter: publicKey,
-					vote_value: 1
+					vote_value: 1,
 				},
 				successMessage: "Vote recorded successfully!",
 				onError: (error) => {
 					toast.error(error.message);
-				}
+				},
 			});
 
 			if (success) {

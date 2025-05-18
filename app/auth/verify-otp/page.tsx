@@ -1,11 +1,11 @@
 "use client";
 
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type FormEvent, Suspense, useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 
 function VerifyOTPContent() {
 	const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -34,7 +34,7 @@ function VerifyOTPContent() {
 	const handleChange = (index: number, value: string) => {
 		// Handle paste event
 		if (value.length > 1) {
-			const pastedValue = value.slice(0, 6).split('');
+			const pastedValue = value.slice(0, 6).split("");
 			const newOTP = [...otp];
 			pastedValue.forEach((char, i) => {
 				if (i < 6) {
@@ -43,7 +43,7 @@ function VerifyOTPContent() {
 			});
 			setOtp(newOTP);
 			// Focus the next empty input or the last input
-			const nextEmptyIndex = pastedValue.findIndex(char => !char) - 1;
+			const nextEmptyIndex = pastedValue.findIndex((char) => !char) - 1;
 			const focusIndex = nextEmptyIndex >= 0 ? nextEmptyIndex : 5;
 			const nextInput = document.getElementById(`otp-${focusIndex}`);
 			nextInput?.focus();
@@ -82,8 +82,7 @@ function VerifyOTPContent() {
 		else if (e.key === "ArrowLeft" && index > 0) {
 			const prevInput = document.getElementById(`otp-${index - 1}`);
 			prevInput?.focus();
-		}
-		else if (e.key === "ArrowRight" && index < 5) {
+		} else if (e.key === "ArrowRight" && index < 5) {
 			const nextInput = document.getElementById(`otp-${index + 1}`);
 			nextInput?.focus();
 		}
@@ -91,8 +90,8 @@ function VerifyOTPContent() {
 
 	const handlePaste = (e: React.ClipboardEvent) => {
 		e.preventDefault();
-		const pastedData = e.clipboardData.getData('text').slice(0, 6);
-		const pastedValue = pastedData.split('');
+		const pastedData = e.clipboardData.getData("text").slice(0, 6);
+		const pastedValue = pastedData.split("");
 		const newOTP = [...otp];
 		pastedValue.forEach((char, i) => {
 			if (i < 6) {
@@ -101,7 +100,7 @@ function VerifyOTPContent() {
 		});
 		setOtp(newOTP);
 		// Focus the next empty input or the last input
-		const nextEmptyIndex = pastedValue.findIndex(char => !char) - 1;
+		const nextEmptyIndex = pastedValue.findIndex((char) => !char) - 1;
 		const focusIndex = nextEmptyIndex >= 0 ? nextEmptyIndex : 5;
 		const nextInput = document.getElementById(`otp-${focusIndex}`);
 		nextInput?.focus();
@@ -196,8 +195,8 @@ function VerifyOTPContent() {
 					<div className="flex justify-center space-x-2">
 						{otp.map((digit, index) => (
 							<Input
-								key={`otp-${index}`}
-								id={`otp-${index}`}
+								key={`otp-${crypto.randomUUID()}`}
+								id={`otp-${crypto.randomUUID()}`}
 								type="text"
 								inputMode="numeric"
 								pattern="[0-9]*"
@@ -210,7 +209,7 @@ function VerifyOTPContent() {
 									"w-12 h-12 text-center text-xl font-semibold",
 									"focus-visible:ring-[#194247] focus-visible:ring-offset-0",
 									"border-2 border-[#194247] rounded-lg",
-									"disabled:opacity-50 disabled:cursor-not-allowed"
+									"disabled:opacity-50 disabled:cursor-not-allowed",
 								)}
 								required
 								disabled={isLoading}

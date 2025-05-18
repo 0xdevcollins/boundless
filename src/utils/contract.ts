@@ -132,7 +132,7 @@ export async function invokeContract<T extends ContractMethod>({
 
   try {
     // Get the contract method
-    const contractMethod = contractClient[method];
+    const contractMethod = contractClient[method as keyof typeof contractClient];
     if (typeof contractMethod !== "function") {
       throw new Error(`Invalid contract method: ${String(method)}`);
     }
