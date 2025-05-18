@@ -1,6 +1,4 @@
 import { authOptions } from "@/lib/auth.config";
-import { createNotification } from "@/lib/notifications";
-import { generateProjectEmailTemplate } from "@/lib/notifications/email-templates";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -18,8 +16,8 @@ export async function POST(
 		}
 
 		const projectId = (await params).id;
-		const { review } = await request.json();
 
+		// Update project approval status
 		const updatedProject = await prisma.project.update({
 			where: { id: projectId },
 			data: { isApproved: true },
@@ -34,35 +32,13 @@ export async function POST(
 			},
 		});
 
-		let emailDescription = `
-      <p>Your project "${updatedProject.title}" has been approved by the Boundless team.</p>
-    `;
-
-		if (review?.trim()) {
-			emailDescription += `
-        <p>The admin has provided the following feedback:</p>
-        <div style="margin: 16px 0; padding: 16px; background-color: #f9f9f9; border-left: 4px solid #0d9488; border-radius: 4px;">
-          ${review}
-        </div>
-      `;
-		}
-
-		await createNotification({
-			userId: updatedProject.userId,
-			title: "Project Approved",
-			description: `Your project "${updatedProject.title}" has been approved by the Boundless team.`,
-			type: "SUCCESS",
-			sendEmail: true,
-			emailSubject: `Project Approved: ${updatedProject.title}`,
-			emailTemplate: generateProjectEmailTemplate({
-				title: "Project Approved! 🎉",
-				description: emailDescription,
-				type: "SUCCESS",
-				projectId: updatedProject.id,
-				projectTitle: updatedProject.title,
-				actionText: "View Your Project",
-				additionalContent: "Thank you for using Boundless!",
-			}),
+		// Create notification for the project owner
+		await prisma.notification.create({
+			data: {
+				userId: updatedProject.userId,
+				title: "Project Approved",
+				description: `Your project "${updatedProject.title}" has been approved by the Boundless team.`,
+			},
 		});
 
 		return NextResponse.json(updatedProject);
