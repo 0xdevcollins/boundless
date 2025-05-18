@@ -1,8 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
-// import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 
 interface ProjectUser {
@@ -81,7 +81,9 @@ export function RecentProjects({ projects }: RecentProjectsProps) {
 										{project.isApproved ? "Approved" : "Pending"}
 									</Badge>
 									<span className="text-xs text-muted-foreground mt-1">
-										{/* {formatDistanceToNow(new Date(project.createdAt), { addSuffix: true })} */}
+										{formatDistanceToNow(new Date(project.createdAt), {
+											addSuffix: true,
+										})}
 									</span>
 								</div>
 							</div>

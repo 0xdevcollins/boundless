@@ -17,6 +17,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import type { ValidationStatus } from "@/types/project";
 import { formatDistanceToNow } from "date-fns";
 import {
 	Check,
@@ -50,19 +51,35 @@ type ProjectCategory =
 	| "COMMUNITY"
 	| "OTHER";
 
-interface Project {
+interface TableProject {
 	id: string;
 	title: string;
-	bannerUrl?: string;
-	category: ProjectCategory;
+	description: string;
+	userId: string;
+	fundingGoal: number;
+	category: string;
+	bannerUrl: string | null;
+	profileUrl: string | null;
+	blockchainTx: string | null;
+	ideaValidation: ValidationStatus;
+	createdAt: Date;
+	updatedAt?: Date; // Make updatedAt optional
 	isApproved: boolean;
-	createdAt: string;
-	user?: User;
-	_count: ProjectCounts;
+	whitepaper: string | null;
+	user: {
+		id: string;
+		name: string | null;
+		image: string | null;
+		email: string | null;
+	};
+	_count: {
+		fundings: number;
+		votes: number;
+	};
 }
 
 interface ProjectsTableProps {
-	projects: Project[];
+	projects: TableProject[];
 	currentPage: number;
 	totalPages: number;
 }
@@ -176,7 +193,7 @@ export function ProjectsTable({
 											<Avatar className="h-6 w-6">
 												<AvatarImage
 													src={project.user?.image || "/placeholder.svg"}
-													alt={project.user?.name}
+													alt={`${project.user?.name}`}
 												/>
 												<AvatarFallback>
 													{project.user?.name?.charAt(0) || "U"}
