@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 
 interface User {
@@ -11,6 +11,7 @@ interface User {
 	image: string | null;
 	role: "USER" | "ADMIN";
 	createdAt: string | Date;
+	emailVerified: string | Date;
 }
 
 interface RecentUsersProps {
@@ -59,7 +60,11 @@ export function RecentUsers({ users }: RecentUsersProps) {
 										{user.role}
 									</Badge>
 									<span className="text-xs text-muted-foreground mt-1">
-										{/* {formatDistanceToNow(new Date(user.createdAt), { addSuffix: true })} */}
+										{user.emailVerified
+											? formatDistanceToNow(new Date(user.emailVerified), {
+													addSuffix: true,
+												})
+											: "Not Verified"}
 									</span>
 								</div>
 							</div>
