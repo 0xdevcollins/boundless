@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { logout } from "@/lib/api/auth";
 import { cn } from "@/lib/utils";
 import { useThemeStore } from "@/store/useThemeStore";
 import { useUserStore } from "@/store/userStore";
@@ -17,7 +18,7 @@ import {
 	Settings,
 	Sun,
 } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -49,6 +50,7 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 	const { theme, toggleTheme } = useThemeStore();
 	const router = useRouter();
 	const pathname = usePathname();
+	const { data: session } = useSession();
 
 	const handleThemeToggle = () => {
 		toggleTheme();
@@ -60,11 +62,21 @@ export function Sidebar({ className, ...props }: SidebarProps) {
 	};
 	const showCreatorCard = pathname !== "/projects/new";
 	const handleLogout = async () => {
-		await signOut({
-			redirect: false,
-			callbackUrl: "/auth/signin",
-		});
-		router.push("/auth/signin");
+		try {
+			// Call backend logout endpoint with access token
+			await logout(session?.user?.accessToken);
+		} catch (err) {
+			console.error("Backend logout failed:", err);
+		} finally {
+
+			await signOut({
+				redirect: true,
+				redirectTo: "/auth/signin",
+				callbackUrl: "/auth/signin",
+			});
+		}
+		// Sign out from NextAuth (client session)
+		// router.push("/auth/signin");
 	};
 
 	const {

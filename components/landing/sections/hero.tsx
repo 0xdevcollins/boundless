@@ -4,15 +4,8 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "../../ui/button";
-
-type CryptoCategoryType =
-	| "DeFi Protocol"
-	| "NFT Marketplace"
-	| "Data DAOs"
-	| "AI Agents"
-	| "Web3 Storage";
 
 interface HeroProps {
 	className?: string;
@@ -20,21 +13,6 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ className }) => {
 	const particlesRef = useRef<HTMLDivElement>(null);
-	const [currentCategory, setCurrentCategory] = useState<number>(0);
-	const [displayText, setDisplayText] = useState<string>("");
-	const [isTyping, setIsTyping] = useState<boolean>(true);
-
-	// Categories for the rotating text
-	const categories = useMemo<CryptoCategoryType[]>(
-		() => [
-			"DeFi Protocol",
-			"NFT Marketplace",
-			"Data DAOs",
-			"AI Agents",
-			"Web3 Storage",
-		],
-		[],
-	);
 
 	// Animation variants for text elements
 	const titleVariants = {
@@ -99,34 +77,6 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
 			},
 		},
 	};
-
-	// Typing animation effect
-	useEffect(() => {
-		const currentWord = categories[currentCategory];
-		if (isTyping) {
-			if (displayText !== currentWord) {
-				const timeout = setTimeout(() => {
-					setDisplayText(currentWord.substring(0, displayText.length + 1));
-				}, 100);
-				return () => clearTimeout(timeout);
-			}
-			const timeout = setTimeout(() => {
-				setIsTyping(false);
-			}, 1000);
-			return () => clearTimeout(timeout);
-		}
-		if (displayText.length > 0) {
-			const timeout = setTimeout(() => {
-				setDisplayText(displayText.substring(0, displayText.length - 1));
-			}, 50);
-			return () => clearTimeout(timeout);
-		}
-		const timeout = setTimeout(() => {
-			setCurrentCategory((prev) => (prev + 1) % categories.length);
-			setIsTyping(true);
-		}, 300);
-		return () => clearTimeout(timeout);
-	}, [displayText, isTyping, currentCategory, categories]);
 
 	useEffect(() => {
 		if (!particlesRef.current) return;
@@ -231,30 +181,17 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
 						animate="visible"
 						variants={titleVariants}
 					>
-						Community-Powered Funding for Innovative Web3 Ideas
+						Boundless
 					</motion.h1>
 
-					<motion.div
-						className="flex items-center justify-center h-12 mb-8"
+					<motion.p
+						className="text-xl md:text-2xl font-semibold text-primary mb-6"
 						initial="hidden"
 						animate="visible"
 						variants={subtitleVariants}
 					>
-						<div className="text-xl md:text-2xl font-semibold">
-							Building{" "}
-							<span className="relative inline-block text-left">
-								<span className="text-primary font-extrabold">
-									{displayText}?
-									<motion.span
-										className="absolute bottom-0 left-0 w-full h-1 bg-primary"
-										initial={{ scaleX: 0 }}
-										animate={{ scaleX: 1 }}
-										transition={{ duration: 0.5, ease: "easeOut" }}
-									/>
-								</span>
-							</span>
-						</div>
-					</motion.div>
+						The decentralized platform for crowdfunding and grant funding — powered by Stellar and Soroban.
+					</motion.p>
 
 					<motion.p
 						className="text-lg md:text-xl text-muted-foreground mb-10"
@@ -262,8 +199,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
 						animate="visible"
 						variants={subtitleVariants}
 					>
-						Pitch your blockchain idea to our community of backers for
-						validation, funding, and smooth development—without the hassle.
+						Raise funds, validate ideas, launch projects, or fund changemakers — with full transparency and milestone-based payouts.
 					</motion.p>
 
 					<motion.div
@@ -274,22 +210,22 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
 					>
 						{/* Wrap Button with motion.div to use whileHover */}
 						<motion.div whileHover={{ scale: 1.05 }}>
-							<Link href="/auth/signin">
+							<Link href="/dashboard/projects/new">
 								<Button
 									size="lg"
 									className="group relative overflow-hidden px-8"
 								>
-									Get Started
+									Start a Project
 									<ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
 								</Button>
 							</Link>
 						</motion.div>
 
 						<motion.div whileHover={{ scale: 1.05 }}>
-							<Link href="/explore">
+							<Link href="/dashboard/projects">
 								<Button size="lg" variant="outline" className="group">
 									<Sparkles className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform" />
-									Browse Projects
+									Explore Ideas
 								</Button>
 							</Link>
 						</motion.div>

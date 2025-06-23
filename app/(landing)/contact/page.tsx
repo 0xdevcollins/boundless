@@ -1,388 +1,300 @@
 "use client";
 
-import PageTransition from "@/components/landing/components/PageTransition";
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
 import {
-	ArrowRight,
 	Mail,
-	MessageCircle,
 	MessageSquare,
+	Send,
 	Twitter,
-	User,
+	Linkedin,
+	Github,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { Toaster } from "sonner";
-import * as z from "zod";
-
-// Form validation schema
-const formSchema = z.object({
-	name: z.string().min(2, "Name must be at least 2 characters"),
-	email: z.string().email("Invalid email address"),
-	subject: z.string().min(5, "Subject must be at least 5 characters"),
-	message: z.string().min(10, "Message must be at least 10 characters"),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import React, { useState } from "react";
 
 export default function ContactPage() {
-	const [isSubmitting, setIsSubmitting] = useState(false);
-
-	// Initialize form
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
+	const [formData, setFormData] = useState({
 			name: "",
 			email: "",
 			subject: "",
 			message: "",
-		},
 	});
 
-	// Handle form submission
-	async function onSubmit(data: FormValues) {
-		try {
-			setIsSubmitting(true);
-			const response = await fetch("/api/contact", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			});
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		// Handle form submission here
+		console.log("Form submitted:", formData);
+	};
 
-			const result = await response.json();
-
-			if (!response.ok) {
-				throw new Error(result.error || "Failed to send message");
-			}
-
-			toast.success(
-				"Message sent successfully! Check your email for confirmation.",
-			);
-			form.reset();
-		} catch (error) {
-			toast.error(
-				error instanceof Error ? error.message : "Failed to send message",
-			);
-		} finally {
-			setIsSubmitting(false);
-		}
-	}
-
-	const supportChannels = [
-		{
-			id: "discord",
-			icon: <MessageCircle className="w-6 h-6" />,
-			title: "Discord Community",
-			description:
-				"Join our Discord server for real-time support and community discussions.",
-			link: "https://discord.gg/juUmBmwC3s",
-			linkText: "Join Discord",
-		},
-		{
-			id: "telegram",
-			icon: <MessageSquare className="w-6 h-6" />,
-			title: "Telegram Support",
-			description: "Get direct support from our team through Telegram.",
-			links: [
-				{
-					name: "Benjamin",
-					link: "https://t.me/kitch_the_dev",
-				},
-				{
-					name: "Collins",
-					link: "https://t.me/devcollinss",
-				},
-			],
-		},
-		{
-			id: "email",
-			icon: <Mail className="w-6 h-6" />,
-			title: "Email Support",
-			description:
-				"Send us an email and we'll get back to you as soon as possible.",
-			email: "support@boundlessfi.xyz",
-		},
-	];
+	const handleInputChange = (field: string, value: string) => {
+		setFormData(prev => ({
+			...prev,
+			[field]: value,
+		}));
+	};
 
 	return (
-		<PageTransition>
-			<Toaster
-				position="top-center"
-				expand={true}
-				richColors
-				closeButton
-				theme="system"
-			/>
 			<div className="min-h-screen bg-background">
 				{/* Hero Section */}
-				<section className="relative py-24 md:py-32 overflow-hidden">
-					{/* Background Pattern */}
-					<div className="absolute inset-0">
-						<div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-background to-background" />
-						<div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
-						<div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+			<section className="relative pt-24 pb-24 overflow-hidden">
+				<div className="absolute top-0 right-0 w-1/3 h-1/3 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+				<div
+					className="absolute bottom-0 left-0 w-1/2 h-1/3 bg-primary/5 rounded-full blur-3xl animate-pulse"
+					style={{ animationDelay: "1s" }}
+				/>
+
+				<div className="container max-w-6xl mx-auto px-4 relative z-10">
+					<div className="flex flex-col items-center text-center">
+						<div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 border border-primary/20">
+							<MessageSquare className="h-4 w-4 mr-2" />
+							<span className="text-sm font-medium">
+								 Contact Us
+							</span>
 					</div>
 
-					<div className="container max-w-6xl mx-auto px-4 md:px-6 relative">
-						<motion.div
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.6 }}
-							className="text-center max-w-3xl mx-auto"
-						>
-							<motion.div
-								initial={{ opacity: 0, scale: 0.95 }}
-								animate={{ opacity: 1, scale: 1 }}
-								transition={{ duration: 0.5, delay: 0.2 }}
-								className="inline-block bg-primary/10 px-4 py-2 rounded-full mb-6"
-							>
-								<span className="text-primary font-medium">Contact Us</span>
-							</motion.div>
-
-							<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter mb-6">
-								Get in{" "}
-								<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
-									Touch
-								</span>
+						<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+							Get in Touch
 							</h1>
 
-							<motion.p
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ duration: 0.6, delay: 0.3 }}
-								className="text-lg md:text-xl text-muted-foreground mb-8"
-							>
-								Have questions or need support? We&apos;re here to help. Choose
-								your preferred way to reach out.
-							</motion.p>
-						</motion.div>
+						<div className="h-1.5 w-32 bg-gradient-to-r from-primary to-primary/50 rounded-full mb-8" />
+
+						<p className="text-xl text-muted-foreground max-w-3xl mb-10">
+							We&apos;re always excited to hear from creators, grantors, contributors, and ecosystem partners.
+						</p>
+
+						<p className="text-lg text-muted-foreground max-w-2xl">
+							Whether you have a question, feedback, press inquiry, or want to explore collaboration — drop us a message below.
+						</p>
+					</div>
 					</div>
 				</section>
 
 				{/* Contact Form Section */}
-				<section className="py-16 md:py-24 bg-muted/30">
-					<div className="container max-w-6xl mx-auto px-4 md:px-6">
-						<div className="grid lg:grid-cols-2 gap-12">
-							<motion.div
-								initial={{ opacity: 0, x: -20 }}
-								whileInView={{ opacity: 1, x: 0 }}
-								transition={{ duration: 0.6 }}
-							>
-								<h2 className="text-3xl font-bold tracking-tighter mb-6">
-									Send us a Message
-								</h2>
-								<p className="text-muted-foreground mb-8">
-									Fill out the form below and we&apos;ll get back to you as soon
-									as possible.
-								</p>
+			<section className="py-24 bg-gradient-to-b from-primary/5 to-background">
+				<div className="container max-w-4xl mx-auto px-4">
+					<div className="bg-card rounded-2xl border border-primary/10 p-8 shadow-xl">
+						<div className="text-center mb-8">
+							<div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 border border-primary/20">
+								<Send className="h-4 w-4 mr-2" />
+								<span className="text-sm font-medium"> Contact Form</span>
+							</div>
+						</div>
 
-								<Form {...form}>
-									<form
-										onSubmit={form.handleSubmit(onSubmit)}
-										className="space-y-6"
-									>
-										<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-											<FormField
-												control={form.control}
-												name="name"
-												render={({ field }) => (
-													<FormItem>
-														<FormLabel>Name</FormLabel>
-														<FormControl>
-															<Input placeholder="Your name" {...field} />
-														</FormControl>
-														<FormMessage />
-													</FormItem>
-												)}
-											/>
-											<FormField
-												control={form.control}
-												name="email"
-												render={({ field }) => (
-													<FormItem>
-														<FormLabel>Email</FormLabel>
-														<FormControl>
+						<form onSubmit={handleSubmit} className="space-y-6">
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+								<div className="space-y-2">
+									<Label htmlFor="name" className="text-sm font-medium">
+										Name
+									</Label>
+									<Input
+										id="name"
+										type="text"
+										placeholder="Your Name"
+										value={formData.name}
+										onChange={(e) => handleInputChange("name", e.target.value)}
+										required
+										className="border-primary/20 focus:border-primary/50"
+									/>
+								</div>
+
+								<div className="space-y-2">
+									<Label htmlFor="email" className="text-sm font-medium">
+										Email
+									</Label>
 															<Input
+										id="email"
 																type="email"
-																placeholder="Your email"
-																{...field}
-															/>
-														</FormControl>
-														<FormMessage />
-													</FormItem>
-												)}
+										placeholder="your.email@example.com"
+										value={formData.email}
+										onChange={(e) => handleInputChange("email", e.target.value)}
+										required
+										className="border-primary/20 focus:border-primary/50"
 											/>
 										</div>
-										<FormField
-											control={form.control}
-											name="subject"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>Subject</FormLabel>
-													<FormControl>
-														<Input
-															placeholder="What's this about?"
-															{...field}
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-										<FormField
-											control={form.control}
-											name="message"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>Message</FormLabel>
-													<FormControl>
+							</div>
+
+							<div className="space-y-2">
+								<Label htmlFor="subject" className="text-sm font-medium">
+									Subject
+								</Label>
+								<Select value={formData.subject} onValueChange={(value) => handleInputChange("subject", value)}>
+									<SelectTrigger className="border-primary/20 focus:border-primary/50">
+										<SelectValue placeholder="Select a subject" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="general">General Inquiry</SelectItem>
+										<SelectItem value="partnerships">Partnerships</SelectItem>
+										<SelectItem value="press">Press</SelectItem>
+										<SelectItem value="feedback">Feedback</SelectItem>
+										<SelectItem value="bug-report">Bug Report</SelectItem>
+									</SelectContent>
+								</Select>
+							</div>
+
+							<div className="space-y-2">
+								<Label htmlFor="message" className="text-sm font-medium">
+									Message
+								</Label>
 														<Textarea
-															placeholder="Your message"
-															className="min-h-[150px]"
-															{...field}
+									id="message"
+									placeholder="Tell us more about your inquiry..."
+									value={formData.message}
+									onChange={(e) => handleInputChange("message", e.target.value)}
+									required
+									rows={6}
+									className="border-primary/20 focus:border-primary/50 resize-none"
 														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
+							</div>
+
+							<div className="flex justify-center pt-4">
 										<Button
 											type="submit"
 											size="lg"
-											className="w-full sm:w-auto"
-											disabled={isSubmitting}
+									className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 px-8 py-6 text-lg"
 										>
-											{isSubmitting ? "Sending..." : "Send Message"}
-											<ArrowRight className="ml-2 h-4 w-4" />
+									<Send className="mr-2 h-5 w-5" /> Send Message
 										</Button>
+							</div>
 									</form>
-								</Form>
-							</motion.div>
+					</div>
+				</div>
+			</section>
 
-							<motion.div
-								initial={{ opacity: 0, x: 20 }}
-								whileInView={{ opacity: 1, x: 0 }}
-								transition={{ duration: 0.6 }}
-								className="space-y-8"
+			{/* Direct Contact Section */}
+			<section className="py-24 bg-background">
+				<div className="container max-w-6xl mx-auto px-4">
+					<div className="text-center max-w-3xl mx-auto mb-16">
+						<div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 border border-primary/20">
+							<Mail className="h-4 w-4 mr-2" />
+							<span className="text-sm font-medium"> Reach us directly</span>
+						</div>
+						<h2 className="text-3xl md:text-4xl font-bold mb-6">Connect with us on your preferred platform</h2>
+						<div className="h-1.5 w-24 bg-gradient-to-r from-primary to-primary/50 rounded-full mx-auto mb-6" />
+					</div>
+
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+						<div className="bg-card rounded-xl border border-primary/10 p-6 text-center hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
+							<div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+								<Mail className="h-8 w-8 text-primary" />
+							</div>
+							<h3 className="font-semibold mb-2">Email</h3>
+							<a 
+								href="mailto:hello@boundless.xyz" 
+								className="text-primary hover:text-primary/80 transition-colors"
 							>
-								<h2 className="text-3xl font-bold tracking-tighter mb-6">
-									Other Ways to Connect
-								</h2>
+								hello@boundless.xyz
+							</a>
+						</div>
 
-								<div className="space-y-6">
-									{supportChannels.map((channel) => (
-										<motion.div
-											key={channel.id}
-											initial={{ opacity: 0, y: 20 }}
-											whileInView={{ opacity: 1, y: 0 }}
-											transition={{ duration: 0.5, delay: 0.1 }}
-											className="bg-card border border-border p-6 rounded-lg"
-										>
-											<div className="flex items-start space-x-4">
-												<div className="mt-1 bg-primary/10 p-3 rounded-full">
-													{channel.icon}
+						<div className="bg-card rounded-xl border border-primary/10 p-6 text-center hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
+							<div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+								<Twitter className="h-8 w-8 text-primary" />
 												</div>
-												<div className="flex-1">
-													<h3 className="text-xl font-semibold mb-2">
-														{channel.title}
-													</h3>
-													<p className="text-muted-foreground mb-4">
-														{channel.description}
-													</p>
-													{channel.link && (
-														<Button variant="outline" asChild>
-															<Link
-																href={channel.link}
+							<h3 className="font-semibold mb-2">Twitter</h3>
+							<a 
+								href="https://twitter.com/BoundlessXYZ" 
 																target="_blank"
-																className="flex items-center"
+								rel="noopener noreferrer"
+								className="text-primary hover:text-primary/80 transition-colors"
 															>
-																{channel.linkText}
-																<ArrowRight className="ml-2 h-4 w-4" />
-															</Link>
-														</Button>
-													)}
-													{channel.links && (
-														<div className="space-y-2">
-															{channel.links.map((link) => (
-																<Button
-																	key={link.name}
-																	variant="outline"
-																	asChild
-																	className="w-full sm:w-auto"
-																>
-																	<Link
-																		href={link.link}
-																		target="_blank"
-																		className="flex items-center"
-																	>
-																		<User className="mr-2 h-4 w-4" />
-																		{link.name}
-																	</Link>
-																</Button>
-															))}
+								@BoundlessXYZ
+							</a>
+						</div>
+
+						<div className="bg-card rounded-xl border border-primary/10 p-6 text-center hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
+							<div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+								<Linkedin className="h-8 w-8 text-primary" />
+							</div>
+							<h3 className="font-semibold mb-2">LinkedIn</h3>
+							<a 
+								href="#" 
+								className="text-primary hover:text-primary/80 transition-colors"
+							>
+								Boundless on LinkedIn
+							</a>
+						</div>
+
+						<div className="bg-card rounded-xl border border-primary/10 p-6 text-center hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
+							<div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+								<Github className="h-8 w-8 text-primary" />
+							</div>
+							<h3 className="font-semibold mb-2">GitHub</h3>
+							<a 
+								href="#" 
+								className="text-primary hover:text-primary/80 transition-colors"
+							>
+								github.com/boundless
+							</a>
+						</div>
+					</div>
+
+					<div className="text-center mt-12">
+						<div className="bg-primary/5 rounded-xl p-6 border border-primary/10 inline-block">
+							<p className="text-lg font-semibold mb-2">We usually respond within 24–48 hours.</p>
+							<p className="text-muted-foreground">Looking forward to hearing from you!</p>
 														</div>
-													)}
-													{channel.email && (
-														<Button variant="outline" asChild>
-															<Link
-																href={`mailto:${channel.email}`}
-																className="flex items-center"
-															>
-																{channel.email}
-																<Mail className="ml-2 h-4 w-4" />
-															</Link>
-														</Button>
-													)}
 												</div>
 											</div>
-										</motion.div>
-									))}
+			</section>
+
+			{/* CTA Section */}
+			<section className="py-20 bg-gradient-to-b from-background to-primary/5">
+				<div className="container max-w-6xl mx-auto px-4">
+					<div className="bg-gradient-to-r from-primary/5 via-card to-primary/5 rounded-2xl border border-primary/20 p-8 md:p-12 shadow-xl relative overflow-hidden">
+						{/* Background elements */}
+						<div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl opacity-70" />
+						<div className="absolute -bottom-20 -left-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl opacity-70" />
+
+						<div className="relative text-center">
+							<div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 border border-primary/20">
+								<MessageSquare className="h-4 w-4 mr-2" />
+								<span className="text-sm font-medium">Ready to get started?</span>
 								</div>
 
-								<div className="pt-8">
-									<h3 className="text-xl font-semibold mb-4">Follow Us</h3>
-									<div className="flex space-x-4">
-										<Button variant="outline" size="icon" asChild>
-											<Link
-												href="https://x.com/boundless_fi"
-												target="_blank"
-												className="flex items-center"
+							<h2 className="text-3xl md:text-4xl font-bold mb-8">
+								Join the Boundless community
+							</h2>
+							
+							<p className="text-lg text-muted-foreground mb-8">
+								Whether you&apos;re a creator, funder, or contributor, we&apos;re here to help you succeed.
+							</p>
+
+							<div className="flex flex-wrap gap-6 justify-center">
+								<Link href="/how-it-works">
+									<Button
+										size="lg"
+										className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 px-8 py-6 text-lg"
 											>
-												<Twitter className="h-5 w-5" />
+										<Mail className="mr-2 h-5 w-5" /> Learn How It Works
+									</Button>
 											</Link>
+								<Link href="/crowdfunding">
+									<Button
+										size="lg"
+										variant="outline"
+										className="border-primary/20 hover:border-primary/50 px-8 py-6 text-lg"
+									>
+										<MessageSquare className="mr-2 h-5 w-5" /> Start Crowdfunding
 										</Button>
-										<Button variant="outline" size="icon" asChild>
-											<Link
-												href="https://discord.gg/juUmBmwC3s"
-												target="_blank"
-												className="flex items-center"
+								</Link>
+								<Link href="/grants">
+									<Button
+										size="lg"
+										variant="outline"
+										className="border-primary/20 hover:border-primary/50 px-8 py-6 text-lg"
 											>
-												<MessageCircle className="h-5 w-5" />
+										<MessageSquare className="mr-2 h-5 w-5" /> Explore Grants
+									</Button>
 											</Link>
-										</Button>
-									</div>
 								</div>
-							</motion.div>
+						</div>
 						</div>
 					</div>
 				</section>
 			</div>
-		</PageTransition>
 	);
 }

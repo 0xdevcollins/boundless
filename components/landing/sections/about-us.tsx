@@ -2,11 +2,14 @@
 
 import { motion, useInView } from "framer-motion";
 import {
+	CheckCircle,
 	Globe,
 	Handshake,
 	Lightbulb,
 	type LucideIcon,
 	Shield,
+	Users,
+	Zap,
 } from "lucide-react";
 import React, { useRef } from "react";
 import AnimatedUnderline from "../components/AnimatedUnderline";
@@ -25,28 +28,28 @@ type MetricItem = {
 
 const VALUES: ValueItem[] = [
 	{
-		icon: Shield,
-		title: "Trust & Transparency",
+		icon: Lightbulb,
+		title: "Crowdfund Your Vision",
 		description:
-			"See exactly where your money goes. We release funds as projects hit their goals.",
+			"Submit an idea, get public validation, and raise support from your community.",
 	},
 	{
-		icon: Globe,
-		title: "Open to Everyone",
+		icon: Shield,
+		title: "Launch a Grant Program",
 		description:
-			"Low fees and fast payments help creators from anywhere join our platform.",
+			"Create your own funding program for builders, open-source teams, or creators — using smart escrow contracts.",
+	},
+	{
+		icon: Users,
+		title: "Apply for Grants",
+		description:
+			"Build something meaningful? Apply for milestone-based funding with clear deliverables.",
 	},
 	{
 		icon: Handshake,
-		title: "Community Input",
+		title: "Back Great Projects",
 		description:
-			"Backers get to vote on important project decisions. Your voice matters here.",
-	},
-	{
-		icon: Lightbulb,
-		title: "Bold Ideas Welcome",
-		description:
-			"We support projects that push boundaries and help communities grow.",
+			"Support ideas early, follow their progress, and fund with confidence via smart contracts.",
 	},
 ];
 
@@ -68,7 +71,7 @@ export default function WhoWeAre() {
 					<div className="text-center mb-10">
 						<div className="relative inline-block">
 							<h2 className="text-3xl md:text-4xl font-bold tracking-tighter">
-								Who We Are
+								What You Can Do on Boundless
 							</h2>
 							<AnimatedUnderline isInView={isInView} />
 						</div>
@@ -83,13 +86,10 @@ export default function WhoWeAre() {
 								className="max-w-2xl"
 							>
 								<p className="text-lg mb-4">
-									Boundless connects creators with backers to bring innovative
-									projects to life.
+									Boundless is the decentralized platform for crowdfunding and grant funding — powered by Stellar and Soroban.
 								</p>
 								<p className="text-muted-foreground">
-									We believe in community-driven funding where backers have a
-									voice, creators get fair support, and bold ideas find the
-									resources they need to succeed.
+									Raise funds, validate ideas, launch projects, or fund changemakers — with full transparency and milestone-based payouts.
 								</p>
 							</motion.div>
 

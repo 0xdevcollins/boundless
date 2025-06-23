@@ -16,7 +16,8 @@ export const Navbar = ({ className }: NavbarProps) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 	const navLinks = [
-		{ name: "Discover Projects", href: "/explore" },
+		{ name: "Projects", href: "/projects" },
+		{ name: "Grants", href: "/grants/explore" },
 		{ name: "How It Works", href: "/how-it-works" },
 		{ name: "Start a Project", href: "/projects/new" },
 		{ name: "Stellar Ecosystem", href: "/stellar" },

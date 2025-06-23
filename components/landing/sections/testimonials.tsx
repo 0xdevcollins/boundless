@@ -1,87 +1,52 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { motion, useInView } from "framer-motion";
-import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
-import React, { useState, useRef } from "react";
+import { 
+	Globe, 
+	Shield, 
+	Users, 
+	Zap,
+	type LucideIcon 
+} from "lucide-react";
+import React, { useRef } from "react";
 import AnimatedUnderline from "../components/AnimatedUnderline";
 import PageTransition from "../components/PageTransition";
 
-const testimonials = [
+type FeatureItem = {
+	icon: LucideIcon;
+	title: string;
+	description: string;
+};
+
+const FEATURES: FeatureItem[] = [
 	{
-		id: 1,
-		name: "Alex Morgan",
-		role: "Project Creator",
-		quote:
-			"Boundless provided the perfect platform to validate, fund, and develop my DeFi protocol. The community feedback was invaluable, and the milestone-based funding gave our backers confidence.",
-		image: "/api/placeholder/100/100",
+		icon: Shield,
+		title: "Trustless Funding",
+		description: "Funds are held in Soroban smart escrows and only released after verified milestones.",
 	},
 	{
-		id: 2,
-		name: "Jamie Chen",
-		role: "Investor & Backer",
-		quote:
-			"As someone who invests in blockchain projects, I appreciate the transparency Boundless provides. Being able to vote on milestone completions and track progress gives me confidence in my investments.",
-		image: "/api/placeholder/100/100",
+		icon: Users,
+		title: "Community Validation",
+		description: "Projects are voted and commented on before they go live.",
 	},
 	{
-		id: 3,
-		name: "Nadia Williams",
-		role: "Blockchain Developer",
-		quote:
-			"The community on Boundless is amazing! I received constructive feedback that helped refine my project, and the milestone-based funding allowed me to focus on building without financial stress.",
-		image: "/api/placeholder/100/100",
+		icon: Globe,
+		title: "No Middlemen",
+		description: "No banks. No institutions. Just builders and supporters.",
 	},
 	{
-		id: 4,
-		name: "Marcus Johnson",
-		role: "Early Adopter",
-		quote:
-			"I've backed several projects on Boundless and have been impressed with the accountability. The Stellar integration makes transactions fast and inexpensive, and I love seeing my investments grow.",
-		image: "/api/placeholder/100/100",
+		icon: Zap,
+		title: "Multiflow System",
+		description: "Crowdfunding + Grant Creation + Grant Applications all in one.",
 	},
 ];
 
-export default function Testimonials() {
-	const [activeIndex, setActiveIndex] = useState(0);
-	const itemsPerView = 3;
-
-	// Update the slide index correctly
-	const nextSlide = () => {
-		setActiveIndex((prevIndex) =>
-			prevIndex + itemsPerView >= testimonials.length ? 0 : prevIndex + 1,
-		);
-	};
-
-	const prevSlide = () => {
-		setActiveIndex((prevIndex) =>
-			prevIndex === 0 ? testimonials.length - itemsPerView : prevIndex - 1,
-		);
-	};
-
-	// Determine the visible testimonials based on activeIndex
-	const visibleTestimonials = testimonials.slice(
-		activeIndex,
-		activeIndex + itemsPerView,
-	);
-
-	// Ensure index wrapping correctly when the array length is exceeded
-	if (visibleTestimonials.length < itemsPerView) {
-		const remainingItems = testimonials.slice(
-			0,
-			itemsPerView - visibleTestimonials.length,
-		);
-		visibleTestimonials.push(...remainingItems);
-	}
-
+export default function WhyBoundless() {
 	const ref = useRef<HTMLDivElement>(null);
 	const isInView = useInView(ref, { margin: "-100px" });
 
 	return (
 		<PageTransition>
-			{/* Wrap the entire section with PageTransition */}
 			<section className="py-20 bg-background" ref={ref}>
 				<div className="container max-w-6xl mx-auto px-4 md:px-6">
 					<motion.div
@@ -93,105 +58,57 @@ export default function Testimonials() {
 					>
 						<div className="relative inline-block">
 							<h2 className="text-3xl md:text-4xl font-bold tracking-tighter mb-6">
-								What People Say About Boundless
+								Why Boundless?
 							</h2>
 							<AnimatedUnderline isInView={isInView} />
 						</div>
 						<p className="text-lg text-muted-foreground mt-6">
-							Join our growing community of creators and backers
+							Built on transparency, community, and blockchain technology
 						</p>
 					</motion.div>
 
-					<div className="relative">
-						{/* Control buttons */}
-						<div className="absolute top-1/2 left-0 -translate-y-1/2 z-10">
-							<Button
-								variant="ghost"
-								size="icon"
-								className="h-10 w-10 rounded-full border bg-background/80 backdrop-blur-sm hover:bg-muted"
-								onClick={prevSlide}
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+						{FEATURES.map((feature, index) => (
+							<motion.div
+								key={feature.title}
+								initial={{ opacity: 0, y: 20 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: true }}
+								transition={{ duration: 0.6, delay: index * 0.1 }}
+								className="bg-card border border-border rounded-lg p-6 hover:shadow-lg transition-shadow duration-300"
 							>
-								<ChevronLeft className="h-6 w-6" />
-							</Button>
-						</div>
-
-						<div className="absolute top-1/2 right-0 -translate-y-1/2 z-10">
-							<Button
-								variant="ghost"
-								size="icon"
-								className="h-10 w-10 rounded-full border bg-background/80 backdrop-blur-sm hover:bg-muted"
-								onClick={nextSlide}
-							>
-								<ChevronRight className="h-6 w-6" />
-							</Button>
-						</div>
-
-						{/* Testimonial cards */}
-						<div className="grid grid-cols-1 md:grid-cols-3 gap-6 overflow-hidden px-8">
-							{visibleTestimonials.map((testimonial, index) => (
-								<motion.div
-									key={`${testimonial.id}-${index}`}
-									initial={{ opacity: 0, y: 20 }}
-									whileInView={{ opacity: 1, y: 0 }}
-									viewport={{ once: true }}
-									transition={{ duration: 0.6, delay: index * 0.1 }}
-								>
-									<Card className="h-full hover:shadow-lg transition-shadow duration-300">
-										<CardContent className="p-6">
-											<div className="flex items-start mb-4">
-												<Quote className="text-primary h-6 w-6 mr-2 flex-shrink-0" />
-												<p className="text-sm text-muted-foreground italic">
-													&quot;{testimonial.quote}&quot;
-												</p>
-											</div>
-											<div className="flex items-center mt-6">
-												<Avatar className="h-10 w-10 mr-3">
-													<AvatarImage
-														src={testimonial.image}
-														alt={testimonial.name}
-													/>
-													<AvatarFallback>
-														{testimonial.name
-															.split(" ")
-															.map((n) => n[0])
-															.join("")}
-													</AvatarFallback>
-												</Avatar>
-												<div>
-													<p className="font-semibold">{testimonial.name}</p>
-													<p className="text-sm text-muted-foreground">
-														{testimonial.role}
-													</p>
-												</div>
-											</div>
-											{/* Hover Indicator */}
-											<motion.div
-												className="absolute inset-0 bg-primary/10 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-												initial={{ opacity: 0 }}
-											/>
-										</CardContent>
-									</Card>
-								</motion.div>
-							))}
-						</div>
-
-						{/* Pagination indicator */}
-						<div className="flex justify-center mt-8">
-							{testimonials.map((testimonial, index) => (
-								<Button
-									key={testimonial.id}
-									variant="ghost"
-									size="sm"
-									className={`w-2 h-2 rounded-full mx-1 p-0 min-w-0 ${
-										index >= activeIndex && index < activeIndex + itemsPerView
-											? "bg-primary"
-											: "bg-muted"
-									}`}
-									onClick={() => setActiveIndex(index)}
-								/>
-							))}
-						</div>
+								<div className="flex items-center mb-4">
+									<div className="bg-primary/10 p-3 rounded-full mr-4">
+										<feature.icon className="h-6 w-6 text-primary" />
+									</div>
+									<h3 className="font-semibold text-lg">{feature.title}</h3>
+								</div>
+								<p className="text-muted-foreground">
+									{feature.description}
+								</p>
+							</motion.div>
+						))}
 					</div>
+
+					<motion.div
+						className="text-center mt-12"
+						initial={{ opacity: 0, y: 20 }}
+						whileInView={{ opacity: 1, y: 0 }}
+						viewport={{ once: true }}
+						transition={{ duration: 0.6, delay: 0.4 }}
+					>
+						<div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-8">
+							<h3 className="text-2xl font-bold mb-4"> Powered by Stellar</h3>
+							<p className="text-lg text-muted-foreground mb-6">
+								Boundless is built on the Stellar blockchain, using Soroban smart contracts for secure, fast, and low-fee transactions.
+							</p>
+							<div className="flex justify-center">
+								<button className="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors">
+									Learn About Stellar
+								</button>
+							</div>
+						</div>
+					</motion.div>
 				</div>
 			</section>
 		</PageTransition>

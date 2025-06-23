@@ -20,6 +20,11 @@ const essentialLinks = [
 	{ label: "Blog", href: "/blog" },
 ];
 
+const legalLinks = [
+	{ label: "Terms & Privacy", href: "/legal" },
+	{ label: "Documentation", href: "https://docs.boundlessfi.xyz" },
+];
+
 const socialLinks = [
 	{ icon: Facebook, href: "https://facebook.com" },
 	{ icon: Twitter, href: "https://twitter.com" },
@@ -31,7 +36,7 @@ export default function Footer() {
 	return (
 		<footer className="bg-background border-t border-border">
 			<div className="container max-w-6xl mx-auto px-4 md:px-6 py-12">
-				<div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+				<div className="grid grid-cols-1 md:grid-cols-5 gap-8">
 					{/* Quick Links */}
 					<div>
 						<h4 className="text-lg font-semibold mb-4">Quick Links</h4>
@@ -66,6 +71,23 @@ export default function Footer() {
 						</ul>
 					</div>
 
+					{/* Legal Links */}
+					<div>
+						<h4 className="text-lg font-semibold mb-4">Legal</h4>
+						<ul className="space-y-2">
+							{legalLinks.map((link) => (
+								<li key={link.href}>
+									<Link
+										href={link.href}
+										className="text-sm text-muted-foreground hover:text-primary transition-colors"
+									>
+										{link.label}
+									</Link>
+								</li>
+							))}
+						</ul>
+					</div>
+
 					{/* Social Media */}
 					<div>
 						<h4 className="text-lg font-semibold mb-4">Follow Us</h4>
@@ -85,7 +107,7 @@ export default function Footer() {
 					</div>
 
 					{/* Newsletter Subscription */}
-					<div className="md:col-span-1">
+					<div>
 						<h4 className="text-lg font-semibold mb-4">
 							Subscribe to Our Newsletter
 						</h4>
@@ -114,8 +136,18 @@ export default function Footer() {
 				<div className="border-t border-border my-8" />
 
 				{/* Copyright */}
-				<div className="text-center text-sm text-muted-foreground">
+				<div className="flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
+					<div>
 					© {new Date().getFullYear()} Boundless. All rights reserved.
+					</div>
+					<div className="flex space-x-4 mt-2 md:mt-0">
+						<Link href="/legal" className="hover:text-primary transition-colors">
+							Terms & Privacy
+						</Link>
+						<Link href="https://docs.boundlessfi.xyz" className="hover:text-primary transition-colors">
+							Documentation
+						</Link>
+					</div>
 				</div>
 			</div>
 		</footer>

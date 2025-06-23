@@ -5,9 +5,8 @@ import CTA from "@/components/landing/sections/cta";
 import ExploreProjects from "@/components/landing/sections/explore-projects";
 import Hero from "@/components/landing/sections/hero";
 import HowItWorks from "@/components/landing/sections/how-it-works";
-import Testimonials from "@/components/landing/sections/testimonials";
 import UsAndStellar from "@/components/landing/sections/us-and-stellar";
-import React from "react";
+import WhyBoundless from "@/components/landing/sections/testimonials";
 
 export default function LandingPage() {
 	return (
@@ -18,7 +17,7 @@ export default function LandingPage() {
 				<HowItWorks />
 				<ExploreProjects />
 				<UsAndStellar />
-				<Testimonials />
+				<WhyBoundless />
 				<CTA />
 			</main>
 		</div>

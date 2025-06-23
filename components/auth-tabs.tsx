@@ -3,8 +3,8 @@
 import SignInButtons from "@/components/signin-buttons";
 import SignInForm from "@/components/signin-form";
 import { AnimatePresence, type Variants, motion } from "framer-motion";
-import type { BuiltInProviderType } from "next-auth/providers/index";
-import type { ClientSafeProvider, LiteralUnion } from "next-auth/react";
+// import type { BuiltInProviderType } from "next-auth/providers/index";
+// import type { ClientSafeProvider, LiteralUnion } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -48,14 +48,14 @@ const contentVariants: Variants = {
 	},
 };
 
-interface AuthTabsProps {
-	providers: Record<
-		LiteralUnion<BuiltInProviderType, string>,
-		ClientSafeProvider
-	> | null;
-}
+// interface AuthTabsProps {
+// 	providers: Record<
+// 		LiteralUnion<BuiltInProviderType, string>,
+// 		ClientSafeProvider
+// 	> | null;
+// }
 
-export default function AuthTabs({ providers }: AuthTabsProps) {
+export default function AuthTabs() {
 	const [activeTab, setActiveTab] = useState<"signin" | "register">("signin");
 	const { status } = useSession();
 	const router = useRouter();
@@ -155,7 +155,7 @@ export default function AuthTabs({ providers }: AuthTabsProps) {
 							</span>
 						</div>
 					</div>
-					{providers && <SignInButtons providers={providers} />}
+					<SignInButtons />
 					<div className="mt-4 text-center text-primary">
 						<Link href="/auth/forgot-password" className="text-center">
 							Forgot password?
