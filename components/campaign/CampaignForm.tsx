@@ -8,9 +8,10 @@ import { Calendar } from '../ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import format from 'date-fns/format';
 import { cn } from '@/lib/utils';
+import { X } from 'lucide-react';
 
 const InputClass =
-  'appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm';
+  'appearance-none rounded-none capitalize block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm';
 
 const CampaignForm = () => {
   const [fundingGoal, setFundingGoal] = useState('');
@@ -26,7 +27,6 @@ const CampaignForm = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Basic validation
     if (!fundingGoal || fundingGoal.length < 2) {
       toast.error('Funding goal too short');
       setIsLoading(false);
@@ -74,23 +74,35 @@ const CampaignForm = () => {
   const addMilestoneInputs = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    const isTitled = milestones.every((milestone) => Boolean(milestone.title));
-
-    if (!isTitled) {
-      milestones.map((milestone, index) => {
-        console.log({ milestone: !milestone.title });
-        if (!milestone.title) {
-          const updatedErrors = [...errors];
-          updatedErrors[index] = 'Title required';
-          return setErrors(updatedErrors);
+    if (milestones) {
+      milestones.forEach((milestone, index) => {
+        if (milestone.title === '') {
+          setErrors((prev) => {
+            const errorsCopy = [...prev];
+            errorsCopy[index] = 'Title required';
+            return errorsCopy;
+          });
         }
       });
-    } else {
-      setMilestones([...milestones, { title: '', description: '' }]);
-      setErrors([...errors, '']);
-    }
 
-    console.log({ errors, isTitled });
+      const emptyTitleInputs = milestones.some((milestone) => milestone.title === '');
+
+      if (!emptyTitleInputs) {
+        setMilestones((prev) => [...prev, { title: '', description: '' }]);
+        setErrors((prev) => [...prev, '']);
+      }
+    }
+  };
+
+  const handleDeleteMilestoneInput = (index: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    if (milestones.length > 1) {
+      const prevMilestones = [...milestones];
+      const filteredMilestones = prevMilestones.filter((_, idx) => idx !== index);
+      return setMilestones(filteredMilestones);
+    } else {
+      toast.warning('A campaign must have at least 1 milestone');
+    }
   };
 
   return (
@@ -131,6 +143,7 @@ const CampaignForm = () => {
           value={fundingGoal}
           onChange={(e) => setFundingGoal(e.target.value)}
         />
+        {<p className="text-sm text-red-500 py-2">{fundingGoal && fundingGoal.length <= 2 ? 'Text too short' : ''}</p>}
       </div>
       <div className="my-4 ">
         <Popover>
@@ -153,35 +166,47 @@ const CampaignForm = () => {
 
       <div className="space-y-4">
         <h3 className="font-semibold">Milestones</h3>
-        <div className="overflow-y-scroll max-h-[250px] sm:max-h-[300px] pb-6 pr-4">
+        <div className="overflow-y-scroll max-h-[250px] sm:max-h-[300px] pb-6 pt-4 pr-4">
           {' '}
           {milestones.map((milestone, index) => (
-            <div key={index} className="grid gap-2 ">
-              <div className="flex gap-4 flex-col sm:flex-row">
-                <h6 className="self-center font-bold">{index + 1}.</h6>
-                <Input
-                  placeholder="Title"
-                  value={milestone.title}
-                  className={InputClass}
-                  onChange={(e) => {
-                    setMilestones((prev) => {
-                      const updated = [...prev];
-                      updated[index] = { ...updated[index], title: e.target.value };
-                      return updated;
-                    });
+            <div key={index} className="grid gap-2 relative ">
+              <div className="flex gap-4 flex-col sm:flex-row w-full">
+                <div className="flex justify-between items-center">
+                  <h6 className="self-start font-bold">{index + 1}.</h6>
+                  <button
+                    className="bg-white z-30  h-[18px] mmin-w-[18px] place-items-center  border border-primary grid sm:hidden"
+                    onClick={(e) => handleDeleteMilestoneInput(index, e)}
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+                <div className="min-w-[35%] grid">
+                  {' '}
+                  <Input
+                    placeholder="Title"
+                    value={milestone.title}
+                    className={InputClass}
+                    onChange={(e) => {
+                      setMilestones((prev) => {
+                        const updated = [...prev];
+                        updated[index] = { ...updated[index], title: e.target.value };
+                        return updated;
+                      });
 
-                    setErrors((prev) => {
-                      const updatedErrors = [...prev];
-                      updatedErrors[index] = '';
-                      return updatedErrors;
-                    });
-                  }}
-                />
+                      setErrors((prev) => {
+                        const updatedErrors = [...prev];
+                        updatedErrors[index] = '';
+                        return updatedErrors;
+                      });
+                    }}
+                  />
+                  {errors[index] && <p className="text-sm text-red-500 py-2">{errors[index]}</p>}
+                </div>
                 <Textarea
                   draggable={false}
                   placeholder="Description"
                   value={milestone.description}
-                  className={InputClass}
+                  className={cn(InputClass, 'min-w-[45%]')}
                   onChange={(e) =>
                     setMilestones((prev) => {
                       const updated = [...prev];
@@ -190,8 +215,17 @@ const CampaignForm = () => {
                     })
                   }
                 />
+                <div className="w-[10%] self-center">
+                  {' '}
+                  <button
+                    className="bg-white z-30  h-[18px] mmin-w-[18px] place-items-center  border border-primary hidden sm:grid"
+                    onClick={(e) => handleDeleteMilestoneInput(index, e)}
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
               </div>
-              {errors[index] && <p className="text-sm text-red-500 pb-2">{errors[index]}</p>}
+
               <hr className="sm:my-3 my-6" />
             </div>
           ))}

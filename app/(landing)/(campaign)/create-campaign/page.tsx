@@ -46,7 +46,7 @@ const CreateCampaign = () => {
       <div className="max-w-xl w-full space-y-4 bg-white p-8 rounded-lg shadow-lg">
         <div className="flex flex-col items-center">
           <motion.div className="relative overflow-hidden mt-0" layout transition={{ duration: 0.4 }}>
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               <motion.div initial="enter" animate="center" exit="exit" className="w-full">
                 <CampaignForm />
               </motion.div>
