@@ -17,21 +17,17 @@ export default function SignInButtons() {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
-      // TODO: Insert Google Sign-In JS logic here to get the Google ID token
-      // Example: const googleToken = await googleSignInAndGetIdToken();
       const googleToken = '';
       if (!googleToken) {
         alert('Google Sign-In not implemented.');
         return;
       }
-      // Send token to Next.js API route
       const res = await fetch('/api/auth/callback/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: googleToken }),
       });
       const data = await res.json();
-      // Use NextAuth credentials provider to sign in with backend token
       await signIn('credentials', {
         accessToken: data.accessToken,
         callbackUrl: '/dashboard',

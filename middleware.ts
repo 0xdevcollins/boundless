@@ -50,3 +50,7 @@ export const config = {
     "/api/admin/:path*",
   ],
 }
+
+// Optional: Middleware to keep the session alive by updating session expiry on each call
+// Uncomment the following and comment out the above middleware if you want to use the auth middleware directly
+// export { auth as middleware } from "@/auth"

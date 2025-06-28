@@ -22,6 +22,9 @@ function ResetPasswordContent() {
 		}
 	}, [otp, router]);
 
+
+
+
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setError("");
@@ -35,10 +38,10 @@ function ResetPasswordContent() {
 		}
 
 		try {
-			const response = await fetch("/api/auth/reset-password", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ email, password, otp }),
+			const response = await fetch('/api/auth/reset-password', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ token: otp, newPassword: password })
 			});
 
 			if (response.ok) {
