@@ -1,5 +1,5 @@
 export interface BaseProject {
-	id: number;
+	id: string;
 	title: string;
 	progress: number;
 	raised: string;
@@ -17,7 +17,7 @@ export interface TrendingProject extends ProjectWithDays {
 }
 
 export interface CompletedProject {
-	id: number;
+	id: string;
 	title: string;
 	totalRaised: string;
 	contributors: number;

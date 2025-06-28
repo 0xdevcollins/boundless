@@ -170,7 +170,6 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
 				custom={5}
 			/>
 
-			{/* Gradient background */}
 			<div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-background/5 pointer-events-none" />
 
 			<div className="container mx-auto px-4 relative z-10">
@@ -190,7 +189,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
 						animate="visible"
 						variants={subtitleVariants}
 					>
-						The decentralized platform for crowdfunding and grant funding — powered by Stellar and Soroban.
+						The decentralized platform for crowdfunding and grant funding creation — powered by Stellar and Soroban.
 					</motion.p>
 
 					<motion.p
