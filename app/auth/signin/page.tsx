@@ -1,6 +1,5 @@
-
-import AuthTabs from "@/components/auth-tabs";
+import AuthTabs from '@/components/auth-tabs';
 
 export default async function SignIn() {
-	return <AuthTabs  />;
+  return <AuthTabs />;
 }
