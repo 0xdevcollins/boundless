@@ -79,9 +79,9 @@ export default function Dashboard() {
         </p>
 
         <StatsCards analytics={analytics} isLoading={isLoading} />
-        {/* <ActivityOverview /> */}
+        <ActivityOverview />
 
-        {/* <Tabs
+        <Tabs
 					defaultValue="myprojects"
 					className="w-full"
 					onValueChange={setActiveTab}
@@ -131,7 +131,7 @@ export default function Dashboard() {
 							/>
 						</TabsContent>
 					</AnimatePresence>
-				</Tabs> */}
+				</Tabs>
       </div>
     </div>
   );
