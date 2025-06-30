@@ -107,6 +107,7 @@ model Project {
   blockchainTx   String?
   isApproved     Boolean          @default(false)
   ideaValidation ValidationStatus @default(PENDING)
+  publishedAt    DateTime?
   createdAt      DateTime         @default(now())
   pitchDeck      String?
   whitepaper     String?
