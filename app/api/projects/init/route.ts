@@ -1,161 +1,121 @@
-import { notifyProjectCreated } from '@/lib/notifications/project';
-import prisma from '@/lib/prisma';
-import { v2 as cloudinary } from 'cloudinary';
+
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import api from '@/lib/api/api';
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-// Validation schema for project initialization (without File validation)
 const projectInitSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
-  tagline: z.string().min(1, 'Tagline is required').max(120, 'Tagline must be less than 120 characters'),
-  description: z
+  summary: z
     .string()
-    .min(10, 'Description must be at least 10 characters')
-    .max(2000, 'Description must be less than 2000 characters'),
-  fundingGoal: z
-    .number()
-    .min(1, 'Funding goal must be greater than 0')
-    .max(1000000, 'Funding goal must be less than 1,000,000'),
+    .min(10, 'Summary must be at least 10 characters')
+    .max(2000, 'Summary must be less than 2000 characters'),
+  type: z.literal('crowdfund'),
   category: z.string().min(1, 'Category is required'),
-  tags: z.string().optional(), // Will be parsed as JSON string
+  whitepaperUrl: z.string().url().optional(),
+  pitchVideoUrl: z.string().url().optional(),
 });
-
-// Helper function to upload to Cloudinary
-async function uploadToCloudinary(file: File) {
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
-  return new Promise<{ secure_url: string }>((resolve, reject) => {
-    cloudinary.uploader
-      .upload_stream(
-        {
-          resource_type: 'auto',
-          folder: 'boundless/projects',
-        },
-        (error, result) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve({ secure_url: result!.secure_url });
-          }
-        },
-      )
-      .end(buffer);
-  });
-}
 
 export async function POST(request: Request) {
   const session = await auth();
-
-  if (!session || !session.user?.id) {
+  console.log('Session:', JSON.stringify(session, null, 2));
+  console.log('Access Token:', session?.user?.accessToken || 'Missing');
+  
+  if (!session || !session.user?.email || !session.user?.accessToken) {
+    console.log('No session or user email/token found');
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const formData = await request.formData();
+    const body = await request.json();
+    console.log('Received JSON body:', body);
 
-    // Extract form data
-    const title = formData.get('title') as string;
-    const tagline = formData.get('tagline') as string;
-    const description = formData.get('description') as string;
-    const fundingGoal = Number(formData.get('fundingGoal'));
-    const category = formData.get('category') as string;
-    const banner = formData.get('banner') as File | null;
-    const logo = formData.get('logo') as File | null;
-    const whitepaper = formData.get('whitepaper') as File | null;
-    const tagsRaw = formData.get('tags') as string | null;
-    let tags: string[] = [];
-    if (tagsRaw) {
-      try {
-        tags = JSON.parse(tagsRaw);
-      } catch {}
-    }
+    const { title, summary, category, whitepaperUrl, pitchVideoUrl } = body;
 
-    // Validate required fields
+    console.log('Extracted data:', { title, summary, category, whitepaperUrl, pitchVideoUrl });
+
     const validationResult = projectInitSchema.safeParse({
       title,
-      tagline,
-      description,
-      fundingGoal,
+      summary,
+      type: 'crowdfund',
       category,
-      tags: tagsRaw,
+      whitepaperUrl,
+      pitchVideoUrl,
     });
 
     if (!validationResult.success) {
-      return NextResponse.json({ error: 'Validation failed', details: validationResult.error.errors }, { status: 400 });
+      console.log('Validation failed:', validationResult.error.errors);
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Validation failed',
+          details: validationResult.error.errors,
+        },
+        { status: 400 },
+      );
     }
 
-    // Validate file uploads
-    if (!banner) {
-      return NextResponse.json({ error: 'Banner image is required' }, { status: 400 });
-    }
+    const payload = {
+      title: validationResult.data.title,
+      summary: validationResult.data.summary,
+      type: validationResult.data.type,
+      category: validationResult.data.category,
+      ...(validationResult.data.whitepaperUrl && { whitepaperUrl: validationResult.data.whitepaperUrl }),
+      ...(validationResult.data.pitchVideoUrl && { pitchVideoUrl: validationResult.data.pitchVideoUrl }),
+    };
 
-    if (!logo) {
-      return NextResponse.json({ error: 'Logo image is required' }, { status: 400 });
-    }
+    console.log('Sending to backend:', payload);
 
-    // Upload images to Cloudinary
-    let bannerUrl: string;
-    let logoUrl: string;
-    let whitepaperUrl: string | null = null;
-
-    try {
-      const [bannerResult, logoResult] = await Promise.all([uploadToCloudinary(banner), uploadToCloudinary(logo)]);
-
-      bannerUrl = bannerResult.secure_url;
-      logoUrl = logoResult.secure_url;
-
-      if (whitepaper) {
-        const whitepaperResult = await uploadToCloudinary(whitepaper);
-        whitepaperUrl = whitepaperResult.secure_url;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${session.user.accessToken}`
       }
-    } catch (uploadError) {
-      console.error('File upload error:', uploadError);
-      return NextResponse.json({ error: 'Failed to upload files' }, { status: 500 });
-    }
+    };
 
-    // Create project with initialization status
-    const project = await prisma.project.create({
-      data: {
-        userId: session.user.id,
-        title,
-        tagline,
-        description,
-        fundingGoal,
-        category,
-        bannerUrl,
-        profileUrl: logoUrl, // Using profileUrl field for logo
-        whitepaperUrl,
-        tags,
-        isApproved: false, // Requires admin approval
-        ideaValidation: 'PENDING', // Pending community validation
-      },
-    });
+    const response = await api.post('/projects', payload, config);
 
-    // Create notification for project creator
-    await notifyProjectCreated({
-      projectId: project.id,
-      projectTitle: title,
-      userId: session.user.id,
-    });
+    console.log('Backend response:', response);
 
+    // Type the response properly
+    const responseData = response as { data: Record<string, unknown> };
     return NextResponse.json(
       {
         success: true,
-        project,
-        message: 'Project initialized successfully and submitted for admin review',
+        ...responseData.data,
       },
       { status: 201 },
     );
   } catch (error) {
     console.error('Project initialization error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+
+    // Handle API client errors
+    if (error && typeof error === 'object' && 'response' in error) {
+      const apiError = error as { response?: { status?: number; data?: { message?: string } } };
+      if (apiError.response?.status === 401) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Unauthorized - Please check your authentication',
+          },
+          { status: 401 },
+        );
+      }
+
+      return NextResponse.json(
+        {
+          success: false,
+          error: apiError.response?.data?.message || 'Failed to create project',
+        },
+        { status: apiError.response?.status || 500 },
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Internal Server Error',
+      },
+      { status: 500 },
+    );
   }
 }
