@@ -337,6 +337,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { initProject } from '@/lib/api/project';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -408,6 +409,7 @@ export default function ProjectInitPage() {
   };
 
   const onSubmit = async (data: ProjectInitFormValues) => {
+    
     console.log('Form submission started', data);
 
     try {
@@ -425,25 +427,16 @@ export default function ProjectInitPage() {
 
       console.log('Making API request with payload:', payload);
 
-      const response = await fetch('/api/projects', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await initProject(payload);
 
-      console.log('Response status:', response.status);
+      console.log('Response status:', response);
 
-      const responseData = await response.json();
-      console.log('Response data:', responseData);
-
-      if (!response.ok) {
-        throw new Error(responseData.message || responseData.error || 'Failed to create project idea');
+      if (!response) {
+        throw new Error('Failed to create project idea');
       }
 
       toast.success('Project idea created successfully!', {
-        description: responseData.message || 'Your project idea has been created and is now open for voting.',
+          description: 'Your project idea has been created and is now open for voting.',
       });
 
       localStorage.removeItem('project-idea-draft');
@@ -544,7 +537,7 @@ export default function ProjectInitPage() {
                   />
                 </FormControl>
                 <FormDescription>
-                  Link to your project's whitepaper or detailed documentation
+                  Link to your project&apos;s whitepaper or detailed documentation
                 </FormDescription>
                 <FormMessage />
               </FormItem>
