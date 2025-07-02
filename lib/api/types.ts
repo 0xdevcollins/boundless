@@ -219,3 +219,21 @@ export interface DashboardOverviewResponse {
   suggestedActions: SuggestedAction[];
   platformMetrics: PlatformMetrics;
 }
+
+
+export interface ProjectInitRequest {
+  title: string;
+  summary: string;
+  type:"crowdfund" | "grant";
+  category: string;
+  whitepaperUrl?: string;
+  pitchVideoUrl?: string;
+}
+
+export interface ProjectInitResponse {
+  message: string;
+  data: {
+    projectId: string;
+  };
+  [key: string]: unknown;
+}
