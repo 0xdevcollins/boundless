@@ -62,6 +62,7 @@ type Project = {
   whitepaper: string | null;
   ideaValidation: ValidationStatus;
   createdAt: string;
+  isApproved: boolean;
   user: {
     id: string;
     name: string | null;
@@ -84,8 +85,6 @@ type Project = {
     votes: number;
     teamMembers: number;
   };
-  isApproved: boolean;
-  publishedAt: string | null;
 };
 
 export function ProjectViewerPage({ id }: { id: string }) {
@@ -126,10 +125,10 @@ export function ProjectViewerPage({ id }: { id: string }) {
     fetchProject();
   }, [id, router]);
 
-  // Countdown logic
-  const startCountdown = useCallback((publishedAt: string) => {
+  // Countdown logic - use createdAt + 30 days as fallback since we don't have publishedAt
+  const startCountdown = useCallback((publishedDate: string) => {
     if (countdownInterval.current) clearInterval(countdownInterval.current);
-    const deadline = new Date(publishedAt);
+    const deadline = new Date(publishedDate);
     deadline.setDate(deadline.getDate() + 30);
     const updateCountdown = () => {
       const now = new Date();
@@ -150,8 +149,9 @@ export function ProjectViewerPage({ id }: { id: string }) {
   }, []);
 
   useEffect(() => {
-    if (project && project.isApproved && project.publishedAt) {
-      startCountdown(project.publishedAt);
+    if (project && project.isApproved) {
+      // Use createdAt as fallback since we don't have publishedAt from external API
+      startCountdown(project.createdAt);
     }
     return () => {
       if (countdownInterval.current) clearInterval(countdownInterval.current);
@@ -170,7 +170,8 @@ export function ProjectViewerPage({ id }: { id: string }) {
         throw new Error(data.error || 'Failed to publish campaign');
       }
       const data = await res.json();
-      setProject((prev) => prev && { ...prev, ...data.project });
+      // Update the project with the response from external API
+      setProject((prev) => prev && { ...prev, isApproved: true });
       toast.success('Campaign published! Now accepting funds.');
       setShowPublishModal(false);
     } catch (err: any) {
@@ -560,7 +561,7 @@ export function ProjectViewerPage({ id }: { id: string }) {
       </Dialog>
 
       {/* Countdown Timer (if published) */}
-      {project.isApproved && project.publishedAt && (
+      {project.isApproved && (
         <div className="container px-4 mt-4">
           <Card className="bg-primary/10 border-primary">
             <CardContent className="py-4 flex items-center justify-between">

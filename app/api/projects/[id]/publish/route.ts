@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import prisma from '@/lib/prisma';
+
+const API_BASE_URL = 'http://api.boundlessfi.xyz';
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -12,59 +13,31 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const { id } = await params;
     const projectId = id;
 
-    // Check if project exists and user has access
-    const project = await prisma.project.findUnique({
-      where: {
-        id: projectId,
-        userId: session.user.id,
+    // Cast session to access the accessToken property
+    const userSession = session as any;
+
+    // Call the external API to publish the campaign
+    const response = await fetch(`${API_BASE_URL}/campaigns/${projectId}/publish`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userSession.user.accessToken}`,
       },
     });
 
-    if (!project) {
-      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return NextResponse.json(
+        { error: errorData.message || 'Failed to publish campaign' },
+        { status: response.status },
+      );
     }
 
-    // Check if project is validated
-    if (project.ideaValidation !== 'VALIDATED') {
-      return NextResponse.json({ error: 'Project must be validated before publishing' }, { status: 400 });
-    }
-
-    // Check if project is already published
-    if (project.isApproved) {
-      return NextResponse.json({ error: 'Project is already published' }, { status: 400 });
-    }
-
-    // Update project to published status
-    const updatedProject = await prisma.project.update({
-      where: {
-        id: projectId,
-      },
-      data: {
-        isApproved: true,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
-    });
-
-    // Create notification for project creator
-    await prisma.notification.create({
-      data: {
-        userId: session.user.id,
-        title: 'Campaign Published Successfully',
-        description: `Your campaign "${project.title}" has been published and is now live for funding.`,
-      },
-    });
+    const data = await response.json();
 
     return NextResponse.json({
       success: true,
-      project: updatedProject,
+      project: data,
       message: 'Campaign published successfully',
     });
   } catch (error) {
