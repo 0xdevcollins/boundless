@@ -148,10 +148,16 @@ model Vote {
   projectId String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+  type      VoteType @default(UPVOTE)
 
   @@unique([projectId, userId])
   @@index([projectId])
   @@index([userId])
+}
+
+enum VoteType {
+  UPVOTE
+  DOWNVOTE
 }
 
 enum Role {

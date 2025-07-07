@@ -18,52 +18,61 @@ type ProjectWithRelations = Project & {
 
 // Only use the request parameter and extract the ID from the URL
 export async function GET(request: Request) {
-	try {
-		// Extract the ID from the URL path
-		const url = new URL(request.url);
-		const pathParts = url.pathname.split("/");
-		const id = pathParts[pathParts.length - 1]; // Get the last segment of the path
+  try {
+	// Extract the ID from the URL path
+	const url = new URL(request.url);
+	const pathParts = url.pathname.split("/");
+	const id = pathParts[pathParts.length - 1]; // Get the last segment of the path
 
-		const project = (await prisma.project.findUnique({
-			where: { id },
-			include: {
-				user: {
-					select: {
-						id: true,
-						name: true,
-						image: true,
-					},
-				},
-				votes: true,
-				teamMembers: true,
-				_count: {
-					select: {
-						votes: true,
-					},
-				},
-			},
-		})) as ProjectWithRelations | null;
+	const project = (await prisma.project.findUnique({
+	  where: { id },
+	  include: {
+		user: {
+		  select: {
+			id: true,
+			name: true,
+			image: true,
+		  },
+		},
+		votes: true,
+		teamMembers: true,
+		_count: {
+		  select: {
+			votes: true,
+		  },
+		},
+	  },
+	})) as ProjectWithRelations | null;
 
-		if (!project) {
-			return NextResponse.json({ error: "Project not found" }, { status: 404 });
-		}
-
-		// Calculate team members count manually
-		const teamMembersCount = project.teamMembers.length;
-
-		// Return the project with the manually calculated team members count
-		return NextResponse.json({
-			...project,
-			_count: {
-				...project._count,
-				teamMembers: teamMembersCount,
-			},
-		});
-	} catch (error) {
-		console.error("Error fetching project:", error);
-		return NextResponse.json(
-			{ error: "Internal Server Error" },
-			{ status: 500 },
-		);
+	if (!project) {
+	  return NextResponse.json({ error: "Project not found" }, { status: 404 });
 	}
+
+	// Calculate upvotes, downvotes, and vote percentage
+	const upvotes = project.votes.filter((v) => v.type === 'UPVOTE').length;
+	const downvotes = project.votes.filter((v) => v.type === 'DOWNVOTE').length;
+	const totalVotes = upvotes + downvotes;
+	const votePercentage = totalVotes > 0 ? Math.round((upvotes / totalVotes) * 100) : 0;
+
+	// Calculate team members count manually
+	const teamMembersCount = project.teamMembers.length;
+
+	// Return the project with the manually calculated team members count and voting info
+	return NextResponse.json({
+	  ...project,
+	  _count: {
+		...project._count,
+		teamMembers: teamMembersCount,
+	  },
+	  upvotes,
+	  downvotes,
+	  votePercentage,
+	});
+  } catch (error) {
+	console.error("Error fetching project:", error);
+	return NextResponse.json(
+	  { error: "Internal Server Error" },
+	  { status: 500 },
+	);
+  }
 }

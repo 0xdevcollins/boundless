@@ -1,3 +1,49 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth.config";
+export async function POST(request: Request) {
+  try {
+	const url = new URL(request.url);
+	const pathParts = url.pathname.split("/");
+	const projectId = pathParts[pathParts.length - 2];
+	const session = await getServerSession(authOptions);
+
+	if (!session || !session.user || !session.user.id) {
+	  return NextResponse.json(
+		{ error: "You must be logged in to comment" },
+		{ status: 401 },
+	  );
+	}
+
+	const userId = session.user.id;
+	const { content, parentId } = await request.json();
+	if (!content || typeof content !== "string" || content.trim().length === 0) {
+	  return NextResponse.json({ error: "Comment content is required" }, { status: 400 });
+	}
+
+	// Create the comment
+	const comment = await prisma.comment.create({
+	  data: {
+		content: content.trim(),
+		project: { connect: { id: projectId } },
+		user: { connect: { id: userId } },
+		parent: parentId ? { connect: { id: parentId } } : undefined,
+	  },
+	  include: {
+		user: { select: { id: true, name: true, image: true } },
+		reactions: true,
+		_count: { select: { reactions: true, replies: true } },
+	  },
+	});
+
+	return NextResponse.json(comment);
+  } catch (error) {
+	console.error("Error posting comment:", error);
+	return NextResponse.json(
+	  { error: "Failed to post comment" },
+	  { status: 500 },
+	);
+  }
+}
 import prisma from "@/lib/prisma";
 import { type NextRequest, NextResponse } from "next/server";
 
