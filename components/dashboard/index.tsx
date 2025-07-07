@@ -26,7 +26,9 @@ function mapCampaignToProjectWithDays(c: UserCampaign): ProjectWithDays {
     goal: `$${c.fundingGoal?.toLocaleString() ?? '0'}`,
     category: 'General', // Not in API, fallback
     href: `/projects/${c.id}`,
-    daysLeft: c.nextMilestoneDue ? Math.max(0, Math.ceil((new Date(c.nextMilestoneDue).getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0,
+    daysLeft: c.nextMilestoneDue
+      ? Math.max(0, Math.ceil((new Date(c.nextMilestoneDue).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+      : 0,
   };
 }
 
