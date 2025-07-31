@@ -6,6 +6,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-stepper-text-inactive: var(--stepper-text-inactive);
+  --color-stepper-foreground: var(--stepper-foreground);
+  --color-stepper-border-active: var(--stepper-border-active);
+  --color-stepper-border: var(--stepper-border);
+  --color-placeholder: var(--placeholder);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -51,7 +56,7 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: #a7f950;
+  --primary: oklch(0.95 0.24 125);
   --primary-foreground: #020502;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -69,6 +74,11 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
+  --stepper-foreground: oklch(0.2046 0 0);
+  --stepper-border: oklch(0.2264 0 0);
+  --stepper-border-active: oklch(0.3501 0.0381 190.35);
+  --stepper-text-inactive: oklch(0.7731 0 0);
+  --placeholder: oklch(0.6567 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
