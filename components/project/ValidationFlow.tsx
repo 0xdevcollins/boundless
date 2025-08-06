@@ -5,13 +5,21 @@ import { Project } from '@/types/project';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { ThumbsUp, MessageCircle, X, Clock } from 'lucide-react';
+import {
+  ThumbsUp,
+  MessageCircle,
+  Clock,
+  ChevronDown,
+  ChevronUp,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import TimelineStepper from './TimelineStepper';
+import BoundlessSheet from '../sheet/boundless-sheet';
 
 interface ValidationFlowProps {
   project: Project;
-  onClose?: () => void;
+  open: boolean;
+  setOpen: (open: boolean) => void;
   onVote?: (projectId: string) => void;
   onComment?: (projectId: string, comment: string) => void;
   onReact?: (commentId: string, reaction: string) => void;
@@ -19,7 +27,8 @@ interface ValidationFlowProps {
 
 const ValidationFlow: React.FC<ValidationFlowProps> = ({
   project,
-  onClose,
+  open,
+  setOpen,
   onVote,
 }) => {
   const [voteCount, setVoteCount] = useState(12);
@@ -64,33 +73,46 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({
     onVote?.(project.id);
   };
 
-  return (
-    <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4'>
-      <div className='bg-[#101010] rounded-lg shadow-2xl w-full max-w-6xl h-[85vh] flex relative'>
-        {/* Close Button - Outside the main content */}
-        <Button
-          variant='ghost'
-          size='icon'
-          onClick={onClose}
-          className='absolute -top-12 right-0 z-10'
-          style={{
-            width: '48px',
-            height: '48px',
-            gap: '10px',
-            opacity: 1,
-            borderWidth: '0.5px',
-            padding: '10px',
-            borderRadius: '999px',
-            background: '#FFFFFF',
-            border: '0.5px solid #FFFFFF4D',
-            backdropFilter: 'blur(98px)',
-          }}
-        >
-          <X className='w-8 h-8 text-black' />
-        </Button>
+  const [expandedMilestones, setExpandedMilestones] = useState<number[]>([]);
 
+  const toggleMilestone = (milestoneIndex: number) => {
+    setExpandedMilestones(prev =>
+      prev.includes(milestoneIndex)
+        ? prev.filter(i => i !== milestoneIndex)
+        : [...prev, milestoneIndex]
+    );
+  };
+
+  const milestones = [
+    {
+      title: 'Milestone 1',
+      name: 'Prototype & Smart Contract Setup',
+      content: 'Example',
+    },
+    {
+      title: 'Milestone 2',
+      name: 'Campaign & Grant Builder Integration',
+      content: 'Example',
+    },
+    {
+      title: 'Milestone 3',
+      name: 'Platform Launch & Community Building',
+      content: 'Example',
+    },
+  ];
+
+  return (
+    <BoundlessSheet
+      open={open}
+      setOpen={setOpen}
+      title='Project Validation'
+      side='bottom'
+      maxHeight='90vh'
+      minHeight='600px'
+    >
+      <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
         {/* Left Panel - Project Submission Flow */}
-        <div className='w-80 bg-[#0A0A0A] p-6 border-r border-[#2A2A2A] rounded-l-lg'>
+        <div className='lg:col-span-1 bg-[#0A0A0A] p-6 border border-[#2A2A2A] rounded-lg'>
           <div className='space-y-6'>
             {/* Step 1: Initialize */}
             <div className='flex items-start space-x-4'>
@@ -168,9 +190,9 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({
         </div>
 
         {/* Right Panel - Project Details */}
-        <div className='flex-1 p-6 overflow-y-auto rounded-r-lg'>
+        <div className='lg:col-span-2 space-y-6'>
           {/* Header */}
-          <div className='flex justify-between items-start mb-6'>
+          <div className='flex justify-between items-start'>
             <div className='flex items-center space-x-4'>
               <div className='w-12 h-12 bg-[#2A2A2A] rounded-full flex items-center justify-center'>
                 <svg
@@ -204,7 +226,7 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({
           </div>
 
           {/* Funding Goal */}
-          <div className='mb-6'>
+          <div>
             <h2 className='text-3xl font-bold mb-2'>
               <span className='text-[#F5F5F5]'>
                 ${project.amount.toLocaleString()}
@@ -214,21 +236,22 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({
           </div>
 
           {/* Project Description */}
-          <div className='mb-8'>
+          <div>
             <p className='text-[#F5F5F5] text-base leading-relaxed'>
               {project.description}
             </p>
           </div>
 
           {/* Boundless Logo */}
-          <div className='mb-8'>
+          <div>
             <img
               src='/BOUNDLESS.png'
               alt='Boundless Logo'
               className='mx-auto rounded-xl'
               style={{
-                width: '500px',
-                height: '242px',
+                width: '100%',
+                maxWidth: '500px',
+                height: 'auto',
                 opacity: 1,
                 borderRadius: '12px',
               }}
@@ -236,7 +259,7 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({
           </div>
 
           {/* Vote Display */}
-          <div className='mb-8'>
+          <div>
             <div className='flex justify-between items-center mb-3'>
               <h3 className='text-[#F5F5F5] font-medium'>Vote count</h3>
               <span className='text-[#F5F5F5] text-sm'>
@@ -277,108 +300,46 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({
             </div>
           </div>
 
-          {/* Milestones */}
-          <div className='mb-8'>
+          {/* Expandable Milestones */}
+          <div>
             <h3 className='text-[#F5F5F5] mb-4 text-base font-semibold'>
               Milestones
             </h3>
 
             <div className='space-y-3'>
-              <div>
-                <h4 className='text-[#F5F5F5] mb-2 text-xs font-medium'>
-                  Milestone 1
-                </h4>
-                <button
-                  className='w-full flex items-center justify-between bg-[#2A2A2A] border border-[#2B2B2B] rounded-xl text-[#F5F5F5] hover:bg-[#2A2A2A]/80 transition-colors'
-                  style={{
-                    height: '48px',
-                    gap: '12px',
-                    opacity: 1,
-                    borderWidth: '1px',
-                    padding: '16px',
-                    borderRadius: '12px',
-                  }}
+              {milestones.map((milestone, index) => (
+                <div
+                  key={index}
+                  className='border border-[#2B2B2B] rounded-xl overflow-hidden'
                 >
-                  <span>Prototype & Smart Contract Setup</span>
-                  <svg
-                    className='w-4 h-4'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
+                  <button
+                    onClick={() => toggleMilestone(index)}
+                    className='w-full flex items-center justify-between bg-[#2A2A2A] text-[#F5F5F5] hover:bg-[#2A2A2A]/80 transition-colors p-4'
                   >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M19 9l-7 7-7-7'
-                    />
-                  </svg>
-                </button>
-              </div>
+                    <div className='text-left'>
+                      <h4 className='text-xs font-medium text-[#B5B5B5] mb-1'>
+                        {milestone.title}
+                      </h4>
+                      <span className='text-sm font-medium'>
+                        {milestone.name}
+                      </span>
+                    </div>
+                    {expandedMilestones.includes(index) ? (
+                      <ChevronUp className='w-4 h-4' />
+                    ) : (
+                      <ChevronDown className='w-4 h-4' />
+                    )}
+                  </button>
 
-              <div>
-                <h4 className='text-[#F5F5F5] mb-2 text-xs font-medium'>
-                  Milestone 2
-                </h4>
-                <button
-                  className='w-full flex items-center justify-between bg-[#2A2A2A] border border-[#2B2B2B] rounded-xl text-[#F5F5F5] hover:bg-[#2A2A2A]/80 transition-colors'
-                  style={{
-                    height: '48px',
-                    gap: '12px',
-                    opacity: 1,
-                    borderWidth: '1px',
-                    padding: '16px',
-                    borderRadius: '12px',
-                  }}
-                >
-                  <span>Campaign & Grant Builder Integration</span>
-                  <svg
-                    className='w-4 h-4'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M19 9l-7 7-7-7'
-                    />
-                  </svg>
-                </button>
-              </div>
-
-              <div>
-                <h4 className='text-[#F5F5F5] mb-2 text-xs font-medium'>
-                  Milestone 2
-                </h4>
-                <button
-                  className='w-full flex items-center justify-between bg-[#2A2A2A] border border-[#2B2B2B] rounded-xl text-[#F5F5F5] hover:bg-[#2A2A2A]/80 transition-colors'
-                  style={{
-                    height: '48px',
-                    gap: '12px',
-                    opacity: 1,
-                    borderWidth: '1px',
-                    padding: '16px',
-                    borderRadius: '12px',
-                  }}
-                >
-                  <span>Campaign & Grant Builder Integration</span>
-                  <svg
-                    className='w-4 h-4'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M19 9l-7 7-7-7'
-                    />
-                  </svg>
-                </button>
-              </div>
+                  {expandedMilestones.includes(index) && (
+                    <div className='bg-[#1A1A1A] p-4 border-t border-[#2B2B2B]'>
+                      <p className='text-[#B5B5B5] text-sm'>
+                        {milestone.content}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
 
@@ -389,7 +350,7 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </BoundlessSheet>
   );
 };
 
