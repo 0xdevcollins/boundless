@@ -48,6 +48,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 }) => {
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
+      case 'pending':
+        return 'bg-[#865503] text-[#FEF6E7]';
       case 'under_review':
         return 'bg-[#865503] text-[#FEF6E7]';
       case 'approved':
@@ -84,12 +86,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
   const getVoteData = (status: string) => {
     switch (status.toLowerCase()) {
+      case 'pending':
+        return { current: 0, total: 100, showProgress: false };
       case 'under_review':
-        return { current: 100, total: 100, showProgress: false };
+        return { current: 0, total: 100, showProgress: false };
       case 'approved':
         return { current: 12, total: 100, showProgress: true };
       case 'rejected':
-        return { current: 100, total: 100, showProgress: false };
+        return { current: 0, total: 100, showProgress: false };
       case 'validated':
         return { current: 100, total: 100, showProgress: false };
       case 'failed':
@@ -101,10 +105,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
   const getActionCounts = (status: string) => {
     switch (status.toLowerCase()) {
+      case 'pending':
+        return { votes: 0, comments: 0, shares: 0 };
       case 'under_review':
         return { votes: 0, comments: 0, shares: 0 };
       case 'approved':
-        return { votes: 12, comments: 12, shares: 4 };
+        return { votes: 12, comments: 4, shares: 4 };
       case 'rejected':
         return { votes: 0, comments: 0, shares: 0 };
       case 'validated':
