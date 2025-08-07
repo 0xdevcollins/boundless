@@ -11,6 +11,8 @@ import {
   Clock,
   ChevronDown,
   ChevronUp,
+  Calendar,
+  Coins,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import TimelineStepper from './TimelineStepper';
@@ -87,17 +89,23 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({
     {
       title: 'Milestone 1',
       name: 'Prototype & Smart Contract Setup',
-      content: 'Example',
+      description: 'Develop a functional UI prototype for the crowdfunding and grant flow. Simultaneously, implement and test Soroban smart contracts for escrow logic, milestone validation, and secure fund handling.',
+      date: 'October 10, 2025',
+      amount: '$29,000.00'
     },
     {
       title: 'Milestone 2',
       name: 'Campaign & Grant Builder Integration',
-      content: 'Example',
+      description: 'Integrate campaign creation tools and grant builder functionality into the platform with advanced features and user management.',
+      date: 'November 15, 2025',
+      amount: '$45,000.00'
     },
     {
       title: 'Milestone 3',
       name: 'Platform Launch & Community Building',
-      content: 'Example',
+      description: 'Launch the platform to the public and build a strong community of users and contributors with marketing and partnership initiatives.',
+      date: 'December 20, 2025',
+      amount: '$49,000.00'
     },
   ];
 
@@ -333,9 +341,19 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({
 
                   {expandedMilestones.includes(index) && (
                     <div className='bg-[#1A1A1A] p-4 border-t border-[#2B2B2B]'>
-                      <p className='text-[#B5B5B5] text-sm'>
-                        {milestone.content}
+                      <p className='text-[#B5B5B5] text-sm mb-4'>
+                        {milestone.description}
                       </p>
+                      <div className='flex items-center justify-between text-[#B5B5B5] text-sm'>
+                        <div className='flex items-center space-x-2'>
+                          <Calendar className='w-4 h-4' />
+                          <span>{milestone.date}</span>
+                        </div>
+                        <div className='flex items-center space-x-2'>
+                          <Coins className='w-4 h-4' />
+                          <span>{milestone.amount}</span>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
