@@ -1,8 +1,7 @@
 'use client';
 
-import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -12,46 +11,46 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Loader2, LogOut, User, Mail, Shield } from 'lucide-react';
+import { LogOut, User, Mail, Shield, Rocket } from 'lucide-react';
+import LaunchCampaignFlow from '@/components/project/LaunchCampaignFlow';
+import BoundlessSheet from '@/components/sheet/boundless-sheet';
 
 export default function DashboardPage() {
-  const { data: session, status } = useSession();
   const router = useRouter();
+  const [showLaunchFlow, setShowLaunchFlow] = useState(false);
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/signin');
-    }
-  }, [status, router]);
-
-  const handleSignOut = async () => {
-    await signOut({ callbackUrl: '/' });
+  // Mock user data
+  const mockUser = {
+    name: 'Test User',
+    email: 'test@example.com',
+    image: 'https://github.com/shadcn.png',
+    id: 'mock-user-id',
+    role: 'USER',
   };
 
-  if (status === 'loading') {
-    return (
-      <div className='min-h-screen flex items-center justify-center'>
-        <div className='flex items-center space-x-2'>
-          <Loader2 className='h-6 w-6 animate-spin' />
-          <span>Loading...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (!session) {
-    return null;
-  }
+  const handleSignOut = async () => {
+    // Mock sign out
+    router.push('/');
+  };
 
   return (
     <div className='min-h-screen bg-gray-50 py-8'>
       <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='flex justify-between items-center mb-8'>
           <h1 className='text-3xl font-bold text-gray-900'>Dashboard</h1>
-          <Button onClick={handleSignOut} variant='outline'>
-            <LogOut className='mr-2 h-4 w-4' />
-            Sign Out
-          </Button>
+          <div className='flex space-x-4'>
+            <Button
+              onClick={() => setShowLaunchFlow(true)}
+              className='bg-green-600 hover:bg-green-700'
+            >
+              <Rocket className='mr-2 h-4 w-4' />
+              Test Launch Campaign
+            </Button>
+            <Button onClick={handleSignOut} variant='outline'>
+              <LogOut className='mr-2 h-4 w-4' />
+              Sign Out
+            </Button>
+          </div>
         </div>
 
         <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
@@ -65,17 +64,14 @@ export default function DashboardPage() {
             <CardContent>
               <div className='flex items-center space-x-4'>
                 <Avatar className='h-12 w-12'>
-                  <AvatarImage src={session.user.image || ''} />
+                  <AvatarImage src={mockUser.image || ''} />
                   <AvatarFallback>
-                    {session.user.name?.charAt(0) ||
-                      session.user.email.charAt(0)}
+                    {mockUser.name?.charAt(0) || mockUser.email.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className='font-medium'>
-                    {session.user.name || 'No name'}
-                  </p>
-                  <p className='text-sm text-gray-500'>{session.user.email}</p>
+                  <p className='font-medium'>{mockUser.name || 'No name'}</p>
+                  <p className='text-sm text-gray-500'>{mockUser.email}</p>
                 </div>
               </div>
             </CardContent>
@@ -91,11 +87,11 @@ export default function DashboardPage() {
             <CardContent className='space-y-2'>
               <div className='flex justify-between'>
                 <span className='text-sm text-gray-500'>User ID:</span>
-                <span className='text-sm font-mono'>{session.user.id}</span>
+                <span className='text-sm font-mono'>{mockUser.id}</span>
               </div>
               <div className='flex justify-between'>
                 <span className='text-sm text-gray-500'>Email:</span>
-                <span className='text-sm'>{session.user.email}</span>
+                <span className='text-sm'>{mockUser.email}</span>
               </div>
             </CardContent>
           </Card>
@@ -112,7 +108,7 @@ export default function DashboardPage() {
                 <div className='flex justify-between'>
                   <span className='text-sm text-gray-500'>Role:</span>
                   <span className='text-sm font-medium capitalize'>
-                    {session.user.role}
+                    {mockUser.role}
                   </span>
                 </div>
                 <div className='flex justify-between'>
@@ -142,6 +138,19 @@ export default function DashboardPage() {
           </Card>
         </div>
       </div>
+
+      {/* Launch Campaign Flow Modal */}
+      <BoundlessSheet
+        open={showLaunchFlow}
+        setOpen={setShowLaunchFlow}
+        contentClassName='h-full'
+      >
+        <LaunchCampaignFlow
+          projectId='test-project-123'
+          onBack={() => setShowLaunchFlow(false)}
+          onComplete={() => setShowLaunchFlow(false)}
+        />
+      </BoundlessSheet>
     </div>
   );
 }

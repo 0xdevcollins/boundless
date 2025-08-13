@@ -2,12 +2,12 @@
 import { PriceDisplay } from '@/components/PriceDisplay';
 import EmptyState from '@/components/EmptyState';
 import { BoundlessButton } from '@/components/buttons';
-import { Coins, History, Plus } from 'lucide-react';
+import { Coins, History, Plus, Rocket } from 'lucide-react';
 import Card from '@/components/card';
 import RecentProjects from '@/components/overview/RecentProjects';
 import RecentContributions from '@/components/overview/ReecntContributions';
 import GrantHistory from '@/components/overview/GrantHistory';
-import { AuthNav } from '@/components/auth/AuthNav';
+// import { AuthNav } from '@/components/auth/AuthNav';
 import { motion } from 'framer-motion';
 import {
   fadeInUp,
@@ -16,8 +16,13 @@ import {
   slideInFromRight,
 } from '@/lib/motion';
 import PageTransition from '@/components/PageTransition';
+import { useState } from 'react';
+import LaunchCampaignFlow from '@/components/project/LaunchCampaignFlow';
+import BoundlessSheet from '@/components/sheet/boundless-sheet';
 
 export default function Home() {
+  const [showLaunchFlow, setShowLaunchFlow] = useState(false);
+
   return (
     <PageTransition>
       <motion.div
@@ -31,7 +36,16 @@ export default function Home() {
           variants={slideInFromLeft}
         >
           <h1 className='text-2xl font-bold text-white'>Boundless Project</h1>
-          <AuthNav />
+          {/* Temporarily removed AuthNav */}
+          <div className='flex space-x-4'>
+            <BoundlessButton
+              onClick={() => setShowLaunchFlow(true)}
+              className='bg-green-600 hover:bg-green-700'
+            >
+              <Rocket className='mr-2 h-4 w-4' />
+              Test Launch Campaign
+            </BoundlessButton>
+          </div>
         </motion.header>
         <motion.main
           className='flex flex-col gap-[32px] items-center sm:items-start'
@@ -124,6 +138,19 @@ export default function Home() {
             </motion.div>
           </motion.div>
         </motion.main>
+
+        {/* Launch Campaign Flow Modal */}
+        <BoundlessSheet
+          open={showLaunchFlow}
+          setOpen={setShowLaunchFlow}
+          contentClassName='h-full'
+        >
+          <LaunchCampaignFlow
+            projectId='test-project-123'
+            onBack={() => setShowLaunchFlow(false)}
+            onComplete={() => setShowLaunchFlow(false)}
+          />
+        </BoundlessSheet>
       </motion.div>
     </PageTransition>
   );

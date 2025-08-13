@@ -2,8 +2,14 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
 import { useAuthStore } from '@/lib/stores/auth-store';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-if (!API_BASE_URL) {
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
+
+// Only throw error in production if API URL is missing
+if (
+  !process.env.NEXT_PUBLIC_API_BASE_URL &&
+  process.env.NODE_ENV === 'production'
+) {
   throw new Error(
     'NEXT_PUBLIC_API_BASE_URL environment variable is not defined'
   );
