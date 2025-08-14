@@ -8,6 +8,7 @@ import ReviewCampaign from './ReviewCampaign';
 import CampaignLiveSuccess from './CampaignLiveSuccess';
 import LoadingSpinner from '../LoadingSpinner';
 import { Stepper } from '../stepper';
+import { mockCampaignDetails } from '@/lib/mock';
 
 interface LaunchCampaignFlowProps {
   projectId: string;
@@ -57,6 +58,9 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
         data: { campaignId: string };
       };
 
+      // mock campaign details
+      setCampaignDetails(mockCampaignDetails as CampaignDetails);
+
       // Update campaign details with the response
       if (campaignDetails) {
         setCampaignDetails({
@@ -96,7 +100,7 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
       case 'launching':
         return (
           <div className='flex flex-col items-center justify-center h-64 space-y-4'>
-            <LoadingSpinner size='lg' />
+            <LoadingSpinner size='lg' color='white' />
             <div className='text-center'>
               <h3 className='text-[#F5F5F5] text-lg font-medium mb-2'>
                 Launching Campaign...

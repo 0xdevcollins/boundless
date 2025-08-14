@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import {
   CheckCircle,
   Share2,
-  ArrowLeft,
   ThumbsUp,
   MessageCircle,
   Users,
@@ -79,25 +78,23 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
       {/* Action Buttons */}
       <div className='flex gap-4 justify-center'>
         <Button
-          variant='outline'
           onClick={onBackToDashboard}
-          className='border-[#2B2B2B] bg-[#1A1A1A] text-[#F5F5F5] hover:bg-[#2A2A2A] px-6'
+          className='bg-primary text-background hover:bg-primary/90 px-6 font-medium md:font-semibold'
         >
-          <ArrowLeft className='w-4 h-4 mr-2' />
           Back to Dashboard
         </Button>
         <Button
           onClick={handleShare}
-          className='bg-primary text-background hover:bg-primary/90 px-6'
+          className='border-[#2B2B2B] bg-white/30 text-[#F5F5F5] hover:bg-[#2A2A2A] font-medium md:font-semibold'
         >
-          <Share2 className='w-4 h-4 mr-2' />
           Share
+          <Share2 className='w-4 h-4 mr-2' />
         </Button>
       </div>
 
       {/* Campaign Preview */}
       <div className='bg-[#1A1A1A] rounded-xl p-6 border border-[#2B2B2B]'>
-        <h3 className='text-[#F5F5F5] font-medium mb-4'>Campaign Preview</h3>
+        <h3 className='text-[#F5F5F5] font-medium mb-4'>Preview</h3>
 
         {/* Campaign Header */}
         <div className='flex items-center justify-between mb-4'>
