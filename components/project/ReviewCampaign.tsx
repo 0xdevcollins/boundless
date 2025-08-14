@@ -14,8 +14,7 @@ import {
   ChevronUp,
   Calendar,
   Coins,
-  CheckCircle,
-  User,
+  UserCheck2,
 } from 'lucide-react';
 import { CampaignDetails } from '@/lib/api/types';
 import { getCampaignDetails } from '@/lib/api/project';
@@ -158,80 +157,93 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
   };
 
   return (
-    <div className='space-y-6'>
+    <div className='max-w-lg space-y-6'>
+      {/* Campaign Banner */}
+      <div className='w-full h-60 md:h-64'>
+        <Image
+          src={displayData.photos[0]}
+          alt={displayData.title}
+          width={192}
+          height={192}
+          className='w-full h-full object-cover rounded-xl'
+        />
+      </div>
       {/* Campaign Header */}
-      <div className='bg-[#1A1A1A] rounded-xl p-6 border border-[#2B2B2B]'>
+      <div className=''>
         <div className='flex items-center justify-between mb-4'>
           <div className='flex items-center space-x-4'>
-            <div className='w-12 h-12 bg-[#2A2A2A] rounded-full flex items-center justify-center'>
-              <User className='w-6 h-6 text-[#B5B5B5]' />
+            <div className='w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center'>
+              <UserCheck2 className='w-6 h-6 md:w-8 md:h-8 text-blue-100 bg-blue-500 rounded-full' />
             </div>
             <div>
-              <h3 className='text-[#F5F5F5] font-medium'>
+              <h3 className='text-[#F5F5F5] font-medium md:font-semibold'>
                 {displayData.creator.name}
               </h3>
-              <div className='flex items-center space-x-2'>
-                <h1 className='text-2xl font-bold text-[#F5F5F5]'>
-                  {displayData.title}
-                </h1>
-                {displayData.creator.verified && (
-                  <CheckCircle className='w-5 h-5 text-blue-500' />
-                )}
-              </div>
             </div>
           </div>
         </div>
 
         {/* Financials */}
-        <div className='flex justify-between items-center mb-4'>
-          <div className='text-center'>
-            <p className='text-[#B5B5B5] text-sm'>Raised</p>
-            <p className='text-[#F5F5F5] text-xl font-bold'>
-              ${displayData.raisedAmount.toLocaleString()}.00
-            </p>
+        <div className='mb-4'>
+          <div className='flex justify-between items-center mb-4'>
+            <div className='text-center'>
+              <p className='text-[#B5B5B5] text-sm'>Raised</p>
+              <p className='text-[#F5F5F5] text-xl font-bold'>
+                ${displayData.raisedAmount.toLocaleString()}.00
+              </p>
+            </div>
+            <div className='text-center'>
+              <p className='text-[#B5B5B5] text-sm'>Target</p>
+              <p className='text-[#F5F5F5] text-xl font-bold'>
+                ${displayData.fundAmount.toLocaleString()}.00
+              </p>
+            </div>
           </div>
-          <div className='text-center'>
-            <p className='text-[#B5B5B5] text-sm'>Target</p>
-            <p className='text-[#F5F5F5] text-xl font-bold'>
-              ${displayData.fundAmount.toLocaleString()}.00
-            </p>
+          {/* progress bar */}
+          <div className='w-full h-2 bg-[#2A2A2A] rounded-full'>
+            <div
+              className='h-full bg-primary rounded-full'
+              style={{
+                width: `${(displayData.raisedAmount / displayData.fundAmount) * 100}%`,
+              }}
+            ></div>
           </div>
         </div>
 
         {/* Engagement Metrics */}
-        <div className='flex items-center justify-between'>
-          <div className='flex items-center space-x-6'>
-            <div className='flex items-center space-x-2'>
+        <div className='w-full flex items-center justify-between font-semibold'>
+          <div className='flex items-center space-x-3'>
+            <div className='flex items-center space-x-2 bg-[#212121] rounded-lg p-2'>
               <ThumbsUp className='w-4 h-4 text-[#B5B5B5]' />
               <span className='text-[#F5F5F5] text-sm'>
                 {displayData.engagement.likes}
               </span>
             </div>
-            <div className='flex items-center space-x-2'>
+            <div className='flex items-center space-x-2 bg-[#212121] rounded-lg p-2'>
               <MessageCircle className='w-4 h-4 text-[#B5B5B5]' />
               <span className='text-[#F5F5F5] text-sm'>
                 {displayData.engagement.comments}
               </span>
             </div>
-            <div className='flex items-center space-x-2'>
-              <Users className='w-4 h-4 text-[#B5B5B5]' />
-              <span className='text-[#F5F5F5] text-sm'>
-                {displayData.engagement.backers} Backers
-              </span>
-            </div>
-            <div className='flex items-center space-x-2'>
-              <Clock className='w-4 h-4 text-[#B5B5B5]' />
-              <span className='text-[#F5F5F5] text-sm'>
-                {displayData.engagement.daysLeft} days left
-              </span>
-            </div>
+          </div>
+          <div className='flex items-center space-x-2 border-x border-gray-900 px-6'>
+            <Users className='w-4 h-4 text-[#B5B5B5]' />
+            <span className='text-[#F5F5F5] text-sm'>
+              {displayData.engagement.backers} Backers
+            </span>
+          </div>
+          <div className='flex items-center space-x-2'>
+            <Clock className='w-4 h-4 text-[#B5B5B5]' />
+            <span className='text-[#F5F5F5] text-sm'>
+              {displayData.engagement.daysLeft} days left
+            </span>
           </div>
         </div>
       </div>
 
       {/* Campaign Details */}
       <div className='space-y-4'>
-        <h3 className='text-[#F5F5F5] font-medium'>Campaign Details</h3>
+        <h3 className='text-[#F5F5F5] font-semibold'>Campaign Details</h3>
         <p className='text-[#B5B5B5] text-sm leading-relaxed'>
           {displayData.description}
         </p>
@@ -260,7 +272,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
           {displayData.photos.map((photo, index) => (
             <div
               key={index}
-              className='relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0'
+              className='relative w-20 h-20 rounded-lg overflow-hidden flex-1'
             >
               <Image
                 src={photo}
@@ -322,7 +334,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
       </div>
 
       {/* Confirmation and Actions */}
-      <div className='space-y-4 pt-6 border-t border-[#2B2B2B]'>
+      <div className='space-y-4 pt-6'>
         <div className='flex items-center space-x-3'>
           <Checkbox
             id='confirm-details'
@@ -338,11 +350,11 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
           </label>
         </div>
 
-        <div className='flex gap-3'>
+        <div className='flex gap-3 pb-4 font-medium md:font-semibold'>
           <Button
             variant='outline'
             onClick={onBack}
-            className='flex-1 border-[#2B2B2B] bg-[#1A1A1A] text-[#F5F5F5] hover:bg-[#2A2A2A]'
+            className='flex-0 border-[#2B2B2B] bg-white/30 text-[#F5F5F5] hover:bg-white/60'
           >
             Back
           </Button>
