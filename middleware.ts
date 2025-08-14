@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Define protected routes
-// const protectedRoutes = ['/dashboard', '/user', '/projects', '/admin'];
+const protectedRoutes = ['/dashboard', '/user', '/projects', '/admin'];
 
 // Define auth routes (routes that should redirect to dashboard if already authenticated)
 const authRoutes = ['/auth/signin', '/auth/signup', '/auth/forgot-password'];
@@ -16,9 +16,9 @@ export function middleware(request: NextRequest) {
   const isAuthenticated = !!accessToken;
 
   // Check if the route is protected
-  // const isProtectedRoute = protectedRoutes.some(route =>
-  //   pathname.startsWith(route)
-  // );
+  const isProtectedRoute = protectedRoutes.some(route =>
+    pathname.startsWith(route)
+  );
 
   // Check if the route is an auth route
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
@@ -34,11 +34,11 @@ export function middleware(request: NextRequest) {
   }
 
   // Redirect unauthenticated users to signin for protected routes
-  // if (isProtectedRoute && !isAuthenticated) {
-  //   const signinUrl = new URL('/auth/signin', request.url);
-  //   signinUrl.searchParams.set('callbackUrl', pathname);
-  //   return NextResponse.redirect(signinUrl);
-  // }
+  if (isProtectedRoute && !isAuthenticated) {
+    const signinUrl = new URL('/auth/signin', request.url);
+    signinUrl.searchParams.set('callbackUrl', pathname);
+    return NextResponse.redirect(signinUrl);
+  }
 
   // Allow all other requests to proceed
   return NextResponse.next();
