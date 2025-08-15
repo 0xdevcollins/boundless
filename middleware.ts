@@ -30,7 +30,7 @@ export function middleware(request: NextRequest) {
 
   // Redirect authenticated users away from auth routes
   if (isAuthRoute && isAuthenticated) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL('/user', request.url));
   }
 
   // Redirect unauthenticated users to signin for protected routes

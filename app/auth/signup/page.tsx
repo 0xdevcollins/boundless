@@ -261,7 +261,7 @@ export default function SignUpPage() {
               </Button>
             </form>
 
-            <div className='relative'>
+            <div className='relative hidden'>
               <div className='absolute inset-0 flex items-center'>
                 <Separator className='w-full' />
               </div>
@@ -278,7 +278,7 @@ export default function SignUpPage() {
                 window.location.href = '/api/auth/signin/google';
               }}
               disabled={isLoading}
-              className='w-full'
+              className='w-full hidden'
             >
               <svg className='mr-2 h-4 w-4' viewBox='0 0 24 24'>
                 <path

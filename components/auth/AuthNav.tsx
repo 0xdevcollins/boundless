@@ -29,7 +29,7 @@ export function AuthNav() {
   if (!session) {
     return (
       <div className='flex items-center space-x-2'>
-        <Button variant='ghost' onClick={() => signIn()}>
+        <Button variant='outline' onClick={() => signIn()}>
           Sign In
         </Button>
         <Button asChild>
@@ -73,7 +73,7 @@ export function AuthNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href='/dashboard' className='flex items-center'>
+          <Link href='/user' className='flex items-center'>
             <User className='mr-2 h-4 w-4' />
             Dashboard
           </Link>
