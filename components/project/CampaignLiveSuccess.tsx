@@ -128,7 +128,7 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
         </div>
 
         {/* Financial Metrics */}
-        <div className='flex justify-between mb-6'>
+        <div className='flex justify-between mb-4'>
           <div className='text-center'>
             <p className='text-[#B5B5B5] text-sm mb-1'>Raised</p>
             <p className='text-[#F5F5F5] text-xl font-bold'>
@@ -140,6 +140,18 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
             <p className='text-[#F5F5F5] text-xl font-bold'>
               ${campaignDetails.fundAmount.toLocaleString()}.00
             </p>
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className='mb-6'>
+          <div className='w-full bg-[#2A2A2A] rounded-full h-2 mb-4'>
+            <div
+              className='bg-primary h-2 rounded-full transition-all duration-300'
+              style={{
+                width: `${Math.min((campaignDetails.raisedAmount / campaignDetails.fundAmount) * 100, 100)}%`,
+              }}
+            ></div>
           </div>
         </div>
 
