@@ -28,6 +28,11 @@ export interface RequestConfig {
 // Token refresh function
 const refreshAccessToken = async (): Promise<string | null> => {
   try {
+    // Only access cookies on client side
+    if (typeof window === 'undefined') {
+      return null;
+    }
+
     const refreshToken = Cookies.get('refreshToken');
     if (!refreshToken) {
       return null;
@@ -74,10 +79,13 @@ const createClientApi = (): AxiosInstance => {
     config => {
       config.withCredentials = true;
 
-      const accessToken = Cookies.get('accessToken');
-      if (accessToken && !config.headers?.Authorization) {
-        config.headers = config.headers || {};
-        config.headers.Authorization = `Bearer ${accessToken}`;
+      // Only access cookies on client side
+      if (typeof window !== 'undefined') {
+        const accessToken = Cookies.get('accessToken');
+        if (accessToken && !config.headers?.Authorization) {
+          config.headers = config.headers || {};
+          config.headers.Authorization = `Bearer ${accessToken}`;
+        }
       }
 
       return config;

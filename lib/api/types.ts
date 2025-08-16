@@ -250,3 +250,59 @@ export interface ProjectInitResponse {
   };
   [key: string]: unknown;
 }
+
+// Campaign Review and Launch Types
+export interface CampaignDetails {
+  id: string;
+  title: string;
+  tagline: string;
+  description: string;
+  category: string;
+  fundAmount: number;
+  raisedAmount: number;
+  tags: string[];
+  thumbnail: string;
+  creator: {
+    name: string;
+    avatar: string;
+    verified: boolean;
+  };
+  engagement: {
+    likes: number;
+    comments: number;
+    backers: number;
+    daysLeft: number;
+  };
+  photos: string[];
+  milestones: CampaignMilestone[];
+  status: string;
+}
+
+export interface CampaignMilestone {
+  id: string;
+  title: string;
+  description: string;
+  deliveryDate: string;
+  fundPercentage: number;
+  fundAmount: number;
+}
+
+export interface LaunchCampaignRequest {
+  projectId: string;
+}
+
+export interface LaunchCampaignResponse {
+  success: boolean;
+  message: string;
+  data: {
+    campaignId: string;
+    shareLink: string;
+  };
+}
+
+export interface ShareLinkResponse {
+  success: boolean;
+  data: {
+    shareLink: string;
+  };
+}

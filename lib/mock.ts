@@ -285,3 +285,64 @@ export const mockProjects: Project[] = [
   //   updatedAt: "2024-01-21T16:45:00Z",
   // },
 ];
+
+// Mock campaign details for testing
+export const mockCampaignDetails = {
+  id: 'campaign-123',
+  title: 'Boundless',
+  tagline: 'Trustless, decentralized crowdfunding platform',
+  description:
+    'Boundless is a trustless, decentralized application (dApp) that empowers changemakers and builders to raise funds transparently without intermediaries. Campaigns are structured around clearly defined milestones, with funds held in escrow and released only upon approval. Grant creators can launch programs with rule-based logic, and applicants can apply with confidence knowing their work will be fairly evaluated.',
+  category: 'Technology',
+  fundAmount: 123000,
+  raisedAmount: 0,
+  tags: ['web3', 'crowdfunding'],
+  thumbnail: '/BOUNDLESS.png',
+  creator: {
+    name: 'Collins Odumeje',
+    avatar: 'https://github.com/shadcn.png',
+    verified: true,
+  },
+  engagement: {
+    likes: 0,
+    comments: 0,
+    backers: 325,
+    daysLeft: 90,
+  },
+  photos: [
+    '/BOUNDLESS.png',
+    '/BOUNDLESS.png',
+    '/BOUNDLESS.png',
+    '/BOUNDLESS.png',
+  ],
+  milestones: [
+    {
+      id: 'milestone-1',
+      title: 'Prototype & Smart Contract Setup',
+      description:
+        'Develop a functional UI prototype for the crowdfunding and grant flow. Simultaneously, implement and test Soroban smart contracts for escrow logic, milestone validation, and secure fund handling.',
+      deliveryDate: 'October 10, 2025',
+      fundPercentage: 25,
+      fundAmount: 30750,
+    },
+    {
+      id: 'milestone-2',
+      title: 'Campaign & Grant Builder Integration',
+      description:
+        'Integrate campaign creation tools and grant builder functionality into the platform with advanced features and user management.',
+      deliveryDate: 'November 15, 2025',
+      fundPercentage: 35,
+      fundAmount: 43050,
+    },
+    {
+      id: 'milestone-3',
+      title: 'Platform Launch & Community Building',
+      description:
+        'Launch the platform to the public and build a strong community of users and contributors with marketing and partnership initiatives.',
+      deliveryDate: 'December 20, 2025',
+      fundPercentage: 40,
+      fundAmount: 49200,
+    },
+  ],
+  status: 'validated',
+};

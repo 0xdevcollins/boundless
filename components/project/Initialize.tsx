@@ -21,7 +21,7 @@ export type Step = {
 };
 
 interface InitializeProps {
-  onSuccess: () => void;
+  onSuccess: (projectId: string) => void;
 }
 
 const Initialize: React.FC<InitializeProps> = ({ onSuccess }) => {
@@ -129,12 +129,13 @@ const Initialize: React.FC<InitializeProps> = ({ onSuccess }) => {
         // ...(formData.whitepaperFile ? { whitepaperUrl: '' } : {}),
       };
 
-      await initProject(payload);
+      const response = await initProject(payload);
+      const responseData = response as { data: { projectId: string } };
 
       toast.dismiss();
       toast.success('Project initialized!');
       setPhase('success');
-      onSuccess();
+      onSuccess(responseData.data.projectId);
     } catch {
       toast.dismiss();
       toast.error('Failed to initialize project');

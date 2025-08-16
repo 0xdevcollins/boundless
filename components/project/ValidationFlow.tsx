@@ -23,9 +23,14 @@ interface ValidationFlowProps {
   onVote?: (projectId: string) => void;
   onComment?: (projectId: string, comment: string) => void;
   onReact?: (commentId: string, reaction: string) => void;
+  onSuccess?: () => void;
 }
 
-const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
+const ValidationFlow: React.FC<ValidationFlowProps> = ({
+  project,
+  onVote,
+  onSuccess,
+}) => {
   const [voteCount, setVoteCount] = useState(12);
   const [commentCount] = useState(4);
   const [hasVoted, setHasVoted] = useState(false);
@@ -263,6 +268,18 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
         <div>
           <h3 className='text-[#F5F5F5] font-medium mb-4'>Timeline</h3>
           <TimelineStepper project={project} />
+        </div>
+
+        {/* Proceed to Launch Button */}
+        <div className='pt-6 border-t border-[#2B2B2B]'>
+          <div className='flex justify-end'>
+            <Button
+              onClick={() => onSuccess?.()}
+              className='bg-primary text-background hover:bg-primary/90 px-6'
+            >
+              Proceed to Launch
+            </Button>
+          </div>
         </div>
       </div>
     </div>

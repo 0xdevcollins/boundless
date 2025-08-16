@@ -73,7 +73,7 @@ declare module 'next-auth' {
 
 const getMe = (token?: string) => getMeBase(token);
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const authConfig = {
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -88,7 +88,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: 'Password', type: 'password' },
         accessToken: { label: 'Access Token', type: 'text' },
       },
-      authorize: async credentials => {
+      authorize: async (credentials: any) => {
         if (
           typeof credentials?.accessToken === 'string' &&
           !credentials?.email &&
@@ -153,7 +153,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: any) {
       if (user) {
         const u = user as { accessToken?: string; refreshToken?: string };
         token.accessToken = u.accessToken;
@@ -161,10 +161,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       session.user.accessToken = token.accessToken as string | undefined;
       session.user.refreshToken = token.refreshToken as string | undefined;
       return session;
     },
   },
-});
+};
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);

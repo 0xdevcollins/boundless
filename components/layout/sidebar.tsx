@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Package,
   Sun,
@@ -86,6 +86,12 @@ const SidebarLayout: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useAuth();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Function to determine if a route is active
   const isRouteActive = (href: string) => {
     if (href === '/user') {
@@ -93,6 +99,11 @@ const SidebarLayout: React.FC = () => {
     }
     return pathname.startsWith(href);
   };
+
+  // Don't render anything until client-side hydration is complete
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <Sidebar className='bg-background' variant='floating'>
