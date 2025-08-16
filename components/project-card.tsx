@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { Project } from '@/types/project';
 import { BoundlessButton } from '@/components/buttons';
 import { useProjectSheetStore } from '@/lib/stores/project-sheet-store';
@@ -31,6 +31,7 @@ import { Button } from './ui/button';
 import CircularProgress from './ui/circular-progress';
 import { motion } from 'framer-motion';
 import { cardHover, fadeInUp } from '@/lib/motion';
+import { CampaignModal } from './campaign/campaign-modal';
 
 interface ProjectCardProps {
   project: Project;
@@ -50,6 +51,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   showEllipsisMenu = false,
 }) => {
   const sheet = useProjectSheetStore();
+  // Add state for modal visibility
+  const [isCampaignModalOpen, setIsCampaignModalOpen] = useState(false);
+
+  // Handler for opening the campaign modal
+  const handleStartCampaignClick = () => {
+    setIsCampaignModalOpen(true);
+    // You can also call the onStartCampaign prop if needed
+  };
+
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'pending':
@@ -323,11 +333,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           </div>
           {project.status === 'validated' && (
             <div>
-              <BoundlessButton>Start Campaign</BoundlessButton>
+              <BoundlessButton onClick={handleStartCampaignClick}>
+                Start Campaign
+              </BoundlessButton>
             </div>
           )}
         </div>
       </motion.div>
+      <CampaignModal
+        isOpen={isCampaignModalOpen}
+        onClose={() => setIsCampaignModalOpen(false)}
+      />
     </motion.div>
   );
 };
