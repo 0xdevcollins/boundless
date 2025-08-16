@@ -38,6 +38,18 @@ export interface AuthState {
   updateUser: (updates: Partial<User>) => void;
 }
 
+// Safe localStorage access for SSR
+const getStorage = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage;
+  }
+  return {
+    getItem: () => null,
+    setItem: () => {},
+    removeItem: () => {},
+  };
+};
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
@@ -57,17 +69,19 @@ export const useAuthStore = create<AuthState>()(
       setTokens: (accessToken, refreshToken) => {
         set({ accessToken, refreshToken });
 
-        // Update cookies
-        if (accessToken) {
-          Cookies.set('accessToken', accessToken);
-        } else {
-          Cookies.remove('accessToken');
-        }
+        // Update cookies only on client side
+        if (typeof window !== 'undefined') {
+          if (accessToken) {
+            Cookies.set('accessToken', accessToken);
+          } else {
+            Cookies.remove('accessToken');
+          }
 
-        if (refreshToken) {
-          Cookies.set('refreshToken', refreshToken);
-        } else {
-          Cookies.remove('refreshToken');
+          if (refreshToken) {
+            Cookies.set('refreshToken', refreshToken);
+          } else {
+            Cookies.remove('refreshToken');
+          }
         }
       },
 
@@ -199,9 +213,11 @@ export const useAuthStore = create<AuthState>()(
           error: null,
         });
 
-        // Clear cookies
-        Cookies.remove('accessToken');
-        Cookies.remove('refreshToken');
+        // Clear cookies only on client side
+        if (typeof window !== 'undefined') {
+          Cookies.remove('accessToken');
+          Cookies.remove('refreshToken');
+        }
       },
 
       updateUser: updates => {
@@ -213,7 +229,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => getStorage()),
       partialize: state => ({
         user: state.user,
         accessToken: state.accessToken,
@@ -221,11 +237,11 @@ export const useAuthStore = create<AuthState>()(
         isAuthenticated: state.isAuthenticated,
       }),
       onRehydrateStorage: () => state => {
-        // Rehydrate cookies from localStorage on app start
-        if (state?.accessToken) {
+        // Rehydrate cookies from localStorage on app start (client side only)
+        if (typeof window !== 'undefined' && state?.accessToken) {
           Cookies.set('accessToken', state.accessToken);
         }
-        if (state?.refreshToken) {
+        if (typeof window !== 'undefined' && state?.refreshToken) {
           Cookies.set('refreshToken', state.refreshToken);
         }
       },

@@ -8,9 +8,27 @@ import GrantHistory from '@/components/overview/GrantHistory';
 import PageTransition from '@/components/PageTransition';
 import { Coins, History } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
+import { useEffect, useState } from 'react';
+
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function UserPage() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Show loading until client-side hydration is complete
+  if (!mounted || isLoading) {
+    return (
+      <div className='min-h-screen flex items-center justify-center'>
+        <LoadingSpinner size='lg' />
+      </div>
+    );
+  }
+
   return (
     <PageTransition>
       <div className='min-h-screen'>
@@ -18,7 +36,7 @@ export default function UserPage() {
           {/* Header Section */}
           <div className='mb-8'>
             <h1 className='text-2xl sm:text-3xl lg:text-[32px] font-medium leading-[120%] tracking-[-0.64px] text-white '>
-              Hello, {user?.name?.split(' ')[0]}
+              Hello, {user?.name?.split(' ')[0] || 'User'}
             </h1>
           </div>
           {/* Stats Cards Grid */}
