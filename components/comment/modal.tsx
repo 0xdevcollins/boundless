@@ -228,7 +228,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent
-          className='w-[95%] lg:w-[80vw] !max-w-[90%] lg:!max-w-[90vw] bg-black border-[#2A2A2A] text-white p-0 h-[95vh]'
+          className='w-[95%] lg:w-[80vw] !max-w-[90%] lg:!max-w-[90vw] bg-black border-[#2A2A2A] text-white p-0 h-[80vh] sm:h-[85vh] md:h-[90vh] lg:h-[95vh] overflow-y-auto custom-scrollbar'
           showCloseButton={false}
         >
           <button
@@ -276,13 +276,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                         value={comment}
                         onChange={e => setComment(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className='py-2 text-white placeholder:text-gray-400 w-full bg-transparent text-md leading-none min-h-[60px]'
-                        style={{
-                          border: 'none',
-                          outline: 'none',
-                          boxShadow: 'none',
-                          background: 'transparent',
-                        }}
+                        className='py-2 text-white placeholder:text-gray-400 w-full bg-transparent text-md leading-none min-h-[60px] border-none outline-none shadow-none focus:border-none focus:outline-none focus:ring-0'
                       />
                     </div>
                     <div className='flex-shrink-0'>
@@ -384,13 +378,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                             handleReplySubmit();
                           }
                         }}
-                        className='py-2 text-white placeholder:text-gray-400 w-full bg-transparent text-md leading-none min-h-[60px] resize-none'
-                        style={{
-                          border: 'none',
-                          outline: 'none',
-                          boxShadow: 'none',
-                          background: 'transparent',
-                        }}
+                        className='py-2 text-white placeholder:text-gray-400 w-full bg-transparent text-md leading-none min-h-[60px] resize-none border-none outline-none shadow-none focus:border-none focus:outline-none focus:ring-0'
                         autoFocus
                       />
                     </div>
@@ -417,7 +405,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                       return null;
 
                     return (
-                      <div className='mt-6 space-y-4 overflow-y-auto'>
+                      <div className='mt-6 space-y-4'>
                         {parentComment.replies.map(reply => (
                           <div key={reply.id} className='flex gap-3'>
                             <div className='flex-shrink-0'>
@@ -450,15 +438,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                 </div>
               )}
               {!replyMode.isActive && (
-                <div
-                  className='overflow-y-auto'
-                  style={{
-                    maxHeight: '600px',
-                    minHeight: '200px',
-                    scrollbarWidth: 'thin',
-                    scrollbarColor: '#4A4A4A #1A1A1A',
-                  }}
-                >
+                <div className='flex-1'>
                   {comments.length === 0 ? (
                     <div className='flex items-center justify-center p-12'>
                       <div className='text-center'>
@@ -482,7 +462,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                       </div>
                     </div>
                   ) : (
-                    <div className='p-6 space-y-6 mx-auto w-[70%]'>
+                    <div className='p-6 space-y-6 mx-auto w-[70%] pb-8'>
                       {comments.map(comment => (
                         <div
                           key={comment.id}
