@@ -1,32 +1,39 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Define protected routes
-const protectedRoutes = ['/dashboard', '/user', '/projects', '/admin'];
+// Define protected routes (removed '/dashboard' from this array)
+const protectedRoutes = ['/user', '/projects', '/admin'];
 
 // Define auth routes (routes that should redirect to dashboard if already authenticated)
 const authRoutes = ['/auth/signin', '/auth/signup', '/auth/forgot-password'];
 
-// Define public routes that don't need auth
-export const publicRoutes = ['/', '/auth/verify-email', '/auth/reset-password'];
+// Define public routes that don't need auth (added '/dashboard' to public routes)
+export const publicRoutes = [
+  '/',
+  '/dashboard',
+  '/auth/verify-email',
+  '/auth/reset-password',
+];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get('accessToken')?.value;
   const isAuthenticated = !!accessToken;
 
-  // Check if the route is protected
-  const isProtectedRoute = protectedRoutes.some(route =>
-    pathname.startsWith(route)
-  );
+  // Check if the route is public first (most important check)
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+
+  if (isPublicRoute) {
+    return NextResponse.next();
+  }
 
   // Check if the route is an auth route
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
 
-  // Check if the route is public
-  // const isPublicRoute = publicRoutes.some(route =>
-  //   pathname.startsWith(route)
-  // );
+  // Check if the route is protected
+  const isProtectedRoute = protectedRoutes.some(route =>
+    pathname.startsWith(route)
+  );
 
   // Redirect authenticated users away from auth routes
   if (isAuthRoute && isAuthenticated) {
