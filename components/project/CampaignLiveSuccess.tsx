@@ -21,6 +21,7 @@ import {
 
 import { CampaignDetails } from '@/lib/api/types';
 import { generateCampaignLink } from '@/lib/api/project';
+
 import { toast } from 'sonner';
 import ShareCampaignModal from './ShareCampaignModal';
 
@@ -156,117 +157,119 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
         </div>
 
         {/* Engagement Stats */}
-        <div className='flex space-x-4 mb-6'>
-          <div className='flex items-center space-x-2 bg-[#2A2A2A] px-3 py-2 rounded-lg'>
-            <ThumbsUp className='w-4 h-4 text-[#B5B5B5]' />
-            <span className='text-[#F5F5F5] text-sm'>
-              {campaignDetails.engagement.likes}
-            </span>
+        <div className='w-full flex items-center justify-between font-semibold'>
+          <div className='flex items-center space-x-3'>
+            <div className='flex items-center space-x-2 bg-[#212121] rounded-lg p-2'>
+              <ThumbsUp className='w-4 h-4 text-[#B5B5B5]' />
+              <span className='text-[#F5F5F5] text-sm'>
+                {campaignDetails.engagement.likes}
+              </span>
+            </div>
+            <div className='flex items-center space-x-2 bg-[#212121] rounded-lg p-2'>
+              <MessageCircle className='w-4 h-4 text-[#B5B5B5]' />
+              <span className='text-[#F5F5F5] text-sm'>
+                {campaignDetails.engagement.comments}
+              </span>
+            </div>
           </div>
-          <div className='flex items-center space-x-2 bg-[#2A2A2A] px-3 py-2 rounded-lg'>
-            <MessageCircle className='w-4 h-4 text-[#B5B5B5]' />
-            <span className='text-[#F5F5F5] text-sm'>
-              {campaignDetails.engagement.comments}
-            </span>
-          </div>
-          <div className='flex items-center space-x-2 bg-[#2A2A2A] px-3 py-2 rounded-lg'>
+          <div className='flex items-center space-x-2 border-x border-gray-900 px-6'>
             <Users className='w-4 h-4 text-[#B5B5B5]' />
             <span className='text-[#F5F5F5] text-sm'>
               {campaignDetails.engagement.backers} Backers
             </span>
           </div>
-          <div className='flex items-center space-x-2 bg-[#2A2A2A] px-3 py-2 rounded-lg'>
+          <div className='flex items-center space-x-2'>
             <Clock className='w-4 h-4 text-[#B5B5B5]' />
             <span className='text-[#F5F5F5] text-sm'>
               {campaignDetails.engagement.daysLeft} days left
             </span>
           </div>
         </div>
+      </div>
 
-        {/* Campaign Details */}
-        <div className='mb-6'>
-          <h4 className='text-[#F5F5F5] font-medium text-lg mb-3'>
-            Campaign Details
-          </h4>
-          <div className=''>
-            <p className='text-[#B5B5B5] text-lg leading-relaxed'>
-              {campaignDetails.description}
-            </p>
-          </div>
+      {/* Campaign Details */}
+      <div className='mb-6'>
+        <h4 className='text-[#F5F5F5] font-medium text-lg mb-3'>
+          Campaign Details
+        </h4>
+        <div className=''>
+          <p className='text-[#B5B5B5] text-lg leading-relaxed'>
+            {campaignDetails.description}
+          </p>
         </div>
+      </div>
 
-        {/* Tags */}
-        <div className='mb-6'>
-          <h4 className='text-[#F5F5F5] font-medium text-lg mb-3'>Tags</h4>
-          <div className='flex space-x-2'>
-            {campaignDetails.tags.slice(0, 2).map((tag, index) => (
-              <span key={index} className='text-[#B5B5B5] text-sm'>
-                #{tag}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Campaign Photos */}
-        <div className='mb-6'>
-          <h4 className='text-[#F5F5F5] font-medium text-lg mb-3'>
-            Campaign Photos
-          </h4>
-          <div className='flex space-x-3'>
-            {[1, 2, 3, 4].map(index => (
-              <div
-                key={index}
-                className='w-16 h-16 bg-[#2A2A2A] rounded-lg flex items-center justify-center'
-              >
-                <div className='w-8 h-8 bg-[#B5B5B5] rounded'></div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Milestones */}
-        <div className='mb-6'>
-          <h4 className='text-[#F5F5F5] font-medium text-lg mb-3'>
-            Milestones
-          </h4>
-          <div className='space-y-2'>
-            {campaignDetails.milestones?.slice(0, 3).map((milestone, index) => (
-              <div
-                key={index}
-                className='bg-[#2A2A2A] rounded-lg p-3 flex items-center justify-between'
-              >
-                <span className='text-[#F5F5F5] text-sm'>
-                  Milestone {index + 1}: {milestone.title}
-                </span>
-                <ChevronDown className='w-4 h-4 text-[#B5B5B5]' />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Funding History */}
-        <div className='mb-6'>
-          <div className='flex items-center justify-between mb-3'>
-            <h4 className='text-[#F5F5F5] font-medium text-lg'>
-              Funding History
-            </h4>
-            <span className='text-[#B5B5B5] text-sm cursor-pointer'>
-              View all &gt;
+      {/* Tags */}
+      <div className='mb-6'>
+        <h4 className='text-[#F5F5F5] font-medium text-lg mb-3'>Tags</h4>
+        <div className='flex space-x-2'>
+          {campaignDetails.tags.slice(0, 2).map((tag, index) => (
+            <span key={index} className='text-[#B5B5B5] text-sm'>
+              #{tag}
             </span>
-          </div>
-          <div className='text-center py-8'>
-            <div className='relative inline-block mb-4'>
-              <Search className='w-12 h-12 text-[#B5B5B5] mx-auto' />
-              <X className='w-6 h-6 text-red-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2' />
+          ))}
+        </div>
+      </div>
+
+      {/* Campaign Photos */}
+      <div className='mb-6'>
+        <h4 className='text-[#F5F5F5] font-medium text-lg mb-3'>
+          Campaign Photos
+        </h4>
+        <div className='flex space-x-3'>
+          {[1, 2, 3, 4].map(index => (
+            <Image
+              key={index}
+              src='/campaign-pics.png'
+              alt={`Campaign photo ${index}`}
+              width={64}
+              height={64}
+              className='w-40 h-40 object-cover'
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Milestones */}
+      <div className='mb-6'>
+        <h4 className='text-[#F5F5F5] font-medium text-lg mb-3'>Milestones</h4>
+        <div className='space-y-2'>
+          {campaignDetails.milestones?.slice(0, 3).map((milestone, index) => (
+            <div
+              key={index}
+              className='bg-[#2A2A2A] rounded-lg p-3 flex items-center justify-between'
+            >
+              <span className='text-[#F5F5F5] text-sm'>
+                Milestone {index + 1}: {milestone.title}
+              </span>
+              <ChevronDown className='w-4 h-4 text-[#B5B5B5]' />
             </div>
-            <p className='text-[#F5F5F5] text-lg font-medium mb-2'>
-              No backers for now
-            </p>
-            <p className='text-[#B5B5B5] text-sm max-w-md mx-auto'>
-              Get the word out and attract your first backers. Every share
-              brings you closer to your funding goal.
-            </p>
+          ))}
+        </div>
+      </div>
+
+      {/* Funding History */}
+      <div className='mb-6'>
+        <div className='flex items-center justify-between mb-3'>
+          <h4 className='text-[#F5F5F5] font-medium text-lg'>
+            Funding History
+          </h4>
+          <span className='text-[#B5B5B5] text-sm cursor-pointer'>
+            View all &gt;
+          </span>
+        </div>
+        <div className='text-center py-8'>
+          <div className='relative inline-block mb-4'>
+            <Search className='w-12 h-12 text-[#B5B5B5] mx-auto' />
+            <X className='w-6 h-6 text-red-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2' />
           </div>
+          <p className='text-[#F5F5F5] text-lg font-medium mb-2'>
+            No backers for now
+          </p>
+          <p className='text-[#B5B5B5] text-sm max-w-md mx-auto'>
+            Get the word out and attract your first backers. Every share brings
+            you closer to your funding goal.
+          </p>
         </div>
       </div>
 
