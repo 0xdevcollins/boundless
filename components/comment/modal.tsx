@@ -453,7 +453,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                 <div
                   className='overflow-y-auto'
                   style={{
-                    maxHeight: '400px',
+                    maxHeight: '600px',
                     minHeight: '200px',
                     scrollbarWidth: 'thin',
                     scrollbarColor: '#4A4A4A #1A1A1A',
