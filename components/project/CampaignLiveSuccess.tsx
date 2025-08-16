@@ -7,6 +7,7 @@ import profile from '../../public/profile.png';
 import verify from '../../public/verify.png';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import noBackers from '../../public/noBackers.png';
 import {
   Share2,
   ThumbsUp,
@@ -15,8 +16,6 @@ import {
   Clock,
   ChevronUp,
   ChevronDown,
-  Search,
-  X,
 } from 'lucide-react';
 
 import { CampaignDetails } from '@/lib/api/types';
@@ -36,6 +35,7 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
 }) => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareLink, setShareLink] = useState<string>('');
+  const [expandedMilestones, setExpandedMilestones] = useState<number[]>([]);
 
   const handleShare = async () => {
     try {
@@ -234,23 +234,64 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
       <div className='mb-6'>
         <h4 className='text-[#F5F5F5] font-medium text-lg mb-3'>Milestones</h4>
         <div className='space-y-2'>
-          {campaignDetails.milestones?.slice(0, 3).map((milestone, index) => (
-            <div
-              key={index}
-              className='bg-[#2A2A2A] rounded-lg p-3 flex items-center justify-between'
-            >
-              <span className='text-[#F5F5F5] text-sm'>
-                Milestone {index + 1}: {milestone.title}
-              </span>
-              <ChevronDown className='w-4 h-4 text-[#B5B5B5]' />
-            </div>
-          ))}
+          {[
+            {
+              title: 'Prototype & Smart Contract Setup',
+              description:
+                'Initial development phase with smart contract implementation',
+            },
+            {
+              title: 'Campaign & Grant Builder Integration',
+              description:
+                'Integration of campaign management and grant building features',
+            },
+            {
+              title: 'Platform Launch & Community Building',
+              description:
+                'Final platform launch and community engagement phase',
+            },
+          ].map((milestone, index) => {
+            const isExpanded = expandedMilestones.includes(index);
+            return (
+              <div
+                key={index}
+                className='bg-[#2A2A2A] rounded-lg overflow-hidden'
+              >
+                <div
+                  className='p-3 cursor-pointer hover:bg-[#3A3A3A] transition-colors flex items-center justify-between'
+                  onClick={() => {
+                    setExpandedMilestones(prev =>
+                      isExpanded
+                        ? prev.filter(i => i !== index)
+                        : [...prev, index]
+                    );
+                  }}
+                >
+                  <span className='text-[#F5F5F5] text-sm font-medium'>
+                    Milestone {index + 1}: {milestone.title}
+                  </span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-[#B5B5B5] transition-transform ${
+                      isExpanded ? 'rotate-180' : ''
+                    }`}
+                  />
+                </div>
+                {isExpanded && (
+                  <div className='px-3 pb-3'>
+                    <p className='text-[#B5B5B5] text-sm mt-2'>
+                      {milestone.description}
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {/* Funding History */}
       <div className='mb-6'>
-        <div className='flex items-center justify-between mb-3'>
+        <div className='flex items-center justify-between mb-3 border-t border-[#2A2A2A] pt-4'>
           <h4 className='text-[#F5F5F5] font-medium text-lg'>
             Funding History
           </h4>
@@ -259,10 +300,11 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
           </span>
         </div>
         <div className='text-center py-8'>
-          <div className='relative inline-block mb-4'>
-            <Search className='w-12 h-12 text-[#B5B5B5] mx-auto' />
-            <X className='w-6 h-6 text-red-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2' />
-          </div>
+          <Image
+            src={noBackers}
+            alt='no backers'
+            className='w-20 h-20 mx-auto'
+          />
           <p className='text-[#F5F5F5] text-lg font-medium mb-2'>
             No backers for now
           </p>
@@ -276,14 +318,8 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
       {/* Action Buttons */}
       <div className='flex gap-4 justify-center'>
         <Button
-          onClick={onBackToDashboard}
-          className='bg-[#2A2A2A] text-[#F5F5F5] hover:bg-[#3A3A3A] px-6 font-medium'
-        >
-          Back to Dashboard
-        </Button>
-        <Button
           onClick={handleShare}
-          className='bg-green-500 text-white hover:bg-green-600 px-6 font-medium'
+          className='bg-primary text-black hover:bg-primary/90 px-6 font-medium'
         >
           Share Campaign
         </Button>
