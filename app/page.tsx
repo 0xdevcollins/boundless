@@ -8,6 +8,7 @@ import RecentProjects from '@/components/overview/RecentProjects';
 import RecentContributions from '@/components/overview/ReecntContributions';
 import GrantHistory from '@/components/overview/GrantHistory';
 import { AuthNav } from '@/components/auth/AuthNav';
+import CommentModal from '@/components/comment/modal';
 import { motion } from 'framer-motion';
 import {
   fadeInUp,
@@ -47,14 +48,20 @@ export default function Home() {
               description='Start by sharing your first project idea with the Boundless community. Once submitted, your projects will appear here for easy tracking.'
               type='default'
               action={
-                <BoundlessButton
-                  variant='default'
-                  size='lg'
-                  icon={<Plus className='w-5 h-5' />}
-                  iconPosition='right'
+                <CommentModal
+                  onCommentSubmit={comment =>
+                    console.log('Comment submitted:', comment)
+                  }
                 >
-                  Add comment
-                </BoundlessButton>
+                  <BoundlessButton
+                    variant='default'
+                    size='lg'
+                    icon={<Plus className='w-5 h-5' />}
+                    iconPosition='right'
+                  >
+                    Add comment
+                  </BoundlessButton>
+                </CommentModal>
               }
             />
           </motion.div>
