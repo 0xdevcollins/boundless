@@ -73,7 +73,7 @@ export default function SignInPage() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     try {
-      await signIn('google', { callbackUrl: '/dashboard' });
+      await signIn('google', { callbackUrl: '/user' });
     } catch {
       setError('Failed to sign in with Google');
       setIsLoading(false);
