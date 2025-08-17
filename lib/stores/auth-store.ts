@@ -122,10 +122,14 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
           });
         } catch (error) {
+          const errorMessage =
+            error instanceof Error ? error.message : 'Login failed';
           set({
-            error: error instanceof Error ? error.message : 'Login failed',
+            error: errorMessage,
             isLoading: false,
           });
+          // Clear tokens if login fails
+          get().setTokens(null, null);
           throw error;
         }
       },

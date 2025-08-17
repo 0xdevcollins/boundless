@@ -1,6 +1,8 @@
 'use client';
 import { BoundlessButton } from '@/components/buttons';
 import { AuthNav } from '@/components/auth/AuthNav';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import CommentModal from '@/components/comment/modal';
 import { motion } from 'framer-motion';
 import {
   staggerContainer,
