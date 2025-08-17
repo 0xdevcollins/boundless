@@ -7,7 +7,7 @@ import profile from '../../public/profile.png';
 import verify from '../../public/verify.png';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import noBackers from '../../public/noBackers.png';
+import noBackers from '../../public/nobackers.png';
 import {
   Share2,
   ThumbsUp,
