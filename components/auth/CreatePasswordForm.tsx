@@ -82,8 +82,7 @@ const CreatePasswordForm = ({ email, name }: CreatePasswordFormProps) => {
         const error = await response.json();
         toast.error(error.message || 'Failed to create account');
       }
-    } catch (error) {
-      console.error('Account creation error:', error);
+    } catch {
       toast.error('Failed to create account. Please try again.');
     }
   };

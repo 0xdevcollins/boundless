@@ -48,22 +48,13 @@ const LoginForm = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      console.log('Attempting sign in with:', {
-        email: values.email,
-        password: '***',
-      });
-
       const result = await signIn('credentials', {
         email: values.email,
         password: values.password,
         redirect: false,
       });
 
-      console.log('Sign in result:', result);
-
       if (result?.error) {
-        console.error('Sign in error:', result.error);
-
         if (result.error === 'UNVERIFIED_EMAIL') {
           toast.error(
             'Please verify your email before signing in. Check your inbox for a verification link.'
@@ -84,9 +75,7 @@ const LoginForm = () => {
           });
         }
       } else if (result?.ok) {
-        console.log('Sign in successful, getting session...');
         const session = await getSession();
-        console.log('Session:', session);
 
         if (session) {
           if (session.user.accessToken) {
@@ -95,10 +84,8 @@ const LoginForm = () => {
           if (session.user.refreshToken) {
             Cookies.set('refreshToken', session.user.refreshToken);
           }
-          console.log('Redirecting to:', callbackUrl);
           router.push(callbackUrl);
         } else {
-          console.error('No session after successful sign in');
           form.setError('root', {
             type: 'manual',
             message:
@@ -106,14 +93,12 @@ const LoginForm = () => {
           });
         }
       } else {
-        console.error('Unexpected sign in result:', result);
         form.setError('root', {
           type: 'manual',
           message: 'An unexpected error occurred. Please try again.',
         });
       }
-    } catch (error) {
-      console.error('Sign in exception:', error);
+    } catch {
       form.setError('root', {
         type: 'manual',
         message: 'An unexpected error occurred. Please try again.',

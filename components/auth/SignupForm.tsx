@@ -74,6 +74,7 @@ const SignupForm = () => {
         const error = await response.json();
 
         if (error.field) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           form.setError(error.field as any, {
             type: 'manual',
             message: error.message,
