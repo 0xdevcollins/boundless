@@ -2,30 +2,46 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Mail, ArrowLeft } from 'lucide-react';
+import Image from 'next/image';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Mail, ArrowLeft } from 'lucide-react';
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { BoundlessButton } from '@/components/buttons';
+
+const forgotPasswordSchema = z.object({
+  email: z.string().email({
+    message: 'Please enter a valid email address',
+  }),
+});
+
+type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useForm<ForgotPasswordFormData>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  const handleSubmit = async (data: ForgotPasswordFormData) => {
     setIsLoading(true);
-    setError('');
-    setSuccess('');
+    setSuccessMessage('');
+    setErrorMessage('');
 
     try {
       const response = await fetch('/api/auth/forgot-password', {
@@ -33,95 +49,106 @@ export default function ForgotPasswordPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: data.email }),
       });
 
-      const data = await response.json();
+      const res = await response.json();
 
       if (response.ok) {
-        setSuccess(
+        setSuccessMessage(
           'Password reset instructions have been sent to your email address.'
         );
-        setEmail('');
+        form.reset();
       } else {
-        setError(data.message || 'Failed to send reset email');
+        setErrorMessage(res.message || 'Failed to send reset email');
       }
     } catch {
-      setError('An unexpected error occurred');
+      setErrorMessage('An unexpected error occurred');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8'>
+    <div className='min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-16'>
+      <div className='absolute top-16 left-16'>
+        <Image
+          src='/auth/logo.svg'
+          alt='logo'
+          width={123}
+          height={22}
+          className='object-cover'
+        />
+      </div>
       <div className='max-w-md w-full space-y-8'>
         <div className='text-center'>
-          <h2 className='mt-6 text-3xl font-extrabold text-gray-900'>
-            Forgot your password?
+          <h2 className='mt-6 text-[40px] font-medium text-white'>
+            Reset Password
           </h2>
-          <p className='mt-2 text-sm text-gray-600'>
-            Enter your email address and we'll send you a link to reset your
-            password.
+          <p className='mt-2 text-[#D9D9D9]'>
+            Enter the email address you used when you joined, and we'll send you
+            instructions to reset your password.
           </p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Reset Password</CardTitle>
-            <CardDescription>
-              We'll send you an email with instructions to reset your password
-            </CardDescription>
-          </CardHeader>
-          <CardContent className='space-y-4'>
-            {error && (
-              <Alert variant='destructive'>
-                <AlertDescription>
-                  {typeof error === 'string' ? error : 'An error occurred'}
-                </AlertDescription>
-              </Alert>
-            )}
+        {successMessage && (
+          <div className='text-sm text-green-500 '>{successMessage}</div>
+        )}
 
-            {success && (
-              <Alert>
-                <AlertDescription>{success}</AlertDescription>
-              </Alert>
-            )}
+        {errorMessage && (
+          <div className='text-sm text-red-500'>{errorMessage}</div>
+        )}
 
-            <form onSubmit={handleSubmit} className='space-y-4'>
-              <div className='space-y-2'>
-                <Label htmlFor='email'>Email</Label>
-                <div className='relative'>
-                  <Mail className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
-                  <Input
-                    id='email'
-                    type='email'
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    placeholder='Enter your email'
-                    className='pl-10'
-                    required
-                  />
-                </div>
-              </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className='space-y-4'
+          >
+            <FormField
+              control={form.control}
+              name='email'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-white text-xs font-medium'>
+                    Email
+                  </FormLabel>
+                  <FormControl>
+                    <div className='relative'>
+                      <Mail className='absolute left-3 top-3 h-4 w-4 text-[#B5B5B5]' />
+                      <Input
+                        {...field}
+                        type='email'
+                        placeholder='Enter your email'
+                        className='text-white placeholder:text-[#B5B5B5] border-[#2B2B2B] bg-[#1C1C1C] focus-visible:ring-0 focus-visible:ring-offset-0 caret-white w-full pl-10'
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <Button type='submit' className='w-full' disabled={isLoading}>
-                {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
-                Send Reset Link
-              </Button>
-            </form>
+            <BoundlessButton
+              type='submit'
+              className='w-full'
+              disabled={isLoading}
+              fullWidth
+              loading={isLoading}
+            >
+              Send Reset Link
+            </BoundlessButton>
+          </form>
+        </Form>
 
-            <div className='text-center'>
-              <Link
-                href='/auth/signin'
-                className='inline-flex items-center text-sm text-blue-600 hover:text-blue-500'
-              >
-                <ArrowLeft className='mr-1 h-4 w-4' />
-                Back to sign in
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
+        <div className='text-center'>
+          <Link
+            href='/auth/signin'
+            className='inline-flex items-center text-sm text-primary hover:text-primary/80'
+          >
+            <ArrowLeft className='mr-1 h-4 w-4' />
+            Back to sign in
+          </Link>
+        </div>
       </div>
     </div>
   );
