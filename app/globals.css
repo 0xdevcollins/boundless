@@ -3,6 +3,30 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Custom scrollbar styles for comment modal */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #4a4a4a #1a1a1a;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #4a4a4a;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5a;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

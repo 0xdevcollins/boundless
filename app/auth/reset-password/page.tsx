@@ -3,62 +3,71 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Lock, Eye, EyeOff } from 'lucide-react';
+import { Lock, Eye, EyeOff } from 'lucide-react';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { BoundlessButton } from '@/components/buttons';
+
+const resetPasswordSchema = z
+  .object({
+    password: z.string().min(8, {
+      message: 'Password must be at least 8 characters long',
+    }),
+    confirmPassword: z.string(),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
+
+type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPasswordPage() {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   const [token, setToken] = useState('');
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const form = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: {
+      password: '',
+      confirmPassword: '',
+    },
+  });
 
   useEffect(() => {
     const tokenParam = searchParams.get('token');
     if (tokenParam) {
       setToken(tokenParam);
     } else {
-      setError('Invalid reset link. Please request a new password reset.');
+      setErrorMessage(
+        'Invalid reset link. Please request a new password reset.'
+      );
     }
   }, [searchParams]);
 
-  const validateForm = () => {
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return false;
-    }
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters long');
-      return false;
-    }
-    return true;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (data: ResetPasswordFormData) => {
     setIsLoading(true);
-    setError('');
-    setSuccess('');
-
-    if (!validateForm()) {
-      setIsLoading(false);
-      return;
-    }
+    setSuccessMessage('');
+    setErrorMessage('');
 
     try {
       const response = await fetch('/api/auth/reset-password', {
@@ -68,26 +77,25 @@ export default function ResetPasswordPage() {
         },
         body: JSON.stringify({
           token,
-          newPassword: password,
+          newPassword: data.password,
         }),
       });
 
-      const data = await response.json();
+      const responseData = await response.json();
 
       if (response.ok) {
-        setSuccess(
+        setSuccessMessage(
           'Password reset successfully! You can now sign in with your new password.'
         );
-        setPassword('');
-        setConfirmPassword('');
+        form.reset();
         setTimeout(() => {
           router.push('/auth/signin');
         }, 2000);
       } else {
-        setError(data.message || 'Failed to reset password');
+        setErrorMessage(responseData.message || 'Failed to reset password');
       }
     } catch {
-      setError('An unexpected error occurred');
+      setErrorMessage('An unexpected error occurred');
     } finally {
       setIsLoading(false);
     }
@@ -120,110 +128,120 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8'>
+    <div className='min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8'>
       <div className='max-w-md w-full space-y-8'>
         <div className='text-center'>
-          <h2 className='mt-6 text-3xl font-extrabold text-gray-900'>
+          <h2 className='mt-6 text-[40px] font-medium text-white'>
             Reset your password
           </h2>
-          <p className='mt-2 text-sm text-gray-600'>
-            Enter your new password below
-          </p>
+          <p className='mt-2 text-[#D9D9D9]'>Enter your new password below</p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>New Password</CardTitle>
-            <CardDescription>
-              Choose a strong password for your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent className='space-y-4'>
-            {error && (
-              <Alert variant='destructive'>
-                <AlertDescription>
-                  {typeof error === 'string' ? error : 'An error occurred'}
-                </AlertDescription>
-              </Alert>
-            )}
+        {successMessage && (
+          <div className='text-sm text-green-500'>{successMessage}</div>
+        )}
 
-            {success && (
-              <Alert>
-                <AlertDescription>{success}</AlertDescription>
-              </Alert>
-            )}
+        {errorMessage && (
+          <div className='text-sm text-red-500'>{errorMessage}</div>
+        )}
 
-            <form onSubmit={handleSubmit} className='space-y-4'>
-              <div className='space-y-2'>
-                <Label htmlFor='password'>New Password</Label>
-                <div className='relative'>
-                  <Lock className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
-                  <Input
-                    id='password'
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    placeholder='Enter new password'
-                    className='pl-10 pr-10'
-                    required
-                  />
-                  <button
-                    type='button'
-                    onClick={() => setShowPassword(!showPassword)}
-                    className='absolute right-3 top-3 text-gray-400 hover:text-gray-600'
-                  >
-                    {showPassword ? (
-                      <EyeOff className='h-4 w-4' />
-                    ) : (
-                      <Eye className='h-4 w-4' />
-                    )}
-                  </button>
-                </div>
-              </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className='space-y-4'
+          >
+            <FormField
+              control={form.control}
+              name='password'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-white text-xs font-medium'>
+                    New Password
+                  </FormLabel>
+                  <FormControl>
+                    <div className='relative'>
+                      <Lock className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
+                      <Input
+                        {...field}
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder='Enter new password'
+                        className='pl-10 pr-10 text-white placeholder:text-[#B5B5B5] border-[#2B2B2B] bg-[#1C1C1C] focus-visible:ring-0 focus-visible:ring-offset-0 caret-white w-full'
+                      />
+                      <button
+                        type='button'
+                        onClick={() => setShowPassword(!showPassword)}
+                        className='absolute right-3 top-3 text-gray-400 hover:text-gray-600'
+                      >
+                        {showPassword ? (
+                          <EyeOff className='h-4 w-4' />
+                        ) : (
+                          <Eye className='h-4 w-4' />
+                        )}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <div className='space-y-2'>
-                <Label htmlFor='confirmPassword'>Confirm New Password</Label>
-                <div className='relative'>
-                  <Lock className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
-                  <Input
-                    id='confirmPassword'
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={e => setConfirmPassword(e.target.value)}
-                    placeholder='Confirm new password'
-                    className='pl-10 pr-10'
-                    required
-                  />
-                  <button
-                    type='button'
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className='absolute right-3 top-3 text-gray-400 hover:text-gray-600'
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className='h-4 w-4' />
-                    ) : (
-                      <Eye className='h-4 w-4' />
-                    )}
-                  </button>
-                </div>
-              </div>
+            <FormField
+              control={form.control}
+              name='confirmPassword'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-white text-xs font-medium'>
+                    Confirm New Password
+                  </FormLabel>
+                  <FormControl>
+                    <div className='relative'>
+                      <Lock className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
+                      <Input
+                        {...field}
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        placeholder='Confirm new password'
+                        className='pl-10 pr-10 text-white placeholder:text-[#B5B5B5] border-[#2B2B2B] bg-[#1C1C1C] focus-visible:ring-0 focus-visible:ring-offset-0 caret-white w-full'
+                      />
+                      <button
+                        type='button'
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                        className='absolute right-3 top-3 text-gray-400 hover:text-gray-600'
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className='h-4 w-4' />
+                        ) : (
+                          <Eye className='h-4 w-4' />
+                        )}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <Button type='submit' className='w-full' disabled={isLoading}>
-                {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
-                Reset Password
-              </Button>
-            </form>
+            <BoundlessButton
+              type='submit'
+              className='w-full'
+              disabled={isLoading}
+              fullWidth
+              loading={isLoading}
+            >
+              Reset Password
+            </BoundlessButton>
+          </form>
+        </Form>
 
-            <div className='text-center'>
-              <Link
-                href='/auth/signin'
-                className='text-sm text-blue-600 hover:text-blue-500'
-              >
-                Back to sign in
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
+        <div className='text-center'>
+          <Link
+            href='/auth/signin'
+            className='text-sm text-primary hover:text-primary/80'
+          >
+            Back to sign in
+          </Link>
+        </div>
       </div>
     </div>
   );

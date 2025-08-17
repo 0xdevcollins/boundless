@@ -108,10 +108,14 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
           });
         } catch (error) {
+          const errorMessage =
+            error instanceof Error ? error.message : 'Login failed';
           set({
-            error: error instanceof Error ? error.message : 'Login failed',
+            error: errorMessage,
             isLoading: false,
           });
+          // Clear tokens if login fails
+          get().setTokens(null, null);
           throw error;
         }
       },
@@ -213,7 +217,18 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => {
+        // Check if we're in a browser environment
+        if (typeof window !== 'undefined') {
+          return localStorage;
+        }
+        // Return a mock storage for SSR
+        return {
+          getItem: () => null,
+          setItem: () => {},
+          removeItem: () => {},
+        };
+      }),
       partialize: state => ({
         user: state.user,
         accessToken: state.accessToken,

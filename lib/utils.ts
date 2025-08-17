@@ -86,3 +86,8 @@ export function formatBytes(bytes: number, decimals = 2) {
 
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
+
+export const maskEmail = (email: string) => {
+  const [username, domain] = email.split('@');
+  return `${username.slice(0, 2)}*****@${domain}`;
+};

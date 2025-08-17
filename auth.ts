@@ -74,6 +74,7 @@ declare module 'next-auth' {
 const getMe = (token?: string) => getMeBase(token);
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  debug: process.env.NODE_ENV === 'development',
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -122,7 +123,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               ? credentials.password
               : '';
 
+          console.log('Attempting login with:', { email, password: '***' });
+
           const response = await login({ email, password });
+
+          console.log('Login response:', {
+            success: !!response,
+            hasAccessToken: !!response?.accessToken,
+            hasRefreshToken: !!response?.refreshToken,
+          });
 
           if (response && response.accessToken) {
             const user = await getMe(response.accessToken);
@@ -132,8 +141,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               }
 
               const userInfo = extractUserInfo(user);
-              //   Cookies.set('accessToken', response.accessToken);
-              //   Cookies.set('refreshToken', response.refreshToken || '');
+              console.log('User info extracted:', userInfo);
 
               return {
                 ...userInfo,
@@ -142,11 +150,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               };
             }
           }
+          console.log('Login failed: No valid response or user data');
           return null;
         } catch (err) {
+          console.error('Login error in NextAuth:', err);
           if (err instanceof Error && err.message === 'UNVERIFIED_EMAIL') {
             throw err;
           }
+          // Return null for any other error to indicate login failure
           return null;
         }
       },

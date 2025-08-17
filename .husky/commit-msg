@@ -2,14 +2,23 @@
 
 # Conventional commit message format
 # Format: <type>(<scope>): <description>
-# Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert
+# Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert, merge
+# Also allows Git's standard merge commit format: "Merge branch '...' of ... into ..."
 
-commit_regex='^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .{1,50}'
+# Regex for conventional commits
+conventional_regex='^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert|merge)(\(.+\))?: .{1,50}'
+
+# Regex for Git merge commits
+merge_regex='^Merge branch .* of .* into .*'
+
+# Combined regex - either conventional or merge format
+commit_regex="($conventional_regex|$merge_regex)"
 
 if ! grep -qE "$commit_regex" "$1"; then
     echo "❌ Invalid commit message format."
-    echo "✅ Please use conventional commit format:"
-    echo "   <type>(<scope>): <description>"
+    echo "✅ Please use either:"
+    echo "   1. Conventional commit format: <type>(<scope>): <description>"
+    echo "   2. Git's standard merge format: Merge branch '...' of ... into ..."
     echo ""
     echo "📝 Examples:"
     echo "   feat: add new wallet connection feature"
@@ -17,8 +26,9 @@ if ! grep -qE "$commit_regex" "$1"; then
     echo "   docs: update README with setup instructions"
     echo "   style: format code with prettier"
     echo "   refactor(components): improve wallet button"
+    echo "   Merge branch 'main' of https://github.com/user/repo into feature/branch"
     echo ""
-    echo "🔧 Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert"
+    echo "🔧 Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert, merge"
     exit 1
 fi
 
