@@ -13,6 +13,8 @@ import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
 import { useWalletStore } from '@/hooks/use-wallet';
 import { toast } from 'sonner';
+import { TooltipContent, TooltipProvider } from '@radix-ui/react-tooltip';
+import { Tooltip, TooltipTrigger } from '../ui/tooltip';
 
 const ConnectWallet = ({
   open,
@@ -214,6 +216,29 @@ const ConnectWallet = ({
               Connect Wallet
             </DialogTitle>
             <CircleQuestionMark className='w-4 h-4 text-[#484848]' />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <CircleQuestionMark className='w-4 h-4 text-[#484848]' />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <h4 className='text-white text-lg font-medium'>
+                    What is a Wallet?
+                  </h4>
+                  <p className='text-[#B5B5B5] text-sm'>
+                    Wallets are used to send, receive, and store the keys you
+                    use to sign blockchain transactions.
+                  </p>
+                  <h4 className='text-white text-lg font-medium'>
+                    What is a Stellar Blockchain?
+                  </h4>
+                  <p className='text-[#B5B5B5] text-sm'>
+                    Stellar is a decentralized network that allows you to send
+                    and receive digital assets.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <Button
             variant='ghost'
