@@ -3,11 +3,12 @@ import { PriceDisplay } from '@/components/PriceDisplay';
 import Card from '@/components/card';
 import RecentProjects from '@/components/overview/RecentProjects';
 import { mockProjects } from '@/lib/mock';
-import RecentContributions from '@/components/overview/ReecntContributions';
-import GrantHistory from '@/components/overview/GrantHistory';
+// import RecentContributions from '@/components/overview/ReecntContributions';
+// import GrantHistory from '@/components/overview/GrantHistory';
 import PageTransition from '@/components/PageTransition';
 import { Coins, History } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
+import CampaignTable from '@/components/campaigns/CampaignTable';
 
 export default function UserPage() {
   const { user } = useAuth();
@@ -75,12 +76,15 @@ export default function UserPage() {
           <div className='space-y-8'>
             {/* Recent Projects - Full Width */}
             <RecentProjects projects={mockProjects} />
+            <div className='bg-[#1C1C1C] p-4 sm:p-6 rounded-[12px] flex flex-col gap-6 sm:gap-8 w-full'>
+              <CampaignTable />
+            </div>
 
             {/* Recent Contributions and Grant History - Side by Side on larger screens */}
-            <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
+            {/* <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
               <RecentContributions projects={[]} />
               <GrantHistory projects={[]} />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
