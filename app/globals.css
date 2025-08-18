@@ -158,3 +158,18 @@
 button {
   cursor: pointer;
 }
+
+/* reduce scrollbar width */
+.slim-scrollbar {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: var(--background);
+}
+
+.slim-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.slim-scrollbar::-webkit-scrollbar-track {
+  background-color: transparent;
+}
