@@ -20,6 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Badge } from '../ui/badge';
 import Image from 'next/image';
 import { toast } from 'sonner';
+import CampaignSummary from './CampaignSummary';
 
 interface Campaign {
   id: string;
@@ -601,7 +602,7 @@ const CampaignTable = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [campaignSummaryOpen, setCampaignSummaryOpen] = useState(false);
   const filterOptions = [
     { value: 'all', label: 'All' },
     { value: 'live', label: 'Live' },
@@ -642,7 +643,7 @@ const CampaignTable = () => {
           toast.success('Campaign shared successfully');
           break;
         case 'view-summary':
-          toast.info('Opening campaign summary...');
+          setCampaignSummaryOpen(true);
           break;
         case 'view-history':
           toast.info('Opening campaign history...');
@@ -787,6 +788,10 @@ const CampaignTable = () => {
           ))
         )}
       </div>
+      <CampaignSummary
+        open={campaignSummaryOpen}
+        setOpen={setCampaignSummaryOpen}
+      />
     </div>
   );
 };

@@ -136,7 +136,7 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
         <div
           className={cn(
             'flex-1 overflow-y-auto',
-            'slim-scrollbar',
+            'custom-scrollbar',
             'px-4 pb-4'
           )}
         >
