@@ -91,3 +91,7 @@ export const maskEmail = (email: string) => {
   const [username, domain] = email.split('@');
   return `${username.slice(0, 2)}*****@${domain}`;
 };
+
+export const generateCampaignLink = async (projectId: string) => {
+  return `${process.env.NEXT_PUBLIC_APP_URL}/project/${projectId}`;
+};

@@ -1,23 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { mockCampaignDetails } from '../mock';
+import api from './api';
 import { ProjectInitRequest } from './types';
-import { mockCampaignDetails } from '@/lib/mock';
 
-// Mock API functions that don't require the base URL
-export const initProject = async (_data: ProjectInitRequest) => {
-  // Mock implementation for now
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve({
-        data: {
-          projectId: 'mock-project-' + Date.now(),
-          message: 'Project initialized successfully',
-        },
-      });
-    }, 1000);
-  });
+export const initProject = async (data: ProjectInitRequest) => {
+  const res = await api.post('/projects', data);
+  return res;
 };
 
-// New API functions for campaign review and launch
 export const getCampaignDetails = async (_projectId: string) => {
   // Mock implementation for now
   return new Promise(resolve => {
