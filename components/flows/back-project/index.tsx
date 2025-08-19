@@ -95,7 +95,7 @@ const BackProject = () => {
         setOpen={setIsSheetOpen}
         // title="Back Project"
         showCloseButton={true}
-        contentClassName={backProjectState === 'form' ? 'h-[60vh]' : 'h-[85vh]'}
+        contentClassName={`h-[100vh]`}
         className='mx-4'
       >
         {renderSheetContent()}
