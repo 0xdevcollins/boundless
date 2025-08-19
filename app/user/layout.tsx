@@ -4,6 +4,9 @@ import SidebarLayout from '@/components/layout/sidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { redirect } from 'next/navigation';
 
+// Force dynamic rendering for all user pages
+export const dynamic = 'force-dynamic';
+
 export default async function UserLayout({
   children,
 }: Readonly<{

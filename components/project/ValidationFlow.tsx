@@ -6,6 +6,7 @@ import { Project } from '@/types/project';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
+import CommentModal from '../comment/modal';
 import {
   ThumbsUp,
   MessageCircle,
@@ -23,6 +24,7 @@ interface ValidationFlowProps {
   onVote?: (projectId: string) => void;
   onComment?: (projectId: string, comment: string) => void;
   onReact?: (commentId: string, reaction: string) => void;
+  onSuccess?: () => void;
 }
 
 const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
@@ -107,8 +109,8 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
   ];
 
   return (
-    <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-      <div className='lg:col-span-2 space-y-6'>
+    <div>
+      <div className='w-[500px] flex flex-col gap-3 pt-3 pb-6 space-y-6'>
         <div className='flex justify-between items-start'>
           <div className='flex items-center space-x-4'>
             <div className='w-12 h-12 bg-[#2A2A2A] rounded-full flex items-center justify-center'>
@@ -192,13 +194,20 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
                 <span className='font-semibold'>{voteCount}</span>
               </Button>
 
-              <Button
-                variant='outline'
-                className='flex items-center space-x-2 border-[#2B2B2B] bg-[#212121] hover:bg-[#2A2A2A] text-[#F5F5F5]'
+              <CommentModal
+                onCommentSubmit={comment => {
+                  // eslint-disable-next-line no-console
+                  console.log('Comment submitted:', comment);
+                }}
               >
-                <MessageCircle className='w-4 h-4 fill-transparent' />
-                <span className='font-semibold'>{commentCount}</span>
-              </Button>
+                <Button
+                  variant='outline'
+                  className='flex items-center space-x-2 border-[#2B2B2B] bg-[#212121] hover:bg-[#2A2A2A] text-[#F5F5F5]'
+                >
+                  <MessageCircle className='w-4 h-4 fill-transparent' />
+                  <span className='font-semibold'>{commentCount}</span>
+                </Button>
+              </CommentModal>
             </div>
 
             <div className='flex items-center space-x-2 text-[#B5B5B5] text-sm'>

@@ -6,6 +6,7 @@ import { Stepper } from '../stepper';
 // import { MilestoneReview } from './';
 import Initialize from './Initialize';
 import ValidationFlow from './ValidationFlow';
+import LaunchCampaignFlow from './LaunchCampaignFlow';
 import { useProjectSheetStore } from '@/lib/stores/project-sheet-store';
 // import ValidationFlow from './ValidationFlow';
 
@@ -31,7 +32,8 @@ const initialSteps: Step[] = [
   },
   {
     title: 'Launch Campaign',
-    description: 'Set milestones, activate escrow, and start receiving funds.',
+    description:
+      'Finalize campaign details and deploy smart escrow to go live and receive funding.',
     state: 'pending',
   },
 ];
@@ -47,9 +49,14 @@ const ProjectSheetFlow: React.FC<ProjectSheetFlowProps> = ({
 }) => {
   // Note: sub-steps handled internally by Initialize and ValidationFlow
   const [steps, setSteps] = useState<Step[]>(initialSteps);
+  const [currentStep, setCurrentStep] = useState<
+    'initialize' | 'validate' | 'launch'
+  >('initialize');
+  const [projectId, setProjectId] = useState<string | null>(null);
   const sheet = useProjectSheetStore();
 
-  const handleFormSuccess = () => {
+  const handleFormSuccess = (projectId: string) => {
+    setProjectId(projectId);
     setSteps(prevSteps =>
       prevSteps.map((step, index) => {
         if (index === 0) {
@@ -57,6 +64,41 @@ const ProjectSheetFlow: React.FC<ProjectSheetFlowProps> = ({
         }
         if (index === 1) {
           return { ...step, state: 'active' };
+        }
+        return step;
+      })
+    );
+    setCurrentStep('validate');
+  };
+
+  const handleValidationSuccess = () => {
+    setSteps(prevSteps =>
+      prevSteps.map((step, index) => {
+        if (index === 1) {
+          return { ...step, state: 'completed' };
+        }
+        if (index === 2) {
+          return { ...step, state: 'active' };
+        }
+        return step;
+      })
+    );
+    setCurrentStep('launch');
+  };
+
+  const handleLaunchComplete = () => {
+    handleClose();
+  };
+
+  const handleBackToValidation = () => {
+    setCurrentStep('validate');
+    setSteps(prevSteps =>
+      prevSteps.map((step, index) => {
+        if (index === 1) {
+          return { ...step, state: 'active' };
+        }
+        if (index === 2) {
+          return { ...step, state: 'pending' };
         }
         return step;
       })
@@ -69,12 +111,30 @@ const ProjectSheetFlow: React.FC<ProjectSheetFlowProps> = ({
     onOpenChange(false);
     sheet.reset();
     setSteps(initialSteps);
+    setCurrentStep('initialize');
+    setProjectId(null);
   };
 
   const renderContent = () => {
-    if (sheet.mode === 'validate' && sheet.project) {
-      return <ValidationFlow project={sheet.project} />;
+    if (currentStep === 'launch' && projectId) {
+      return (
+        <LaunchCampaignFlow
+          projectId={projectId}
+          onBack={handleBackToValidation}
+          onComplete={handleLaunchComplete}
+        />
+      );
     }
+
+    if (currentStep === 'validate' && sheet.project) {
+      return (
+        <ValidationFlow
+          project={sheet.project}
+          onSuccess={handleValidationSuccess}
+        />
+      );
+    }
+
     return <Initialize onSuccess={handleFormSuccess} />;
   };
 

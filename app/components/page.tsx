@@ -73,7 +73,7 @@ export default function Components() {
             }
           />
         </div>
-        <RecentProjects projects={[]} />
+        <RecentProjects />
         <div className='flex gap-4'>
           <RecentContributions projects={[]} />
           <GrantHistory projects={[]} />

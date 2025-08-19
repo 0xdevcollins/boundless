@@ -107,10 +107,8 @@ const walletCapabilities = {
 const checkFreighterAvailability = async (): Promise<boolean> => {
   try {
     const connected = await freighterIsConnected();
-    console.log('Freighter direct API check:', connected);
     return Boolean(connected);
-  } catch (error) {
-    console.log('Freighter direct API not available:', error);
+  } catch {
     return false;
   }
 };
@@ -157,13 +155,6 @@ export const useWalletStore = create<WalletState>()(
               ? WalletNetwork.TESTNET
               : WalletNetwork.PUBLIC;
 
-          console.log(
-            'Initializing wallet kit with network:',
-            network,
-            'WalletNetwork:',
-            walletNetwork
-          );
-
           const kit = new StellarWalletsKit({
             network: walletNetwork,
             selectedWalletId: 'freighter',
@@ -174,7 +165,6 @@ export const useWalletStore = create<WalletState>()(
 
           // Get available wallets
           const availableWallets = await kit.getSupportedWallets();
-          console.log('Available wallets from kit:', availableWallets);
 
           // Check if Freighter is available via direct API if not detected by kit
           const freighterAvailable = availableWallets.some(
@@ -183,9 +173,6 @@ export const useWalletStore = create<WalletState>()(
           if (!freighterAvailable) {
             const directFreighterAvailable = await checkFreighterAvailability();
             if (directFreighterAvailable) {
-              console.log(
-                'Freighter available via direct API, adding to available wallets'
-              );
               // Add Freighter to available wallets if detected via direct API
               availableWallets.push({
                 id: 'freighter',
@@ -204,7 +191,6 @@ export const useWalletStore = create<WalletState>()(
             network,
           });
         } catch (error) {
-          console.error('Failed to initialize wallet kit:', error);
           set({
             error:
               error instanceof Error
@@ -224,27 +210,14 @@ export const useWalletStore = create<WalletState>()(
         set({ isLoading: true, error: null });
 
         try {
-          console.log(
-            'Connecting to wallet:',
-            walletId,
-            'on network:',
-            currentNetwork
-          );
-
           // Special handling for Freighter - try direct API if kit doesn't work
           if (walletId === 'freighter') {
             try {
               // First try the kit
               walletKit.setWallet(walletId);
-              const addressResult = await walletKit.getAddress();
-              console.log('Freighter connected via kit:', addressResult);
+              await walletKit.getAddress();
               usingFreighterAPI = false;
-            } catch (kitError) {
-              console.log(
-                'Freighter kit connection failed, trying direct API:',
-                kitError
-              );
-
+            } catch {
               // Try direct Freighter API as fallback
               const directAvailable = await checkFreighterAvailability();
               if (!directAvailable) {
@@ -256,7 +229,6 @@ export const useWalletStore = create<WalletState>()(
               // Use direct Freighter API
               await freighterSetAllowed();
               const address = await freighterGetAddress();
-              console.log('Freighter connected via direct API:', address);
               usingFreighterAPI = true;
 
               // Get network from Freighter
@@ -274,11 +246,7 @@ export const useWalletStore = create<WalletState>()(
                       ? WalletNetwork.TESTNET
                       : WalletNetwork.PUBLIC,
                 };
-              } catch (networkError) {
-                console.log(
-                  'Failed to get network from Freighter, using current:',
-                  networkError
-                );
+              } catch {
                 networkResult = {
                   network: currentNetwork === 'testnet' ? 'TESTNET' : 'PUBLIC',
                   networkPassphrase:
@@ -317,23 +285,15 @@ export const useWalletStore = create<WalletState>()(
           try {
             // Try to get address directly
             addressResult = await walletKit.getAddress();
-            console.log('Direct address result:', addressResult);
-          } catch (directError) {
-            console.log(
-              'Direct connection failed, trying alternative method:',
-              directError
-            );
-
+          } catch {
             // For some wallets like Albedo, we might need to trigger a connection first
             if (walletId === 'albedo') {
               // Albedo might need a different approach
-              console.log('Attempting Albedo-specific connection...');
             }
 
             // Try again after a short delay
             await new Promise(resolve => setTimeout(resolve, 1000));
             addressResult = await walletKit.getAddress();
-            console.log('Retry address result:', addressResult);
           }
 
           if (!addressResult || !addressResult.address) {
@@ -344,12 +304,7 @@ export const useWalletStore = create<WalletState>()(
           let networkResult;
           try {
             networkResult = await walletKit.getNetwork();
-            console.log('Network result:', networkResult);
-          } catch (networkError) {
-            console.log(
-              'Failed to get network, using current network:',
-              networkError
-            );
+          } catch {
             // Use current network if we can't get it from wallet
             networkResult = {
               network: currentNetwork === 'testnet' ? 'TESTNET' : 'PUBLIC',
@@ -384,7 +339,6 @@ export const useWalletStore = create<WalletState>()(
             canSignAuthEntry: capabilities.canSignAuthEntry,
           });
         } catch (error) {
-          console.error('Failed to connect wallet:', error);
           set({
             isLoading: false,
             error:
@@ -418,8 +372,6 @@ export const useWalletStore = create<WalletState>()(
       },
 
       switchNetwork: async (network: StellarNetwork) => {
-        console.log('Switching network from', currentNetwork, 'to', network);
-
         // Disconnect current wallet if connected
         const { isConnected, selectedWallet } = get();
         if (isConnected && selectedWallet) {
@@ -433,8 +385,7 @@ export const useWalletStore = create<WalletState>()(
         if (isConnected && selectedWallet) {
           try {
             await get().connectWallet(selectedWallet);
-          } catch (error) {
-            console.error('Failed to reconnect after network switch:', error);
+          } catch {
             // Don't throw here, just log the error
           }
         }
@@ -455,32 +406,21 @@ export const useWalletStore = create<WalletState>()(
         }
 
         try {
-          console.log(
-            'Signing transaction with wallet:',
-            selectedWallet,
-            'usingFreighterAPI:',
-            usingFreighterAPI
-          );
-
           let result;
           if (usingFreighterAPI && selectedWallet === 'freighter') {
             // Use direct Freighter API
             result = await freighterSignTransaction(xdr);
-            console.log(
-              'Transaction signed successfully via direct Freighter API'
-            );
+
             return typeof result === 'string'
               ? result
               : result.signedTxXdr || String(result);
           } else {
             // Use wallet kit
             result = await walletKit!.signTransaction(xdr);
-            console.log('Transaction signed successfully via wallet kit');
+
             return result.signedTxXdr;
           }
         } catch (error) {
-          console.error('Transaction signing failed:', error);
-
           // Provide more specific error messages
           let errorMessage = 'Failed to sign transaction';
           if (error && typeof error === 'object' && 'message' in error) {
@@ -515,13 +455,6 @@ export const useWalletStore = create<WalletState>()(
         }
 
         try {
-          console.log(
-            'Signing message with wallet:',
-            selectedWallet,
-            'usingFreighterAPI:',
-            usingFreighterAPI
-          );
-
           let result;
           if (usingFreighterAPI && selectedWallet === 'freighter') {
             // Direct Freighter API doesn't support message signing
@@ -531,12 +464,10 @@ export const useWalletStore = create<WalletState>()(
           } else {
             // Use wallet kit
             result = await walletKit!.signMessage(message);
-            console.log('Message signed successfully via wallet kit');
+
             return result.signedMessage;
           }
         } catch (error) {
-          console.error('Message signing failed:', error);
-
           // Provide more specific error messages
           let errorMessage = 'Failed to sign message';
           if (error && typeof error === 'object' && 'message' in error) {
@@ -567,13 +498,6 @@ export const useWalletStore = create<WalletState>()(
         }
 
         try {
-          console.log(
-            'Signing auth entry with wallet:',
-            selectedWallet,
-            'usingFreighterAPI:',
-            usingFreighterAPI
-          );
-
           let result;
           if (usingFreighterAPI && selectedWallet === 'freighter') {
             // Direct Freighter API doesn't support auth entry signing
@@ -583,12 +507,10 @@ export const useWalletStore = create<WalletState>()(
           } else {
             // Use wallet kit
             result = await walletKit!.signAuthEntry(authEntry);
-            console.log('Auth entry signed successfully via wallet kit');
+
             return result.signedAuthEntry;
           }
         } catch (error) {
-          console.error('Auth entry signing failed:', error);
-
           // Provide more specific error messages
           let errorMessage = 'Failed to sign auth entry';
           if (error && typeof error === 'object' && 'message' in error) {
@@ -674,9 +596,8 @@ export function useWalletConnection() {
 
     try {
       await connectWallet(walletId);
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to connect wallet';
+    } catch {
+      const errorMessage = 'Failed to connect wallet';
       setError(errorMessage);
     } finally {
       setIsConnecting(false);
@@ -702,9 +623,7 @@ export function useNetworkSwitcher() {
 
     try {
       await switchNetwork(newNetwork);
-    } catch (error) {
-      console.error('Failed to switch network:', error);
-    }
+    } catch {}
   };
 
   return {

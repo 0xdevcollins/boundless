@@ -35,21 +35,11 @@ const steps: Step[] = [
 
 function ProjectSubmissionFlow() {
   const [open, setOpen] = useState(false);
-  const [stepperState, setStepperState] = useState<Step[]>(steps);
+  const [stepperState] = useState<Step[]>(steps);
   const [submissionStatus, setSubmissionStatus] = useState('idle');
 
   const handleSuccess = () => {
     setSubmissionStatus('success');
-    const newSteps = stepperState.map((step, index) => {
-      if (index === 0) {
-        return { ...step, state: 'completed' as const };
-      }
-      if (index === 1) {
-        return { ...step, state: 'active' as const };
-      }
-      return step;
-    });
-    setStepperState(newSteps);
   };
 
   const renderContent = () => {

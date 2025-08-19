@@ -11,6 +11,11 @@ export interface Project {
   status: string;
   createdAt: string;
   updatedAt: string;
+  // Owner information for filtering
+  owner?: string | null;
+  ownerName?: string;
+  ownerUsername?: string;
+  ownerAvatar?: string;
 }
 
 export type RecentProjectsProps = Project;

@@ -226,6 +226,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
         side='bottom'
         maxHeight='90vh'
         minHeight='60vh'
+        contentClassName='h-[95vh]'
         className='bg-black border-[#2A2A2A] text-white p-0'
       >
         <div className='flex flex-col xl:flex-row h-full overflow-hidden'>

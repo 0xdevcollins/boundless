@@ -17,7 +17,6 @@ const Page = () => {
     if (comment && comment.trim()) {
       // Comment is valid and can be processed
       // Add your comment handling logic here
-      console.log('Comment submitted:', comment);
 
       // Close the sheet after submission
       setIsSheetOpen(false);

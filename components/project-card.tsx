@@ -1,8 +1,11 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { Project } from '@/types/project';
 import { BoundlessButton } from '@/components/buttons';
-import { useProjectSheetStore } from '@/lib/stores/project-sheet-store';
+import BoundlessSheet from './sheet/boundless-sheet';
+import ValidationFlow from './project/ValidationFlow';
+import LaunchCampaignFlow from './campaigns/LaunchCampaignFlow';
+import CommentModal from './comment/modal';
 import {
   ThumbsUp,
   UserIcon,
@@ -31,6 +34,7 @@ import { Button } from './ui/button';
 import CircularProgress from './ui/circular-progress';
 import { motion } from 'framer-motion';
 import { cardHover, fadeInUp } from '@/lib/motion';
+import Stepper from './stepper/Stepper';
 
 interface ProjectCardProps {
   project: Project;
@@ -42,6 +46,49 @@ interface ProjectCardProps {
   showCreatorName?: boolean;
   showEllipsisMenu?: boolean;
 }
+type StepState = 'active' | 'pending' | 'completed';
+
+type Step = {
+  title: string;
+  description: string;
+  state: StepState;
+};
+
+const steps: Step[] = [
+  {
+    title: 'Initialize',
+    description: 'Submit your project idea to kickstart your campaign journey.',
+    state: 'completed',
+  },
+  {
+    title: 'Validate',
+    description: 'Get admin approval and gather public support through voting.',
+    state: 'active',
+  },
+  {
+    title: 'Launch Campaign',
+    description: 'Set milestones, activate escrow, and start receiving funds.',
+    state: 'pending',
+  },
+];
+
+const campaignSteps: Step[] = [
+  {
+    title: 'Initialize',
+    description: 'Submit your project idea to kickstart your campaign journey.',
+    state: 'completed',
+  },
+  {
+    title: 'Validate',
+    description: 'Get admin approval and gather public support through voting.',
+    state: 'completed',
+  },
+  {
+    title: 'Launch Campaign',
+    description: 'Set milestones, activate escrow, and start receiving funds.',
+    state: 'active',
+  },
+];
 
 const ProjectCard: React.FC<ProjectCardProps> = ({
   project,
@@ -49,11 +96,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   showCreatorName = false,
   showEllipsisMenu = false,
 }) => {
-  const sheet = useProjectSheetStore();
+  const [validationSheetOpen, setValidationSheetOpen] = useState(false);
+  const [launchCampaignSheetOpen, setLaunchCampaignSheetOpen] = useState(false);
+  const [stepperState] = useState<Step[]>(steps);
+  const [campaignStepperState] = useState<Step[]>(campaignSteps);
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'pending':
         return 'bg-[#865503] text-[#FEF6E7]';
+      case 'idea':
       case 'under_review':
         return 'bg-[#865503] text-[#FEF6E7]';
       case 'approved':
@@ -92,6 +143,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     switch (status.toLowerCase()) {
       case 'pending':
         return { current: 0, total: 100, showProgress: false };
+      case 'idea':
       case 'under_review':
         return { current: 0, total: 100, showProgress: false };
       case 'approved':
@@ -111,6 +163,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     switch (status.toLowerCase()) {
       case 'pending':
         return { votes: 0, comments: 0, shares: 0 };
+      case 'idea':
       case 'under_review':
         return { votes: 0, comments: 0, shares: 0 };
       case 'approved':
@@ -162,7 +215,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               getStatusColor(project.status)
             )}
           >
-            {project.status.replace('_', ' ')}
+            {project.status.toLowerCase() === 'idea'
+              ? 'Under Review'
+              : project.status.replace('_', ' ')}
           </Badge>
         </motion.div>
 
@@ -241,11 +296,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     align='end'
                     className='bg-[#1C1C1C] border-[#2A2A2A]'
                   >
-                    <DropdownMenuItem className='text-white hover:bg-[#2A2A2A]'>
-                      Edit Project
+                    <DropdownMenuItem
+                      className='text-white hover:bg-[#2A2A2A]'
+                      onClick={() => setValidationSheetOpen(true)}
+                    >
+                      View Validation Flow
                     </DropdownMenuItem>
                     <DropdownMenuItem className='text-white hover:bg-[#2A2A2A]'>
-                      View Details
+                      Edit Project
                     </DropdownMenuItem>
                     <DropdownMenuItem className='text-white hover:bg-[#2A2A2A]'>
                       Delete Project
@@ -289,6 +347,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               )}
               onClick={() => onVote?.(project.id)}
               disabled={
+                project.status === 'idea' ||
                 project.status === 'under_review' ||
                 project.status === 'rejected' ||
                 project.status === 'failed'
@@ -306,28 +365,79 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 className='w-[32px] h-[32px]'
               />
             )}
-            <BoundlessButton
-              variant='secondary'
-              size='sm'
-              className='flex-1 border-[1.4px] border-[#2B2B2B] rounded-[10px] bg-[#212121] hover:bg-[#2A2A2A] disabled:bg-[#212121] disabled:border-[#2B2B2B] disabled:text-[#484848]'
-              onClick={() => sheet.openValidate(project)}
-              disabled={
-                project.status === 'under_review' ||
-                project.status === 'rejected' ||
-                project.status === 'failed'
-              }
+            <CommentModal
+              onCommentSubmit={comment => {
+                // eslint-disable-next-line no-console
+                console.log(comment);
+              }}
             >
-              <MessageCircleMore className='w-4 h-4' />
-              <span className='ml-1 font-semibold'>{actionCounts.votes}</span>
-            </BoundlessButton>
+              <BoundlessButton
+                variant='secondary'
+                size='sm'
+                className='flex-1 border-[1.4px] border-[#2B2B2B] rounded-[10px] bg-[#212121] hover:bg-[#2A2A2A] disabled:bg-[#212121] disabled:border-[#2B2B2B] disabled:text-[#484848]'
+                disabled={
+                  project.status === 'idea' ||
+                  project.status === 'under_review' ||
+                  project.status === 'rejected' ||
+                  project.status === 'failed'
+                }
+              >
+                <MessageCircleMore className='w-4 h-4' />
+                <span className='ml-1 font-semibold'>
+                  {actionCounts.comments}
+                </span>
+              </BoundlessButton>
+            </CommentModal>
           </div>
           {project.status === 'validated' && (
             <div>
-              <BoundlessButton>Start Campaign</BoundlessButton>
+              <BoundlessButton onClick={() => setLaunchCampaignSheetOpen(true)}>
+                Start Campaign
+              </BoundlessButton>
             </div>
           )}
         </div>
       </motion.div>
+
+      {/* Validation Flow Sheet */}
+      <BoundlessSheet
+        open={validationSheetOpen}
+        setOpen={setValidationSheetOpen}
+        side='bottom'
+        maxHeight='90vh'
+      >
+        <div className='grid grid-cols-1 md:grid-cols-2 justify-between relative'>
+          <div className='sticky top-0'>
+            <Stepper steps={stepperState} />
+          </div>
+          <div className='flex-1'>
+            <ValidationFlow
+              project={project}
+              onVote={onVote}
+              onSuccess={() => setValidationSheetOpen(false)}
+            />
+          </div>
+        </div>
+      </BoundlessSheet>
+
+      {/* Launch Campaign Flow Sheet */}
+      <BoundlessSheet
+        open={launchCampaignSheetOpen}
+        setOpen={setLaunchCampaignSheetOpen}
+        side='bottom'
+        maxHeight='90vh'
+      >
+        <div className='grid grid-cols-1 md:grid-cols-2 justify-between relative'>
+          <div className='sticky top-0'>
+            <Stepper steps={campaignStepperState} />
+          </div>
+          <div className='flex-1'>
+            <LaunchCampaignFlow
+              onComplete={() => setLaunchCampaignSheetOpen(false)}
+            />
+          </div>
+        </div>
+      </BoundlessSheet>
     </motion.div>
   );
 };

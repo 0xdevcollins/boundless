@@ -43,7 +43,7 @@ function Stepper({ steps }: StepperProps) {
   };
 
   return (
-    <div className='flex flex-col w-[400px] sticky top-0'>
+    <div className='flex flex-col w-full max-w-[400px] sticky top-0'>
       {steps.map((step, index) => {
         const styles = getStepStyles(step.state);
         const isLastStep = index === steps.length - 1;

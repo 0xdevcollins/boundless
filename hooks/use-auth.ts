@@ -17,7 +17,17 @@ export function useAuth(requireAuth = true) {
     error,
     refreshUser,
     clearAuth,
+    syncWithSession,
   } = useAuthStore();
+
+  // Sync with NextAuth session when available
+  useEffect(() => {
+    if (session?.user && status === 'authenticated') {
+      syncWithSession(session.user).catch(() => {
+        // Silently handle sync failure
+      });
+    }
+  }, [session, status, syncWithSession]);
 
   // Determine if we should use Zustand store or NextAuth session
   const shouldUseStore = isAuthenticated || user;
