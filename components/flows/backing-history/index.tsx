@@ -127,7 +127,7 @@ const BackingHistory: React.FC<BackingHistoryProps> = ({
                 placeholder='Search backer or wallet...'
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className='pl-10 py-5 focus:outline-none placeholder:font-medium bg-muted/20 border-muted-foreground/20 text-placeholder placeholder:text-muted-foreground'
+                className='pl-10 py-5 focus:outline-none placeholder:font-medium bg-[#1c1c1c] border-muted-foreground/20 text-placeholder placeholder:text-muted-foreground'
               />
             </div>
             <SortFilterPopover

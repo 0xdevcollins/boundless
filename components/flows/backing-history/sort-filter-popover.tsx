@@ -30,7 +30,7 @@ const SortFilterPopover: React.FC<SortFilterPopoverProps> = ({
         <Button
           variant='outline'
           size='sm'
-          className='bg-muted/20 border-muted-foreground/20 text-white hover:bg-muted/30 w-12 h-12'
+          className='bg-[#1c1c1c] hover:border-primary border-muted-foreground/20 text-white hover:text-white hover:bg-[#1c1c1c] w-12 h-12'
         >
           <Filter className='w-4 h-4' />
         </Button>
@@ -53,8 +53,10 @@ const SortFilterPopover: React.FC<SortFilterPopoverProps> = ({
                   setSortBy('newest');
                   setShowFilterPopover(false);
                 }}
-                className={`w-full justify-between bg-transparent border-none text-white hover:bg-muted/30 ${
-                  sortBy === 'newest' ? 'bg-muted/40' : ''
+                className={`w-full justify-between bg-transparent text-white hover:bg-muted/30 ${
+                  sortBy === 'newest'
+                    ? 'bg-muted/40 border-primary'
+                    : 'border-none'
                 }`}
               >
                 Newest first
@@ -66,8 +68,10 @@ const SortFilterPopover: React.FC<SortFilterPopoverProps> = ({
                   setSortBy('oldest');
                   setShowFilterPopover(false);
                 }}
-                className={`w-full justify-start bg-transparent border-none text-white hover:bg-muted/30 ${
-                  sortBy === 'oldest' ? 'bg-muted/40' : ''
+                className={`w-full justify-start bg-transparent text-white hover:bg-muted/30 ${
+                  sortBy === 'oldest'
+                    ? 'bg-muted/40 border-primary'
+                    : 'border-none'
                 }`}
               >
                 Oldest first
@@ -86,8 +90,10 @@ const SortFilterPopover: React.FC<SortFilterPopoverProps> = ({
                 setSortBy('alphabetical');
                 setShowFilterPopover(false);
               }}
-              className={`w-full justify-start bg-transparent border-none text-white hover:bg-muted/30 ${
-                sortBy === 'alphabetical' ? 'bg-muted/40' : ''
+              className={`w-full justify-start bg-transparent text-white hover:bg-muted/30 ${
+                sortBy === 'alphabetical'
+                  ? 'bg-muted/40 border-primary'
+                  : 'border-none'
               }`}
             >
               Alphabetical
@@ -106,8 +112,10 @@ const SortFilterPopover: React.FC<SortFilterPopoverProps> = ({
                   setSortBy('highest');
                   setShowFilterPopover(false);
                 }}
-                className={`w-full justify-start bg-transparent border-none text-white hover:bg-muted/30 ${
-                  sortBy === 'highest' ? 'bg-muted/40' : ''
+                className={`w-full justify-start bg-transparent text-white hover:bg-muted/30 ${
+                  sortBy === 'highest'
+                    ? 'bg-muted/40 border-primary'
+                    : 'border-none'
                 }`}
               >
                 Highest first
@@ -118,8 +126,10 @@ const SortFilterPopover: React.FC<SortFilterPopoverProps> = ({
                   setSortBy('lowest');
                   setShowFilterPopover(false);
                 }}
-                className={`w-full justify-start bg-transparent border-none text-white hover:bg-muted/30 ${
-                  sortBy === 'lowest' ? 'bg-muted/40' : ''
+                className={`w-full justify-start bg-transparent text-white hover:bg-muted/30 ${
+                  sortBy === 'lowest'
+                    ? 'bg-muted/40 border-primary'
+                    : 'border-none'
                 }`}
               >
                 Lowest first

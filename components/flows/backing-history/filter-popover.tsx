@@ -62,7 +62,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
         <Button
           variant='outline'
           size='sm'
-          className='bg-muted/20 border-muted-foreground/20 text-white hover:bg-muted/30 w-12 h-12'
+          className='bg-[#1c1c1c] hover:border-primary border-muted-foreground/20 text-white hover:text-white hover:bg-[#1c1c1c] w-12 h-12'
         >
           <ArrowUpDown className='w-4 h-4' />
         </Button>
