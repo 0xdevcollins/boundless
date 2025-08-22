@@ -1,8 +1,6 @@
-import Link from 'next/link';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '../ui/button';
 import {
-  ChevronRightIcon,
   MoreVerticalIcon,
   CheckIcon,
   ChevronDownIcon,
@@ -21,185 +19,12 @@ import { Badge } from '../ui/badge';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import CampaignSummary from './CampaignSummary';
-
-interface Campaign {
-  id: string;
-  name: string;
-  creator: {
-    name: string;
-    avatar: string;
-    verified: boolean;
-  };
-  fundingProgress: {
-    current: number;
-    target: number;
-  };
-  endDate: string;
-  milestones: number;
-  status: 'live' | 'successful' | 'failed';
-  tags: string[];
-  likes: number;
-  comments: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface ApiResponse {
-  data: Campaign[];
-  total: number;
-  page: number;
-  limit: number;
-  success: boolean;
-  message?: string;
-}
-
-type StatusFilter = 'all' | 'live' | 'successful' | 'failed';
-type TabFilter = 'mine' | 'others';
-
-const mockApiService = {
-  async fetchCampaigns(
-    statusFilter: StatusFilter = 'all',
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _tabFilter: TabFilter = 'mine',
-    page: number = 1,
-    limit: number = 10
-  ): Promise<ApiResponse> {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    const mockCampaigns: Campaign[] = [
-      {
-        id: '1',
-        name: 'Boundless Web3 Platform',
-        creator: {
-          name: 'Collins Odumeje',
-          avatar: 'https://github.com/shadcn.png',
-          verified: true,
-        },
-        fundingProgress: {
-          current: 23000,
-          target: 250000,
-        },
-        endDate: 'Sept 30',
-        milestones: 6,
-        status: 'live',
-        tags: ['#web3', '#crowdfunding'],
-        likes: 29,
-        comments: 12,
-        createdAt: '2024-01-15T10:00:00Z',
-        updatedAt: '2024-01-20T14:30:00Z',
-      },
-      {
-        id: '2',
-        name: 'DeFi Innovation Hub',
-        creator: {
-          name: 'Sarah Johnson',
-          avatar: 'https://github.com/shadcn.png',
-          verified: true,
-        },
-        fundingProgress: {
-          current: 250000,
-          target: 250000,
-        },
-        endDate: 'Sept 30',
-        milestones: 6,
-        status: 'successful',
-        tags: ['#defi', '#innovation'],
-        likes: 29,
-        comments: 23,
-        createdAt: '2024-01-10T09:00:00Z',
-        updatedAt: '2024-01-25T16:45:00Z',
-      },
-      {
-        id: '3',
-        name: 'NFT Marketplace',
-        creator: {
-          name: 'Mike Chen',
-          avatar: 'https://github.com/shadcn.png',
-          verified: false,
-        },
-        fundingProgress: {
-          current: 23000,
-          target: 250000,
-        },
-        endDate: 'Expired',
-        milestones: 6,
-        status: 'failed',
-        tags: ['#nft', '#marketplace'],
-        likes: 29,
-        comments: 12,
-        createdAt: '2024-01-05T11:00:00Z',
-        updatedAt: '2024-01-18T13:20:00Z',
-      },
-      {
-        id: '4',
-        name: 'Blockchain Education Platform',
-        creator: {
-          name: 'Emma Wilson',
-          avatar: 'https://github.com/shadcn.png',
-          verified: true,
-        },
-        fundingProgress: {
-          current: 180000,
-          target: 200000,
-        },
-        endDate: 'Oct 15',
-        milestones: 8,
-        status: 'live',
-        tags: ['#education', '#blockchain'],
-        likes: 45,
-        comments: 18,
-        createdAt: '2024-01-12T08:00:00Z',
-        updatedAt: '2024-01-22T15:10:00Z',
-      },
-    ];
-
-    let filteredCampaigns = mockCampaigns;
-    if (statusFilter !== 'all') {
-      filteredCampaigns = mockCampaigns.filter(
-        campaign => campaign.status === statusFilter
-      );
-    }
-
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedCampaigns = filteredCampaigns.slice(startIndex, endIndex);
-
-    return {
-      data: paginatedCampaigns,
-      total: filteredCampaigns.length,
-      page,
-      limit,
-      success: true,
-      message: 'Campaigns fetched successfully',
-    };
-  },
-
-  async likeCampaign(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _campaignId: string
-  ): Promise<{ success: boolean; message: string }> {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return { success: true, message: 'Campaign liked successfully' };
-  },
-
-  async commentCampaign(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _campaignId: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _comment: string
-  ): Promise<{ success: boolean; message: string }> {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return { success: true, message: 'Comment added successfully' };
-  },
-
-  async shareCampaign(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _campaignId: string
-  ): Promise<{ success: boolean; message: string }> {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return { success: true, message: 'Campaign shared successfully' };
-  },
-};
+import {
+  Campaign,
+  StatusFilter,
+  TabFilter,
+  mockApiService,
+} from '@/lib/data/campaigns-mock';
 
 const CampaignRow = ({
   campaign,
@@ -221,17 +46,9 @@ const CampaignRow = ({
     }
   };
 
-  const getProgressColor = (status: string) => {
-    switch (status) {
-      case 'live':
-        return 'bg-[#1671D9]';
-      case 'successful':
-        return 'bg-primary';
-      case 'failed':
-        return 'bg-[#919191]';
-      default:
-        return 'bg-[#919191]';
-    }
+  const getProgressColor = () => {
+    // Use the same blue color for all progress bars
+    return 'bg-[#1671D9]';
   };
 
   const progressPercentage =
@@ -245,13 +62,13 @@ const CampaignRow = ({
     <>
       <div className='hidden xl:flex items-center p-3 border border-[#2B2B2B] bg-[#2B2B2B] rounded-[12px] hover:bg-[#171717] hover:border-[#1671D9] transition-all duration-200 group gap-6'>
         <div className='flex items-center gap-3 w-[200px] flex-shrink-0'>
-          <div className='w-11 h-11 rounded-[4px] flex items-center justify-center flex-shrink-0'>
+          <div className='w-11 h-11 rounded-[4px] flex items-center justify-center flex-shrink-0 overflow-hidden'>
             <Image
-              src={'/banner.png'}
+              src={'/campaign-banner.svg'}
               alt={campaign.name}
-              width={44}
-              height={44}
-              className='object-cover w-full h-full rounded-[4px]'
+              width={55}
+              height={30}
+              className=' h-full rounded-[4px]'
             />
           </div>
           <div className='min-w-0 flex-1'>
@@ -298,7 +115,7 @@ const CampaignRow = ({
           </div>
           <div className='w-full bg-[#484848] rounded-full h-2 overflow-hidden'>
             <div
-              className={`h-full rounded-full transition-all duration-300 ${getProgressColor(campaign.status)}`}
+              className={`h-full rounded-full transition-all duration-300 ${getProgressColor()}`}
               style={{ width: `${Math.min(progressPercentage, 100)}%` }}
             ></div>
           </div>
@@ -314,7 +131,7 @@ const CampaignRow = ({
 
         <div className='w-[75px] flex-shrink-0'>
           <Badge
-            className={`${getStatusColor(campaign.status)} capitalize text-xs font-medium px-2.5 py-1 rounded-none border-none`}
+            className={`${getStatusColor(campaign.status)} capitalize text-xs font-medium px-2.5 py-1 rounded-none border-none w-[75px] text-center flex items-center justify-center`}
           >
             {campaign.status}
           </Badge>
@@ -326,7 +143,7 @@ const CampaignRow = ({
               <Button
                 variant='ghost'
                 size='sm'
-                className='h-8 w-8 p-0 hover:bg-[#374151] transition-colors duration-200'
+                className='h-8 w-8 p-0 bg-[#1C1C1C] border border-gray-800 hover:bg-[#374151] transition-colors duration-200'
               >
                 <MoreVerticalIcon className='h-4 w-4 text-[#9CA3AF] group-hover:text-white transition-colors duration-200' />
               </Button>
@@ -423,7 +240,7 @@ const CampaignRow = ({
           <div className='flex items-center gap-2 sm:gap-3 flex-1 min-w-0'>
             <div className='w-10 h-10 sm:w-12 sm:h-12 rounded-[4px] flex items-center justify-center flex-shrink-0'>
               <Image
-                src={'/banner.png'}
+                src={'/campaign-banner.svg'}
                 alt={campaign.name}
                 width={48}
                 height={48}
@@ -441,7 +258,7 @@ const CampaignRow = ({
           </div>
           <div className='flex items-center gap-1 sm:gap-2'>
             <Badge
-              className={`${getStatusColor(campaign.status)} capitalize text-xs font-medium px-1.5 sm:px-2 py-1 rounded-none border-none`}
+              className={`${getStatusColor(campaign.status)} capitalize text-xs font-medium px-1.5 sm:px-2 py-1 rounded-none border-none w-[75px] text-center flex items-center justify-center`}
             >
               {campaign.status}
             </Badge>
@@ -450,7 +267,7 @@ const CampaignRow = ({
                 <Button
                   variant='ghost'
                   size='sm'
-                  className='h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-[#374151] transition-colors duration-200'
+                  className='h-7 w-7 sm:h-8 sm:w-8 p-0 bg-[#1C1C1C] border border-gray-800 hover:bg-[#374151] transition-colors duration-200'
                 >
                   <MoreVerticalIcon className='h-3 w-3 sm:h-4 sm:w-4 text-[#9CA3AF]' />
                 </Button>
@@ -575,7 +392,7 @@ const CampaignRow = ({
             </div>
             <div className='w-full bg-[#484848] rounded-full h-1.5 sm:h-2 overflow-hidden'>
               <div
-                className={`h-full rounded-full transition-all duration-300 ${getProgressColor(campaign.status)}`}
+                className={`h-full rounded-full transition-all duration-300 ${getProgressColor()}`}
                 style={{ width: `${Math.min(progressPercentage, 100)}%` }}
               ></div>
             </div>
@@ -603,6 +420,11 @@ const CampaignTable = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [campaignSummaryOpen, setCampaignSummaryOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10;
+
+  // Quick filter options - keeping it simple for now
   const filterOptions = [
     { value: 'all', label: 'All' },
     { value: 'live', label: 'Live' },
@@ -610,69 +432,91 @@ const CampaignTable = () => {
     { value: 'failed', label: 'Failed' },
   ];
 
-  const fetchCampaigns = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await mockApiService.fetchCampaigns(
-        statusFilter,
-        tabFilter
-      );
-      setCampaigns(response.data);
-    } catch {
-      setError('Failed to fetch campaigns');
-      toast.error('Failed to fetch campaigns');
-    } finally {
-      setLoading(false);
-    }
-  }, [statusFilter, tabFilter]);
+  const fetchCampaigns = useCallback(
+    async (page: number = 1) => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await mockApiService.fetchCampaigns(
+          statusFilter,
+          tabFilter,
+          page,
+          itemsPerPage
+        );
+        // TODO: Handle empty state better - maybe add a refresh button?
+        setCampaigns(response.data);
+        setTotalPages(Math.ceil(response.total / itemsPerPage));
+      } catch {
+        setError('Failed to fetch campaigns');
+        toast.error('Failed to fetch campaigns');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [statusFilter, tabFilter, itemsPerPage]
+  );
 
+  // Handle different campaign actions - TODO: extract this to a separate hook
   const handleCampaignAction = async (action: string, campaignId: string) => {
     try {
       switch (action) {
         case 'like':
           await mockApiService.likeCampaign(campaignId);
-          toast.success('Campaign liked successfully');
+          toast.success('Liked!');
           break;
         case 'comment':
+          // TODO: Open comment modal instead of hardcoded comment
           await mockApiService.commentCampaign(campaignId, 'Great campaign!');
-          toast.success('Comment added successfully');
+          toast.success('Comment added');
           break;
         case 'share':
           await mockApiService.shareCampaign(campaignId);
-          toast.success('Campaign shared successfully');
+          toast.success('Shared!');
           break;
         case 'view-summary':
           setCampaignSummaryOpen(true);
           break;
         case 'view-history':
-          toast.info('Opening campaign history...');
+          // TODO: Navigate to history page
+          toast.info('Opening history...');
           break;
         case 'campaign-details':
-          toast.info('Opening campaign details...');
+          // TODO: Navigate to details page
+          toast.info('Opening details...');
           break;
         default:
-          toast.info(`Action: ${action}`);
+          toast.info(`${action} clicked`);
       }
 
-      await fetchCampaigns();
+      // Refresh the list after actions
+      fetchCampaigns();
     } catch {
-      toast.error('Action failed');
+      toast.error('Something went wrong');
     }
   };
 
   useEffect(() => {
-    fetchCampaigns();
-  }, [fetchCampaigns]);
+    setCurrentPage(1);
+    fetchCampaigns(1);
+  }, [statusFilter, tabFilter, fetchCampaigns]);
+
+  useEffect(() => {
+    fetchCampaigns(currentPage);
+  }, [currentPage, fetchCampaigns]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <div className='space-y-6'>
+    <div className='space-y-6 min-h-full'>
       <div className='flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 sm:gap-4 xl:gap-0'>
         <div className='flex items-center gap-2 sm:gap-3 xl:gap-5'>
           <h2 className='text-white text-base sm:text-lg xl:text-xl font-semibold leading-[120%] tracking-[-0.4px]'>
-            Latest Campaigns
+            Campaigns
           </h2>
-          <Link href='/campaigns' className='text-sm text-white'>
+          {/* <Link href='/campaigns' className='text-sm text-white'>
             <Button
               variant='ghost'
               className='text-white hover:bg-[#374151] transition-colors duration-200 h-8 sm:h-9 px-2 sm:px-3'
@@ -680,7 +524,7 @@ const CampaignTable = () => {
               View All
               <ChevronRightIcon className='w-3 h-3 sm:w-4 sm:h-4 ml-1' />
             </Button>
-          </Link>
+          </Link> */}
         </div>
         <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full xl:w-auto'>
           <Tabs
@@ -761,20 +605,32 @@ const CampaignTable = () => {
             <div className='text-center'>
               <p className='text-red-400 mb-2'>{error}</p>
               <Button
-                onClick={fetchCampaigns}
+                onClick={() => fetchCampaigns(1)}
                 variant='outline'
                 className='border-[#2B2B2B] hover:border-[#374151]'
               >
-                Try Again
+                Retry
               </Button>
             </div>
           </div>
         ) : campaigns.length === 0 ? (
-          <div className='flex items-center justify-center py-12'>
+          <div className='flex items-center justify-center h-[60vh]'>
             <div className='text-center'>
-              <p className='text-[#B5B5B5] mb-2'>No campaigns found</p>
-              <p className='text-sm text-[#787878]'>
-                Try adjusting your filters
+              <div className='mb-6'>
+                <Image
+                  src='/empty/campaignempty.svg'
+                  alt='No campaigns available'
+                  width={128}
+                  height={128}
+                  className='w-32 h-32 mx-auto mb-4'
+                />
+              </div>
+              <h3 className='text-xl font-semibold text-white mb-2'>
+                No Active Campaigns
+              </h3>
+              <p className='text-gray-400 max-w-md mx-auto'>
+                Projects you vote on, comment on, or fund will appear here. Get
+                involved and support ideas that matter to you.
               </p>
             </div>
           </div>
@@ -787,7 +643,78 @@ const CampaignTable = () => {
             />
           ))
         )}
+
+        {totalPages > 1 && campaigns.length > 0 && (
+          <div className='border-t border-[#2B2B2B] mt-6 pt-4'>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-gray-400'>
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <div className='flex gap-2'>
+                <Button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  size='sm'
+                  variant='outline'
+                  className='border-[#2B2B2B] text-white hover:bg-[#2B2B2B]'
+                >
+                  Previous
+                </Button>
+
+                {/* Basic pagination numbers */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  page => {
+                    // Only show if we're within 2 pages or it's first/last
+                    if (
+                      page === 1 ||
+                      page === totalPages ||
+                      Math.abs(page - currentPage) <= 1
+                    ) {
+                      return (
+                        <Button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          size='sm'
+                          variant={currentPage === page ? 'default' : 'outline'}
+                          className={
+                            currentPage === page
+                              ? 'bg-blue-600'
+                              : 'border-[#2B2B2B] text-white hover:bg-[#2B2B2B]'
+                          }
+                        >
+                          {page}
+                        </Button>
+                      );
+                    } else if (
+                      page === currentPage - 2 ||
+                      page === currentPage + 2
+                    ) {
+                      return (
+                        <span key={page} className='px-2 text-gray-500'>
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
+                  }
+                )}
+
+                <Button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  size='sm'
+                  variant='outline'
+                  className='border-[#2B2B2B] text-white hover:bg-[#2B2B2B]'
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
+
       <CampaignSummary
         open={campaignSummaryOpen}
         setOpen={setCampaignSummaryOpen}

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
-import { RecentProjectsProps } from '@/types/project';
+import { RecentProjectsProps, Project } from '@/types/project';
 import { Plus, ChevronRight, ChevronDown, Loader2 } from 'lucide-react';
 import ProjectCard from '../project-card';
 import EmptyState from '../EmptyState';
@@ -54,20 +54,47 @@ const RecentProjects = () => {
       setError(null);
       const response = await getProjects();
 
-      const transformedProjects = (response.projects || []).map(
-        (project: any) => ({
+      // Define API project interface locally since it's different from our UI Project type
+      interface ApiProject {
+        _id: string;
+        title: string;
+        description: string;
+        whitepaperUrl?: string;
+        tags?: string[];
+        category?: string;
+        type?: string;
+        amount?: number;
+        status?: string;
+        createdAt?: string;
+        updatedAt?: string;
+        owner?: {
+          type?: {
+            _id?: string;
+            profile?: {
+              firstName?: string;
+              lastName?: string;
+              username?: string;
+              avatar?: string;
+            };
+          };
+        };
+      }
+
+      const apiProjects = (response.projects as unknown as ApiProject[]) || [];
+      const transformedProjects = apiProjects.map(
+        (project: ApiProject): Project => ({
           id: project._id,
           name: project.title,
           description: project.description,
           image: project.whitepaperUrl || '/banner.png',
           link: `/projects/${project._id}`,
           tags: project.tags || [],
-          category: project.category,
-          type: project.type,
-          amount: 0,
-          status: project.status,
-          createdAt: project.createdAt,
-          updatedAt: project.updatedAt,
+          category: project.category || 'uncategorized',
+          type: project.type || 'unknown',
+          amount: project.amount || 0,
+          status: project.status || 'draft',
+          createdAt: project.createdAt || new Date().toISOString(),
+          updatedAt: project.updatedAt || new Date().toISOString(),
           // Add owner information for filtering
           owner: project.owner?.type?._id || null,
           ownerName: project.owner?.type?.profile
