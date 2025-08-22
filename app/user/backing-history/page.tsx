@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import BackingHistory from '@/components/flows/backing-history/Index';
+import BackingHistory from '@/components/flows/backing-history/index';
 
 // Sample data matching the images
 const sampleBackers = [
