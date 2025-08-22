@@ -184,7 +184,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
   return (
     <motion.div
-      className='bg-[#101010] rounded-[16px] p-3 w-full max-w-sm mx-auto transition-all duration-200 cursor-pointer group hover:bg-[#151515]'
+      className='bg-[#101010] min-h-[450px] rounded-[16px] p-3 w-full max-w-sm mx-auto transition-all duration-200 cursor-pointer group hover:bg-[#151515]'
       whileHover='hover'
       variants={cardHover}
       initial='hidden'
