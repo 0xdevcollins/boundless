@@ -59,18 +59,17 @@ export function BackProjectForm({
     try {
       await navigator.clipboard.writeText(walletAddress);
       // Could add toast notification here instead of state
-    } catch (err) {
+    } catch {
       // Fallback for browsers that don't support clipboard API
       const textArea = document.createElement('textarea');
-      console.error(err);
-
+      // Silent fallback for older browsers
       textArea.value = walletAddress;
       document.body.appendChild(textArea);
       textArea.select();
       try {
         document.execCommand('copy');
-      } catch (copyErr) {
-        console.error('Failed to copy address:', copyErr);
+      } catch {
+        // Copy failed, but no need to log in production
       }
       document.body.removeChild(textArea);
     }

@@ -22,6 +22,7 @@ interface BoundlessSheetProps {
   side?: 'top' | 'right' | 'bottom' | 'left';
   maxHeight?: string;
   minHeight?: string;
+  size?: 'default' | 'large' | 'xl';
 }
 
 const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
@@ -34,6 +35,7 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
   side = 'bottom',
   maxHeight,
   minHeight = '400px',
+  size = 'default',
 }) => {
   const isMobile = useIsMobile();
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -68,10 +70,20 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
     }
 
     if (side === 'bottom') {
+      let widthClass = 'w-[calc(100vw-120px)]';
+      let maxWidth = '';
+
+      if (size === 'large') {
+        widthClass = 'w-[calc(100vw-80px)]';
+        maxWidth = 'max-w-4xl';
+      } else if (size === 'xl') {
+        widthClass = 'w-[calc(100vw-40px)]';
+        maxWidth = 'max-w-6xl';
+      }
+
       return {
         side: 'bottom' as const,
-        className:
-          'w-[calc(100vw-120px)]  mx-auto rounded-t-[24px] min-h-[400px] !max-h-[95vh] px-4',
+        className: `${widthClass} mx-auto rounded-t-[24px] min-h-[400px] !max-h-[95vh] px-4 ${maxWidth}`,
         closeButtonPosition: 'top-0 -right-16',
         maxHeight: '80vh',
       };
@@ -107,11 +119,13 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
         showCloseButton={false}
       >
         <SheetHeader className='relative pb-4'>
-          {title && (
-            <SheetTitle className='text-white text-lg font-semibold text-center'>
-              {title}
-            </SheetTitle>
-          )}
+          <SheetTitle
+            className={cn(
+              title ? 'text-white text-lg font-semibold text-center' : 'sr-only'
+            )}
+          >
+            {title || 'Dialog'}
+          </SheetTitle>
 
           {showCloseButton && (
             <SheetClose

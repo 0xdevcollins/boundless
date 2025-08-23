@@ -16,6 +16,24 @@ export const getProjects = async (): Promise<{
   return res.data.data;
 };
 
+export const getProjectDetails = async (_projectId: string) => {
+  const res = await api.get(`/projects/${_projectId}`);
+  return res.data.data;
+};
+
+export const deleteProject = async (_projectId: string) => {
+  const res = await api.delete(`/projects/${_projectId}`);
+  return res.data.data;
+};
+
+export const updateProject = async (
+  _projectId: string,
+  data: ProjectInitRequest
+) => {
+  const res = await api.put(`/projects/${_projectId}`, data);
+  return res.data.data;
+};
+
 export const getCampaignDetails = async (_projectId: string) => {
   // Mock implementation for now
   return new Promise(resolve => {

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import BackingHistory from '@/components/flows/backing-history/backing-history';
+import BackingHistory from '@/components/flows/backing-history/index';
 
 // Sample data matching the images
 const sampleBackers = [
@@ -91,8 +91,6 @@ export default function Home() {
   return (
     <div className='min-h-screen bg-background p-8'>
       <div className='max-w-4xl mx-auto'>
-        <h1 className='text-3xl font-bold mb-8'>Crowdfunding Dashboard</h1>
-
         <Button
           onClick={() => setShowBackingHistory(true)}
           className='bg-blue-600 hover:bg-blue-700'

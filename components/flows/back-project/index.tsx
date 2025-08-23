@@ -23,11 +23,12 @@ const BackProject = () => {
   const [backProjectState, setBackProjectState] =
     useState<BackProjectState>('form');
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleBackProject = (data: BackProjectData) => {
     setBackProjectState('loading');
-    console.log(data);
+    // TODO: Send data to actual API endpoint when backend is ready
 
-    // Simulate API call
+    // Simulate API call - data will be used when API is implemented
     setTimeout(() => {
       setBackProjectState('success');
     }, 2000);
