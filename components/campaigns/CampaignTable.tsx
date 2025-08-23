@@ -25,6 +25,8 @@ import {
   TabFilter,
   mockApiService,
 } from '@/lib/data/campaigns-mock';
+import BackingHistory from './backing-history';
+import { sampleBackers } from '@/lib/data/backing-history-mock';
 
 const CampaignRow = ({
   campaign,
@@ -420,6 +422,7 @@ const CampaignTable = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [campaignSummaryOpen, setCampaignSummaryOpen] = useState(false);
+  const [backingHistoryOpen, setBackingHistoryOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10;
@@ -477,8 +480,8 @@ const CampaignTable = () => {
           setCampaignSummaryOpen(true);
           break;
         case 'view-history':
-          // TODO: Navigate to history page
           toast.info('Opening history...');
+          setBackingHistoryOpen(true);
           break;
         case 'campaign-details':
           // TODO: Navigate to details page
@@ -718,6 +721,11 @@ const CampaignTable = () => {
       <CampaignSummary
         open={campaignSummaryOpen}
         setOpen={setCampaignSummaryOpen}
+      />
+      <BackingHistory
+        open={backingHistoryOpen}
+        setOpen={setBackingHistoryOpen}
+        backers={sampleBackers}
       />
     </div>
   );
