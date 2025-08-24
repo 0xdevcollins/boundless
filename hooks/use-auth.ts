@@ -23,7 +23,13 @@ export function useAuth(requireAuth = true) {
   // Sync with NextAuth session when available
   useEffect(() => {
     if (session?.user && status === 'authenticated') {
-      syncWithSession(session.user).catch(() => {
+      // Convert NextAuth session user to SessionUser format
+      const sessionUser = {
+        ...session.user,
+        name: session.user.name || undefined, // Convert null to undefined
+        image: session.user.image || undefined, // Convert null to undefined
+      };
+      syncWithSession(sessionUser).catch(() => {
         // Silently handle sync failure
       });
     }

@@ -119,6 +119,7 @@ const BackingHistory: React.FC<BackingHistoryProps> = ({
     <BoundlessSheet open={open} setOpen={setOpen} contentClassName='h-[100vh]'>
       <section className=''>
         <div className='space-y-4 max-h-screen w-[564px] mx-auto'>
+          <h1 className='text-white text-lg font-semibold'>Backing History</h1>
           {/* Search and Controls */}
           <div className='flex items-center gap-2'>
             <div className='relative flex-1'>

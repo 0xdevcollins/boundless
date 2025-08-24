@@ -29,6 +29,31 @@ interface LaunchCampaignFlowProps {
   onComplete: () => void;
 }
 
+interface CampaignFormData {
+  title: string;
+  description: string;
+  fundingGoal: string;
+  category: string;
+  images: string[];
+  duration: string;
+}
+
+interface EscrowData {
+  network: string;
+  transactionType: string;
+  walletAddress: string;
+  agreedToTerms: boolean;
+}
+
+interface Milestone {
+  id: string;
+  title: string;
+  description: string;
+  deliveryDate: string;
+  fundAmount: number;
+  isExpanded: boolean;
+}
+
 const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
   onComplete,
 }) => {
@@ -264,7 +289,7 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
 
 // Campaign Details Form Component
 const CampaignDetailsForm: React.FC<{
-  formData: any;
+  formData: CampaignFormData;
   selectedTags: string[];
   onInputChange: (field: string, value: string) => void;
   onTagToggle: (tag: string) => void;
@@ -571,9 +596,9 @@ const CampaignDetailsForm: React.FC<{
 
 // Escrow Setup Form Component
 const EscrowSetupForm: React.FC<{
-  escrowData: any;
-  setEscrowData: (data: any) => void;
-  milestones: any[];
+  escrowData: EscrowData;
+  setEscrowData: (data: EscrowData) => void;
+  milestones: Milestone[];
   escrowTerms: { title: string; description: string }[];
   isEscrowValid: () => boolean;
   onBack: () => void;

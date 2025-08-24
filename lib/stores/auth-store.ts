@@ -3,8 +3,30 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { getMe, logout } from '@/lib/api/auth';
 import Cookies from 'js-cookie';
 
+// JWT payload interface
+interface JWTPayload {
+  user_id?: string;
+  userId?: string;
+  sub?: string;
+  exp?: number;
+  iat?: number;
+  [key: string]: unknown;
+}
+
+// Session user interface for NextAuth
+interface SessionUser {
+  id: string;
+  _id?: string;
+  email: string;
+  name?: string;
+  image?: string;
+  role?: string;
+  accessToken?: string;
+  [key: string]: unknown;
+}
+
 // Simple JWT decode function to extract user ID from token
-function decodeJWT(token: string): any {
+function decodeJWT(token: string): JWTPayload | null {
   try {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -55,7 +77,7 @@ export interface AuthState {
   refreshUser: () => Promise<void>;
   clearAuth: () => void;
   updateUser: (updates: Partial<User>) => void;
-  syncWithSession: (sessionUser: any) => Promise<void>;
+  syncWithSession: (sessionUser: SessionUser) => Promise<void>;
 }
 
 // Safe localStorage access for SSR
@@ -251,7 +273,7 @@ export const useAuthStore = create<AuthState>()(
         if (sessionUser && sessionUser.accessToken) {
           try {
             // Use the access token to fetch fresh user data
-            const user = await getMe(sessionUser.accessToken);
+            const user = await getMe(sessionUser.accessToken || '');
 
             const transformedUser: User = {
               id: (user._id || user.id) as string,
@@ -282,8 +304,8 @@ export const useAuthStore = create<AuthState>()(
               const fallbackUser: User = {
                 id: userId || 'unknown',
                 email: sessionUser.email,
-                name: sessionUser.name,
-                image: sessionUser.image,
+                name: sessionUser.name || null,
+                image: sessionUser.image || null,
                 role: 'USER',
               };
 
