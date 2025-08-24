@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { RecentProjectsProps } from '@/types/project';
-import { Plus, ChevronRight, ChevronDown, Loader2 } from 'lucide-react';
+import { Plus,  ChevronDown, Loader2 } from 'lucide-react';
 import ProjectCard from './project-card';
 import EmptyState from './EmptyState';
 import { BoundlessButton } from './buttons';
@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import Link from 'next/link';
+
 import { getProjects } from '@/lib/api/project';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
@@ -39,7 +39,6 @@ const Projects = () => {
   const [error, setError] = useState<string | null>(null);
   const { user, isAuthenticated } = useAuth(false);
   const sheet = useProjectSheetStore();
-  const [open, setOpen] = useState(false);
 
   const filterOptions = [
     { value: 'all', label: 'All' },
@@ -269,7 +268,7 @@ const Projects = () => {
                             iconPosition='right'
                             onClick={() => {
                               sheet.openInitialize();
-                              setOpen(true);
+                             
                             }}
                           >
                             New Project.
