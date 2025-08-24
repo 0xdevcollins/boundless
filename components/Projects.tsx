@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { getProjects } from '@/lib/api/project';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
+import { useProjectSheetStore } from '@/lib/stores/project-sheet-store';
 
 type StatusFilter =
   | 'all'
@@ -37,6 +38,8 @@ const Projects = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user, isAuthenticated } = useAuth(false);
+  const sheet = useProjectSheetStore();
+  const [open, setOpen] = useState(false);
 
   const filterOptions = [
     { value: 'all', label: 'All' },
@@ -106,7 +109,7 @@ const Projects = () => {
           <h2 className='text-white text-base sm:text-lg xl:text-xl font-semibold leading-[120%] tracking-[-0.4px]'>
             {tabFilter === 'mine' ? 'My Projects' : 'All Projects'}
           </h2>
-          
+
         </div>
         <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full xl:w-auto'>
           <Tabs
@@ -264,8 +267,12 @@ const Projects = () => {
                             size='lg'
                             icon={<Plus className='w-5 h-5' />}
                             iconPosition='right'
+                            onClick={() => {
+                              sheet.openInitialize();
+                              setOpen(true);
+                            }}
                           >
-                            New Project
+                            New Project.
                           </BoundlessButton>
                         ) : undefined
                       }
