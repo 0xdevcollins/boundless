@@ -27,7 +27,6 @@ import {
 } from '@/lib/data/campaigns-mock';
 import BackingHistory from './backing-history';
 import { sampleBackers } from '@/lib/data/backing-history-mock';
-import BackProject from './back-project';
 
 const CampaignRow = ({
   campaign,
@@ -430,7 +429,6 @@ const CampaignTable = () => {
   const [error, setError] = useState<string | null>(null);
   const [campaignSummaryOpen, setCampaignSummaryOpen] = useState(false);
   const [backingHistoryOpen, setBackingHistoryOpen] = useState(false);
-  const [backingProjectOpen, setBackingProjectOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10;
@@ -490,10 +488,6 @@ const CampaignTable = () => {
         case 'view-history':
           toast.info('Opening history...');
           setBackingHistoryOpen(true);
-          break;
-        case 'back-project':
-          toast.info('Opening back project...');
-          setBackingProjectOpen(true);
           break;
         case 'campaign-details':
           // TODO: Navigate to details page
@@ -739,7 +733,6 @@ const CampaignTable = () => {
         setOpen={setBackingHistoryOpen}
         backers={sampleBackers}
       />
-      <BackProject open={backingProjectOpen} setOpen={setBackingProjectOpen} />
     </div>
   );
 };

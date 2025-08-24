@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-// import { BoundlessButton } from '@/components/buttons';
+import { BoundlessButton } from '@/components/buttons';
 import { ProjectSubmissionSuccess } from '@/components/project';
 import BoundlessSheet from '@/components/sheet/boundless-sheet';
 import { ProjectSubmissionLoading } from '@/components/flows/back-project/project-submission-loading';
@@ -18,12 +18,8 @@ interface BackProjectData {
   keepAnonymous: boolean;
 }
 
-interface BackingProjectProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}
-const BackProject = ({ open, setOpen }: BackingProjectProps) => {
-  // const [isSheetOpen, setIsSheetOpen] = useState(false);
+const BackProject = () => {
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [backProjectState, setBackProjectState] =
     useState<BackProjectState>('form');
 
@@ -94,16 +90,22 @@ const BackProject = ({ open, setOpen }: BackingProjectProps) => {
   };
 
   return (
-    <BoundlessSheet
-      open={open}
-      setOpen={setOpen}
-      // title="Back Project"
-      showCloseButton={true}
-      contentClassName={`h-[100vh]`}
-      className='mx-4'
-    >
-      {renderSheetContent()}
-    </BoundlessSheet>
+    <div className='min-h-screen space-x-2 w-full  text-white bg-black'>
+      <BoundlessSheet
+        open={isSheetOpen}
+        setOpen={setIsSheetOpen}
+        // title="Back Project"
+        showCloseButton={true}
+        contentClassName={`h-[100vh]`}
+        className='mx-4'
+      >
+        {renderSheetContent()}
+      </BoundlessSheet>
+
+      <BoundlessButton onClick={() => setIsSheetOpen(true)}>
+        Back Project
+      </BoundlessButton>
+    </div>
   );
 };
 
