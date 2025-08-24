@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { BoundlessButton } from '@/components/buttons';
 import { ProjectSubmissionSuccess } from '@/components/project';
 import BoundlessSheet from '@/components/sheet/boundless-sheet';
-import { ProjectSubmissionLoading } from '@/components/flows/back-project/project-submission-loading';
+import { ProjectSubmissionLoading } from './project-submission-loading';
 import { BackProjectForm } from './back-project-form';
 
 type BackProjectState = 'form' | 'loading' | 'success';
