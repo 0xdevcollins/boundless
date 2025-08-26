@@ -102,7 +102,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                               ? format(dateRange.from, 'MM-dd-yy')
                               : '06-04-25'
                           }
-                          className='bg-muted/20 p-5 border-muted-foreground/30 text-white pr-8 cursor-pointer'
+                          className='bg-[#101010] p-5 border-muted-foreground/30 text-white pr-8 cursor-pointer'
                           readOnly
                         />
                         <Calendar className='absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white' />
@@ -135,7 +135,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                               ? format(dateRange.to, 'MM-dd-yy')
                               : '06-04-25'
                           }
-                          className='bg-muted/20 p-5 border-muted-foreground/20 text-white pr-8 cursor-pointer'
+                          className='bg-[#101010] p-5 border-muted-foreground/20 text-white pr-8 cursor-pointer'
                           readOnly
                         />
                         <Calendar className='absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white' />
@@ -160,7 +160,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                   variant='outline'
                   size='sm'
                   onClick={() => setQuickDateFilter(0)}
-                  className='bg-muted/20 p-5 border-muted-foreground/20 rounded-3xl text-white hover:bg-muted/30 text-xs'
+                  className='bg-[#101010] p-5 border-muted-foreground/20 rounded-3xl text-white hover:bg-muted/30 text-xs'
                 >
                   Today
                 </Button>
@@ -168,7 +168,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                   variant='outline'
                   size='sm'
                   onClick={() => setQuickDateFilter(7)}
-                  className='bg-muted/20 rounded-3xl p-5 border-muted-foreground/20 text-white hover:bg-muted/30 text-xs'
+                  className='bg-[#101010] rounded-3xl p-5 border-muted-foreground/20 text-white hover:bg-muted/30 text-xs'
                 >
                   Last 7 days
                 </Button>
@@ -176,7 +176,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                   variant='outline'
                   size='sm'
                   onClick={() => setQuickDateFilter(30)}
-                  className='bg-muted/20 rounded-3xl p-5 border-muted-foreground/20 text-white hover:bg-muted/30 text-xs'
+                  className='bg-[#101010] rounded-3xl p-5 border-muted-foreground/20 text-white hover:bg-muted/30 text-xs'
                 >
                   Last month
                 </Button>
@@ -211,7 +211,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                           amountRange[1],
                         ])
                       }
-                      className='bg-muted/20 border-muted-foreground/20 text-white pl-8 p-5'
+                      className='bg-[#101010] border-muted-foreground/20 text-white pl-8 p-5'
                     />
                   </div>
                 </div>
@@ -227,7 +227,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                           Number.parseInt(e.target.value) || 0,
                         ])
                       }
-                      className='bg-muted/20 border-muted-foreground/20 text-white pl-8 p-5'
+                      className='bg-[#101010] border-muted-foreground/20 text-white pl-8 p-5'
                     />
                   </div>
                 </div>
@@ -262,7 +262,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                 onClick={() => setIdentityFilter('all')}
                 className={`w-full justify-between bg-transparent p-5 border-none text-white hover:bg-muted/30 ${
                   identityFilter === 'all'
-                    ? 'bg-muted/40 border-muted-foreground/20'
+                    ? 'bg-[#2b2b2b] border-muted-foreground/20'
                     : ''
                 }`}
               >
@@ -274,7 +274,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                 onClick={() => setIdentityFilter('identified')}
                 className={`w-full justify-start p-5 bg-transparent border-none text-white hover:bg-muted/30 ${
                   identityFilter === 'identified'
-                    ? 'bg-muted/40 border-muted-foreground/20'
+                    ? 'bg-[#2b2b2b] border-muted-foreground/20'
                     : ''
                 }`}
               >
@@ -299,7 +299,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
             <Button
               onClick={resetFilters}
               variant='outline'
-              className='flex-1 bg-muted/20 py-5 border-muted-foreground/20 text-white hover:bg-muted/30'
+              className='flex-1 bg-[#101010] py-5 border-muted-foreground/20 text-white hover:bg-muted/30'
             >
               Reset all
             </Button>
