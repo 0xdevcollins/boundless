@@ -68,8 +68,9 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className='w-100 border border-muted-foreground/20 p-4'
-        align='start'
+        className='w-80 sm:w-100 border border-muted-foreground/20 p-4'
+        align='end'
+        alignOffset={-10}
         style={{ backgroundColor: '#101010' }}
       >
         <div className='space-y-6'>
@@ -87,7 +88,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
               </Button>
             </div>
             <div className='space-y-3'>
-              <div className='grid grid-cols-2 gap-2'>
+              <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
                 <div className='space-y-1'>
                   <label className='text-xs text-muted-foreground'>From</label>
                   <Popover
@@ -95,7 +96,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                     onOpenChange={setShowFromCalendar}
                   >
                     <PopoverTrigger asChild>
-                      <div className='relative text-white bg-background cursor-pointer mr-2'>
+                      <div className='relative text-white bg-background cursor-pointer'>
                         <Input
                           value={
                             dateRange.from
@@ -121,7 +122,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                     </PopoverContent>
                   </Popover>
                 </div>
-                <div className='space-y-1 ml-2'>
+                <div className='space-y-1'>
                   <label className='text-xs text-muted-foreground'>To</label>
                   <Popover
                     open={showToCalendar}
@@ -155,12 +156,12 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                   </Popover>
                 </div>
               </div>
-              <div className='flex gap-5'>
+              <div className='flex flex-wrap gap-2 sm:gap-5'>
                 <Button
                   variant='outline'
                   size='sm'
                   onClick={() => setQuickDateFilter(0)}
-                  className='bg-[#101010] p-5 border-muted-foreground/20 rounded-3xl text-white hover:bg-muted/30 text-xs'
+                  className='bg-[#101010] p-3 sm:p-5 border-muted-foreground/20 rounded-3xl text-white hover:bg-muted/30 text-xs flex-1 sm:flex-none min-w-0'
                 >
                   Today
                 </Button>
@@ -168,7 +169,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                   variant='outline'
                   size='sm'
                   onClick={() => setQuickDateFilter(7)}
-                  className='bg-[#101010] rounded-3xl p-5 border-muted-foreground/20 text-white hover:bg-muted/30 text-xs'
+                  className='bg-[#101010] rounded-3xl p-3 sm:p-5 border-muted-foreground/20 text-white hover:bg-muted/30 text-xs flex-1 sm:flex-none min-w-0'
                 >
                   Last 7 days
                 </Button>
@@ -176,7 +177,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
                   variant='outline'
                   size='sm'
                   onClick={() => setQuickDateFilter(30)}
-                  className='bg-[#101010] rounded-3xl p-5 border-muted-foreground/20 text-white hover:bg-muted/30 text-xs'
+                  className='bg-[#101010] rounded-3xl p-3 sm:p-5 border-muted-foreground/20 text-white hover:bg-muted/30 text-xs flex-1 sm:flex-none min-w-0'
                 >
                   Last month
                 </Button>
@@ -198,7 +199,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
               </Button>
             </div>
             <div className='space-y-3'>
-              <div className='grid grid-cols-2 gap-5'>
+              <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5'>
                 <div className='space-y-1'>
                   <label className='text-xs text-muted-foreground'>Min</label>
                   <div className='relative'>
@@ -295,7 +296,7 @@ const AdvancedFilterPopover: React.FC<AdvancedFilterPopoverProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className='flex gap-15 pt-2'>
+          <div className='flex flex-col sm:flex-row gap-3 sm:gap-15 pt-2'>
             <Button
               onClick={resetFilters}
               variant='outline'

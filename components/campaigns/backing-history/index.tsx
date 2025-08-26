@@ -118,45 +118,47 @@ const BackingHistory: React.FC<BackingHistoryProps> = ({
   return (
     <BoundlessSheet open={open} setOpen={setOpen} contentClassName='h-[100vh]'>
       <section className=''>
-        <div className='space-y-4 max-h-screen w-[564px] mx-auto'>
+        <div className='space-y-4 max-h-screen w-full max-w-[564px] mx-auto px-4'>
           <h1 className='text-white text-lg font-semibold'>Backing History</h1>
           {/* Search and Controls */}
-          <div className='flex items-center gap-2'>
-            <div className='relative flex-1'>
+          <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-2'>
+            <div className='relative flex-1 min-w-0'>
               <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4' />
               <Input
                 placeholder='Search backer or wallet...'
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className='pl-10 py-5 focus:outline-none placeholder:font-medium bg-[#1c1c1c] border-muted-foreground/20 text-placeholder placeholder:text-muted-foreground'
+                className='pl-10 py-5 focus:outline-none placeholder:font-medium bg-[#1c1c1c] border-muted-foreground/20 text-placeholder placeholder:text-muted-foreground w-full'
               />
             </div>
-            <SortFilterPopover
-              sortBy={sortBy}
-              setSortBy={setSortBy}
-              showFilterPopover={showFilterPopover}
-              setShowFilterPopover={setShowFilterPopover}
-            />
-            <AdvancedFilterPopover
-              amountRange={amountRange}
-              setAmountRange={setAmountRange}
-              dateRange={dateRange}
-              setDateRange={setDateRange}
-              identityFilter={identityFilter}
-              setIdentityFilter={setIdentityFilter}
-              showSortPopover={showSortPopover}
-              setShowSortPopover={setShowSortPopover}
-              showFromCalendar={showFromCalendar}
-              setShowFromCalendar={setShowFromCalendar}
-              showToCalendar={showToCalendar}
-              setShowToCalendar={setShowToCalendar}
-              setQuickDateFilter={setQuickDateFilter}
-              resetFilters={resetFilters}
-              resetDateRange={resetDateRange}
-              resetAmountRange={resetAmountRange}
-              resetIdentityFilter={resetIdentityFilter}
-              applyFilters={applyFilters}
-            />
+            <div className='flex gap-2 flex-shrink-0'>
+              <SortFilterPopover
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                showFilterPopover={showFilterPopover}
+                setShowFilterPopover={setShowFilterPopover}
+              />
+              <AdvancedFilterPopover
+                amountRange={amountRange}
+                setAmountRange={setAmountRange}
+                dateRange={dateRange}
+                setDateRange={setDateRange}
+                identityFilter={identityFilter}
+                setIdentityFilter={setIdentityFilter}
+                showSortPopover={showSortPopover}
+                setShowSortPopover={setShowSortPopover}
+                showFromCalendar={showFromCalendar}
+                setShowFromCalendar={setShowFromCalendar}
+                showToCalendar={showToCalendar}
+                setShowToCalendar={setShowToCalendar}
+                setQuickDateFilter={setQuickDateFilter}
+                resetFilters={resetFilters}
+                resetDateRange={resetDateRange}
+                resetAmountRange={resetAmountRange}
+                resetIdentityFilter={resetIdentityFilter}
+                applyFilters={applyFilters}
+              />
+            </div>
           </div>
 
           <BackingHistoryTable backers={filteredAndSortedBackers} />
