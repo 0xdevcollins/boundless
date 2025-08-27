@@ -153,6 +153,12 @@ const CampaignRow = ({
               {campaign.status === 'live' && (
                 <>
                   <DropdownMenuItem
+                    onClick={() => handleAction('back-project')}
+                    className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                  >
+                    Back Project
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
                     onClick={() => handleAction('share')}
                     className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
                   >
