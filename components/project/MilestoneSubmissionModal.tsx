@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MilestoneSubmissionSuccess from './MilestoneSubmissionSuccess';
+import { useWalletProtection } from '@/hooks/use-wallet-protection';
+import WalletRequiredModal from '@/components/wallet/WalletRequiredModal';
 
 export interface MilestoneSubmissionData {
   files: File[];
@@ -49,6 +51,16 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  // Wallet protection hook
+  const {
+    requireWallet,
+    showWalletModal,
+    handleWalletConnected,
+    closeWalletModal,
+  } = useWalletProtection({
+    actionName: 'submit milestone',
+  });
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(event.target.files || []);
     setFiles(prev => [...prev, ...selectedFiles]);
@@ -75,12 +87,14 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
   };
 
   const handleSubmit = () => {
-    const filteredLinks = externalLinks.filter(link => link.trim() !== '');
-    onSubmit({
-      files,
-      externalLinks: filteredLinks,
+    requireWallet(() => {
+      const filteredLinks = externalLinks.filter(link => link.trim() !== '');
+      onSubmit({
+        files,
+        externalLinks: filteredLinks,
+      });
+      setShowSuccess(true);
     });
-    setShowSuccess(true);
   };
 
   const formatDate = (dateString: string) => {
@@ -372,6 +386,14 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
           </div>
         </div>
       )}
+
+      {/* Wallet Required Modal */}
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='submit milestone'
+        onWalletConnected={handleWalletConnected}
+      />
     </BoundlessSheet>
   );
 };

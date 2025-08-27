@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { RecentProjectsProps, Project } from '@/types/project';
-import { Plus, ChevronRight, ChevronDown, Loader2 } from 'lucide-react';
+import { Plus, ChevronRight, ChevronDown } from 'lucide-react';
 import ProjectCard from '../project-card';
 import EmptyState from '../EmptyState';
 import { BoundlessButton } from '../buttons';
@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { getProjects } from '@/lib/api/project';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
+import { RecentProjectsSkeleton } from '../skeleton/UserPageSkeleton';
 
 type StatusFilter =
   | 'all'
@@ -118,6 +119,19 @@ const RecentProjects = () => {
     fetchProjects();
   }, [fetchProjects]);
 
+  if (loading) {
+    return (
+      <motion.div
+        className='bg-[#1C1C1C] p-4 sm:p-6 rounded-[12px] flex flex-col gap-6 sm:gap-8 w-full'
+        initial='hidden'
+        animate='visible'
+        variants={fadeInUp}
+      >
+        <RecentProjectsSkeleton />
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       className='bg-[#1C1C1C] p-4 sm:p-6 rounded-[12px] flex flex-col gap-6 sm:gap-8 w-full'
@@ -213,16 +227,7 @@ const RecentProjects = () => {
         className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols- xl:grid-cols-3 gap-4 sm:gap-6'
         variants={staggerContainer}
       >
-        {loading ? (
-          <motion.div className='col-span-full' variants={fadeInUp}>
-            <div className='flex items-center justify-center py-12'>
-              <div className='flex items-center gap-3'>
-                <Loader2 className='w-6 h-6 animate-spin text-[#1671D9]' />
-                <span className='text-[#B5B5B5]'>Loading projects...</span>
-              </div>
-            </div>
-          </motion.div>
-        ) : error ? (
+        {error ? (
           <motion.div className='col-span-full' variants={fadeInUp}>
             <div className='flex items-center justify-center py-12'>
               <div className='text-center'>

@@ -11,6 +11,8 @@ import MilestoneManager from './MilestoneManager';
 import MilestoneReview from './MilestoneReview';
 import ProjectSubmissionSuccess from './ProjectSubmissionSuccess';
 import Loading from '../Loading';
+import { useWalletProtection } from '@/hooks/use-wallet-protection';
+import WalletRequiredModal from '@/components/wallet/WalletRequiredModal';
 
 type StepState = 'pending' | 'active' | 'completed';
 
@@ -40,6 +42,16 @@ const Initialize: React.FC<InitializeProps> = ({ onSuccess }) => {
       isExpanded: true,
     },
   ]);
+
+  // Wallet protection hook
+  const {
+    requireWallet,
+    showWalletModal,
+    handleWalletConnected,
+    closeWalletModal,
+  } = useWalletProtection({
+    actionName: 'initialize project',
+  });
 
   const localSteps: Step[] = [
     {
@@ -85,101 +97,113 @@ const Initialize: React.FC<InitializeProps> = ({ onSuccess }) => {
 
   const submitInit = async () => {
     if (!formData) return;
-    try {
-      setIsSubmitting(true);
-      toast.loading('Initializing project...');
+    requireWallet(async () => {
+      try {
+        setIsSubmitting(true);
+        toast.loading('Initializing project...');
 
-      // Validate milestone distribution
-      const totalPercentage = milestones.reduce(
-        (sum, m) => sum + (parseFloat(m.fundPercentage) || 0),
-        0
-      );
-      if (totalPercentage !== 100) {
-        toast.dismiss();
-        toast.error('Total milestone fund percentage must equal 100%');
-        setIsSubmitting(false);
-        return;
-      }
+        // Validate milestone distribution
+        const totalPercentage = milestones.reduce(
+          (sum, m) => sum + (parseFloat(m.fundPercentage) || 0),
+          0
+        );
+        if (totalPercentage !== 100) {
+          toast.dismiss();
+          toast.error('Total milestone fund percentage must equal 100%');
+          setIsSubmitting(false);
+          return;
+        }
 
-      const milestonesPayload = milestones.map(m => {
-        const pct = parseFloat(m.fundPercentage) || 0;
-        const amt = (formData.fundAmount * pct) / 100;
-        return {
-          title: m.title,
-          description: m.description,
-          deliveryDate: m.deliveryDate,
-          fundPercentage: pct,
-          fundAmount: amt,
+        const milestonesPayload = milestones.map(m => {
+          const pct = parseFloat(m.fundPercentage) || 0;
+          const amt = (formData.fundAmount * pct) / 100;
+          return {
+            title: m.title,
+            description: m.description,
+            deliveryDate: m.deliveryDate,
+            fundPercentage: pct,
+            fundAmount: amt,
+          };
+        });
+
+        const payload: ProjectInitRequest = {
+          title: formData.title,
+          description: formData.description,
+          tagline: formData.tagline,
+          type: 'crowdfund',
+          category: formData.category,
+          fundAmount: formData.fundAmount,
+          tags: formData.tags,
+          milestones: milestonesPayload,
+          thumbnail: 'https://placehold.co/600x400',
+          whitepaperUrl: 'https://placehold.co/600x400',
+          // Optional placeholders until uploads are wired
+          // ...(formData.thumbnailFile ? { thumbnail: '' } : {}),
+          // ...(formData.whitepaperFile ? { whitepaperUrl: '' } : {}),
         };
-      });
 
-      const payload: ProjectInitRequest = {
-        title: formData.title,
-        description: formData.description,
-        tagline: formData.tagline,
-        type: 'crowdfund',
-        category: formData.category,
-        fundAmount: formData.fundAmount,
-        tags: formData.tags,
-        milestones: milestonesPayload,
-        thumbnail: 'https://placehold.co/600x400',
-        whitepaperUrl: 'https://placehold.co/600x400',
-        // Optional placeholders until uploads are wired
-        // ...(formData.thumbnailFile ? { thumbnail: '' } : {}),
-        // ...(formData.whitepaperFile ? { whitepaperUrl: '' } : {}),
-      };
+        const response = await initProject(payload);
+        const responseData = response as { data: { projectId: string } };
 
-      const response = await initProject(payload);
-      const responseData = response as { data: { projectId: string } };
-
-      toast.dismiss();
-      toast.success('Project initialized!');
-      setPhase('success');
-      onSuccess(responseData.data.projectId);
-    } catch {
-      toast.dismiss();
-      toast.error('Failed to initialize project');
-    } finally {
-      setIsSubmitting(false);
-    }
+        toast.dismiss();
+        toast.success('Project initialized!');
+        setPhase('success');
+        onSuccess(responseData.data.projectId);
+      } catch {
+        toast.dismiss();
+        toast.error('Failed to initialize project');
+      } finally {
+        setIsSubmitting(false);
+      }
+    });
   };
 
   return (
-    <div className='space-y-6 w-[500px]'>
-      {isSubmitting && <Loading />}
-      <InitialSteps steps={localSteps} />
+    <>
+      <div className='space-y-6 w-[500px]'>
+        {isSubmitting && <Loading />}
+        <InitialSteps steps={localSteps} />
 
-      {phase === 'form' && (
-        <ProjectSubmissionForm
-          onComplete={handleFormComplete}
-          initialData={formData ?? undefined}
-          onChange={handleFormChange}
-        />
-      )}
-
-      {phase === 'milestones' && (
-        <MilestonesPhase
-          milestones={milestones}
-          onChange={ms => setMilestones(ms)}
-          onBack={() => setPhase('form')}
-          onNext={handleMilestonesCompleted}
-        />
-      )}
-
-      {phase === 'review' && (
-        <div className='space-y-4'>
-          <MilestoneReview
-            milestones={milestones}
-            totalFundAmount={formData?.fundAmount ?? 0}
-            onBack={() => setPhase('milestones')}
-            onSubmit={submitInit}
-            submitting={isSubmitting}
+        {phase === 'form' && (
+          <ProjectSubmissionForm
+            onComplete={handleFormComplete}
+            initialData={formData ?? undefined}
+            onChange={handleFormChange}
           />
-        </div>
-      )}
+        )}
 
-      {phase === 'success' && <ProjectSubmissionSuccess />}
-    </div>
+        {phase === 'milestones' && (
+          <MilestonesPhase
+            milestones={milestones}
+            onChange={ms => setMilestones(ms)}
+            onBack={() => setPhase('form')}
+            onNext={handleMilestonesCompleted}
+          />
+        )}
+
+        {phase === 'review' && (
+          <div className='space-y-4'>
+            <MilestoneReview
+              milestones={milestones}
+              totalFundAmount={formData?.fundAmount ?? 0}
+              onBack={() => setPhase('milestones')}
+              onSubmit={submitInit}
+              submitting={isSubmitting}
+            />
+          </div>
+        )}
+
+        {phase === 'success' && <ProjectSubmissionSuccess />}
+      </div>
+
+      {/* Wallet Required Modal */}
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='initialize project'
+        onWalletConnected={handleWalletConnected}
+      />
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import { BoundlessButton } from '../buttons';
 import {
   Form,
@@ -9,19 +9,14 @@ import {
   FormMessage,
 } from '../ui/form';
 import { FormLabel } from '../ui/form';
-import z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '../ui/input';
 import { Eye, EyeOff, LockIcon, MailIcon } from 'lucide-react';
 import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
 import Link from 'next/link';
-import { getSession, signIn } from 'next-auth/react';
-import { toast } from 'sonner';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Cookies from 'js-cookie';
 import Image from 'next/image';
+import { UseFormReturn } from 'react-hook-form';
+import z from 'zod';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -32,87 +27,28 @@ const formSchema = z.object({
   }),
 });
 
-const LoginForm = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/user';
-  const [showPassword, setShowPassword] = useState(false);
+interface LoginFormProps {
+  form: UseFormReturn<z.infer<typeof formSchema>>;
+  onSubmit: (values: z.infer<typeof formSchema>) => Promise<void>;
+  showPassword: boolean;
+  setShowPassword: (show: boolean) => void;
+  isLoading: boolean;
+}
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
-
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      const result = await signIn('credentials', {
-        email: values.email,
-        password: values.password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        if (result.error === 'UNVERIFIED_EMAIL') {
-          toast.error(
-            'Please verify your email before signing in. Check your inbox for a verification link.'
-          );
-          setTimeout(() => {
-            router.push(
-              `/auth/verify-email?email=${encodeURIComponent(values.email)}`
-            );
-          }, 3000);
-        } else {
-          form.setError('email', {
-            type: 'manual',
-            message: 'Invalid email or password',
-          });
-          form.setError('password', {
-            type: 'manual',
-            message: 'Invalid email or password',
-          });
-        }
-      } else if (result?.ok) {
-        const session = await getSession();
-
-        if (session) {
-          if (session.user.accessToken) {
-            Cookies.set('accessToken', session.user.accessToken);
-          }
-          if (session.user.refreshToken) {
-            Cookies.set('refreshToken', session.user.refreshToken);
-          }
-          router.push(callbackUrl);
-        } else {
-          form.setError('root', {
-            type: 'manual',
-            message:
-              'Login successful but session not found. Please try again.',
-          });
-        }
-      } else {
-        form.setError('root', {
-          type: 'manual',
-          message: 'An unexpected error occurred. Please try again.',
-        });
-      }
-    } catch {
-      form.setError('root', {
-        type: 'manual',
-        message: 'An unexpected error occurred. Please try again.',
-      });
-    }
-  };
-
+const LoginForm = ({
+  form,
+  onSubmit,
+  showPassword,
+  setShowPassword,
+  isLoading,
+}: LoginFormProps) => {
   return (
     <>
-      <div>
-        <h2 className='text-2xl lg:text-[40px] font-medium text-white mb-3'>
+      <div className='space-y-2'>
+        <h2 className='text-2xl text-center md:text-left lg:text-[40px] font-medium text-white mb-3'>
           Sign in
         </h2>
-        <p className='text-sm lg:text-base text-[#D9D9D9] leading-relaxed'>
+        <p className='text-sm text-center md:text-left lg:text-base text-[#D9D9D9] leading-relaxed'>
           Sign in to manage campaigns, apply for grants, and track your funding
           progress — all in one dashboard.
         </p>
@@ -223,9 +159,9 @@ const LoginForm = () => {
             <BoundlessButton
               type='submit'
               className='w-full'
-              disabled={form.formState.isSubmitting || !form.formState.isValid}
+              disabled={isLoading || !form.formState.isValid}
               fullWidth
-              loading={form.formState.isSubmitting}
+              loading={isLoading}
             >
               Sign in
             </BoundlessButton>

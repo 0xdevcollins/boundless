@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { RecentProjectsProps } from '@/types/project';
-import { Plus,  ChevronDown, Loader2 } from 'lucide-react';
+import { Plus, ChevronDown } from 'lucide-react';
 import ProjectCard from './project-card';
 import EmptyState from './EmptyState';
 import { BoundlessButton } from './buttons';
@@ -20,6 +20,7 @@ import { getProjects } from '@/lib/api/project';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
 import { useProjectSheetStore } from '@/lib/stores/project-sheet-store';
+import { ProjectsSkeleton } from './skeleton/ProjectsSkeleton';
 
 type StatusFilter =
   | 'all'
@@ -93,6 +94,19 @@ const Projects = () => {
     fetchProjects();
   }, [fetchProjects]);
 
+  if (loading) {
+    return (
+      <motion.div
+        className='bg-[#1C1C1C] p-4 sm:p-6 rounded-[12px] flex flex-col gap-6 sm:gap-8 w-full'
+        initial='hidden'
+        animate='visible'
+        variants={fadeInUp}
+      >
+        <ProjectsSkeleton />
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       className='bg-[#1C1C1C] p-4 sm:p-6 rounded-[12px] flex flex-col gap-6 sm:gap-8 w-full'
@@ -108,7 +122,6 @@ const Projects = () => {
           <h2 className='text-white text-base sm:text-lg xl:text-xl font-semibold leading-[120%] tracking-[-0.4px]'>
             {tabFilter === 'mine' ? 'My Projects' : 'All Projects'}
           </h2>
-
         </div>
         <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full xl:w-auto'>
           <Tabs
@@ -180,16 +193,7 @@ const Projects = () => {
         className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols- xl:grid-cols-3 gap-4 sm:gap-6'
         variants={staggerContainer}
       >
-        {loading ? (
-          <motion.div className='col-span-full' variants={fadeInUp}>
-            <div className='flex items-center justify-center py-12'>
-              <div className='flex items-center gap-3'>
-                <Loader2 className='w-6 h-6 animate-spin text-[#1671D9]' />
-                <span className='text-[#B5B5B5]'>Loading projects...</span>
-              </div>
-            </div>
-          </motion.div>
-        ) : error ? (
+        {error ? (
           <motion.div className='col-span-full' variants={fadeInUp}>
             <div className='flex items-center justify-center py-12'>
               <div className='text-center'>
@@ -268,7 +272,6 @@ const Projects = () => {
                             iconPosition='right'
                             onClick={() => {
                               sheet.openInitialize();
-                             
                             }}
                           >
                             New Project.

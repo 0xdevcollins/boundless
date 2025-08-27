@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import TimelineStepper from './TimelineStepper';
+import { useWalletProtection } from '@/hooks/use-wallet-protection';
+import WalletRequiredModal from '@/components/wallet/WalletRequiredModal';
 
 interface ValidationFlowProps {
   project: Project;
@@ -33,6 +35,16 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
   const [hasVoted, setHasVoted] = useState(false);
   const [daysLeft] = useState(12);
   const [expandedMilestones, setExpandedMilestones] = useState<number[]>([]);
+
+  // Wallet protection hook
+  const {
+    requireWallet,
+    showWalletModal,
+    handleWalletConnected,
+    closeWalletModal,
+  } = useWalletProtection({
+    actionName: 'vote on project',
+  });
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -63,14 +75,16 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
   };
 
   const handleVote = () => {
-    if (hasVoted) {
-      setVoteCount(prev => prev - 1);
-      setHasVoted(false);
-    } else {
-      setVoteCount(prev => prev + 1);
-      setHasVoted(true);
-    }
-    onVote?.(project.id);
+    requireWallet(() => {
+      if (hasVoted) {
+        setVoteCount(prev => prev - 1);
+        setHasVoted(false);
+      } else {
+        setVoteCount(prev => prev + 1);
+        setHasVoted(true);
+      }
+      onVote?.(project.id);
+    });
   };
 
   const toggleMilestone = (milestoneIndex: number) => {
@@ -274,6 +288,14 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
           <TimelineStepper project={project} />
         </div>
       </div>
+
+      {/* Wallet Required Modal */}
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='vote on project'
+        onWalletConnected={handleWalletConnected}
+      />
     </div>
   );
 };

@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '../ui/button';
-import {
-  MoreVerticalIcon,
-  CheckIcon,
-  ChevronDownIcon,
-  Loader2Icon,
-} from 'lucide-react';
+import { MoreVerticalIcon, CheckIcon, ChevronDown } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import {
   DropdownMenu,
@@ -27,6 +22,7 @@ import {
 } from '@/lib/data/campaigns-mock';
 import BackingHistory from './backing-history';
 import { sampleBackers } from '@/lib/data/backing-history-mock';
+import { CampaignTableSkeleton } from '../skeleton/UserPageSkeleton';
 
 const CampaignRow = ({
   campaign,
@@ -518,6 +514,14 @@ const CampaignTable = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  if (loading) {
+    return (
+      <div className='space-y-6 min-h-full'>
+        <CampaignTableSkeleton />
+      </div>
+    );
+  }
+
   return (
     <div className='space-y-6 min-h-full'>
       <div className='flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 sm:gap-4 xl:gap-0'>
@@ -566,7 +570,7 @@ const CampaignTable = () => {
                   filterOptions.find(option => option.value === statusFilter)
                     ?.label
                 }{' '}
-                <ChevronDownIcon className='w-3 h-3 sm:w-4 sm:h-4' />
+                <ChevronDown className='w-3 h-3 sm:w-4 sm:h-4' />
               </BoundlessButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -602,14 +606,7 @@ const CampaignTable = () => {
       </div>
 
       <div className='space-y-3'>
-        {loading ? (
-          <div className='flex items-center justify-center py-12'>
-            <div className='flex items-center gap-3'>
-              <Loader2Icon className='w-6 h-6 animate-spin text-[#1671D9]' />
-              <span className='text-[#B5B5B5]'>Loading campaigns...</span>
-            </div>
-          </div>
-        ) : error ? (
+        {error ? (
           <div className='flex items-center justify-center py-12'>
             <div className='text-center'>
               <p className='text-red-400 mb-2'>{error}</p>

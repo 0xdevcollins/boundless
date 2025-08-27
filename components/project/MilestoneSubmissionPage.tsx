@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MilestoneSubmissionData } from './MilestoneSubmissionModal';
+import { useWalletProtection } from '@/hooks/use-wallet-protection';
+import WalletRequiredModal from '@/components/wallet/WalletRequiredModal';
 
 interface MilestoneSubmissionPageProps {
   milestone: {
@@ -40,6 +42,16 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
   const [externalLinks, setExternalLinks] = useState<string[]>(['']);
   const [isExpanded, setIsExpanded] = useState(true);
   const [additionalNotes, setAdditionalNotes] = useState('');
+
+  // Wallet protection hook
+  const {
+    requireWallet,
+    showWalletModal,
+    handleWalletConnected,
+    closeWalletModal,
+  } = useWalletProtection({
+    actionName: 'submit milestone',
+  });
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(event.target.files || []);
@@ -67,10 +79,12 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
   };
 
   const handleSubmit = () => {
-    const filteredLinks = externalLinks.filter(link => link.trim() !== '');
-    onSubmit({
-      files,
-      externalLinks: filteredLinks,
+    requireWallet(() => {
+      const filteredLinks = externalLinks.filter(link => link.trim() !== '');
+      onSubmit({
+        files,
+        externalLinks: filteredLinks,
+      });
     });
   };
 
@@ -392,6 +406,14 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Wallet Required Modal */}
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='submit milestone'
+        onWalletConnected={handleWalletConnected}
+      />
     </div>
   );
 };

@@ -19,9 +19,11 @@ import { Tooltip, TooltipTrigger } from '../ui/tooltip';
 const ConnectWallet = ({
   open,
   onOpenChange,
+  onConnect,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onConnect?: () => void;
 }) => {
   const [selectedNetwork, setSelectedNetwork] = useState('testnet');
   const [acceptedTerms, setAcceptedTerms] = useState(true);
@@ -107,6 +109,7 @@ const ConnectWallet = ({
         description: `Connected to ${network === 'testnet' ? 'Testnet' : 'Public'} network`,
       });
       onOpenChange(false);
+      onConnect?.();
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Failed to connect wallet';
