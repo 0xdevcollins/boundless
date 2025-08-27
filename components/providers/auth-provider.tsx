@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '@/lib/stores/auth-store';
+import Loading from '../loading/Loading';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -63,11 +64,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Show loading state while hydrating
   if (!isHydrated) {
-    return (
-      <div className='flex items-center justify-center min-h-screen'>
-        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-white'></div>
-      </div>
-    );
+    return <Loading />;
   }
 
   return <>{children}</>;
@@ -98,11 +95,7 @@ export function AuthLoadingProvider({
   const { isLoading } = useAuthStore();
 
   if (!isHydrated || isLoading) {
-    return (
-      <div className='flex items-center justify-center min-h-screen'>
-        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-white'></div>
-      </div>
-    );
+    return <Loading />;
   }
 
   return <>{children}</>;

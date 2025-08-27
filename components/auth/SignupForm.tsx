@@ -139,11 +139,11 @@ const SignupForm = () => {
 
   return (
     <>
-      <div>
-        <h2 className='text-2xl lg:text-[40px] font-medium text-white mb-3'>
+      <div className='space-y-2'>
+        <h2 className='text-2xl text-center md:text-left lg:text-[40px] font-medium text-white mb-3'>
           Create account
         </h2>
-        <p className='text-sm lg:text-base text-[#D9D9D9] leading-relaxed'>
+        <p className='text-sm text-center md:text-left lg:text-base text-[#D9D9D9] leading-relaxed'>
           Create an account to manage campaigns, apply for grants, and track
           your funding progress — all in one dashboard.
         </p>
