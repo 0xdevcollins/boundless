@@ -92,6 +92,7 @@ const LoginForm = () => {
               'Login successful but session not found. Please try again.',
           });
         }
+        router.push(callbackUrl);
       } else {
         form.setError('root', {
           type: 'manual',

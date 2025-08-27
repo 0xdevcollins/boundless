@@ -12,6 +12,8 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowLeft, Check, Copy } from 'lucide-react';
 import { BoundlessButton } from '@/components/buttons';
+import { useWalletProtection } from '@/hooks/use-wallet-protection';
+import WalletRequiredModal from '@/components/wallet/WalletRequiredModal';
 
 interface BackProjectFormProps {
   onSubmit: (data: {
@@ -38,15 +40,27 @@ export function BackProjectForm({
   const [walletAddress] = useState('GDS3...GB7');
   const [keepAnonymous, setKeepAnonymous] = useState(false);
 
+  // Wallet protection hook
+  const {
+    requireWallet,
+    showWalletModal,
+    handleWalletConnected,
+    closeWalletModal,
+  } = useWalletProtection({
+    actionName: 'back this project',
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
-      amount,
-      currency,
-      token,
-      network,
-      walletAddress,
-      keepAnonymous,
+    requireWallet(() => {
+      onSubmit({
+        amount,
+        currency,
+        token,
+        network,
+        walletAddress,
+        keepAnonymous,
+      });
     });
   };
 
@@ -196,6 +210,14 @@ export function BackProjectForm({
           Confirm Contribution
         </BoundlessButton>
       </div>
+
+      {/* Wallet Required Modal */}
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='back this project'
+        onWalletConnected={handleWalletConnected}
+      />
     </div>
   );
 }

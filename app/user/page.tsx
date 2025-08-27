@@ -7,8 +7,7 @@ import { Coins, History } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import CampaignTable from '@/components/campaigns/CampaignTable';
 import { useEffect, useState } from 'react';
-
-import LoadingSpinner from '@/components/LoadingSpinner';
+import { UserPageSkeleton } from '@/components/skeleton/UserPageSkeleton';
 
 export default function UserPage() {
   const { user, isLoading } = useAuth();
@@ -20,11 +19,7 @@ export default function UserPage() {
 
   // Show loading until client-side hydration is complete
   if (!mounted || isLoading) {
-    return (
-      <div className='min-h-screen flex items-center justify-center'>
-        <LoadingSpinner size='lg' />
-      </div>
-    );
+    return <UserPageSkeleton />;
   }
 
   return (

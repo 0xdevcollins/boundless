@@ -9,6 +9,8 @@ import CampaignLiveSuccess from './CampaignLiveSuccess';
 import LoadingSpinner from '../LoadingSpinner';
 import { Stepper } from '../stepper';
 import { mockCampaignDetails } from '@/lib/mock';
+import { useWalletProtection } from '@/hooks/use-wallet-protection';
+import WalletRequiredModal from '../wallet/WalletRequiredModal';
 
 interface LaunchCampaignFlowProps {
   projectId: string;
@@ -26,6 +28,16 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
   const [currentStep, setCurrentStep] = useState<FlowStep>('review');
   const [campaignDetails, setCampaignDetails] =
     useState<CampaignDetails | null>(null);
+
+  // Wallet protection hook
+  const {
+    requireWallet,
+    showWalletModal,
+    handleWalletConnected,
+    closeWalletModal,
+  } = useWalletProtection({
+    actionName: 'launch campaign',
+  });
 
   // Define the steps for the stepper
   const steps = [
@@ -50,31 +62,33 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
   ];
 
   const handleLaunch = async () => {
-    try {
-      setCurrentStep('launching');
+    requireWallet(async () => {
+      try {
+        setCurrentStep('launching');
 
-      // Launch the campaign
-      const response = (await launchCampaign(projectId)) as {
-        data: { campaignId: string };
-      };
+        // Launch the campaign
+        const response = (await launchCampaign(projectId)) as {
+          data: { campaignId: string };
+        };
 
-      // mock campaign details
-      setCampaignDetails(mockCampaignDetails as CampaignDetails);
+        // mock campaign details
+        setCampaignDetails(mockCampaignDetails as CampaignDetails);
 
-      // Update campaign details with the response
-      if (campaignDetails) {
-        setCampaignDetails({
-          ...campaignDetails,
-          id: response.data.campaignId,
-        });
+        // Update campaign details with the response
+        if (campaignDetails) {
+          setCampaignDetails({
+            ...campaignDetails,
+            id: response.data.campaignId,
+          });
+        }
+
+        toast.success('Campaign launched successfully!');
+        setCurrentStep('success');
+      } catch {
+        toast.error('Failed to launch campaign. Please try again.');
+        setCurrentStep('review');
       }
-
-      toast.success('Campaign launched successfully!');
-      setCurrentStep('success');
-    } catch {
-      toast.error('Failed to launch campaign. Please try again.');
-      setCurrentStep('review');
-    }
+    });
   };
 
   const handleBackToDashboard = () => {
@@ -137,15 +151,25 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
   };
 
   return (
-    <div className='flex h-full'>
-      {/* Left Sidebar with Stepper */}
-      <div className='flex-1 sticky top-0'>
-        <Stepper steps={steps} />
+    <>
+      <div className='flex h-full'>
+        {/* Left Sidebar with Stepper */}
+        <div className='flex-1 sticky top-0'>
+          <Stepper steps={steps} />
+        </div>
+
+        {/* Right Content Area */}
+        <div className='flex-1'>{renderContent()}</div>
       </div>
 
-      {/* Right Content Area */}
-      <div className='flex-1'>{renderContent()}</div>
-    </div>
+      {/* Wallet Required Modal */}
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='launch campaign'
+        onWalletConnected={handleWalletConnected}
+      />
+    </>
   );
 };
 

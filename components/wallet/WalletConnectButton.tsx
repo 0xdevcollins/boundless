@@ -51,6 +51,7 @@ interface WalletConnectButtonProps {
     | 'link';
   size?: 'default' | 'sm' | 'lg' | 'icon';
   showErrorGuide?: boolean;
+  onConnect?: () => void;
 }
 
 const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
@@ -58,6 +59,7 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
   variant = 'default',
   size = 'default',
   showErrorGuide = true,
+  onConnect,
 }) => {
   const [showErrorGuideState, setShowErrorGuideState] = useState(false);
   const [showConnectModal, setShowConnectModal] = useState(false);
@@ -305,6 +307,7 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
         <ConnectWallet
           open={showConnectModal}
           onOpenChange={setShowConnectModal}
+          onConnect={onConnect}
         />
       </div>
     );
@@ -329,6 +332,7 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
       <ConnectWallet
         open={showConnectModal}
         onOpenChange={setShowConnectModal}
+        onConnect={onConnect}
       />
     </div>
   );

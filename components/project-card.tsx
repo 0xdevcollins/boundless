@@ -35,6 +35,8 @@ import CircularProgress from './ui/circular-progress';
 import { motion } from 'framer-motion';
 import { cardHover, fadeInUp } from '@/lib/motion';
 import Stepper from './stepper/Stepper';
+import { useWalletProtection } from '@/hooks/use-wallet-protection';
+import WalletRequiredModal from '@/components/wallet/WalletRequiredModal';
 
 interface ProjectCardProps {
   project: Project;
@@ -98,6 +100,16 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 }) => {
   const [validationSheetOpen, setValidationSheetOpen] = useState(false);
   const [launchCampaignSheetOpen, setLaunchCampaignSheetOpen] = useState(false);
+
+  // Wallet protection hook
+  const {
+    requireWallet,
+    showWalletModal,
+    handleWalletConnected,
+    closeWalletModal,
+  } = useWalletProtection({
+    actionName: 'start campaign',
+  });
   const [stepperState] = useState<Step[]>(steps);
   const [campaignStepperState] = useState<Step[]>(campaignSteps);
   const getStatusColor = (status: string) => {
@@ -345,7 +357,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 'flex-1 border-[1.4px] border-[#2B2B2B] rounded-[10px] bg-[#212121] hover:bg-[#2A2A2A] disabled:bg-[#212121] disabled:border-[#2B2B2B] disabled:text-[#484848]',
                 project.status === 'validated' && 'hidden'
               )}
-              onClick={() => onVote?.(project.id)}
+              onClick={() => requireWallet(() => onVote?.(project.id))}
               disabled={
                 project.status === 'idea' ||
                 project.status === 'under_review' ||
@@ -391,7 +403,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           </div>
           {project.status === 'validated' && (
             <div>
-              <BoundlessButton onClick={() => setLaunchCampaignSheetOpen(true)}>
+              <BoundlessButton
+                onClick={() =>
+                  requireWallet(() => setLaunchCampaignSheetOpen(true))
+                }
+              >
                 Start Campaign
               </BoundlessButton>
             </div>
@@ -438,6 +454,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           </div>
         </div>
       </BoundlessSheet>
+
+      {/* Wallet Required Modal */}
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='start campaign'
+        onWalletConnected={handleWalletConnected}
+      />
     </motion.div>
   );
 };

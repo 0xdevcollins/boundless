@@ -24,6 +24,8 @@ import {
 } from '@/components/ui/select';
 import { BoundlessButton } from '../buttons';
 import { Checkbox } from '../ui/checkbox';
+import { useWalletProtection } from '@/hooks/use-wallet-protection';
+import WalletRequiredModal from '@/components/wallet/WalletRequiredModal';
 
 interface LaunchCampaignFlowProps {
   onComplete: () => void;
@@ -60,6 +62,16 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
   const [currentPhase, setCurrentPhase] = useState<'details' | 'escrow'>(
     'details'
   );
+
+  // Wallet protection hook
+  const {
+    requireWallet,
+    showWalletModal,
+    handleWalletConnected,
+    closeWalletModal,
+  } = useWalletProtection({
+    actionName: 'launch campaign',
+  });
   const [formData, setFormData] = useState({
     title: 'Boundless',
     description:
@@ -280,9 +292,17 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
           escrowTerms={escrowTerms}
           isEscrowValid={isEscrowValid}
           onBack={handleBackPhase}
-          onComplete={onComplete}
+          onComplete={() => requireWallet(onComplete)}
         />
       )}
+
+      {/* Wallet Required Modal */}
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='launch campaign'
+        onWalletConnected={handleWalletConnected}
+      />
     </div>
   );
 };

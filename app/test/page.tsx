@@ -5,12 +5,24 @@ import LaunchCampaignFlow from '@/components/project/LaunchCampaignFlow';
 import BoundlessSheet from '@/components/sheet/boundless-sheet';
 import { Button } from '@/components/ui/button';
 import { Rocket } from 'lucide-react';
+import { useWalletProtection } from '@/hooks/use-wallet-protection';
+import WalletRequiredModal from '@/components/wallet/WalletRequiredModal';
 
 export default function TestPage() {
   const [showLaunchFlow, setShowLaunchFlow] = useState(false);
 
+  // Wallet protection hook
+  const {
+    requireWallet,
+    showWalletModal,
+    handleWalletConnected,
+    closeWalletModal,
+  } = useWalletProtection({
+    actionName: 'test launch campaign',
+  });
+
   const handleOpenModal = () => {
-    setShowLaunchFlow(true);
+    requireWallet(() => setShowLaunchFlow(true));
   };
 
   const handleCloseModal = () => {
@@ -55,6 +67,14 @@ export default function TestPage() {
             onComplete={handleCloseModal}
           />
         </BoundlessSheet>
+
+        {/* Wallet Required Modal */}
+        <WalletRequiredModal
+          open={showWalletModal}
+          onOpenChange={closeWalletModal}
+          actionName='test launch campaign'
+          onWalletConnected={handleWalletConnected}
+        />
       </div>
     </div>
   );
