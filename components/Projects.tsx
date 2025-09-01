@@ -15,6 +15,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationEllipsis,
+} from './ui/pagination';
 
 import { getProjects } from '@/lib/api/project';
 import { toast } from 'sonner';
@@ -38,8 +47,13 @@ const Projects = () => {
   const [projects, setProjects] = useState<RecentProjectsProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
   const { user, isAuthenticated } = useAuth(false);
   const sheet = useProjectSheetStore();
+
+  const ITEMS_PER_PAGE = 9;
 
   const filterOptions = [
     { value: 'all', label: 'All' },
@@ -51,11 +65,24 @@ const Projects = () => {
     { value: 'completed', label: 'Completed' },
   ];
 
-  const fetchProjects = useCallback(async () => {
+  const fetchProjects = useCallback(async (pageNum = 1) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await getProjects();
+
+      // Build filters based on current state
+      const filters: { status?: string; owner?: string } = {};
+
+      if (statusFilter !== 'all') {
+        filters.status = statusFilter;
+      }
+
+      // Add owner filter for "mine" tab
+      if (tabFilter === 'mine' && isAuthenticated && user) {
+        filters.owner = user.id;
+      }
+
+      const response = await getProjects(pageNum, ITEMS_PER_PAGE, filters);
 
       const transformedProjects = (response.projects || []).map(
         (project: any) => ({
@@ -82,7 +109,14 @@ const Projects = () => {
       );
 
       setProjects(transformedProjects);
-    } catch {
+
+      // Update pagination state
+      if (response.pagination) {
+        setTotalPages(response.pagination.totalPages || 1);
+        setTotalItems(response.pagination.totalItems || 0);
+      }
+    } catch (error) {
+      console.error('Error fetching projects:', error);
       setError('Failed to fetch projects');
       toast.error('Failed to fetch projects');
     } finally {
@@ -91,8 +125,53 @@ const Projects = () => {
   }, []);
 
   useEffect(() => {
-    fetchProjects();
-  }, [fetchProjects]);
+    setCurrentPage(1);
+    fetchProjects(1);
+  }, [statusFilter, tabFilter, isAuthenticated, user?.id]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    fetchProjects(page);
+  };
+
+  const generatePaginationItems = () => {
+    const items = [];
+    const maxVisiblePages = 5;
+
+    if (totalPages <= maxVisiblePages) {
+      // Show all pages if total is small
+      for (let i = 1; i <= totalPages; i++) {
+        items.push(i);
+      }
+    } else {
+      items.push(1);
+
+      if (currentPage > 3) {
+        items.push('ellipsis-start');
+      }
+
+      // Show pages around current page
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        if (i !== 1 && i !== totalPages) {
+          items.push(i);
+        }
+      }
+
+      if (currentPage < totalPages - 2) {
+        items.push('ellipsis-end');
+      }
+
+      // Show last page
+      if (totalPages > 1) {
+        items.push(totalPages);
+      }
+    }
+
+    return items;
+  };
 
   if (loading) {
     return (
@@ -119,28 +198,51 @@ const Projects = () => {
         variants={fadeInUp}
       >
         <div className='flex items-center gap-2 sm:gap-3 xl:gap-5'>
-          <h2 className='text-white text-base sm:text-lg xl:text-xl font-semibold leading-[120%] tracking-[-0.4px]'>
-            {tabFilter === 'mine' ? 'My Projects' : 'All Projects'}
-          </h2>
-        </div>
-        <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full xl:w-auto'>
           <Tabs
             value={tabFilter}
             onValueChange={value => setTabFilter(value as TabFilter)}
             className='w-full sm:w-auto'
           >
-            <TabsList className='bg-[#101010] border border-[#2B2B2B] p-1 gap-1 rounded-[12px] h-10 sm:h-11 text-sm w-full sm:w-auto'>
+            <TabsList className='bg-transparent rounded-none border-b p-0 border-[#484848] gap-2'>
               <TabsTrigger
                 value='mine'
-                className='data-[state=active]:text-white text-[#B5B5B5] rounded-[8px] data-[state=active]:bg-[#2B2B2B] px-2 sm:px-3 xl:px-4 py-2 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
+                className=' border-0 rounded-none border-primary data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-white text-[#B5B5B5] data-[state=active]:bg-transparent px-0  py-0 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
               >
-                In Progress
+                My Projects
               </TabsTrigger>
               <TabsTrigger
                 value='others'
+                className='border-0 rounded-none border-primary data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-white text-[#B5B5B5] data-[state=active]:bg-transparent px-0  py-0 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
+              >
+                Explore ({totalItems})
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+        <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full xl:w-auto'>
+          <Tabs
+            value={statusFilter}
+            onValueChange={value => setStatusFilter(value as StatusFilter)}
+            className='w-full sm:w-auto'
+          >
+            <TabsList className='bg-[#101010] border border-[#2B2B2B] p-1 gap-1 rounded-[12px] h-10 sm:h-11 text-sm w-full sm:w-auto'>
+              <TabsTrigger
+                value='all'
                 className='data-[state=active]:text-white text-[#B5B5B5] rounded-[8px] data-[state=active]:bg-[#2B2B2B] px-2 sm:px-3 xl:px-4 py-2 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
               >
-                Active
+                All
+              </TabsTrigger>
+              <TabsTrigger
+                value='funding'
+                className='data-[state=active]:text-white text-[#B5B5B5] rounded-[8px] data-[state=active]:bg-[#2B2B2B] px-2 sm:px-3 xl:px-4 py-2 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
+              >
+                Funding
+              </TabsTrigger>
+              <TabsTrigger
+                value='funded'
+                className='data-[state=active]:text-white text-[#B5B5B5] rounded-[8px] data-[state=active]:bg-[#2B2B2B] px-2 sm:px-3 xl:px-4 py-2 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
+              >
+                Funded
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -199,7 +301,7 @@ const Projects = () => {
               <div className='text-center'>
                 <p className='text-red-400 mb-2'>{error}</p>
                 <Button
-                  onClick={fetchProjects}
+                  onClick={() => fetchProjects(1)}
                   variant='outline'
                   className='border-[#2B2B2B] hover:border-[#374151]'
                 >
@@ -210,22 +312,12 @@ const Projects = () => {
           </motion.div>
         ) : (
           (() => {
-            // Filter projects based on tab selection
+            // Since filtering is now handled at the API level, we just use the projects as-is
             let filteredProjects = projects;
 
-            // Filter based on user ownership
-            if (!isAuthenticated) {
-              // If not authenticated, show all projects in both tabs
-            } else if (tabFilter === 'mine') {
-              // Show only user's own projects
-              filteredProjects = projects.filter(
-                project =>
-                  project.owner === user?.id ||
-                  project.ownerUsername === user?.email ||
-                  project.ownerName === user?.name
-              );
-            } else {
-              // Show all projects except user's own
+            // For the "explore" tab, we need to filter out user's own projects client-side
+            // since the API doesn't support "not owner" filtering
+            if (tabFilter === 'others' && isAuthenticated && user) {
               filteredProjects = projects.filter(
                 project =>
                   project.owner !== user?.id &&
@@ -234,17 +326,31 @@ const Projects = () => {
               );
             }
 
-            // Additional filtering based on status if needed
-            if (statusFilter !== 'all') {
-              filteredProjects = filteredProjects.filter(
-                project => project.status === statusFilter
+            // Handle empty state for "mine" tab when not authenticated
+            if (tabFilter === 'mine' && !isAuthenticated) {
+              return (
+                <motion.div className='col-span-full' variants={fadeInUp}>
+                  <div className='w-full max-w-md mx-auto'>
+                    <EmptyState
+                      title='Sign in to see your projects'
+                      description='Sign in to view and manage your projects.'
+                      type='default'
+                    />
+                  </div>
+                </motion.div>
               );
             }
 
             if (filteredProjects.length > 0) {
               return filteredProjects.map((project, index) => (
                 <motion.div key={project.id} variants={fadeInUp} custom={index}>
-                  <ProjectCard project={project} showEllipsisMenu={true} />
+                  <ProjectCard
+                    project={project}
+                    showEllipsisMenu={true}
+                    currentUserId={user?.id}
+                    currentUserEmail={user?.email}
+                    currentUserName={user?.name}
+                  />
                 </motion.div>
               ));
             } else {
@@ -254,17 +360,21 @@ const Projects = () => {
                     <EmptyState
                       title={
                         tabFilter === 'mine'
-                          ? 'No projects yet'
+                          ? isAuthenticated
+                            ? 'No projects yet'
+                            : 'Sign in to see your projects'
                           : 'No projects found'
                       }
                       description={
                         tabFilter === 'mine'
-                          ? 'Start by sharing your first project idea with the Boundless community. Once submitted, your projects will appear here for easy tracking.'
+                          ? isAuthenticated
+                            ? 'Start by sharing your first project idea with the Boundless community. Once submitted, your projects will appear here for easy tracking.'
+                            : 'Sign in to view and manage your projects.'
                           : 'No projects match the current filters. Try adjusting your search criteria.'
                       }
                       type='default'
                       action={
-                        tabFilter === 'mine' ? (
+                        tabFilter === 'mine' && isAuthenticated ? (
                           <BoundlessButton
                             variant='default'
                             size='lg'
@@ -274,7 +384,7 @@ const Projects = () => {
                               sheet.openInitialize();
                             }}
                           >
-                            New Project.
+                            New Project
                           </BoundlessButton>
                         ) : undefined
                       }
@@ -286,6 +396,61 @@ const Projects = () => {
           })()
         )}
       </motion.div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <motion.div className='flex justify-center mt-8' variants={fadeInUp}>
+          <Pagination>
+            <PaginationContent className='bg-[#101010] border border-[#2B2B2B] rounded-[12px] p-2'>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  className={`cursor-pointer ${
+                    currentPage === 1
+                      ? 'text-[#484848] cursor-not-allowed'
+                      : 'text-white hover:text-primary'
+                  }`}
+                  style={{ pointerEvents: currentPage === 1 ? 'none' : 'auto' }}
+                />
+              </PaginationItem>
+
+              {generatePaginationItems().map((item, index) => (
+                <PaginationItem key={index}>
+                  {item === 'ellipsis-start' || item === 'ellipsis-end' ? (
+                    <PaginationEllipsis className='text-[#B5B5B5]' />
+                  ) : (
+                    <PaginationLink
+                      onClick={() => handlePageChange(item as number)}
+                      isActive={currentPage === item}
+                      className={`cursor-pointer ${
+                        currentPage === item
+                          ? 'bg-[#2B2B2B] text-white border-[#2B2B2B]'
+                          : 'text-[#B5B5B5] hover:text-white hover:bg-[#2B2B2B]'
+                      }`}
+                    >
+                      {item}
+                    </PaginationLink>
+                  )}
+                </PaginationItem>
+              ))}
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  className={`cursor-pointer ${
+                    currentPage === totalPages
+                      ? 'text-[#484848] cursor-not-allowed'
+                      : 'text-white hover:text-primary'
+                  }`}
+                  style={{
+                    pointerEvents: currentPage === totalPages ? 'none' : 'auto',
+                  }}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
