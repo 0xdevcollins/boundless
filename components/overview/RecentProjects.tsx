@@ -117,7 +117,7 @@ const RecentProjects = () => {
 
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [fetchProjects]);
 
   if (loading) {
     return (

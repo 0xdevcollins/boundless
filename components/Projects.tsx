@@ -57,69 +57,72 @@ const Projects = () => {
     { value: 'completed', label: 'Completed' },
   ];
 
-  const fetchProjects = useCallback(async (pageNum = 1) => {
-    try {
-      setLoading(true);
-      setError(null);
+  const fetchProjects = useCallback(
+    async (pageNum = 1) => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      // Build filters based on current state
-      const filters: { status?: string; owner?: string } = {};
+        // Build filters based on current state
+        const filters: { status?: string; owner?: string } = {};
 
-      if (statusFilter !== 'all') {
-        filters.status = statusFilter;
+        if (statusFilter !== 'all') {
+          filters.status = statusFilter;
+        }
+
+        // Add owner filter for "mine" tab
+        if (tabFilter === 'mine' && isAuthenticated && user) {
+          filters.owner = user.id;
+        }
+
+        const response = await getProjects(pageNum, ITEMS_PER_PAGE, filters);
+
+        const transformedProjects = (response.projects || []).map(
+          (project: any) => ({
+            id: project._id,
+            name: project.title,
+            description: project.description,
+            image: project.whitepaperUrl || '/banner.png',
+            link: `/projects/${project._id}`,
+            tags: project.tags || [],
+            category: project.category,
+            type: project.type,
+            amount: 0,
+            status: project.status,
+            createdAt: project.createdAt,
+            updatedAt: project.updatedAt,
+            // Add owner information for filtering
+            owner: project.owner?.type?._id || null,
+            ownerName: project.owner?.type?.profile
+              ? `${project.owner.type.profile.firstName} ${project.owner.type.profile.lastName}`
+              : 'Anonymous',
+            ownerUsername:
+              project.owner?.type?.profile?.username || 'anonymous',
+            ownerAvatar: project.owner?.type?.profile?.avatar || '',
+          })
+        );
+
+        setProjects(transformedProjects);
+
+        // Update pagination state
+        if (response.pagination) {
+          setTotalPages(response.pagination.totalPages || 1);
+          setTotalItems(response.pagination.totalItems || 0);
+        }
+      } catch {
+        setError('Failed to fetch projects');
+        toast.error('Failed to fetch projects');
+      } finally {
+        setLoading(false);
       }
-
-      // Add owner filter for "mine" tab
-      if (tabFilter === 'mine' && isAuthenticated && user) {
-        filters.owner = user.id;
-      }
-
-      const response = await getProjects(pageNum, ITEMS_PER_PAGE, filters);
-
-      const transformedProjects = (response.projects || []).map(
-        (project: any) => ({
-          id: project._id,
-          name: project.title,
-          description: project.description,
-          image: project.whitepaperUrl || '/banner.png',
-          link: `/projects/${project._id}`,
-          tags: project.tags || [],
-          category: project.category,
-          type: project.type,
-          amount: 0,
-          status: project.status,
-          createdAt: project.createdAt,
-          updatedAt: project.updatedAt,
-          // Add owner information for filtering
-          owner: project.owner?.type?._id || null,
-          ownerName: project.owner?.type?.profile
-            ? `${project.owner.type.profile.firstName} ${project.owner.type.profile.lastName}`
-            : 'Anonymous',
-          ownerUsername: project.owner?.type?.profile?.username || 'anonymous',
-          ownerAvatar: project.owner?.type?.profile?.avatar || '',
-        })
-      );
-
-      setProjects(transformedProjects);
-
-      // Update pagination state
-      if (response.pagination) {
-        setTotalPages(response.pagination.totalPages || 1);
-        setTotalItems(response.pagination.totalItems || 0);
-      }
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-      setError('Failed to fetch projects');
-      toast.error('Failed to fetch projects');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [isAuthenticated, statusFilter, tabFilter, user]
+  );
 
   useEffect(() => {
     setCurrentPage(1);
     fetchProjects(1);
-  }, [statusFilter, tabFilter, isAuthenticated, user?.id]);
+  }, [statusFilter, tabFilter, isAuthenticated, user?.id, fetchProjects]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
