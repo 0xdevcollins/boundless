@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { ReactNode } from 'react';
-import { Navbar, Footer } from '@/components/landing-page';
+import { Navbar } from '@/components/landing-page';
 
 export const metadata: Metadata = {
   title: 'Boundless - Ideas Made Boundless',
@@ -35,10 +35,9 @@ interface LandingLayoutProps {
 
 export default function LandingLayout({ children }: LandingLayoutProps) {
   return (
-    <div className='min-h-screen flex flex-col bg-background'>
+    <div className='min-h-screen flex flex-col bg-background pt-5 md:pt-11'>
       <Navbar />
       <main className='flex-1'>{children}</main>
-      <Footer />
     </div>
   );
 }
