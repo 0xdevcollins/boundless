@@ -87,7 +87,7 @@ export default function UserPage() {
             {/* Recent Projects - Full Width */}
             <RecentProjects />
             <div className='bg-[#1C1C1C] p-4 sm:p-6 rounded-[12px] flex flex-col gap-6 sm:gap-8 w-full'>
-              <CampaignTable />
+              <CampaignTable limit={5} showPagination={false} />
             </div>
 
             {/* Recent Contributions and Grant History - Side by Side on larger screens */}

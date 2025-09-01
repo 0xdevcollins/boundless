@@ -33,7 +33,7 @@ export default function CampaignsPage() {
 
           {/* Campaign Table Section */}
           <div className='bg-[#1C1C1C] p-4 sm:p-6 rounded-[12px] pb-[5em]'>
-            <CampaignTable />
+            <CampaignTable limit={10} showPagination={true} />
           </div>
         </div>
       </div>

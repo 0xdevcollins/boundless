@@ -15,15 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-  PaginationEllipsis,
-} from './ui/pagination';
+import Pagination from './ui/pagination';
 
 import { getProjects } from '@/lib/api/project';
 import { toast } from 'sonner';
@@ -132,45 +124,6 @@ const Projects = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     fetchProjects(page);
-  };
-
-  const generatePaginationItems = () => {
-    const items = [];
-    const maxVisiblePages = 5;
-
-    if (totalPages <= maxVisiblePages) {
-      // Show all pages if total is small
-      for (let i = 1; i <= totalPages; i++) {
-        items.push(i);
-      }
-    } else {
-      items.push(1);
-
-      if (currentPage > 3) {
-        items.push('ellipsis-start');
-      }
-
-      // Show pages around current page
-      const start = Math.max(2, currentPage - 1);
-      const end = Math.min(totalPages - 1, currentPage + 1);
-
-      for (let i = start; i <= end; i++) {
-        if (i !== 1 && i !== totalPages) {
-          items.push(i);
-        }
-      }
-
-      if (currentPage < totalPages - 2) {
-        items.push('ellipsis-end');
-      }
-
-      // Show last page
-      if (totalPages > 1) {
-        items.push(totalPages);
-      }
-    }
-
-    return items;
   };
 
   if (loading) {
@@ -399,56 +352,15 @@ const Projects = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <motion.div className='flex justify-center mt-8' variants={fadeInUp}>
-          <Pagination>
-            <PaginationContent className='bg-[#101010] border border-[#2B2B2B] rounded-[12px] p-2'>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  className={`cursor-pointer ${
-                    currentPage === 1
-                      ? 'text-[#484848] cursor-not-allowed'
-                      : 'text-white hover:text-primary'
-                  }`}
-                  style={{ pointerEvents: currentPage === 1 ? 'none' : 'auto' }}
-                />
-              </PaginationItem>
-
-              {generatePaginationItems().map((item, index) => (
-                <PaginationItem key={index}>
-                  {item === 'ellipsis-start' || item === 'ellipsis-end' ? (
-                    <PaginationEllipsis className='text-[#B5B5B5]' />
-                  ) : (
-                    <PaginationLink
-                      onClick={() => handlePageChange(item as number)}
-                      isActive={currentPage === item}
-                      className={`cursor-pointer ${
-                        currentPage === item
-                          ? 'bg-[#2B2B2B] text-white border-[#2B2B2B]'
-                          : 'text-[#B5B5B5] hover:text-white hover:bg-[#2B2B2B]'
-                      }`}
-                    >
-                      {item}
-                    </PaginationLink>
-                  )}
-                </PaginationItem>
-              ))}
-
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  className={`cursor-pointer ${
-                    currentPage === totalPages
-                      ? 'text-[#484848] cursor-not-allowed'
-                      : 'text-white hover:text-primary'
-                  }`}
-                  style={{
-                    pointerEvents: currentPage === totalPages ? 'none' : 'auto',
-                  }}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+        <motion.div
+          className='flex justify-end w-full mt-8'
+          variants={fadeInUp}
+        >
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </motion.div>
       )}
     </motion.div>
