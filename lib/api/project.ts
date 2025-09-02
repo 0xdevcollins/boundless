@@ -9,10 +9,37 @@ export const initProject = async (data: ProjectInitRequest) => {
   return res;
 };
 
-export const getProjects = async (): Promise<{
+export const getProjects = async (
+  page = 1,
+  limit = 9,
+  filters?: {
+    status?: string;
+    owner?: string;
+  }
+): Promise<{
   projects: RecentProjectsProps[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }> => {
-  const res = await api.get('/projects');
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+
+  if (filters?.status && filters.status !== 'all') {
+    params.append('status', filters.status);
+  }
+
+  if (filters?.owner) {
+    params.append('owner', filters.owner);
+  }
+
+  const res = await api.get(`/projects?${params.toString()}`);
   return res.data.data;
 };
 

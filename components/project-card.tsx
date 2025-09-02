@@ -47,6 +47,9 @@ interface ProjectCardProps {
   onStartCampaign?: (projectId: string) => void;
   showCreatorName?: boolean;
   showEllipsisMenu?: boolean;
+  currentUserId?: string | null;
+  currentUserEmail?: string | null;
+  currentUserName?: string | null;
 }
 type StepState = 'active' | 'pending' | 'completed';
 
@@ -97,9 +100,21 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   onVote,
   showCreatorName = false,
   showEllipsisMenu = false,
+  currentUserId,
+  currentUserEmail,
+  currentUserName,
 }) => {
   const [validationSheetOpen, setValidationSheetOpen] = useState(false);
   const [launchCampaignSheetOpen, setLaunchCampaignSheetOpen] = useState(false);
+
+  // Check if current user owns this project
+  const isProjectOwner =
+    (currentUserId && project.owner === currentUserId) ||
+    (currentUserEmail && project.ownerUsername === currentUserEmail) ||
+    (currentUserName && project.ownerName === currentUserName);
+
+  // Only show ellipsis menu if user owns the project
+  const shouldShowEllipsisMenu = showEllipsisMenu && isProjectOwner;
 
   // Wallet protection hook
   const {
@@ -289,7 +304,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 ? `${project.name} by Collins Odumeje`
                 : project.name}
             </h2>
-            {showEllipsisMenu && (
+            {shouldShowEllipsisMenu && (
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

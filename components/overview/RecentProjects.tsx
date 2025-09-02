@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback } from 'react';
 import { RecentProjectsProps, Project } from '@/types/project';
-import { Plus, ChevronRight, ChevronDown } from 'lucide-react';
+import { Plus, ChevronDown } from 'lucide-react';
 import ProjectCard from '../project-card';
 import EmptyState from '../EmptyState';
 import { BoundlessButton } from '../buttons';
@@ -15,11 +15,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import Link from 'next/link';
 import { getProjects } from '@/lib/api/project';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/use-auth';
 import { RecentProjectsSkeleton } from '../skeleton/UserPageSkeleton';
+import Link from 'next/link';
 
 type StatusFilter =
   | 'all'
@@ -144,40 +144,54 @@ const RecentProjects = () => {
         variants={fadeInUp}
       >
         <div className='flex items-center gap-2 sm:gap-3 xl:gap-5'>
-          <h2 className='text-white text-base sm:text-lg xl:text-xl font-semibold leading-[120%] tracking-[-0.4px]'>
-            {tabFilter === 'mine' ? 'My Projects' : 'All Projects'}
-          </h2>
-          <Link href='/projects' className='text-sm text-white'>
-            <Button
-              variant='ghost'
-              className='text-white hover:bg-[#374151] transition-colors duration-200 h-8 sm:h-9 px-2 sm:px-3'
-            >
-              View All
-              <ChevronRight className='w-3 h-3 sm:w-4 sm:h-4 ml-1' />
-            </Button>
-          </Link>
-        </div>
-        <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full xl:w-auto'>
           <Tabs
             value={tabFilter}
             onValueChange={value => setTabFilter(value as TabFilter)}
             className='w-full sm:w-auto'
           >
-            <TabsList className='bg-[#101010] border border-[#2B2B2B] p-1 gap-1 rounded-[12px] h-10 sm:h-11 text-sm w-full sm:w-auto'>
+            <TabsList className='bg-transparent rounded-none border-b p-0 border-[#484848] gap-2'>
               <TabsTrigger
                 value='mine'
-                className='data-[state=active]:text-white text-[#B5B5B5] rounded-[8px] data-[state=active]:bg-[#2B2B2B] px-2 sm:px-3 xl:px-4 py-2 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
+                className=' border-0 rounded-none border-primary data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-white text-[#B5B5B5] data-[state=active]:bg-transparent px-0  py-0 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
               >
-                Mine
+                My Projects
               </TabsTrigger>
               <TabsTrigger
                 value='others'
-                className='data-[state=active]:text-white text-[#B5B5B5] rounded-[8px] data-[state=active]:bg-[#2B2B2B] px-2 sm:px-3 xl:px-4 py-2 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
+                className='border-0 rounded-none border-primary data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-white text-[#B5B5B5] data-[state=active]:bg-transparent px-0  py-0 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
               >
-                Others
+                Explore ({projects.length})
               </TabsTrigger>
             </TabsList>
           </Tabs>
+        </div>
+        <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full xl:w-auto'>
+          {/* <Tabs
+            value={statusFilter}
+            onValueChange={value => setStatusFilter(value as StatusFilter)}
+            className='w-full sm:w-auto'
+          >
+            <TabsList className='bg-[#101010] border border-[#2B2B2B] p-1 gap-1 rounded-[12px] h-10 sm:h-11 text-sm w-full sm:w-auto'>
+              <TabsTrigger
+                value='all'
+                className='data-[state=active]:text-white text-[#B5B5B5] rounded-[8px] data-[state=active]:bg-[#2B2B2B] px-2 sm:px-3 xl:px-4 py-2 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
+              >
+                All
+              </TabsTrigger>
+              <TabsTrigger
+                value='funding'
+                className='data-[state=active]:text-white text-[#B5B5B5] rounded-[8px] data-[state=active]:bg-[#2B2B2B] px-2 sm:px-3 xl:px-4 py-2 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
+              >
+                Funding
+              </TabsTrigger>
+              <TabsTrigger
+                value='funded'
+                className='data-[state=active]:text-white text-[#B5B5B5] rounded-[8px] data-[state=active]:bg-[#2B2B2B] px-2 sm:px-3 xl:px-4 py-2 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
+              >
+                Funded
+              </TabsTrigger>
+            </TabsList>
+          </Tabs> */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <BoundlessButton
@@ -248,27 +262,35 @@ const RecentProjects = () => {
             let filteredProjects = projects;
 
             // Filter based on user ownership
-            if (!isAuthenticated) {
-              // If not authenticated, show all projects in both tabs
-            } else if (tabFilter === 'mine') {
-              // Show only user's own projects
-              filteredProjects = projects.filter(
-                project =>
-                  project.owner === user?.id ||
-                  project.ownerUsername === user?.email ||
-                  project.ownerName === user?.name
-              );
+            if (tabFilter === 'mine') {
+              if (isAuthenticated && user) {
+                // Show only user's own projects when authenticated
+                filteredProjects = projects.filter(
+                  project =>
+                    project.owner === user?.id ||
+                    project.ownerUsername === user?.email ||
+                    project.ownerName === user?.name
+                );
+              } else {
+                // If not authenticated, show empty for "mine" tab
+                filteredProjects = [];
+              }
             } else {
-              // Show all projects except user's own
-              filteredProjects = projects.filter(
-                project =>
-                  project.owner !== user?.id &&
-                  project.ownerUsername !== user?.email &&
-                  project.ownerName !== user?.name
-              );
+              // Show all projects except user's own in "explore" tab
+              if (isAuthenticated && user) {
+                filteredProjects = projects.filter(
+                  project =>
+                    project.owner !== user?.id &&
+                    project.ownerUsername !== user?.email &&
+                    project.ownerName !== user?.name
+                );
+              } else {
+                // If not authenticated, show all projects in explore tab
+                filteredProjects = projects;
+              }
             }
 
-            // Additional filtering based on status if needed
+            // Additional filtering based on status
             if (statusFilter !== 'all') {
               filteredProjects = filteredProjects.filter(
                 project => project.status === statusFilter
@@ -279,11 +301,33 @@ const RecentProjects = () => {
             filteredProjects = filteredProjects.slice(0, 3);
 
             if (filteredProjects.length > 0) {
-              return filteredProjects.map((project, index) => (
-                <motion.div key={project.id} variants={fadeInUp} custom={index}>
-                  <ProjectCard project={project} showEllipsisMenu={true} />
-                </motion.div>
-              ));
+              return (
+                <>
+                  {filteredProjects.map((project, index) => (
+                    <motion.div
+                      key={project.id}
+                      variants={fadeInUp}
+                      custom={index}
+                    >
+                      <ProjectCard
+                        project={project}
+                        showEllipsisMenu={true}
+                        currentUserId={user?.id}
+                        currentUserEmail={user?.email}
+                        currentUserName={user?.name}
+                      />
+                    </motion.div>
+                  ))}
+                  {/* Show "View All" button when there are projects */}
+                  <div className='col-span-full flex justify-center items-center'>
+                    <Link href='/projects'>
+                      <BoundlessButton variant='outline' className=''>
+                        View All
+                      </BoundlessButton>
+                    </Link>
+                  </div>
+                </>
+              );
             } else {
               return (
                 <motion.div className='col-span-full' variants={fadeInUp}>
@@ -291,17 +335,21 @@ const RecentProjects = () => {
                     <EmptyState
                       title={
                         tabFilter === 'mine'
-                          ? 'No projects yet'
+                          ? isAuthenticated
+                            ? 'No projects yet'
+                            : 'Sign in to see your projects'
                           : 'No projects found'
                       }
                       description={
                         tabFilter === 'mine'
-                          ? 'Start by sharing your first project idea with the Boundless community. Once submitted, your projects will appear here for easy tracking.'
+                          ? isAuthenticated
+                            ? 'Start by sharing your first project idea with the Boundless community. Once submitted, your projects will appear here for easy tracking.'
+                            : 'Sign in to view and manage your projects.'
                           : 'No projects match the current filters. Try adjusting your search criteria.'
                       }
                       type='default'
                       action={
-                        tabFilter === 'mine' ? (
+                        tabFilter === 'mine' && isAuthenticated ? (
                           <BoundlessButton
                             variant='default'
                             size='lg'

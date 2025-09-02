@@ -23,6 +23,7 @@ import {
 import BackingHistory from './backing-history';
 import { sampleBackers } from '@/lib/data/backing-history-mock';
 import { CampaignTableSkeleton } from '../skeleton/UserPageSkeleton';
+import Pagination from '../ui/pagination';
 
 const CampaignRow = ({
   campaign,
@@ -417,7 +418,15 @@ const CampaignRow = ({
   );
 };
 
-const CampaignTable = () => {
+interface CampaignTableProps {
+  limit?: number;
+  showPagination?: boolean;
+}
+
+const CampaignTable = ({
+  limit = 100,
+  showPagination = false,
+}: CampaignTableProps) => {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [tabFilter, setTabFilter] = useState<TabFilter>('mine');
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -427,7 +436,7 @@ const CampaignTable = () => {
   const [backingHistoryOpen, setBackingHistoryOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = limit;
 
   // Quick filter options - keeping it simple for now
   const filterOptions = [
@@ -448,9 +457,10 @@ const CampaignTable = () => {
           page,
           itemsPerPage
         );
-        // TODO: Handle empty state better - maybe add a refresh button?
         setCampaigns(response.data);
-        setTotalPages(Math.ceil(response.total / itemsPerPage));
+        if (showPagination) {
+          setTotalPages(Math.ceil(response.total / itemsPerPage));
+        }
       } catch {
         setError('Failed to fetch campaigns');
         toast.error('Failed to fetch campaigns');
@@ -458,7 +468,7 @@ const CampaignTable = () => {
         setLoading(false);
       }
     },
-    [statusFilter, tabFilter, itemsPerPage]
+    [statusFilter, tabFilter, itemsPerPage, showPagination]
   );
 
   // Handle different campaign actions - TODO: extract this to a separate hook
@@ -506,8 +516,10 @@ const CampaignTable = () => {
   }, [statusFilter, tabFilter, fetchCampaigns]);
 
   useEffect(() => {
-    fetchCampaigns(currentPage);
-  }, [currentPage, fetchCampaigns]);
+    if (showPagination) {
+      fetchCampaigns(currentPage);
+    }
+  }, [currentPage, fetchCampaigns, showPagination]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -650,74 +662,12 @@ const CampaignTable = () => {
           ))
         )}
 
-        {totalPages > 1 && campaigns.length > 0 && (
-          <div className='border-t border-[#2B2B2B] mt-6 pt-4'>
-            <div className='flex justify-between items-center'>
-              <span className='text-sm text-gray-400'>
-                Page {currentPage} of {totalPages}
-              </span>
-
-              <div className='flex gap-2'>
-                <Button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  size='sm'
-                  variant='outline'
-                  className='border-[#2B2B2B] text-white hover:bg-[#2B2B2B]'
-                >
-                  Previous
-                </Button>
-
-                {/* Basic pagination numbers */}
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  page => {
-                    // Only show if we're within 2 pages or it's first/last
-                    if (
-                      page === 1 ||
-                      page === totalPages ||
-                      Math.abs(page - currentPage) <= 1
-                    ) {
-                      return (
-                        <Button
-                          key={page}
-                          onClick={() => handlePageChange(page)}
-                          size='sm'
-                          variant={currentPage === page ? 'default' : 'outline'}
-                          className={
-                            currentPage === page
-                              ? 'bg-blue-600'
-                              : 'border-[#2B2B2B] text-white hover:bg-[#2B2B2B]'
-                          }
-                        >
-                          {page}
-                        </Button>
-                      );
-                    } else if (
-                      page === currentPage - 2 ||
-                      page === currentPage + 2
-                    ) {
-                      return (
-                        <span key={page} className='px-2 text-gray-500'>
-                          ...
-                        </span>
-                      );
-                    }
-                    return null;
-                  }
-                )}
-
-                <Button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  size='sm'
-                  variant='outline'
-                  className='border-[#2B2B2B] text-white hover:bg-[#2B2B2B]'
-                >
-                  Next
-                </Button>
-              </div>
-            </div>
-          </div>
+        {showPagination && campaigns.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         )}
       </div>
 
