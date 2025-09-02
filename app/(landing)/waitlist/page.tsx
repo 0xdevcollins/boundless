@@ -377,12 +377,17 @@ const WaitlistPage = () => {
       )}
       <div className='w-full text-center'>
         <p className='text-[#D9D9D9]'>
-          By joining, you agree to receive updates from Boundless. Learn more in
-          our{' '}
-          <Link className='text-[#A7F950]' href='/privacy'>
-            Privacy policy
-          </Link>
-          .
+          <span className='text-[.8rem] sm:text-lg'>
+            By joining, you agree to receive updates from Boundless.
+          </span>{' '}
+          <br />
+          <span className='text-[.8rem] sm:text-lg'>
+            Learn more in our{' '}
+            <Link className='text-[#A7F950]' href='/privacy'>
+              Privacy policy
+            </Link>
+            .
+          </span>
         </p>
       </div>
     </div>
