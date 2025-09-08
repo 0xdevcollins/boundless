@@ -98,7 +98,7 @@ export default function LandingPage() {
       <BeamBackground />
       <div
         ref={contentRef}
-        className='relative z-10 space-y-[23px] md:space-y-[80px] max-w-[1200px] mx-auto'
+        className='relative z-10 space-y-[23px] md:space-y-[80px] max-w-[1300px] mx-auto'
       >
         <Hero />
         <WhyBoundless />

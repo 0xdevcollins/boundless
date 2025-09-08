@@ -357,6 +357,8 @@ input[type='number'] {
     #3ae6b2 73.28%
   );
   -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   -webkit-text-fill-color: transparent;
 }
 
