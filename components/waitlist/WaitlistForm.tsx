@@ -387,8 +387,7 @@ export default function WaitlistForm() {
       });
 
       animateFormSubmission();
-    } catch (error) {
-      console.error(error);
+    } catch {
       setError('Failed to submit form. Please try again.');
       setIsSubmitting(false);
     }

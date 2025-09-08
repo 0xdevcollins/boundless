@@ -128,7 +128,7 @@ const BackedBy = () => {
 
   return (
     <div
-      className='w-full h-full py-16 px-6 md:px-12 lg:px-[100px] relative'
+      className='w-full h-full md:py-16 py-5 px-6 md:px-12 lg:px-[100px] relative'
       id='backed-by'
     >
       <div className='mx-auto relative max-w-[1200px]'>

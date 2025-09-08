@@ -304,14 +304,14 @@ export default function BeamBackground() {
       </div>
 
       {/* Pattern Placeholder */}
-      <div className='flex items-center justify-center'>
+      <div className='flex items-center bg-acscent'>
         <div id='pattern' className='w-full h-screen'>
           <svg
             width='1252'
             height='810'
             id='pattern'
             viewBox='0 0 1252 810'
-            className='justify-self-center h-screen'
+            className='justify-self-center w-full h-screen'
             fill='none'
             xmlns='http://www.w3.org/2000/svg'
           >

@@ -11,6 +11,7 @@ import HowBoundlessWork from '@/components/landing-page/HowBoundlessWork';
 import WhyBoundless from '@/components/landing-page/WhyBoundless';
 import BackedBy from '@/components/landing-page/BackedBy';
 import NewsLetter from '@/components/landing-page/NewsLetter';
+import BlogSection from '@/components/landing-page/blog/BlogSection';
 
 export default function LandingPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -95,11 +96,15 @@ export default function LandingPage() {
   return (
     <div ref={containerRef} className='relative overflow-hidden'>
       <BeamBackground />
-      <div ref={contentRef} className='relative z-10 space-y-[80px]'>
+      <div
+        ref={contentRef}
+        className='relative z-10 space-y-[23px] md:space-y-[80px] max-w-[1200px] mx-auto'
+      >
         <Hero />
         <WhyBoundless />
         <BackedBy />
         <NewsLetter />
+        <BlogSection />
         <HowBoundlessWork />
       </div>
     </div>

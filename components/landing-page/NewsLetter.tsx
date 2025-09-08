@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BoundlessButton } from '../buttons';
+import Newsletter from '../overview/Newsletter';
 
 const NewsLetter = () => {
+  const [open, setOpen] = useState(false);
   return (
     <div className='w-full h-full my-[98px] px-5 md:px-[100px] relative'>
       <div
@@ -20,11 +22,13 @@ const NewsLetter = () => {
             variant='secondary'
             className='bg-background hover:text-background'
             size='xl'
+            onClick={() => setOpen(true)}
           >
             Subscribe to Our Newsletter
           </BoundlessButton>
         </div>
       </div>
+      <Newsletter open={open} onOpenChange={setOpen} />
     </div>
   );
 };

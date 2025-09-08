@@ -84,7 +84,7 @@ export default function Hero() {
 
   return (
     <div
-      className='min-h-screen h-screen flex items-stretch md:items-end justify-between pb-[66px] md:mx-[116px] mx-5 relative'
+      className='min-h-screen h-screen flex items-stretch md:items-end justify-between pb-[36] md:pb-[66px] md:mx-[116px] mx-5 relative '
       id='hero'
     >
       <div
@@ -104,7 +104,7 @@ export default function Hero() {
           src='/glow.svg'
           alt='glow'
           unoptimized
-          className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full z-10 glow-element'
+          className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  h-full z-10 glow-element !max-w-screen !w-screen'
           width={1920}
           height={1080}
         />
@@ -116,13 +116,13 @@ export default function Hero() {
           width={1920}
           height={1080}
         />
-        <div
-          className='absolute bottom-0 left-0 w-full h-[150px] z-10 bg-gradient-to-t from-transparent to-background'
+        {/* <div
+          className='absolute bottom-0 left-0 !w-screen !max-w-screen h-[150px] z-10 bg-gradient-to-t from-transparent to-background'
           style={{
             background:
               'linear-gradient(180deg, rgba(3, 3, 3, 0.00) 32.3%, #030303 84.8%)',
           }}
-        />
+        /> */}
       </div>
       <div className='flex flex-col md:flex-row justify-between items-end gap-4 h-full w-full md:h-auto mt-[120px] z-10'>
         <h2 className='text-left text-white xl:text-[48px] lg:text-[32px] text-[30px] leading-[140%] md:max-w-[579px] max-w-[350px]'>

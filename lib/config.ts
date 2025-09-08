@@ -15,21 +15,21 @@ export const backedBy = [
   {
     name: 'OnlyDust',
     image: '/onlydust.svg',
-    url: 'https://stellarpark.xyz',
+    url: 'https://app.onlydust.com/projects/boundless/overview',
   },
   {
     name: 'SDF',
-    image: '/onlydust.svg',
+    image: '/sdf.svg',
     url: 'https://stellar.org',
   },
   {
     name: 'Soroban',
-    image: '/onlydust.svg',
-    url: 'https://stellarpark.xyz',
+    image: '/stellar.svg',
+    url: 'https://stellar.org/',
   },
   {
     name: 'trustless work',
-    image: '/onlydust.svg',
-    url: 'https://stellarpark.xyz',
+    image: '/trustless.svg',
+    url: 'https://www.trustlesswork.com/',
   },
 ];

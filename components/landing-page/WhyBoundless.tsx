@@ -5,7 +5,7 @@ import React from 'react';
 const WhyBoundless = () => {
   return (
     <div
-      className='w-full h-full py-20 px-6 md:px-10 xl:px-[100px]'
+      className='w-full h-full md:py-20 py-5 px-6 md:px-10 xl:px-[100px]'
       id='how-boundless-work'
     >
       {/* Heading & Description */}
