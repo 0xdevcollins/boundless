@@ -1,33 +1,10 @@
 import { Metadata } from 'next';
 import { ReactNode } from 'react';
 import { Navbar } from '@/components/landing-page';
+import { generatePageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-  title: 'Boundless - Ideas Made Boundless',
-  description:
-    'Validate, fund, and grow your project with milestone-based support on Stellar.',
-  openGraph: {
-    title: 'Boundless - Ideas Made Boundless',
-    description:
-      'Validate, fund, and grow your project with milestone-based support on Stellar.',
-    type: 'website',
-    images: [
-      {
-        url: '/og-image-placeholder.png',
-        width: 1200,
-        height: 630,
-        alt: 'Boundless',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Boundless - Ideas Made Boundless',
-    description:
-      'Validate, fund, and grow your project with milestone-based support on Stellar.',
-    images: ['/og-image-placeholder.png'],
-  },
-};
+// Generate metadata for the landing layout (home page)
+export const metadata: Metadata = generatePageMetadata('home');
 
 interface LandingLayoutProps {
   children: ReactNode;
@@ -35,7 +12,7 @@ interface LandingLayoutProps {
 
 export default function LandingLayout({ children }: LandingLayoutProps) {
   return (
-    <div className='min-h-screen flex flex-col bg-background pt-5 md:pt-11'>
+    <div className='min-h-screen flex flex-col bg-background pt-5 md:pt-11 relative'>
       <Navbar />
       <main className='flex-1'>{children}</main>
     </div>

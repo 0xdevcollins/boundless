@@ -1,11 +1,15 @@
 import React from 'react';
+import { Metadata } from 'next';
+import { generatePageMetadata } from '@/lib/metadata';
 
-const HackathonPage = () => {
+export const metadata: Metadata = generatePageMetadata('hackathons');
+
+const HackathonsPage = () => {
   return (
     <div className='text-white text-4xl font-bold text-center mt-10'>
-      Hackathon Page
+      Hackathons Page
     </div>
   );
 };
 
-export default HackathonPage;
+export default HackathonsPage;

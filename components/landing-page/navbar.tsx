@@ -1,34 +1,23 @@
 'use client';
 import Link from 'next/link';
-import { ChevronDown, Menu, XIcon } from 'lucide-react';
+import { Menu, XIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 import { BoundlessButton } from '../buttons';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+
 import { Sheet, SheetTrigger, SheetContent, SheetClose } from '../ui/sheet';
 
 gsap.registerPlugin(useGSAP, SplitText);
 
 const menuItems = [
+  { href: '/about', label: 'About' },
   { href: '/projects', label: 'Projects' },
   { href: '/hackathons', label: 'Hackathons' },
   { href: '/grants', label: 'Grants' },
-];
-
-const learnMenuItems = [
-  { href: '/about', label: 'About' },
-  { href: '/code-of-conduct', label: 'Code of Conduct' },
-  { href: '/privacy', label: 'Privacy Policy' },
-  { href: '/terms', label: 'Terms of Service' },
-  { href: '/disclaimer', label: 'Disclaimer' },
+  { href: '/blog', label: 'Blog' },
 ];
 
 export function Navbar() {
@@ -188,9 +177,12 @@ export function Navbar() {
   );
 
   return (
-    <nav ref={navbarRef} className=''>
-      <div className='max-w-[820px] mx-auto border-[0.5px] border-[rgba(167,249,80,0.24)] rounded-[12px] p-4 '>
-        <div className='flex gap-10 justify-between items-center'>
+    <nav
+      ref={navbarRef}
+      className='sticky top-0 z-50 max-h-[88px]  -mt-11 bg-[#030303A3] blur-s[12px]'
+    >
+      <div className='py-5 lg:px-[100px] md:px-[50px] px-5'>
+        <div className='flex gap- justify-between items-center'>
           <div className='flex-shrink-0'>
             <Link ref={logoRef} href='/' className='flex items-center'>
               <Image src='/auth/logo.svg' alt='logo' width={116} height={22} />
@@ -203,40 +195,11 @@ export function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className='text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium transition-colors'
+                  className='text-white hover:text-white/80 px-3 py-2 rounded-md md:text-xs lg:text-sm font-medium transition-colors'
                 >
                   {item.label}
                 </Link>
               ))}
-
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  asChild
-                  className='text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1'
-                >
-                  <BoundlessButton variant='outline'>
-                    Learn
-                    <ChevronDown className='h-4 w-4' />
-                  </BoundlessButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className='bg-background !border-[0.1px] border-primary'>
-                  {learnMenuItems.map((item, index) => (
-                    <DropdownMenuItem key={item.href} asChild>
-                      <Link
-                        href={item.href}
-                        className='text-white hover:text-white/80 hover:bg-gray-800 cursor-pointer'
-                        style={{
-                          animationDelay: `${index * 50}ms`,
-                          animation:
-                            'dropdownItemSlideIn 0.3s ease-out forwards',
-                        }}
-                      >
-                        {item.label}
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
             </div>
           </div>
 
@@ -416,27 +379,6 @@ function MobileMenu() {
                 {item.label}
               </Link>
             ))}
-            <Link
-              key='how-it-works'
-              href='/how-it-works'
-              className='text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium transition-colors'
-            >
-              How it works
-            </Link>
-            <Link
-              key='about-us'
-              href='/about-us'
-              className='text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium transition-colors'
-            >
-              About us
-            </Link>
-            <Link
-              key='blog'
-              href='/blog'
-              className='text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium transition-colors'
-            >
-              Blog
-            </Link>
           </div>
           <div ref={mobileCTARef}>
             <BoundlessButton size='xl' className='w-full' fullWidth>

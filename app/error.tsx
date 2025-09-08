@@ -95,7 +95,7 @@ const Error: React.FC<ErrorProps> = ({ error, reset }) => {
             <p className='text-gray-500 text-xs'>
               Still having issues?{' '}
               <a
-                href='mailto:support@boundless.com'
+                href='mailto:support@boundlessfi.xyz'
                 className='text-blue-400 hover:text-blue-300 underline'
               >
                 Contact Support

@@ -1,11 +1,15 @@
 import React from 'react';
+import { Metadata } from 'next';
+import { generatePageMetadata } from '@/lib/metadata';
 
-const TermsOfServicePage = () => {
+export const metadata: Metadata = generatePageMetadata('terms');
+
+const TermsPage = () => {
   return (
     <div className='text-white text-4xl font-bold text-center mt-10'>
-      Terms of Service Page
+      Terms Page
     </div>
   );
 };
 
-export default TermsOfServicePage;
+export default TermsPage;

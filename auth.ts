@@ -152,6 +152,10 @@ export const authConfig = {
     }),
   ],
   callbacks: {
+    authorized: async ({ auth }: { auth: any }) => {
+      // Logged in users are authenticated, otherwise redirect to login page
+      return !!auth;
+    },
     async jwt({ token, user }: any) {
       if (user) {
         const u = user as { accessToken?: string; refreshToken?: string };
