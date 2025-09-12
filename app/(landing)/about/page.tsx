@@ -1,14 +1,18 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { generatePageMetadata } from '@/lib/metadata';
+import Timeline from '@/components/landing-page/about/timeline/Timeline';
+import AboutLayout from './layout';
 
 export const metadata: Metadata = generatePageMetadata('about');
 
 const AboutPage = () => {
   return (
-    <div className='text-white text-4xl font-bold text-center mt-10'>
-      About Page
-    </div>
+    <AboutLayout>
+      {/*Hero Section */}
+      {/*Boundless Difference */}
+      <Timeline />
+    </AboutLayout>
   );
 };
 
