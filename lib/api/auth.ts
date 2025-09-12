@@ -1,3 +1,4 @@
+import { auth } from '@/auth';
 import api from './api';
 import {
   RegisterRequest,
@@ -20,6 +21,7 @@ import {
   ResetPasswordResponse,
 } from '@/lib/api/types';
 import { useAuthStore } from '@/lib/stores/auth-store';
+import { redirect } from 'next/navigation';
 
 export const register = async (
   data: RegisterRequest
@@ -88,6 +90,10 @@ export const getMe = async (token?: string): Promise<GetMeResponse> => {
 };
 
 export const logout = async (token?: string): Promise<LogoutResponse> => {
+  const session = await auth();
+  if (!session?.user) {
+    redirect('/auth/signin');
+  }
   try {
     const config = token
       ? { headers: { Authorization: `Bearer ${token}` } }

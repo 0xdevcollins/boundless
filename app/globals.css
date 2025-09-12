@@ -150,6 +150,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -186,6 +187,7 @@ input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
 .text-gradient {
   background-image: linear-gradient(180deg, #69726d 0%, #fff 100%);
   -webkit-background-clip: text;
@@ -198,6 +200,7 @@ input[type='number'] {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -232,4 +235,136 @@ input[type='number'] {
   display: inline-block;
   will-change: transform;
   transition: transform 0.2s ease-out;
+}
+
+/* Waitlist page advanced text animations */
+.title-char,
+.subtitle-char {
+  display: inline-block;
+  will-change: transform;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.title-word,
+.subtitle-word {
+  display: inline-block;
+  will-change: transform;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.title-line,
+.subtitle-line {
+  display: block;
+  will-change: transform;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* 3D text effects */
+.title-char,
+.subtitle-char {
+  backface-visibility: hidden;
+  transform-origin: 50% 50%;
+}
+
+/* Hover effects for interactive text */
+.title-char:hover,
+.subtitle-char:hover {
+  filter: brightness(1.2);
+  transform: scale(1.1) translateZ(10px);
+  transition: all 0.3s ease;
+}
+
+/* Enhanced gradient text effects */
+.gradient-text-3d {
+  background: linear-gradient(45deg, #a7f950, #3ae6b2, #69726d);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Enhanced text glow effects */
+.text-glow {
+  filter: drop-shadow(0 0 20px rgba(167, 249, 80, 0.4));
+  transition: filter 0.3s ease;
+}
+
+.text-glow:hover {
+  filter: drop-shadow(0 0 30px rgba(167, 249, 80, 0.6));
+}
+
+/* Particle trail effect */
+.particle-trail {
+  position: relative;
+}
+
+.particle-trail::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle,
+    rgba(167, 249, 80, 0.1) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.particle-trail:hover::after {
+  opacity: 1;
+}
+
+/* 3D text depth */
+.text-3d {
+  text-shadow:
+    0 1px 0 #ccc,
+    0 2px 0 #c9c9c9,
+    0 3px 0 #bbb,
+    0 4px 0 #b9b9b9,
+    0 5px 0 #aaa,
+    0 6px 1px rgba(0, 0, 0, 0.1),
+    0 0 5px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    0 3px 5px rgba(0, 0, 0, 0.2),
+    0 5px 10px rgba(0, 0, 0, 0.25),
+    0 10px 10px rgba(0, 0, 0, 0.2),
+    0 20px 20px rgba(0, 0, 0, 0.15);
+}
+
+.gradient-text {
+  background-image: linear-gradient(
+    273deg,
+    rgba(167, 249, 80, 0.5) 13.84%,
+    #3ae6b2 73.28%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-2 {
+  background: linear-gradient(93deg, #b5b5b5 15.93%, #fff 97.61%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

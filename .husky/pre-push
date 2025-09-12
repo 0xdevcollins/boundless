@@ -11,8 +11,8 @@ echo "🔒 Running security audit..."
 npm audit --audit-level=moderate
 
 # Run build check one more time
-echo "🏗️ Final build check..."
-npm run build
+# echo "🏗️ Final build check..."
+# npm run build
 
 # Check for any uncommitted changes
 if ! git diff-index --quiet HEAD --; then

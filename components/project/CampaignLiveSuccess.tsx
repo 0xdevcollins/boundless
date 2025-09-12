@@ -2,12 +2,8 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import check from '../../public/check.png';
-import profile from '../../public/profile.png';
-import verify from '../../public/verify.png';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import noBackers from '../../public/nobackers.png';
 import {
   Share2,
   ThumbsUp,
@@ -56,7 +52,7 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
       {/* Success Header */}
       <div className='text-center space-y-4'>
         <h1 className='text-xl text-[#F5F5F5] mb-2'>Your Campaign is Live!</h1>
-        <Image src={check} alt='check' className='w-20 h-20 mx-auto' />
+        <Image src='/check.png' alt='check' className='w-20 h-20 mx-auto' />
         <p className='text-[#B5B5B5] font-inter text-lg leading-relaxed max-w-2xl mx-auto'>
           Your campaign has been successfully launched. Backers can now fund it,
           and your milestone progress will be tracked automatically.{' '}
@@ -113,12 +109,12 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
         <div className='flex items-center space-x-3 mb-6'>
           <div className='relative'>
             <Image
-              src={profile}
+              src='/profile.png'
               alt='profile'
               className='w-20 h-20 rounded-full'
             />
             <Image
-              src={verify}
+              src='/verify.png'
               alt='verify'
               className='w-8 h-8 absolute -bottom-1 -right-1'
             />
@@ -301,7 +297,7 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
         </div>
         <div className='text-center py-8'>
           <Image
-            src={noBackers}
+            src='/nobackers.png'
             alt='no backers'
             className='w-20 h-20 mx-auto'
           />

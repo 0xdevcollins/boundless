@@ -79,7 +79,7 @@ export const launchCampaign = async (_projectId: string) => {
         message: 'Campaign launched successfully',
         data: {
           campaignId: 'launched-campaign-123',
-          shareLink: 'https://boundless.com/campaigns/launched-campaign-123',
+          shareLink: 'https://boundlessfi.xyz/campaigns/launched-campaign-123',
         },
       });
     }, 2000);
@@ -93,7 +93,7 @@ export const generateCampaignLink = async (_projectId: string) => {
       resolve({
         success: true,
         data: {
-          shareLink: 'https://boundless.com/campaigns/' + _projectId,
+          shareLink: 'https://boundlessfi.xyz/campaigns/' + _projectId,
         },
       });
     }, 500);
