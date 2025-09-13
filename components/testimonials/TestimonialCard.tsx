@@ -20,7 +20,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
   icon,
 }) => {
   return (
-    <div className='bg-[#101010] rounded-[8px] shadow-xl p-6 flex flex-col gap-4 border border-[#A7F950]/20 hover:border-[#A7F950]/40 hover:shadow-[0_0_30px_rgba(167,249,80,0.3)] transition-all duration-500 hover:scale-105 transform mb-6'>
+    <div className='bg-[#101010] rounded-[8px] shadow-xl p-6 flex flex-col gap-4 border border-[#A7F950]/20 hover:border-[#A7F950]/40 hover:shadow-[0_0_30px_rgba(167,249,80,0.3)] transition-all duration-500 hover:scale-105 transform mb-6 max-w-[300px] w-[300px]'>
       <div className='flex flex-row justify-between items-start'>
         <div className='flex items-center gap-3'>
           <div className='relative'>

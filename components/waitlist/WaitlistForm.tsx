@@ -32,10 +32,12 @@ export default function WaitlistForm() {
   const container = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
-  const [titleAnimation, setTitleAnimation] = useState<any>(null);
-  const [titleSplit, setTitleSplit] = useState<any>(null);
-  const [subtitleAnimation, setSubtitleAnimation] = useState<any>(null);
-  const [subtitleSplit, setSubtitleSplit] = useState<any>(null);
+  const [titleAnimation, setTitleAnimation] =
+    useState<gsap.core.Timeline | null>(null);
+  const [titleSplit, setTitleSplit] = useState<SplitText | null>(null);
+  const [subtitleAnimation, setSubtitleAnimation] =
+    useState<gsap.core.Timeline | null>(null);
+  const [subtitleSplit, setSubtitleSplit] = useState<SplitText | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

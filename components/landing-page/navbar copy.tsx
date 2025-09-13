@@ -92,7 +92,7 @@ export function Navbar() {
         hoverTl: gsap.core.Timeline;
         enterHandler: () => void;
         leaveHandler: () => void;
-        split: any;
+        split: SplitText;
       }> = [];
 
       menuItems?.forEach(item => {
