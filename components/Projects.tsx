@@ -23,6 +23,31 @@ import { useAuth } from '@/hooks/use-auth';
 import { useProjectSheetStore } from '@/lib/stores/project-sheet-store';
 import { ProjectsSkeleton } from './skeleton/ProjectsSkeleton';
 
+// Strongly typed shape for the project objects returned by the API
+type ProjectApi = {
+  _id: string;
+  title: string;
+  description: string;
+  whitepaperUrl?: string;
+  tags?: string[];
+  category?: string;
+  type?: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  owner?: {
+    type?: {
+      _id?: string;
+      profile?: {
+        firstName?: string;
+        lastName?: string;
+        username?: string;
+        avatar?: string;
+      } | null;
+    } | null;
+  } | null;
+};
+
 type StatusFilter =
   | 'all'
   | 'idea'
@@ -77,16 +102,18 @@ const Projects = () => {
 
         const response = await getProjects(pageNum, ITEMS_PER_PAGE, filters);
 
-        const transformedProjects = (response.projects || []).map(
-          (project: any) => ({
+        const apiProjects = (response.projects ??
+          []) as unknown as ProjectApi[];
+        const transformedProjects: RecentProjectsProps[] = apiProjects.map(
+          project => ({
             id: project._id,
             name: project.title,
             description: project.description,
             image: project.whitepaperUrl || '/banner.png',
             link: `/projects/${project._id}`,
             tags: project.tags || [],
-            category: project.category,
-            type: project.type,
+            category: project.category ?? 'unknown',
+            type: project.type ?? 'unknown',
             amount: 0,
             status: project.status,
             createdAt: project.createdAt,
