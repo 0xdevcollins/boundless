@@ -79,6 +79,21 @@ const createClientApi = (): AxiosInstance => {
     config => {
       config.withCredentials = true;
 
+      // Reject data: URLs proactively to avoid Node adapter decoding large payloads
+      try {
+        const base = config.baseURL || API_BASE_URL;
+        const rawUrl = config.url || '';
+        // If absolute URL provided, use as-is; else resolve against base
+        const fullUrl = /^https?:|^data:|^\/\//.test(rawUrl)
+          ? rawUrl
+          : `${base?.replace(/\/$/, '')}/${String(rawUrl).replace(/^\//, '')}`;
+        if (fullUrl.startsWith('data:')) {
+          throw new Error('Blocked request to data: URL');
+        }
+      } catch (e) {
+        return Promise.reject(e);
+      }
+
       // Only access cookies on client side
       if (typeof window !== 'undefined') {
         const accessToken = Cookies.get('accessToken');

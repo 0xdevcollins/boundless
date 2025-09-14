@@ -34,8 +34,7 @@ export async function POST(request: NextRequest) {
 
     const data = await response.json();
     return NextResponse.json(data, { status: 200 });
-  } catch (error) {
-    console.error('Waitlist subscription error:', error);
+  } catch {
     return NextResponse.json(
       {
         message: 'Internal server error',

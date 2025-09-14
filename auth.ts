@@ -1,4 +1,7 @@
 import NextAuth from 'next-auth';
+import type { Session } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
+import type { User as NextAuthUser } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { login, getMe as getMeBase } from '@/lib/api/auth';
 import Google from 'next-auth/providers/google';
@@ -89,7 +92,11 @@ export const authConfig = {
         password: { label: 'Password', type: 'password' },
         accessToken: { label: 'Access Token', type: 'text' },
       },
-      authorize: async (credentials: any) => {
+      authorize: async (
+        credentials:
+          | Partial<Record<'email' | 'password' | 'accessToken', unknown>>
+          | undefined
+      ) => {
         if (
           typeof credentials?.accessToken === 'string' &&
           !credentials?.email &&
@@ -152,21 +159,28 @@ export const authConfig = {
     }),
   ],
   callbacks: {
-    authorized: async ({ auth }: { auth: any }) => {
+    authorized: async ({ auth }: { auth: Session | null }) => {
       // Logged in users are authenticated, otherwise redirect to login page
       return !!auth;
     },
-    async jwt({ token, user }: any) {
+    async jwt({ token, user }: { token: JWT; user?: NextAuthUser | null }) {
       if (user) {
-        const u = user as { accessToken?: string; refreshToken?: string };
+        const u = user as NextAuthUser & {
+          accessToken?: string;
+          refreshToken?: string;
+        };
         token.accessToken = u.accessToken;
         token.refreshToken = u.refreshToken;
       }
       return token;
     },
-    async session({ session, token }: any) {
-      session.user.accessToken = token.accessToken as string | undefined;
-      session.user.refreshToken = token.refreshToken as string | undefined;
+    async session({ session, token }: { session: Session; token: JWT }) {
+      session.user.accessToken = (
+        token as JWT & { accessToken?: string }
+      ).accessToken;
+      session.user.refreshToken = (
+        token as JWT & { refreshToken?: string }
+      ).refreshToken;
       return session;
     },
   },
