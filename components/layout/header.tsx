@@ -6,77 +6,15 @@ import { BoundlessButton } from '../buttons';
 import { Plus, Search, Menu } from 'lucide-react';
 import { SidebarTrigger } from '../ui/sidebar';
 import Image from 'next/image';
-// import BoundlessSheet from '../sheet/boundless-sheet';
 import { motion } from 'framer-motion';
 import { fadeInUp, slideInFromLeft, slideInFromRight } from '@/lib/motion';
 import WalletConnectButton from '../wallet/WalletConnectButton';
-// import ProjectSubmissionForm from '../project/ProjectSubmissionForm';
-// import ProjectSubmissionLoading from '../project/ProjectSubmissionLoading';
-// import ProjectSubmissionSuccess from '../project/ProjectSubmissionSuccess';
-// import { Stepper } from '../stepper';
 import { ProjectSheetFlow } from '../project';
 import { useProjectSheetStore } from '@/lib/stores/project-sheet-store';
-
-// type Step = {
-//   title: string;
-//   description: string;
-//   state: 'pending' | 'active' | 'completed';
-// };
-
-// const initialSteps: Step[] = [
-//   {
-//     title: 'Initialize',
-//     description: 'Submit your project idea to kickstart your campaign journey.',
-//     state: 'active',
-//   },
-//   {
-//     title: 'Project Details',
-//     description: 'Provide detailed information about your project.',
-//     state: 'pending',
-//   },
-//   {
-//     title: 'Review & Submit',
-//     description: 'Review your submission and finalize your entry.',
-//     state: 'pending',
-//   },
-// ];
 
 const Header = () => {
   const [open, setOpen] = useState(false);
   const sheet = useProjectSheetStore();
-  // const [submissionStatus, setSubmissionStatus] = useState('idle');
-  // const [steps, setSteps] = useState<Step[]>(initialSteps);
-
-  // const handleSuccess = () => {
-  //   setSubmissionStatus('success');
-  //   setSteps(prevSteps =>
-  //     prevSteps.map((step, index) => {
-  //       if (index === 0) {
-  //         return { ...step, state: 'completed' };
-  //       }
-  //       if (index === 1) {
-  //         return { ...step, state: 'active' };
-  //       }
-  //       return step;
-  //     })
-  //   );
-  // };
-
-  // const renderContent = () => {
-  //   switch (submissionStatus) {
-  //     case 'submitting':
-  //       return <ProjectSubmissionLoading />;
-  //     case 'success':
-  //       return <ProjectSubmissionSuccess />;
-  //     default:
-  //       return (
-  //         <ProjectSubmissionForm
-  //           onSuccess={handleSuccess}
-  //           setSubmissionStatus={setSubmissionStatus}
-  //         />
-  //       );
-  //   }
-  // };
 
   return (
     <motion.header
@@ -169,16 +107,7 @@ const Header = () => {
           sheet.setOpen(o);
         }}
       />
-      {/* <BoundlessSheet open={open} setOpen={setOpen}>
-        <div className='flex justify-between'>
-          <div className='flex-1'>
-            <Stepper steps={steps} />
-          </div>
-          <div className='flex-1'>
-            <div className='flex-1'>{renderContent()}</div>
-          </div>
-        </div>
-      </BoundlessSheet> */}
+      
     </motion.header>
   );
 };
