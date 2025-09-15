@@ -22,7 +22,6 @@ const AboutPage = () => {
       <Missionpage />
       <AboutUsDifferent />
 
-
       <Timeline />
       <OurTeam />
       <Partners />
