@@ -30,9 +30,9 @@ function normalizeDraftKey(key: string) {
 }
 
 // Denormalize the draft key by removing the '_draft' suffix if present
-// function denormalizeDraftKey(key: string) {
-//   return key.endsWith(DRAFT_SUFFIX) ? key.slice(0, -DRAFT_SUFFIX.length) : key;
-// }
+function denormalizeDraftKey(key: string) {
+  return key.endsWith(DRAFT_SUFFIX) ? key.slice(0, -DRAFT_SUFFIX.length) : key;
+}
 
 export function useLocalStorageDraft<T>({
   key,
