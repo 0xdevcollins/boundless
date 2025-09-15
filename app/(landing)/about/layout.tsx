@@ -7,7 +7,7 @@ type AboutLayoutProps = {
 
 const AboutLayout = ({ children }: AboutLayoutProps) => {
   return (
-    <section>
+    <section className='relative z-10 space-y-[23px] md:space-y-[80px] max-w-[1300px] mx-auto'>
       <BeamBackground />
       {children}
     </section>

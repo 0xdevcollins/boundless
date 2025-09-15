@@ -107,7 +107,6 @@ const Header = () => {
           sheet.setOpen(o);
         }}
       />
-      
     </motion.header>
   );
 };

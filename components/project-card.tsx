@@ -217,191 +217,162 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       initial='hidden'
       animate='visible'
     >
-      {/* Image Container */}
+      {/* Image and Content Side by Side */}
       <motion.div
-        className='relative h-40 sm:h-48 rounded-[12px] overflow-hidden mb-4'
+        className='flex items-start space-x-3 sm:space-x-4 mb-4'
         variants={fadeInUp}
       >
-        <Image
-          src={project.image}
-          fill
-          alt={`${project.name} banner`}
-          className='object-cover pointer-events-none'
-          unoptimized
-        />
-
-        {/* Status Badge */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Badge
-            className={cn(
-              'absolute top-3 right-3 px-2 py-1 rounded-[6px] text-xs font-medium',
-              getStatusColor(project.status)
-            )}
-          >
-            {project.status.toLowerCase() === 'idea'
-              ? 'Under Review'
-              : project.status.replace('_', ' ')}
-          </Badge>
-        </motion.div>
-
-        {/* Category Badge */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Badge
-            className={cn(
-              'absolute top-12 right-3 px-2 py-1 rounded-[6px] text-xs font-medium',
-              getCategoryColor(project.category)
-            )}
-          >
-            {project.category}
-          </Badge>
-        </motion.div>
-
-        {/* Ellipsis Menu - Conditional */}
-
-        {/* Avatar with Tooltip */}
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Avatar className='absolute top-3 left-3 w-8 h-8 cursor-pointer'>
-                  <AvatarImage src='https://github.com/shadcn.png' />
-                  <AvatarFallback className='bg-blue-500'>
-                    <UserIcon className='w-4 h-4 text-white' />
-                  </AvatarFallback>
-                </Avatar>
-              </motion.div>
-            </TooltipTrigger>
-            <TooltipContent
-              side='bottom'
-              className='bg-[#CDC4C4] border-[#2A2A2A] shadow-[0_2px_2px_0_rgba(0,0,0,0.24)] text-white'
-            >
-              <p className='text-xs font-medium text-[#514A4A] leading-[145%] tracking-[-0.06px]'>
-                Project Creator
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </motion.div>
-
-      {/* Content */}
-      <motion.div className='space-y-4' variants={fadeInUp}>
-        {/* Title and Price */}
-        <div className='space-y-2'>
-          <div className='flex justify-between items-center'>
-            <h2 className='text-[#F5F5F5] text-lg sm:text-xl font-medium line-clamp-1'>
-              {showCreatorName
-                ? `${project.name} by Collins Odumeje`
-                : project.name}
-            </h2>
-            {shouldShowEllipsisMenu && (
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant='ghost'
-                      size='icon'
-                      className=' w-8 h-8 bg-background hover:bg-background/40'
-                    >
-                      <MoreHorizontal className='w-4 h-4 text-white' />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align='end'
-                    className='bg-[#1C1C1C] border-[#2A2A2A]'
-                  >
-                    <DropdownMenuItem
-                      className='text-white hover:bg-[#2A2A2A]'
-                      onClick={() => setValidationSheetOpen(true)}
-                    >
-                      View Validation Flow
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className='text-white hover:bg-[#2A2A2A]'>
-                      Edit Project
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className='text-white hover:bg-[#2A2A2A]'>
-                      Delete Project
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </motion.div>
-            )}
-          </div>
-          <PriceDisplay
-            price={project.amount}
-            className='text-lg sm:text-xl tracking-[-0.4px]'
+        {/* Image on the left */}
+        <div className='relative h-24 w-24 sm:h-32 sm:w-32 rounded-[12px] overflow-hidden bg-gradient-to-br from-[#D4AF37] to-[#B8860B] flex-shrink-0'>
+          <Image
+            src={project.image}
+            fill
+            alt={`${project.name} banner`}
+            className='object-cover pointer-events-none'
+            unoptimized
           />
-          <p className='text-[#F5F5F5] text-sm line-clamp-2 leading-relaxed'>
-            {project.description}
-          </p>
-        </div>
 
-        {/* Vote Progress - Conditional */}
-        <div className='space-y-3'>
-          <div className='flex justify-between items-center text-[#F5F5F5] text-xs font-medium'>
-            <span>Vote count</span>
-            <span className='flex items-center gap-1'>
-              {voteData.current} <span className='text-[#B5B5B5]'>of</span>{' '}
-              {voteData.total} votes
-            </span>
-          </div>
-          <Progress
-            value={(voteData.current / voteData.total) * 100}
-            className='h-2'
-          />
-        </div>
-        <div className='flex justify-between items-center'>
-          <div className='flex items-center gap-4'>
-            <BoundlessButton
-              variant='secondary'
-              size='sm'
+          {/* Status Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Badge
               className={cn(
-                'flex-1 border-[1.4px] border-[#2B2B2B] rounded-[10px] bg-[#212121] hover:bg-[#2A2A2A] disabled:bg-[#212121] disabled:border-[#2B2B2B] disabled:text-[#484848]',
-                project.status === 'validated' && 'hidden'
+                'absolute top-1 right-1 px-1 py-0.5 rounded-[4px] text-xs font-medium',
+                getStatusColor(project.status)
               )}
-              onClick={() => requireWallet(() => onVote?.(project.id))}
-              disabled={
-                project.status === 'idea' ||
-                project.status === 'under_review' ||
-                project.status === 'rejected' ||
-                project.status === 'failed'
-              }
             >
-              <ThumbsUp className='w-4 h-4' />
-              <span className='ml-1 font-semibold'>{actionCounts.votes}</span>
-            </BoundlessButton>
-            {(project.status === 'approved' || project.status === 'failed') && (
-              <CircularProgress
-                value={voteData.current}
-                size={32}
-                strokeWidth={3}
-                segments={14}
-                className='w-[32px] h-[32px]'
-              />
-            )}
-            <CommentModal
-              onCommentSubmit={comment => {
-                // eslint-disable-next-line no-console
-                console.log(comment);
-              }}
+              {project.status.toLowerCase() === 'idea'
+                ? 'Under Review'
+                : project.status.replace('_', ' ')}
+            </Badge>
+          </motion.div>
+
+          {/* Category Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Badge
+              className={cn(
+                'absolute top-6 right-1 px-1 py-0.5 rounded-[4px] text-xs font-medium',
+                getCategoryColor(project.category)
+              )}
             >
+              {project.category}
+            </Badge>
+          </motion.div>
+
+          {/* Avatar with Tooltip */}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Avatar className='absolute top-1 left-1 w-6 h-6 cursor-pointer'>
+                    <AvatarImage src='https://github.com/shadcn.png' />
+                    <AvatarFallback className='bg-blue-500'>
+                      <UserIcon className='w-3 h-3 text-white' />
+                    </AvatarFallback>
+                  </Avatar>
+                </motion.div>
+              </TooltipTrigger>
+              <TooltipContent
+                side='bottom'
+                className='bg-[#CDC4C4] border-[#2A2A2A] shadow-[0_2px_2px_0_rgba(0,0,0,0.24)] text-white'
+              >
+                <p className='text-xs font-medium text-[#514A4A] leading-[145%] tracking-[-0.06px]'>
+                  Project Creator
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+
+        {/* Content on the right */}
+        <motion.div className='flex-1 min-w-0 space-y-2' variants={fadeInUp}>
+          {/* Title and Price */}
+          <div className='space-y-2'>
+            <div className='flex justify-between items-center'>
+              <h2 className='text-[#F5F5F5] text-lg sm:text-xl font-medium line-clamp-1'>
+                {showCreatorName
+                  ? `${project.name} by Collins Odumeje`
+                  : project.name}
+              </h2>
+              {shouldShowEllipsisMenu && (
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant='ghost'
+                        size='icon'
+                        className=' w-8 h-8 bg-background hover:bg-background/40'
+                      >
+                        <MoreHorizontal className='w-4 h-4 text-white' />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align='end'
+                      className='bg-[#1C1C1C] border-[#2A2A2A]'
+                    >
+                      <DropdownMenuItem
+                        className='text-white hover:bg-[#2A2A2A]'
+                        onClick={() => setValidationSheetOpen(true)}
+                      >
+                        View Validation Flow
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className='text-white hover:bg-[#2A2A2A]'>
+                        Edit Project
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className='text-white hover:bg-[#2A2A2A]'>
+                        Delete Project
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </motion.div>
+              )}
+            </div>
+            <PriceDisplay
+              price={project.amount}
+              className='text-lg sm:text-xl tracking-[-0.4px]'
+            />
+            <p className='text-[#F5F5F5] text-sm line-clamp-2 leading-relaxed'>
+              {project.description}
+            </p>
+          </div>
+
+          {/* Vote Progress - Conditional */}
+          <div className='space-y-3'>
+            <div className='flex justify-between items-center text-[#F5F5F5] text-xs font-medium'>
+              <span>Vote count</span>
+              <span className='flex items-center gap-1'>
+                {voteData.current} <span className='text-[#B5B5B5]'>of</span>{' '}
+                {voteData.total} votes
+              </span>
+            </div>
+            <Progress
+              value={(voteData.current / voteData.total) * 100}
+              className='h-2'
+            />
+          </div>
+          <div className='flex justify-between items-center'>
+            <div className='flex items-center gap-4'>
               <BoundlessButton
                 variant='secondary'
                 size='sm'
-                className='flex-1 border-[1.4px] border-[#2B2B2B] rounded-[10px] bg-[#212121] hover:bg-[#2A2A2A] disabled:bg-[#212121] disabled:border-[#2B2B2B] disabled:text-[#484848]'
+                className={cn(
+                  'flex-1 border-[1.4px] border-[#2B2B2B] rounded-[10px] bg-[#212121] hover:bg-[#2A2A2A] disabled:bg-[#212121] disabled:border-[#2B2B2B] disabled:text-[#484848]',
+                  project.status === 'validated' && 'hidden'
+                )}
+                onClick={() => requireWallet(() => onVote?.(project.id))}
                 disabled={
                   project.status === 'idea' ||
                   project.status === 'under_review' ||
@@ -409,25 +380,56 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   project.status === 'failed'
                 }
               >
-                <MessageCircleMore className='w-4 h-4' />
-                <span className='ml-1 font-semibold'>
-                  {actionCounts.comments}
-                </span>
+                <ThumbsUp className='w-4 h-4' />
+                <span className='ml-1 font-semibold'>{actionCounts.votes}</span>
               </BoundlessButton>
-            </CommentModal>
-          </div>
-          {project.status === 'validated' && (
-            <div>
-              <BoundlessButton
-                onClick={() =>
-                  requireWallet(() => setLaunchCampaignSheetOpen(true))
-                }
+              {(project.status === 'approved' ||
+                project.status === 'failed') && (
+                <CircularProgress
+                  value={voteData.current}
+                  size={32}
+                  strokeWidth={3}
+                  segments={14}
+                  className='w-[32px] h-[32px]'
+                />
+              )}
+              <CommentModal
+                onCommentSubmit={comment => {
+                  // eslint-disable-next-line no-console
+                  console.log(comment);
+                }}
               >
-                Start Campaign
-              </BoundlessButton>
+                <BoundlessButton
+                  variant='secondary'
+                  size='sm'
+                  className='flex-1 border-[1.4px] border-[#2B2B2B] rounded-[10px] bg-[#212121] hover:bg-[#2A2A2A] disabled:bg-[#212121] disabled:border-[#2B2B2B] disabled:text-[#484848]'
+                  disabled={
+                    project.status === 'idea' ||
+                    project.status === 'under_review' ||
+                    project.status === 'rejected' ||
+                    project.status === 'failed'
+                  }
+                >
+                  <MessageCircleMore className='w-4 h-4' />
+                  <span className='ml-1 font-semibold'>
+                    {actionCounts.comments}
+                  </span>
+                </BoundlessButton>
+              </CommentModal>
             </div>
-          )}
-        </div>
+            {project.status === 'validated' && (
+              <div>
+                <BoundlessButton
+                  onClick={() =>
+                    requireWallet(() => setLaunchCampaignSheetOpen(true))
+                  }
+                >
+                  Start Campaign
+                </BoundlessButton>
+              </div>
+            )}
+          </div>
+        </motion.div>
       </motion.div>
 
       {/* Validation Flow Sheet */}
