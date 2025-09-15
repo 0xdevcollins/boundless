@@ -22,8 +22,7 @@ const AboutPage = () => {
       <Missionpage />
       <AboutUsDifferent />
 
-      {/* Hero Section */}
-      {/* Boundless Difference */}
+
       <Timeline />
       <OurTeam />
       <Partners />
