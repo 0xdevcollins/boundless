@@ -34,7 +34,6 @@ const MilestoneReview: React.FC<MilestoneReviewProps> = ({
     return (totalFundAmount * numPercentage) / 100;
   };
 
-  // Multi-open accordion behavior
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const toggle = (id: string) => {
     setExpandedIds(prev => {
