@@ -36,7 +36,7 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
   const [daysLeft] = useState(12);
   const [expandedMilestones, setExpandedMilestones] = useState<number[]>([]);
 
-  // Wallet protection hook
+  
   const {
     requireWallet,
     showWalletModal,
@@ -210,7 +210,7 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
 
               <CommentModal
                 onCommentSubmit={comment => {
-                  // eslint-disable-next-line no-console
+                  
                   console.log('Comment submitted:', comment);
                 }}
               >
@@ -289,7 +289,7 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
         </div>
       </div>
 
-      {/* Wallet Required Modal */}
+    
       <WalletRequiredModal
         open={showWalletModal}
         onOpenChange={closeWalletModal}
