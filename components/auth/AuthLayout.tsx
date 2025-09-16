@@ -114,7 +114,7 @@ const AuthLayout = ({ children, showCarousel = true }: AuthLayoutProps) => {
                     {slides.map(slide => (
                       <CarouselItem key={slide.id} className='h-full'>
                         <div className='flex flex-col items-center justify-between h-full gap-6 lg:gap-8'>
-                          {/* Image Card Container */}
+                       
                           <div className='relative w-full max-w-[400px] lg:max-w-[500px] aspect-[5/3]'>
                             <Image
                               src='/auth/image-card.png'
@@ -135,7 +135,7 @@ const AuthLayout = ({ children, showCarousel = true }: AuthLayoutProps) => {
                             </div>
                           </div>
 
-                          {/* Content */}
+                        
                           <div className='text-center w-full max-w-[300px] lg:max-w-[400px] px-2 mb-8'>
                             <Badge className='inline-flex items-center text-xs font-medium backdrop-blur-md bg-white/10 border border-white/20 rounded-full px-3 py-1 text-white mb-4 hover:bg-white/15 transition-colors'>
                               {slide.badge}
@@ -152,7 +152,7 @@ const AuthLayout = ({ children, showCarousel = true }: AuthLayoutProps) => {
                     ))}
                   </CarouselContent>
 
-                  {/* Controls */}
+                
                   <div className='flex items-center justify-between w-full mt-6 absolute bottom-0'>
                     <CarouselPrevious className='relative left-0 translate-y-0 bg-transparent border-none text-white hover:text-gray-300 hover:scale-110 transition-all duration-200 h-8 w-8' />
 
