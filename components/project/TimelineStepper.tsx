@@ -58,7 +58,7 @@ const TimelineStepper: React.FC<TimelineStepperProps> = () => {
     <div className='space-y-4'>
       {timelineItems.map((item, index) => (
         <div key={item.id} className='flex items-start space-x-4'>
-          {/* Timeline Icon */}
+          {}
           <div className='flex flex-col items-center'>
             <div
               className={cn(
@@ -75,13 +75,13 @@ const TimelineStepper: React.FC<TimelineStepperProps> = () => {
             >
               {item.icon}
             </div>
-            {/* Connector Line */}
+            {}
             {index < timelineItems.length - 1 && (
               <div className='w-0.5 h-8 bg-[#2A2A2A] mt-2'></div>
             )}
           </div>
 
-          {/* Content */}
+          {}
           <div className='flex-1 pt-1'>
             <h4
               className={cn(
