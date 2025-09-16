@@ -368,3 +368,47 @@ input[type='number'] {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+.gradient-text-3 {
+  background: linear-gradient(
+    273deg,
+    rgba(167, 249, 80, 0.5) 13.84%,
+    #3ae6b2 73.28%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* About Timeline Card's Background gradient for images */
+.my-gradient-box {
+  background: radial-gradient(circle, #ffffff7a, #ffffff14);
+}
+
+/* Background Images for the three Timeline Cards  */
+.time-card-background-image-one {
+  background-image: url('/landing/about/Abstract_01.png');
+  background-color: #101010;
+}
+.time-card-background-image-two {
+  background-image: url('/landing/about/Abstract_02.png');
+}
+.time-card-background-image-three {
+  background-image: url('/landing/about/Abstract_03.png');
+}
+
+.time-card-general-background-positioning {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: bottom right;
+}
+@media (min-width: 768px) {
+  .time-card-background-image-one {
+    background-image: url('/landing/about/Abstract_01md.png');
+  }
+  .time-card-background-image-two {
+    background-image: url('/landing/about/Abstract_02md.png');
+  }
+  .time-card-background-image-three {
+    background-image: url('/landing/about/Abstract_03md.png');
+  }
+}

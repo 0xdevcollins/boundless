@@ -123,12 +123,8 @@ export default function TestimonialsSection({
 
         <div className='relative overflow-hidden shadow-2xl backdrop-blur-sm md:max-h-[600px] max-h-[470px]'>
           <div className='absolute inset-0 bg-[#CCFF95] opacity-95'></div>
-          {/* <div className='absolute inset-0 overflow-hidden pointer-events-none'>
-            <div className='absolute top-10 left-10 w-2 h-2 bg-[#CCFF95] rounded-full opacity-60 animate-pulse'></div>
-            <div className='absolute top-20 right-20 w-1 h-1 bg-primary rounded-full opacity-40 animate-ping'></div>
-            <div className='absolute bottom-16 left-1/3 w-1.5 h-1.5 bg-white rounded-full opacity-30 animate-pulse'></div>
-            <div className='absolute bottom-32 right-1/4 w-1 h-1 bg-[#CCFF95] rounded-full opacity-50 animate-ping'></div>
-          </div> */}
+
+          {/* Fade overlays */}
           <Image
             src='/fade.png'
             alt='Gradient top'
@@ -158,6 +154,7 @@ export default function TestimonialsSection({
             }}
           />
 
+          {/* Scrolling Columns */}
           <div
             className='-mx-6 overflow-x-auto relative z-[10]'
             ref={el => {
@@ -173,7 +170,6 @@ export default function TestimonialsSection({
                 perspective: '1000px',
               }}
             >
-              {/* Columns */}
               {Array.from({ length: numColumns }, (_, colIdx) => colIdx).map(
                 colIdx => (
                   <div
@@ -210,6 +206,8 @@ export default function TestimonialsSection({
               )}
             </div>
           </div>
+
+          {/* CTA Section */}
           <div className='absolute lg:bottom-[60px] bottom-14  lg:mt-0 mt-20 left-1/2 -translate-x-1/2 md:max-h-[212px] w-[90%] max-w-6xl bg-primary rounded-xl shadow-lg p-8 md:p-12 text-black z-40'>
             <div className='flex flex-col md:flex-row items-center md:justify-between gap-6'>
               <div>

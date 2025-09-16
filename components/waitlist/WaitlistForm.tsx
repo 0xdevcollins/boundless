@@ -59,7 +59,6 @@ export default function WaitlistForm() {
           linesClass: 'title-line',
         });
 
-        // Apply gradient styling to characters
         split.chars.forEach((char: Element) => {
           (char as HTMLElement).style.background =
             'linear-gradient(180deg, #69726D 0%, #FFF 100%)';
@@ -71,9 +70,7 @@ export default function WaitlistForm() {
 
         setTitleSplit(split);
 
-        // Create a more sophisticated timeline with multiple animation layers
         const animation = tl
-          // Initial state - characters scattered and rotated
           .set(split.chars, {
             opacity: 0,
             y: 'random(-100, 100)',
@@ -82,7 +79,6 @@ export default function WaitlistForm() {
             scale: 0,
             transformOrigin: '50% 50%',
           })
-          // First wave - characters fly in from random positions
           .to(split.chars, {
             opacity: 1,
             y: 0,
@@ -96,7 +92,6 @@ export default function WaitlistForm() {
               from: 'random',
             },
           })
-          // Second wave - words scale up with bounce effect
           .to(
             split.words,
             {
@@ -116,7 +111,6 @@ export default function WaitlistForm() {
             },
             '-=0.2'
           )
-          // Third wave - 3D rotation effect on lines
           .to(
             split.lines,
             {
@@ -138,7 +132,6 @@ export default function WaitlistForm() {
             },
             '-=0.2'
           )
-          // Add subtle continuous breathing animation
           .to(
             split.words,
             {
@@ -154,7 +147,6 @@ export default function WaitlistForm() {
 
         setTitleAnimation(animation);
 
-        // Add magnetic effect to title
         const titleElement = titleRef.current;
         if (titleElement) {
           titleElement.addEventListener('mousemove', e => {
@@ -190,7 +182,6 @@ export default function WaitlistForm() {
 
         setSubtitleSplit(split);
 
-        // Apply gradient styling to words
         split.words.forEach((word: Element) => {
           (word as HTMLElement).style.background =
             'linear-gradient(273deg, rgba(167, 249, 80, 0.50) 13.84%, #3AE6B2 73.28%)';
@@ -200,10 +191,8 @@ export default function WaitlistForm() {
           (word as HTMLElement).style.color = 'transparent';
         });
 
-        // Create a more dynamic subtitle animation
         const animation = gsap
           .timeline()
-          // Initial state - words hidden and transformed
           .from(split.words, {
             opacity: 0,
             y: 100,
@@ -211,7 +200,6 @@ export default function WaitlistForm() {
             transformOrigin: '50% 50% -50px',
             scale: 0.5,
           })
-          // Words reveal with 3D flip effect
           .to(split.words, {
             opacity: 1,
             y: 0,
@@ -222,7 +210,6 @@ export default function WaitlistForm() {
             stagger: 0.15,
             delay: 1.2,
           })
-          // Add a subtle floating animation
           .to(
             split.words,
             {
@@ -235,7 +222,6 @@ export default function WaitlistForm() {
             },
             '-=0.5'
           )
-          // Add glow effect
           .to(
             split.chars,
             {
@@ -250,7 +236,6 @@ export default function WaitlistForm() {
 
         setSubtitleAnimation(animation);
 
-        // Add magnetic effect to subtitle
         const subtitleElement = subtitleRef.current;
         if (subtitleElement) {
           subtitleElement.addEventListener('mousemove', e => {
@@ -374,7 +359,6 @@ export default function WaitlistForm() {
     setIsSubmitting(true);
 
     try {
-      // Split name into firstName and lastName, handling edge cases
       const nameParts = values.name
         .trim()
         .split(' ')
@@ -399,10 +383,8 @@ export default function WaitlistForm() {
     if (titleAnimation && titleSplit) {
       titleAnimation.revert();
 
-      // Create a new dynamic animation on each click
       const newAnimation = gsap
         .timeline()
-        // Scatter characters randomly
         .to(titleSplit.chars, {
           x: 'random(-300, 300)',
           y: 'random(-200, 200)',
@@ -412,7 +394,6 @@ export default function WaitlistForm() {
           duration: 0.5,
           ease: 'power2.in',
         })
-        // Bring them back with different effects
         .to(titleSplit.chars, {
           x: 0,
           y: 0,
@@ -426,7 +407,6 @@ export default function WaitlistForm() {
             from: 'random',
           },
         })
-        // Add a wave effect
         .to(
           titleSplit.words,
           {
@@ -448,10 +428,8 @@ export default function WaitlistForm() {
     if (subtitleAnimation && subtitleSplit) {
       subtitleAnimation.revert();
 
-      // Create a morphing text effect
       const newAnimation = gsap
         .timeline()
-        // First, morph the text out
         .to(subtitleSplit.words, {
           scale: 0,
           rotationY: 180,
@@ -460,7 +438,6 @@ export default function WaitlistForm() {
           ease: 'power2.in',
           stagger: 0.05,
         })
-        // Then morph it back in with 3D effects
         .to(subtitleSplit.words, {
           scale: 1,
           rotationY: 0,
@@ -469,7 +446,6 @@ export default function WaitlistForm() {
           ease: 'back.out(1.7)',
           stagger: 0.1,
         })
-        // Add a ripple effect
         .to(
           subtitleSplit.chars,
           {
@@ -490,7 +466,7 @@ export default function WaitlistForm() {
   return (
     <div
       ref={container}
-      className=' max-w-[446px] mx-auto flex flex-col gap-16 items-center justify-start px-4 mt-[65px]'
+      className=' max-w-[446px] mx-auto flex flex-col gap-16 items-center justify-start px-4 mt-[65px] bg-center'
     >
       <div className={cn(' w-full text-center', isSubmitted && 'hidden')}>
         <h1

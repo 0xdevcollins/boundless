@@ -4,16 +4,14 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Get the backend URL from environment or config
     const backendUrl =
       process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
-    // Forward the request to the backend
     const response = await fetch(`${backendUrl}/waitlist/subscribe`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // Forward any relevant headers
+
         ...(request.headers.get('user-agent') && {
           'User-Agent': request.headers.get('user-agent')!,
         }),
