@@ -49,7 +49,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
 
   return (
     <div className='max-w-4xl mx-auto space-y-6'>
-      {/* Success Header */}
       <div className='text-center space-y-4'>
         <h1 className='text-xl text-[#F5F5F5] mb-2'>Your Campaign is Live!</h1>
         <Image src='/check.png' alt='check' className='w-20 h-20 mx-auto' />
@@ -60,7 +59,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
         </p>
       </div>
 
-      {/* Action Buttons */}
       <div className='flex gap-4 justify-center'>
         <Button
           onClick={onBackToDashboard}
@@ -77,15 +75,12 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
         </Button>
       </div>
 
-      {/* Campaign Preview Section */}
       <div className='p-6'>
-        {/* Preview Header */}
         <div className='flex items-center justify-between mb-6'>
           <h3 className='text-[#F5F5F5] font-medium text-xl'>Preview</h3>
           <ChevronUp className='w-5 h-5 text-[#B5B5B5]' />
         </div>
 
-        {/* Campaign Banner Image */}
         <div className='relative w-full h-60 bg-gradient-to-br from-teal-800 to-teal-900 rounded-lg mb-6 flex items-center justify-center'>
           <Image
             src={campaignDetails.thumbnail}
@@ -95,7 +90,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
           />
         </div>
 
-        {/* Campaign Title and Status */}
         <div className='flex items-center gap-4 mb-4'>
           <h2 className='text-[#F5F5F5] text-2xl font-bold'>
             {campaignDetails.title}
@@ -105,7 +99,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
           </Badge>
         </div>
 
-        {/* Creator Info */}
         <div className='flex items-center space-x-3 mb-6'>
           <div className='relative'>
             <Image
@@ -124,7 +117,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
           </span>
         </div>
 
-        {/* Financial Metrics */}
         <div className='flex justify-between mb-4'>
           <div className='text-center'>
             <p className='text-[#B5B5B5] text-sm mb-1'>Raised</p>
@@ -140,7 +132,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
           </div>
         </div>
 
-        {/* Progress Bar */}
         <div className='mb-6'>
           <div className='w-full bg-[#2A2A2A] rounded-full h-2 mb-4'>
             <div
@@ -152,7 +143,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
           </div>
         </div>
 
-        {/* Engagement Stats */}
         <div className='w-full flex items-center justify-between font-semibold'>
           <div className='flex items-center space-x-3'>
             <div className='flex items-center space-x-2 bg-[#212121] rounded-lg p-2'>
@@ -183,7 +173,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
         </div>
       </div>
 
-      {/* Campaign Details */}
       <div className='mb-6'>
         <h4 className='text-[#F5F5F5] font-medium text-lg mb-3'>
           Campaign Details
@@ -195,7 +184,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
         </div>
       </div>
 
-      {/* Tags */}
       <div className='mb-6'>
         <h4 className='text-[#F5F5F5] font-medium text-lg mb-3'>Tags</h4>
         <div className='flex space-x-2'>
@@ -207,7 +195,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
         </div>
       </div>
 
-      {/* Campaign Photos */}
       <div className='mb-6'>
         <h4 className='text-[#F5F5F5] font-medium text-lg mb-3'>
           Campaign Photos
@@ -226,7 +213,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
         </div>
       </div>
 
-      {/* Milestones */}
       <div className='mb-6'>
         <h4 className='text-[#F5F5F5] font-medium text-lg mb-3'>Milestones</h4>
         <div className='space-y-2'>
@@ -285,7 +271,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
         </div>
       </div>
 
-      {/* Funding History */}
       <div className='mb-6'>
         <div className='flex items-center justify-between mb-3 border-t border-[#2A2A2A] pt-4'>
           <h4 className='text-[#F5F5F5] font-medium text-lg'>
@@ -311,7 +296,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
         </div>
       </div>
 
-      {/* Action Buttons */}
       <div className='flex gap-4 justify-center'>
         <Button
           onClick={handleShare}
@@ -321,7 +305,6 @@ const CampaignLiveSuccess: React.FC<CampaignLiveSuccessProps> = ({
         </Button>
       </div>
 
-      {/* Share Modal */}
       <ShareCampaignModal
         open={showShareModal}
         onOpenChange={setShowShareModal}
