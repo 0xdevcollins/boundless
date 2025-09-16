@@ -107,7 +107,7 @@ const ShareCampaignModal: React.FC<ShareCampaignModalProps> = ({
         </DialogHeader>
 
         <div className='space-y-6'>
-          {/* Campaign Link */}
+
           <div className='space-y-3'>
             <label className='text-[#B5B5B5] text-sm font-medium'>
               Campaign Link
@@ -143,7 +143,7 @@ const ShareCampaignModal: React.FC<ShareCampaignModalProps> = ({
             )}
           </div>
 
-          {/* Share Options */}
+
           <div className='space-y-3'>
             <label className='text-[#B5B5B5] text-sm font-medium'>
               Share on Social Media
@@ -162,7 +162,6 @@ const ShareCampaignModal: React.FC<ShareCampaignModalProps> = ({
             </div>
           </div>
 
-          {/* Campaign Preview */}
           <div className='bg-[#2A2A2A] rounded-lg p-4 border border-[#2B2B2B]'>
             <h4 className='text-[#F5F5F5] font-medium mb-2'>Preview</h4>
             <div className='space-y-2'>
