@@ -29,7 +29,6 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
   const [campaignDetails, setCampaignDetails] =
     useState<CampaignDetails | null>(null);
 
-  // Wallet protection hook
   const {
     requireWallet,
     showWalletModal,
@@ -39,7 +38,6 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
     actionName: 'launch campaign',
   });
 
-  // Define the steps for the stepper
   const steps = [
     {
       title: 'Initialize',
@@ -66,15 +64,12 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
       try {
         setCurrentStep('launching');
 
-        // Launch the campaign
         const response = (await launchCampaign(projectId)) as {
           data: { campaignId: string };
         };
 
-        // mock campaign details
         setCampaignDetails(mockCampaignDetails as CampaignDetails);
 
-        // Update campaign details with the response
         if (campaignDetails) {
           setCampaignDetails({
             ...campaignDetails,
@@ -96,7 +91,7 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
   };
 
   const handleLoading = () => {
-    // Handle loading state if needed
+    
   };
 
   const renderContent = () => {
@@ -153,16 +148,15 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
   return (
     <>
       <div className='flex h-full'>
-        {/* Left Sidebar with Stepper */}
+        
         <div className='flex-1 sticky top-0'>
           <Stepper steps={steps} />
         </div>
 
-        {/* Right Content Area */}
+
         <div className='flex-1'>{renderContent()}</div>
       </div>
 
-      {/* Wallet Required Modal */}
       <WalletRequiredModal
         open={showWalletModal}
         onOpenChange={closeWalletModal}
