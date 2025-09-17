@@ -51,7 +51,6 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
   const [focusedInput, setFocusedInput] = useState<number | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Wallet protection hook
   const {
     requireWallet,
     showWalletModal,
@@ -72,7 +71,6 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
 
   const handleExternalLinkChange = (index: number, value: string) => {
     const newLinks = [...externalLinks];
-    // Ensure the value starts with "www."
     if (!value.startsWith('www.')) {
       newLinks[index] = 'www.' + value;
     } else {
@@ -82,7 +80,6 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
   };
 
   const handleSaveLink = () => {
-    // Add a new field with "www."
     setExternalLinks(prev => [...prev, 'www.']);
   };
 
@@ -124,7 +121,6 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
         />
       ) : (
         <div className='space-y-6'>
-          {/* Milestone Header */}
           <div className='flex justify-center'>
             <div className='text-left' style={{ width: '500px' }}>
               <h2 className='text-xl font-semibold text-white mb-2'>
@@ -134,7 +130,6 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
             </div>
           </div>
 
-          {/* Milestone Card - Centered */}
           <div className='flex justify-center'>
             <div
               className='bg-[#1C1C1C] border border-[#2B2B2B] rounded-[12px]'
@@ -189,7 +184,6 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
             </div>
           </div>
 
-          {/* File Upload Section */}
           <div className='flex justify-center'>
             <div className='space-y-3' style={{ width: '500px' }}>
               <h3 className='text-white font-medium text-lg'>
@@ -243,10 +237,8 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
                 />
               </div>
 
-              {/* Uploaded Files Section */}
               {files.length > 0 && (
                 <div className='space-y-3'>
-                  {/* Header with count */}
                   <div className='flex items-center gap-2'>
                     <h3 className='text-white font-medium'>Uploaded Files</h3>
                     <div className='w-6 h-6 rounded-full bg-[#1C1C1C] border border-white flex items-center justify-center'>
@@ -256,7 +248,6 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
                     </div>
                   </div>
 
-                  {/* Files List */}
                   <div className='space-y-2'>
                     {files.map((file, index) => (
                       <div
@@ -264,12 +255,10 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
                         className='flex items-center justify-between bg-[#1C1C1C] border border-[#2B2B2B] rounded-lg p-3'
                       >
                         <div className='flex items-center gap-3'>
-                          {/* Green check circle */}
                           <div className='w-6 h-6 rounded-full bg-green-500 flex items-center justify-center'>
                             <Check className='w-3 h-3 text-white' />
                           </div>
 
-                          {/* File info */}
                           <div className='flex flex-col'>
                             <span className='text-white text-sm font-medium'>
                               {file.name}
@@ -286,7 +275,6 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
                           </div>
                         </div>
 
-                        {/* Red trash button */}
                         <button
                           onClick={() => handleRemoveFile(index)}
                           className='w-8 h-8 rounded-lg bg-red-500 hover:bg-red-600 flex items-center justify-center transition-colors'
@@ -300,8 +288,6 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
               )}
             </div>
           </div>
-
-          {/* External Links Section */}
           <div className='flex justify-center'>
             <div className='space-y-3' style={{ width: '500px' }}>
               <Label className='text-white font-medium'>
@@ -343,8 +329,6 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
                       }}
                       className='placeholder:text-gray-400'
                     />
-
-                    {/* Save button - only show when there's more text than just "www." */}
                     {link.trim() && link !== 'www.' && (
                       <BoundlessButton
                         className='absolute right-2 top-1/2 transform -translate-y-1/2 w-[65px] h-[36px] rounded-[10px] border-[0.3px] border-[#A7F950] bg-[#A7F950] text-black text-[14px] font-[500] transition-colors'
@@ -363,7 +347,6 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
             </div>
           </div>
 
-          {/* Submit Button */}
           <div className='flex justify-center'>
             <BoundlessButton
               onClick={handleSubmit}
@@ -387,7 +370,6 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
         </div>
       )}
 
-      {/* Wallet Required Modal */}
       <WalletRequiredModal
         open={showWalletModal}
         onOpenChange={closeWalletModal}
