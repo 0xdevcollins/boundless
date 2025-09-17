@@ -466,7 +466,7 @@ export default function WaitlistForm() {
   return (
     <div
       ref={container}
-      className=' max-w-[446px] mx-auto flex flex-col gap-16 items-center justify-start px-4 mt-[65px]'
+      className=' max-w-[446px] mx-auto flex flex-col gap-16 items-center justify-start px-4 mt-[65px] bg-center'
     >
       <div className={cn(' w-full text-center', isSubmitted && 'hidden')}>
         <h1

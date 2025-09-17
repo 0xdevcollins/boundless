@@ -15,17 +15,15 @@ const MilestoneSubmissionSuccess: React.FC<MilestoneSubmissionSuccessProps> = ({
   return (
     <div className='min-h-screen bg-black flex items-center justify-center p-4'>
       <div className='max-w-md w-full text-center space-y-8'>
-        {/* Title */}
+      
         <h1 className='text-3xl font-bold text-white'>Proof Submitted!</h1>
 
-        {/* Success Icon */}
         <div className='flex justify-center'>
           <div className='w-20 h-20 rounded-full bg-[#A7F950] flex items-center justify-center'>
             <Check className='w-10 h-10 text-white' />
           </div>
         </div>
 
-        {/* Main Message */}
         <div className='space-y-4'>
           <p className='text-white text-base leading-relaxed'>
             Your project has been submitted and is now under admin review.
@@ -33,7 +31,6 @@ const MilestoneSubmissionSuccess: React.FC<MilestoneSubmissionSuccessProps> = ({
             project will proceed to public validation.
           </p>
 
-          {/* Tracking Information */}
           <p className='text-white text-base'>
             You can track the status of your submission anytime on the{' '}
             <Link
@@ -45,7 +42,6 @@ const MilestoneSubmissionSuccess: React.FC<MilestoneSubmissionSuccessProps> = ({
           </p>
         </div>
 
-        {/* Continue Button */}
         <div className='pt-4'>
           <BoundlessButton
             onClick={onContinue}

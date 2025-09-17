@@ -95,7 +95,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
     );
   }
 
-  // Use mock data as fallback if API fails
+  
   const displayData = campaignDetails || {
     id: 'fallback-campaign',
     title: 'Boundless',
@@ -158,7 +158,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
 
   return (
     <div className='max-w-lg space-y-6'>
-      {/* Campaign Banner */}
+    
       <div className='w-full h-60 md:h-64'>
         <Image
           src={displayData.photos[0]}
@@ -168,7 +168,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
           className='w-full h-full object-cover rounded-xl'
         />
       </div>
-      {/* Campaign Header */}
+      
       <div className=''>
         <div className='flex items-center justify-between mb-4'>
           <div className='flex items-center space-x-4'>
@@ -183,7 +183,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
           </div>
         </div>
 
-        {/* Financials */}
+        
         <div className='mb-4'>
           <div className='flex justify-between items-center mb-4'>
             <div className='text-center'>
@@ -199,7 +199,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
               </p>
             </div>
           </div>
-          {/* progress bar */}
+         
           <div className='w-full h-2 bg-[#2A2A2A] rounded-full'>
             <div
               className='h-full bg-primary rounded-full'
@@ -210,7 +210,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
           </div>
         </div>
 
-        {/* Engagement Metrics */}
+        
         <div className='w-full flex items-center justify-between font-semibold'>
           <div className='flex items-center space-x-3'>
             <div className='flex items-center space-x-2 bg-[#212121] rounded-lg p-2'>
@@ -241,7 +241,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
         </div>
       </div>
 
-      {/* Campaign Details */}
+     
       <div className='space-y-4'>
         <h3 className='text-[#F5F5F5] font-semibold'>Campaign Details</h3>
         <p className='text-[#B5B5B5] text-sm leading-relaxed'>
@@ -249,7 +249,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
         </p>
       </div>
 
-      {/* Tags */}
+      
       <div className='space-y-3'>
         <h3 className='text-[#F5F5F5] font-medium'>Tags</h3>
         <div className='flex flex-wrap gap-2'>
@@ -265,7 +265,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
         </div>
       </div>
 
-      {/* Campaign Photos */}
+      
       <div className='space-y-3'>
         <h3 className='text-[#F5F5F5] font-medium'>Campaign Photos</h3>
         <div className='flex space-x-3 overflow-x-auto'>
@@ -285,7 +285,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
         </div>
       </div>
 
-      {/* Milestones */}
+     
       <div className='space-y-3'>
         <h3 className='text-[#F5F5F5] font-medium'>Milestones</h3>
         <div className='space-y-3'>
@@ -333,7 +333,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
         </div>
       </div>
 
-      {/* Confirmation and Actions */}
+     
       <div className='space-y-4 pt-6'>
         <div className='flex items-center space-x-3'>
           <Checkbox

@@ -11,7 +11,6 @@ export const UserPageSkeleton = () => {
           <Skeleton className='h-8 w-64 sm:h-10 sm:w-80' />
         </div>
 
-        {/* Stats Cards Grid Skeleton */}
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8'>
           {Array.from({ length: 4 }).map((_, index) => (
             <div
@@ -27,13 +26,11 @@ export const UserPageSkeleton = () => {
             </div>
           ))}
         </div>
-
-        {/* Recent Projects Skeleton */}
+        
         <div className='mb-8'>
           <RecentProjectsSkeleton />
         </div>
 
-        {/* Campaign Table Skeleton */}
         <div className='bg-[#1C1C1C] p-4 sm:p-6 rounded-[12px] flex flex-col gap-6 sm:gap-8 w-full'>
           <CampaignTableSkeleton />
         </div>
@@ -45,7 +42,6 @@ export const UserPageSkeleton = () => {
 export const RecentProjectsSkeleton = () => {
   return (
     <>
-      {/* Header */}
       <motion.div
         className='flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 sm:gap-4 xl:gap-0'
         variants={fadeInUp}
@@ -59,8 +55,7 @@ export const RecentProjectsSkeleton = () => {
           <Skeleton className='h-10 w-24' />
         </div>
       </motion.div>
-
-      {/* Projects Grid */}
+      
       <motion.div
         className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
         variants={staggerContainer}
@@ -97,7 +92,7 @@ export const RecentProjectsSkeleton = () => {
 export const CampaignTableSkeleton = () => {
   return (
     <>
-      {/* Header */}
+ 
       <div className='flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 sm:gap-4 xl:gap-0'>
         <div className='flex items-center gap-2 sm:gap-3 xl:gap-5'>
           <Skeleton className='h-6 w-32 sm:h-7 sm:w-40' />
@@ -108,7 +103,6 @@ export const CampaignTableSkeleton = () => {
         </div>
       </div>
 
-      {/* Table Header */}
       <div className='hidden xl:flex px-4 py-3 text-[#B5B5B5] text-sm font-medium border-b border-[#2B2B2B] gap-6'>
         <div className='w-[200px] flex-shrink-0'>
           <Skeleton className='h-4 w-24' />
@@ -133,7 +127,6 @@ export const CampaignTableSkeleton = () => {
         </div>
       </div>
 
-      {/* Table Rows */}
       <div className='space-y-3'>
         {Array.from({ length: 5 }).map((_, index) => (
           <div
@@ -176,7 +169,6 @@ export const CampaignTableSkeleton = () => {
           </div>
         ))}
 
-        {/* Mobile Rows */}
         {Array.from({ length: 3 }).map((_, index) => (
           <div
             key={`mobile-${index}`}

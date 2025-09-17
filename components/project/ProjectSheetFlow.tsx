@@ -3,12 +3,10 @@
 import React, { useState } from 'react';
 import BoundlessSheet from '../sheet/boundless-sheet';
 import { Stepper } from '../stepper';
-// import { MilestoneReview } from './';
 import Initialize from './Initialize';
 import ValidationFlow from './ValidationFlow';
 import LaunchCampaignFlow from './LaunchCampaignFlow';
 import { useProjectSheetStore } from '@/lib/stores/project-sheet-store';
-// import ValidationFlow from './ValidationFlow';
 
 type StepState = 'pending' | 'active' | 'completed';
 
@@ -47,7 +45,6 @@ const ProjectSheetFlow: React.FC<ProjectSheetFlowProps> = ({
   open,
   onOpenChange,
 }) => {
-  // Note: sub-steps handled internally by Initialize and ValidationFlow
   const [steps, setSteps] = useState<Step[]>(initialSteps);
   const [currentStep, setCurrentStep] = useState<
     'initialize' | 'validate' | 'launch'
@@ -104,8 +101,6 @@ const ProjectSheetFlow: React.FC<ProjectSheetFlowProps> = ({
       })
     );
   };
-
-  // Milestone handling moved inside Initialize; no-op here
 
   const handleClose = () => {
     onOpenChange(false);

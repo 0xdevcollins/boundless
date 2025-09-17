@@ -43,7 +43,6 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
   const [isExpanded, setIsExpanded] = useState(true);
   const [additionalNotes, setAdditionalNotes] = useState('');
 
-  // Wallet protection hook
   const {
     requireWallet,
     showWalletModal,
@@ -174,7 +173,6 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
               )}
             </div>
 
-            {/* File Upload Section */}
             <div className='bg-[#1C1C1C] border border-[#2B2B2B] rounded-xl p-6 space-y-4 self-start w-full max-w-2xl'>
               <div>
                 <Label className='text-white font-medium text-lg'>
@@ -220,7 +218,6 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
                 />
               </div>
 
-              {/* Uploaded Files List */}
               {files.length > 0 && (
                 <div className='space-y-3'>
                   <h4 className='text-white font-medium'>Uploaded Files</h4>
@@ -252,7 +249,6 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
               )}
             </div>
 
-            {/* External Links Section */}
             <div className='bg-[#1C1C1C] border border-[#2B2B2B] rounded-xl p-6 space-y-4 self-start w-full max-w-2xl'>
               <div>
                 <Label className='text-white font-medium text-lg'>
@@ -297,7 +293,6 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
               </BoundlessButton>
             </div>
 
-            {/* Additional Notes Section */}
             <div className='bg-[#1C1C1C] border border-[#2B2B2B] rounded-xl p-6 space-y-4 self-start w-full max-w-2xl'>
               <div>
                 <Label className='text-white font-medium text-lg'>
@@ -324,9 +319,7 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
             </div>
           </div>
 
-          {/* Sidebar */}
           <div className='space-y-6'>
-            {/* Submission Summary */}
             <div className='bg-[#1C1C1C] border border-[#2B2B2B] rounded-xl p-6'>
               <h3 className='text-white font-semibold text-lg mb-4'>
                 Submission Summary
@@ -354,7 +347,6 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
               </div>
             </div>
 
-            {/* Guidelines */}
             <div className='bg-[#1C1C1C] border border-[#2B2B2B] rounded-xl p-6'>
               <h3 className='text-white font-semibold text-lg mb-4'>
                 Submission Guidelines
@@ -387,7 +379,6 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
           </div>
         </div>
 
-        {/* Submit Button */}
         <div className='mt-8 pt-6 border-t border-[#2B2B2B] w-full max-w-2xl mx-auto'>
           <div className='flex items-center justify-between'>
             <BoundlessButton variant='outline' onClick={onBack} size='lg'>
@@ -407,7 +398,6 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
         </div>
       </div>
 
-      {/* Wallet Required Modal */}
       <WalletRequiredModal
         open={showWalletModal}
         onOpenChange={closeWalletModal}
