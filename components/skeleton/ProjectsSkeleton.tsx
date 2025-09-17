@@ -15,7 +15,6 @@ export const ProjectsPageSkeleton = () => {
 export const ProjectsSkeleton = () => {
   return (
     <>
-      {/* Header */}
       <motion.div
         className='flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 sm:gap-4 xl:gap-0'
         variants={fadeInUp}
@@ -29,7 +28,6 @@ export const ProjectsSkeleton = () => {
         </div>
       </motion.div>
 
-      {/* Projects Grid */}
       <motion.div
         className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
         variants={staggerContainer}
