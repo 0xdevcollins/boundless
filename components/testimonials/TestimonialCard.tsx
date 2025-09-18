@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import Image from 'next/image';
 
 interface TestimonialCardProps {
@@ -18,18 +18,33 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
   content,
   icon,
 }) => {
+  const [imageError, setImageError] = useState(false);
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
   return (
     <div className='bg-[#101010] rounded-[8px] shadow-xl p-6 flex flex-col gap-4 border border-[#A7F950]/20 hover:border-[#A7F950]/40 hover:shadow-[0_0_30px_rgba(167,249,80,0.3)] transition-all duration-500 hover:scale-105 transform mb-6 max-w-[300px] w-[300px]'>
       <div className='flex flex-row justify-between items-start'>
         <div className='flex items-center gap-3'>
           <div className='relative'>
-            <Image
-              src={avatarSrc}
-              alt={`${name} profile picture`}
-              className='w-12 h-12 rounded-full object-cover ring-2 ring-[#A7F950]/30'
-              width={48}
-              height={48}
-            />
+            {!imageError ? (
+              <Image
+                src={avatarSrc}
+                alt={`${name} profile picture`}
+                className='w-12 h-12 rounded-full object-cover ring-2 ring-[#A7F950]/30'
+                width={48}
+                height={48}
+                onError={handleImageError}
+              />
+            ) : (
+              <div className='w-12 h-12 rounded-full bg-[#A7F950]/20 ring-2 ring-[#A7F950]/30 flex items-center justify-center'>
+                <span className='text-[#A7F950] font-semibold text-lg'>
+                  {avatarFallback}
+                </span>
+              </div>
+            )}
           </div>
           <div className='flex flex-col items-baseline'>
             <p className='text-sm font-bold text-white'>{name}</p>

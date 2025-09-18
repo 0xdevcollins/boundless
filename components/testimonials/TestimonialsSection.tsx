@@ -124,7 +124,6 @@ export default function TestimonialsSection({
         <div className='relative overflow-hidden shadow-2xl backdrop-blur-sm md:max-h-[600px] max-h-[470px]'>
           <div className='absolute inset-0 bg-[#CCFF95] opacity-95'></div>
 
-         
           <Image
             src='/fade.png'
             alt='Gradient top'
@@ -154,7 +153,6 @@ export default function TestimonialsSection({
             }}
           />
 
-         
           <div
             className='-mx-6 overflow-x-auto relative z-[10]'
             ref={el => {
@@ -207,7 +205,6 @@ export default function TestimonialsSection({
             </div>
           </div>
 
-        
           <div className='absolute lg:bottom-[60px] bottom-14  lg:mt-0 mt-20 left-1/2 -translate-x-1/2 md:max-h-[212px] w-[90%] max-w-6xl bg-primary rounded-xl shadow-lg p-8 md:p-12 text-black z-40'>
             <div className='flex flex-col md:flex-row items-center md:justify-between gap-6'>
               <div>

@@ -15,7 +15,6 @@ const MilestoneSubmissionSuccess: React.FC<MilestoneSubmissionSuccessProps> = ({
   return (
     <div className='min-h-screen bg-black flex items-center justify-center p-4'>
       <div className='max-w-md w-full text-center space-y-8'>
-      
         <h1 className='text-3xl font-bold text-white'>Proof Submitted!</h1>
 
         <div className='flex justify-center'>

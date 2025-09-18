@@ -348,7 +348,7 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
               ))}
             </div>
           </div>
-          
+
           <div className='flex justify-center'>
             <BoundlessButton
               onClick={handleSubmit}

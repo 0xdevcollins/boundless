@@ -26,7 +26,7 @@ export const UserPageSkeleton = () => {
             </div>
           ))}
         </div>
-        
+
         <div className='mb-8'>
           <RecentProjectsSkeleton />
         </div>
@@ -55,7 +55,7 @@ export const RecentProjectsSkeleton = () => {
           <Skeleton className='h-10 w-24' />
         </div>
       </motion.div>
-      
+
       <motion.div
         className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
         variants={staggerContainer}
@@ -92,7 +92,6 @@ export const RecentProjectsSkeleton = () => {
 export const CampaignTableSkeleton = () => {
   return (
     <>
- 
       <div className='flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 sm:gap-4 xl:gap-0'>
         <div className='flex items-center gap-2 sm:gap-3 xl:gap-5'>
           <Skeleton className='h-6 w-32 sm:h-7 sm:w-40' />

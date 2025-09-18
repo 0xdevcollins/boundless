@@ -77,10 +77,8 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
   const { currentNetwork, switchToNetwork } = useNetworkSwitcher();
   const walletInfo = useWalletInfo();
 
-  
   useAutoReconnect();
 
-  
   React.useEffect(() => {
     if (error) {
       toast.error(error, {
@@ -183,7 +181,6 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
 
-            
             <DropdownMenuItem
               className='flex items-center gap-2 p-3 bg-card hover:bg-accent text-card-foreground hover:text-accent-foreground cursor-pointer'
               onSelect={e => e.preventDefault()}
@@ -215,7 +212,6 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
 
             <DropdownMenuSeparator />
 
-           
             <div className='grid grid-cols-1 gap-1 p-2'>
               <DropdownMenuItem
                 onClick={handleSwitchWallet}
@@ -228,7 +224,6 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
 
             <DropdownMenuSeparator />
 
-            
             <div className='p-2'>
               <div className='text-xs font-medium mb-2 px-2 text-card-foreground'>
                 Network
@@ -268,7 +263,6 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
 
             <DropdownMenuSeparator />
 
-            
             <DropdownMenuItem
               asChild
               className='bg-card hover:bg-accent text-card-foreground hover:text-accent-foreground text-xs'
@@ -289,7 +283,6 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
 
             <DropdownMenuSeparator />
 
-            
             <DropdownMenuItem
               onClick={handleDisconnect}
               className='text-destructive hover:text-destructive bg-card hover:bg-accent text-xs'
