@@ -13,9 +13,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { isAuthenticated, accessToken, refreshUser, clearAuth } =
     useAuthStore();
 
-
   useEffect(() => {
-    
     if (useAuthStore.persist.hasHydrated()) {
       setIsHydrated(true);
       return;
@@ -24,7 +22,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const unsubscribe = useAuthStore.persist.onFinishHydration(() => {
       setIsHydrated(true);
     });
-
 
     const timeout = setTimeout(() => {
       setIsHydrated(true);
@@ -36,21 +33,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     };
   }, []);
 
- 
   useEffect(() => {
     if (!isHydrated) return;
 
     const initializeAuth = async () => {
       try {
-       
         if (accessToken && isAuthenticated) {
           await refreshUser();
         } else if (accessToken) {
-        
           try {
             await refreshUser();
           } catch {
-          
             clearAuth();
           }
         }
@@ -62,14 +55,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     initializeAuth();
   }, [isHydrated, accessToken, isAuthenticated, refreshUser, clearAuth]);
 
- 
   if (!isHydrated) {
     return <Loading />;
   }
 
   return <>{children}</>;
 }
-
 
 export function useAuthHydration() {
   const [isHydrated, setIsHydrated] = useState(false);
