@@ -15,7 +15,7 @@ import { Badge } from '../ui/badge';
 import { DollarSign, Package, Trash, X } from 'lucide-react';
 import { Input } from '../ui/input';
 
-// Dummy data for the Select components
+
 const fundingGoals = [
   { value: 'Technology', label: 'Technology' },
   { value: 'Healthcare', label: 'Healthcare' },
@@ -55,7 +55,7 @@ function ProjectSubmissionForm({
   initialData,
   onChange,
 }: ProjectSubmissionFormProps) {
-  // State for all form fields
+
   const [projectTitle, setProjectTitle] = useState(initialData?.title ?? '');
   const [projectTagline, setProjectTagline] = useState(
     initialData?.tagline ?? ''
@@ -78,11 +78,11 @@ function ProjectSubmissionForm({
   const [tagQuery, setTagQuery] = useState('');
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
 
-  // Refs for file inputs
+
   const whitepaperInputRef = useRef<HTMLInputElement>(null);
   const thumbnailInputRef = useRef<HTMLInputElement>(null);
 
-  // Check form validity
+
   useEffect(() => {
     const allFieldsFilled =
       projectTitle.trim() !== '' &&
@@ -116,7 +116,7 @@ function ProjectSubmissionForm({
     onChange,
   ]);
 
-  // Tag handlers
+
   const normalizeTag = (value: string) => value.trim();
 
   const handleAddTag = (rawTag: string) => {
@@ -132,7 +132,7 @@ function ProjectSubmissionForm({
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
-  // File removal handler
+
   const handleRemoveFile = (fileType: 'whitepaper' | 'thumbnail') => {
     if (fileType === 'whitepaper') {
       setWhitepaperFile(null);
@@ -215,7 +215,7 @@ function ProjectSubmissionForm({
           />
         </div>
 
-        {/* Funding Goal */}
+
         <div className='flex flex-col gap-1'>
           <label className='text-xs text-card font-medium'>
             Category <span className='text-red-500'>*</span>
@@ -237,7 +237,7 @@ function ProjectSubmissionForm({
           </Select>
         </div>
 
-        {/* Fund Amount */}
+
         <div className='flex flex-col gap-1'>
           <label className='text-xs text-card font-medium'>
             Fund Amount <span className='text-red-500'>*</span>
@@ -254,7 +254,7 @@ function ProjectSubmissionForm({
           </div>
         </div>
 
-        {/* Upload Whitepaper */}
+
         <div className='flex flex-col gap-1'>
           <label htmlFor='' className='text-xs text-card font-medium'>
             Upload Whitepaper or Detailed Proposal{' '}
@@ -334,7 +334,7 @@ function ProjectSubmissionForm({
           </div>
         </div>
 
-        {/* Upload Project Thumbnail */}
+
         <div className='flex flex-col gap-1'>
           <label htmlFor='' className='text-xs text-card font-medium'>
             Upload Project Thumbnail <span className='text-red-500'>*</span>
@@ -413,7 +413,7 @@ function ProjectSubmissionForm({
           </div>
         </div>
 
-        {/* Add Tags */}
+
         <div className='flex flex-col gap-2'>
           <label className='text-xs text-card font-medium flex items-center justify-between'>
             Tags <span className='text-placeholder'>Optional</span>
@@ -466,7 +466,7 @@ function ProjectSubmissionForm({
               />
             </div>
 
-            {/* Suggestions dropdown */}
+
             {isSuggestionsOpen && tagQuery.trim().length > 0 && (
               <div className='absolute z-50 mt-1 w-full max-h-40 overflow-auto bg-background border border-stepper-border rounded-md shadow-md'>
                 <ul className='py-1'>
@@ -493,7 +493,7 @@ function ProjectSubmissionForm({
                         </button>
                       </li>
                     ))}
-                  {/* Create custom tag */}
+
                   {!projectTags.some(
                     t =>
                       t.value.toLowerCase() === tagQuery.toLowerCase() ||

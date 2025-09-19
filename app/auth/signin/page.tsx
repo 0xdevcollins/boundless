@@ -1,15 +1,15 @@
 'use client';
 import AuthLayout from '@/components/auth/AuthLayout';
+import AuthLoadingState from '@/components/auth/AuthLoadingState';
 import LoginForm from '@/components/auth/LoginForm';
-import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { getSession, signIn } from 'next-auth/react';
-import { toast } from 'sonner';
-import Cookies from 'js-cookie';
-import z from 'zod';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Loading from '@/components/loading/Loading';
+import Cookies from 'js-cookie';
+import { getSession, signIn } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import z from 'zod';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -99,19 +99,18 @@ export default function SignInPage() {
     }
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   return (
-    <AuthLayout>
-      <LoginForm
-        form={form}
-        onSubmit={onSubmit}
-        showPassword={showPassword}
-        setShowPassword={setShowPassword}
-        isLoading={isLoading}
-      />
-    </AuthLayout>
+    <>
+      {isLoading && <AuthLoadingState message='Signing in...' />}
+      <AuthLayout>
+        <LoginForm
+          form={form}
+          onSubmit={onSubmit}
+          showPassword={showPassword}
+          setShowPassword={setShowPassword}
+          isLoading={isLoading}
+        />
+      </AuthLayout>
+    </>
   );
 }

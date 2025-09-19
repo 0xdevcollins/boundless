@@ -1,5 +1,11 @@
 'use client';
-import React from 'react';
+import { maskEmail } from '@/lib/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Cookies from 'js-cookie';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import z from 'zod';
 import { BoundlessButton } from '../buttons';
 import {
   Form,
@@ -8,13 +14,7 @@ import {
   FormItem,
   FormMessage,
 } from '../ui/form';
-import z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { InputOTP, InputOTPSlot } from '../ui/input-otp';
-import { toast } from 'sonner';
-import { maskEmail } from '@/lib/utils';
-import Cookies from 'js-cookie';
 
 const formSchema = z.object({
   otp: z.string().length(6, {
@@ -26,15 +26,26 @@ interface OtpFormProps {
   email: string;
   onOtpSuccess: () => void;
   onResendOtp: () => void;
+  onLoadingChange?: (isLoading: boolean) => void;
 }
 
-const OtpForm = ({ email, onOtpSuccess, onResendOtp }: OtpFormProps) => {
+const OtpForm = ({
+  email,
+  onOtpSuccess,
+  onResendOtp,
+  onLoadingChange,
+}: OtpFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       otp: '',
     },
   });
+
+  // Notify parent component of loading state changes
+  useEffect(() => {
+    onLoadingChange?.(form.formState.isSubmitting);
+  }, [form.formState.isSubmitting, onLoadingChange]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {

@@ -1,25 +1,24 @@
 'use client';
-import React from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { LockIcon, MailIcon, User } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import z from 'zod';
 import { BoundlessButton } from '../buttons';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from '../ui/form';
-import { FormLabel } from '../ui/form';
-import z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '../ui/input';
-import { LockIcon, MailIcon, User } from 'lucide-react';
-import Link from 'next/link';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import OtpForm from './OtpForm';
-import { useState } from 'react';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -36,7 +35,11 @@ const formSchema = z.object({
   }),
 });
 
-const SignupForm = () => {
+interface SignupFormProps {
+  onLoadingChange?: (isLoading: boolean) => void;
+}
+
+const SignupForm = ({ onLoadingChange }: SignupFormProps) => {
   const router = useRouter();
   const [step, setStep] = useState<'signup' | 'otp'>('signup');
   const [userData, setUserData] = useState<{ email: string } | null>(null);
@@ -50,6 +53,11 @@ const SignupForm = () => {
       password: '',
     },
   });
+
+  // Notify parent component of loading state changes
+  useEffect(() => {
+    onLoadingChange?.(form.formState.isSubmitting);
+  }, [form.formState.isSubmitting, onLoadingChange]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -133,6 +141,7 @@ const SignupForm = () => {
         email={userData.email}
         onOtpSuccess={handleOtpSuccess}
         onResendOtp={handleResendOtp}
+        onLoadingChange={onLoadingChange}
       />
     );
   }

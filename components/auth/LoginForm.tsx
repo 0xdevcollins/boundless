@@ -1,22 +1,21 @@
 'use client';
-import React from 'react';
+import { Eye, EyeOff, LockIcon, MailIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { UseFormReturn } from 'react-hook-form';
+import z from 'zod';
 import { BoundlessButton } from '../buttons';
+import { Checkbox } from '../ui/checkbox';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from '../ui/form';
-import { FormLabel } from '../ui/form';
 import { Input } from '../ui/input';
-import { Eye, EyeOff, LockIcon, MailIcon } from 'lucide-react';
-import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
-import Link from 'next/link';
-import Image from 'next/image';
-import { UseFormReturn } from 'react-hook-form';
-import z from 'zod';
 
 const formSchema = z.object({
   email: z.string().email({
