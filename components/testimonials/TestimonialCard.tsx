@@ -12,7 +12,7 @@ interface TestimonialCardProps {
 
 const TestimonialCard: React.FC<TestimonialCardProps> = ({
   avatarSrc = '/avatar-placeholder.png',
-  avatarFallback = 'U',
+  // avatarFallback = 'U',
   name,
   username,
   content,
