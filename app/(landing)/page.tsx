@@ -6,7 +6,7 @@ import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useEffect, useRef } from 'react';
 import BeamBackground from '@/components/landing-page/BeamBackground';
-import { Hero } from '@/components/landing-page';
+import { Hero, Footer } from '@/components/landing-page';
 import HowBoundlessWork from '@/components/landing-page/HowBoundlessWork';
 import WhyBoundless from '@/components/landing-page/WhyBoundless';
 import BackedBy from '@/components/landing-page/BackedBy';
@@ -103,6 +103,7 @@ export default function LandingPage() {
         <NewsLetter />
         <BlogSection />
         <HowBoundlessWork />
+        <Footer />
       </div>
     </div>
   );
