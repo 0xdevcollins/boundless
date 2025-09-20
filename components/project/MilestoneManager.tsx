@@ -106,7 +106,6 @@ const MilestoneManager: React.FC<MilestoneManagerProps> = ({
     onChange?.(remaining, isValid(remaining));
   };
 
-
   return (
     <div className='w-full  mx-auto space-y-6'>
       <div className='space-y-4'>
@@ -135,7 +134,6 @@ const MilestoneManager: React.FC<MilestoneManagerProps> = ({
           </Button>
         </div>
       )}
-
     </div>
   );
 };

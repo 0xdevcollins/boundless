@@ -107,7 +107,6 @@ const ShareCampaignModal: React.FC<ShareCampaignModalProps> = ({
         </DialogHeader>
 
         <div className='space-y-6'>
-
           <div className='space-y-3'>
             <label className='text-[#B5B5B5] text-sm font-medium'>
               Campaign Link
@@ -142,7 +141,6 @@ const ShareCampaignModal: React.FC<ShareCampaignModalProps> = ({
               </p>
             )}
           </div>
-
 
           <div className='space-y-3'>
             <label className='text-[#B5B5B5] text-sm font-medium'>
