@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '@/lib/stores/auth-store';
-import Loading from '../loading/Loading';
+import React, { useEffect, useState } from 'react';
+import AuthLoadingState from '../auth/AuthLoadingState';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -13,9 +13,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { isAuthenticated, accessToken, refreshUser, clearAuth } =
     useAuthStore();
 
-
   useEffect(() => {
-    
     if (useAuthStore.persist.hasHydrated()) {
       setIsHydrated(true);
       return;
@@ -24,7 +22,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const unsubscribe = useAuthStore.persist.onFinishHydration(() => {
       setIsHydrated(true);
     });
-
 
     const timeout = setTimeout(() => {
       setIsHydrated(true);
@@ -36,21 +33,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     };
   }, []);
 
- 
   useEffect(() => {
     if (!isHydrated) return;
 
     const initializeAuth = async () => {
       try {
-       
         if (accessToken && isAuthenticated) {
           await refreshUser();
         } else if (accessToken) {
-        
           try {
             await refreshUser();
           } catch {
-          
             clearAuth();
           }
         }
@@ -62,14 +55,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     initializeAuth();
   }, [isHydrated, accessToken, isAuthenticated, refreshUser, clearAuth]);
 
- 
   if (!isHydrated) {
-    return <Loading />;
+    return <AuthLoadingState message='Initializing...' />;
   }
 
   return <>{children}</>;
 }
-
 
 export function useAuthHydration() {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -94,7 +85,7 @@ export function AuthLoadingProvider({
   const { isLoading } = useAuthStore();
 
   if (!isHydrated || isLoading) {
-    return <Loading />;
+    return <AuthLoadingState message='Loading...' />;
   }
 
   return <>{children}</>;

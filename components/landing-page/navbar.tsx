@@ -5,12 +5,11 @@ import Image from 'next/image';
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { SplitText } from 'gsap/SplitText';
 import { BoundlessButton } from '../buttons';
-
+import { useRouter } from 'next/navigation';
 import { Sheet, SheetTrigger, SheetContent, SheetClose } from '../ui/sheet';
 
-gsap.registerPlugin(useGSAP, SplitText);
+gsap.registerPlugin(useGSAP);
 
 const menuItems = [
   { href: '/about', label: 'About' },
@@ -25,45 +24,17 @@ export function Navbar() {
   const logoRef = useRef<HTMLAnchorElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-
+  const router = useRouter();
   useGSAP(
     () => {
-      const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
-
-      tl.fromTo(
+      gsap.fromTo(
         navbarRef.current,
-        { y: -20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6 }
-      )
-        .fromTo(
-          logoRef.current,
-          { scale: 0.8, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.4 },
-          '-=0.3'
-        )
-        .fromTo(
-          menuRef.current?.children || [],
-          { y: -15, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, stagger: 0.1 },
-          '-=0.2'
-        )
-        .fromTo(
-          ctaRef.current,
-          { y: -15, opacity: 0, scale: 0.95 },
-          { y: 0, opacity: 1, scale: 1, duration: 0.4 },
-          '-=0.1'
-        );
-
-      gsap.to(logoRef.current, {
-        y: -2,
-        duration: 2,
-        ease: 'power2.inOut',
-        yoyo: true,
-        repeat: -1,
-      });
+        { opacity: 0 },
+        { opacity: 1, duration: 0.4, ease: 'power2.out' }
+      );
 
       const logoHover = gsap.to(logoRef.current, {
-        scale: 1.05,
+        scale: 1.02,
         duration: 0.2,
         ease: 'power2.out',
         paused: true,
@@ -81,28 +52,15 @@ export function Navbar() {
         hoverTl: gsap.core.Timeline;
         enterHandler: () => void;
         leaveHandler: () => void;
-        split: SplitText;
       }> = [];
 
       menuItems?.forEach(item => {
-        const split = SplitText.create(item, {
-          type: 'chars',
-          charsClass: 'nav-char',
-        });
-
         const hoverTl = gsap.timeline({ paused: true });
-        hoverTl.to(item, { y: -2, duration: 0.2, ease: 'power2.out' });
-
-        hoverTl.to(
-          split.chars,
-          {
-            y: -3,
-            duration: 0.3,
-            stagger: 0.02,
-            ease: 'power2.out',
-          },
-          '-=0.1'
-        );
+        hoverTl.to(item, {
+          y: -1,
+          duration: 0.2,
+          ease: 'power2.out',
+        });
 
         const enterHandler = () => hoverTl.play();
         const leaveHandler = () => hoverTl.reverse();
@@ -115,12 +73,11 @@ export function Navbar() {
           hoverTl,
           enterHandler,
           leaveHandler,
-          split,
         });
       });
 
       const ctaHover = gsap.to(ctaRef.current, {
-        scale: 1.02,
+        scale: 1.01,
         duration: 0.2,
         ease: 'power2.out',
         paused: true,
@@ -134,9 +91,9 @@ export function Navbar() {
 
       const scrollTl = gsap.timeline({ paused: true });
       scrollTl.to(navbarRef.current, {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        backdropFilter: 'blur(10px)',
-        duration: 0.3,
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        backdropFilter: 'blur(8px)',
+        duration: 0.2,
         ease: 'power2.out',
       });
 
@@ -159,9 +116,8 @@ export function Navbar() {
         logoRef.current?.removeEventListener('mouseleave', logoLeaveHandler);
 
         menuItemAnimations.forEach(
-          ({ item, hoverTl, enterHandler, leaveHandler, split }) => {
+          ({ item, hoverTl, enterHandler, leaveHandler }) => {
             hoverTl.kill();
-            split.revert();
             item.removeEventListener('mouseenter', enterHandler);
             item.removeEventListener('mouseleave', leaveHandler);
           }
@@ -184,7 +140,12 @@ export function Navbar() {
       <div className='py-5 lg:px-[100px] md:px-[50px] px-5'>
         <div className='flex gap- justify-between items-center'>
           <div className='flex-shrink-0'>
-            <Link ref={logoRef} href='/' className='flex items-center'>
+            <Link
+              ref={logoRef}
+              href='/'
+              onClick={() => router.push('/')}
+              className='flex items-center'
+            >
               <Image src='/auth/logo.svg' alt='logo' width={116} height={22} />
             </Link>
           </div>
@@ -226,12 +187,12 @@ function MobileMenu() {
     () => {
       gsap.fromTo(
         mobileButtonRef.current,
-        { scale: 0.8, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.4, delay: 0.8 }
+        { opacity: 0 },
+        { opacity: 1, duration: 0.3 }
       );
 
       const buttonHover = gsap.to(mobileButtonRef.current, {
-        scale: 1.05,
+        scale: 1.02,
         duration: 0.2,
         ease: 'power2.out',
         paused: true,
@@ -267,50 +228,34 @@ function MobileMenu() {
   const animateMobileMenuOpen = () => {
     gsap.fromTo(
       mobileLogoRef.current,
-      { x: -20, opacity: 0 },
-      { x: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }
+      { opacity: 0 },
+      { opacity: 1, duration: 0.3, ease: 'power2.out' }
     );
 
     const menuItems = mobileMenuItemsRef.current?.querySelectorAll('a');
     if (menuItems) {
-      menuItems.forEach((item, index) => {
-        const split = SplitText.create(item, {
-          type: 'chars, words',
-          charsClass: 'char',
-          wordsClass: 'word',
-        });
-
-        gsap.fromTo(
-          split.words,
-          {
-            y: 20,
-            opacity: 0,
-            rotationX: -90,
-            transformOrigin: '50% 50% -20px',
-          },
-          {
-            y: 0,
-            opacity: 1,
-            rotationX: 0,
-            duration: 0.6,
-            stagger: 0.03,
-            delay: 0.2 + index * 0.1,
-            ease: 'back.out(1.7)',
-          }
-        );
-      });
+      gsap.fromTo(
+        menuItems,
+        { opacity: 0, y: 10 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.3,
+          stagger: 0.1,
+          ease: 'power2.out',
+        }
+      );
     }
 
     gsap.fromTo(
       mobileCTARef.current,
-      { y: 30, opacity: 0, scale: 0.9 },
+      { opacity: 0, y: 10 },
       {
-        y: 0,
         opacity: 1,
-        scale: 1,
-        duration: 0.5,
-        delay: 0.8,
-        ease: 'back.out(1.7)',
+        y: 0,
+        duration: 0.3,
+        delay: 0.2,
+        ease: 'power2.out',
       }
     );
   };
@@ -320,8 +265,7 @@ function MobileMenu() {
       [mobileLogoRef.current, mobileMenuItemsRef.current, mobileCTARef.current],
       {
         opacity: 0,
-        y: -20,
-        duration: 0.3,
+        duration: 0.2,
         ease: 'power2.in',
       }
     );

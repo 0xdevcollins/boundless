@@ -4,7 +4,7 @@ import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import BeamBackground from '@/components/landing-page/BeamBackground';
 import { Hero, Footer } from '@/components/landing-page';
 import HowBoundlessWork from '@/components/landing-page/HowBoundlessWork';
@@ -13,14 +13,40 @@ import BackedBy from '@/components/landing-page/BackedBy';
 import NewsLetter from '@/components/landing-page/NewsLetter';
 import BlogSection from '@/components/landing-page/blog/BlogSection';
 import { useRouter } from 'next/navigation';
+import { useIsMobile } from '@/hooks/use-mobile';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function LandingPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const isMobile = useIsMobile();
+  const [hasRedirected, setHasRedirected] = useState(false);
+
   useEffect(() => {
-    router.push('/waitlist');
-  }, [router]);
+    const delay = isMobile ? 1000 : 500;
+
+    const redirectTimer = setTimeout(() => {
+      if (!hasRedirected) {
+        setHasRedirected(true);
+        router.push('/waitlist');
+      }
+    }, delay);
+
+    return () => clearTimeout(redirectTimer);
+  }, [router, isMobile, hasRedirected]);
+
+  useEffect(() => {
+    if (hasRedirected) {
+      const fallbackTimer = setTimeout(() => {
+        if (window.location.pathname === '/') {
+          window.location.href = '/waitlist';
+        }
+      }, 2000);
+
+      return () => clearTimeout(fallbackTimer);
+    }
+  }, [hasRedirected]);
 
   gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrollToPlugin);
 
@@ -43,8 +69,6 @@ export default function LandingPage() {
         scrub: 1,
         snap: {
           snapTo: value => {
-            // value is a normalized progress (0-1) between start and end
-            // Snap to 0 (top of #hero) or 1 (top of #how-boundless-work)
             return value < 0.5 ? 0 : 1;
           },
           duration: { min: 0.2, max: 1 },
@@ -89,6 +113,17 @@ export default function LandingPage() {
     },
     { scope: containerRef }
   );
+
+  if (hasRedirected) {
+    return (
+      <div className='flex items-center justify-center min-h-screen bg-black'>
+        <div className='text-center'>
+          <LoadingSpinner />
+          <p className='text-white text-lg'>Redirecting to waitlist...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className='relative overflow-hidden'>

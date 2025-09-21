@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Badge } from '../ui/badge';
 import {
   Carousel,
@@ -76,7 +76,7 @@ const AuthLayout = ({ children, showCarousel = true }: AuthLayoutProps) => {
           alt='auth'
           width={248}
           height={231}
-          className='absolute top-0 left-0 object-contain pointer-events-none z-0'
+          className='absolute top-0 left-0 object-contain pointer-events-none z-[-1]'
           unoptimized
         />
         <Image
@@ -84,11 +84,11 @@ const AuthLayout = ({ children, showCarousel = true }: AuthLayoutProps) => {
           alt='grid'
           width={248}
           height={231}
-          className='absolute bottom-0 left-0 object-cover pointer-events-none w-1/2 min-w-[500px] max-h-[254px] z-0'
+          className='absolute bottom-0 left-0 object-cover pointer-events-none w-1/2 min-w-[500px] max-h-[254px] z-[-1]'
           unoptimized
         />
         <div className='w-full h-full lg:basis-1/2 relative flex items-center justify-center px-6 py-10 lg:px-16 xl:px-24 2xl:px-32 overflow-hidden'>
-          <div className='flex flex-col justify-center h-full max-w-[500px] w-full gap-6 lg:gap-10 relative z-10'>
+          <div className='flex flex-col justify-center h-full max-w-[500px] w-full gap-6 lg:gap-10 relative z-[1]'>
             <Image
               src='/auth/logo.svg'
               alt='auth-logo'
@@ -104,7 +104,7 @@ const AuthLayout = ({ children, showCarousel = true }: AuthLayoutProps) => {
         {showCarousel && (
           <div className='hidden lg:flex w-full lg:basis-1/2 items-center justify-center p-6 lg:p-8 xl:p-10'>
             <div className="relative w-full max-w-[500px] md:max-w-[600px] xl:max-w-[700px] 2xl:max-w-[800px] aspect-[4/3] lg:aspect-[3/4] xl:aspect-[4/3] h-full rounded-2xl border border-[#2B2B2B] overflow-hidden bg-[url('/auth/bg.png')] bg-cover bg-center shadow-xl">
-              <div className='flex flex-col items-center justify-center h-full p-6 lg:p-8 relative z-10'>
+              <div className='flex flex-col items-center justify-center h-full p-6 lg:p-8 relative z-[1]'>
                 <Carousel
                   opts={{ align: 'start', loop: true }}
                   setApi={setApi}

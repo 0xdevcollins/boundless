@@ -90,9 +90,7 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
     onComplete();
   };
 
-  const handleLoading = () => {
-    
-  };
+  const handleLoading = () => {};
 
   const renderContent = () => {
     switch (currentStep) {
@@ -148,11 +146,9 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
   return (
     <>
       <div className='flex h-full'>
-        
         <div className='flex-1 sticky top-0'>
           <Stepper steps={steps} />
         </div>
-
 
         <div className='flex-1'>{renderContent()}</div>
       </div>
