@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-16'>
+    <div className='bg-background flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-16'>
       <div className='absolute top-16 left-16'>
         <Image
           src='/auth/logo.svg'
@@ -80,7 +80,7 @@ export default function ForgotPasswordPage() {
           className='object-cover'
         />
       </div>
-      <div className='max-w-md w-full space-y-8'>
+      <div className='w-full max-w-md space-y-8'>
         <div className='text-center'>
           <h2 className='mt-6 text-[40px] font-medium text-white'>
             Reset Password
@@ -92,7 +92,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         {successMessage && (
-          <div className='text-sm text-green-500 '>{successMessage}</div>
+          <div className='text-sm text-green-500'>{successMessage}</div>
         )}
 
         {errorMessage && (
@@ -109,17 +109,17 @@ export default function ForgotPasswordPage() {
               name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='text-white text-xs font-medium'>
+                  <FormLabel className='text-xs font-medium text-white'>
                     Email
                   </FormLabel>
                   <FormControl>
                     <div className='relative'>
-                      <Mail className='absolute left-3 top-3 h-4 w-4 text-[#B5B5B5]' />
+                      <Mail className='absolute top-3 left-3 h-4 w-4 text-[#B5B5B5]' />
                       <Input
                         {...field}
                         type='email'
                         placeholder='Enter your email'
-                        className='text-white placeholder:text-[#B5B5B5] border-[#2B2B2B] bg-[#1C1C1C] focus-visible:ring-0 focus-visible:ring-offset-0 caret-white w-full pl-10'
+                        className='w-full border-[#2B2B2B] bg-[#1C1C1C] pl-10 text-white caret-white placeholder:text-[#B5B5B5] focus-visible:ring-0 focus-visible:ring-offset-0'
                       />
                     </div>
                   </FormControl>
@@ -143,7 +143,7 @@ export default function ForgotPasswordPage() {
         <div className='text-center'>
           <Link
             href='/auth/signin'
-            className='inline-flex items-center text-sm text-primary hover:text-primary/80'
+            className='text-primary hover:text-primary/80 inline-flex items-center text-sm'
           >
             <ArrowLeft className='mr-1 h-4 w-4' />
             Back to sign in

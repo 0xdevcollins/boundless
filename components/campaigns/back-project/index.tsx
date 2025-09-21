@@ -54,8 +54,8 @@ const BackProject = () => {
   const renderSheetContent = () => {
     if (backProjectState === 'success') {
       return (
-        <div className='absolute inset-0 flex flex-col items-center justify-center w-full h-full'>
-          <div className='flex items-center mb-4 w-full max-w-[500px]'>
+        <div className='absolute inset-0 flex h-full w-full flex-col items-center justify-center'>
+          <div className='mb-4 flex w-full max-w-[500px] items-center'>
             {/* <Button variant="ghost" size="icon" onClick={handleBack} className="text-white hover:bg-gray-800">
               <ArrowLeft className="w-5 h-5" />
             </Button> */}
@@ -74,14 +74,14 @@ const BackProject = () => {
     }
 
     return (
-      <div className='relative flex flex-col items-center justify-start min-h-full px-4'>
+      <div className='relative flex min-h-full flex-col items-center justify-start px-4'>
         <BackProjectForm
           onSubmit={handleBackProject}
           isLoading={backProjectState === 'loading'}
         />
 
         {backProjectState === 'loading' && (
-          <div className='absolute inset-0 flex items-center justify-center w-full h-full bg-black/50 backdrop-blur-sm'>
+          <div className='absolute inset-0 flex h-full w-full items-center justify-center bg-black/50 backdrop-blur-sm'>
             <ProjectSubmissionLoading />
           </div>
         )}
@@ -90,7 +90,7 @@ const BackProject = () => {
   };
 
   return (
-    <div className='min-h-screen space-x-2 w-full  text-white bg-black'>
+    <div className='min-h-screen w-full space-x-2 bg-black text-white'>
       <BoundlessSheet
         open={isSheetOpen}
         setOpen={setIsSheetOpen}

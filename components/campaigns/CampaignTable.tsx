@@ -59,35 +59,35 @@ const CampaignRow = ({
 
   return (
     <>
-      <div className='hidden xl:flex items-center p-3 border border-[#2B2B2B] bg-[#2B2B2B] rounded-[12px] hover:bg-[#171717] hover:border-[#1671D9] transition-all duration-200 group gap-6'>
-        <div className='flex items-center gap-3 w-[200px] flex-shrink-0'>
-          <div className='w-11 h-11 rounded-[4px] flex items-center justify-center flex-shrink-0 overflow-hidden'>
+      <div className='group hidden items-center gap-6 rounded-[12px] border border-[#2B2B2B] bg-[#2B2B2B] p-3 transition-all duration-200 hover:border-[#1671D9] hover:bg-[#171717] xl:flex'>
+        <div className='flex w-[200px] flex-shrink-0 items-center gap-3'>
+          <div className='flex h-11 w-11 flex-shrink-0 items-center justify-center overflow-hidden rounded-[4px]'>
             <Image
               src={'/campaign-banner.svg'}
               alt={campaign.name}
               width={55}
               height={30}
-              className=' h-full rounded-[4px]'
+              className='h-full rounded-[4px]'
             />
           </div>
           <div className='min-w-0 flex-1'>
-            <div className='text-white font-medium text-sm leading-5 truncate'>
+            <div className='truncate text-sm leading-5 font-medium text-white'>
               {campaign.name}
             </div>
-            <div className='text-[#B5B5B5] text-xs leading-4 truncate mt-0.5'>
+            <div className='mt-0.5 truncate text-xs leading-4 text-[#B5B5B5]'>
               {campaign.tags.join(' ')}
             </div>
           </div>
         </div>
 
-        <div className='flex items-center gap-3 w-[164px] flex-shrink-0'>
+        <div className='flex w-[164px] flex-shrink-0 items-center gap-3'>
           <div className='relative flex-shrink-0'>
-            <Avatar className='w-8 h-8'>
+            <Avatar className='h-8 w-8'>
               <AvatarImage
                 src={campaign.creator.avatar}
                 alt={campaign.creator.name}
               />
-              <AvatarFallback className='bg-[#1671D9] text-white text-xs font-medium'>
+              <AvatarFallback className='bg-[#1671D9] text-xs font-medium text-white'>
                 {campaign.creator.name
                   .split(' ')
                   .map(n => n[0])
@@ -95,24 +95,24 @@ const CampaignRow = ({
               </AvatarFallback>
             </Avatar>
             {campaign.creator.verified && (
-              <div className='absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-[#2B2B2B] border border-[#2B2B2B] rounded-full flex items-center justify-center'>
-                <CheckIcon className='w-2.5 h-2.5 text-[#787878]' />
+              <div className='absolute -right-0.5 -bottom-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-[#2B2B2B] bg-[#2B2B2B]'>
+                <CheckIcon className='h-2.5 w-2.5 text-[#787878]' />
               </div>
             )}
           </div>
-          <span className='text-white text-sm font-medium leading-5 truncate flex-1'>
+          <span className='flex-1 truncate text-sm leading-5 font-medium text-white'>
             {campaign.creator.name}
           </span>
         </div>
 
-        <div className='space-y-2 w-[160px] flex-shrink-0'>
-          <div className='text-[#F5F5F5] text-sm font-medium leading-5'>
+        <div className='w-[160px] flex-shrink-0 space-y-2'>
+          <div className='text-sm leading-5 font-medium text-[#F5F5F5]'>
             ${campaign.fundingProgress.current.toLocaleString()} /
             <span className='text-[#B5B5B5]'>
               ${campaign.fundingProgress.target.toLocaleString()}
             </span>
           </div>
-          <div className='w-full bg-[#484848] rounded-full h-2 overflow-hidden'>
+          <div className='h-2 w-full overflow-hidden rounded-full bg-[#484848]'>
             <div
               className={`h-full rounded-full transition-all duration-300 ${getProgressColor()}`}
               style={{ width: `${Math.min(progressPercentage, 100)}%` }}
@@ -120,72 +120,72 @@ const CampaignRow = ({
           </div>
         </div>
 
-        <div className='text-white text-sm font-medium leading-5 w-[100px] flex-shrink-0'>
+        <div className='w-[100px] flex-shrink-0 text-sm leading-5 font-medium text-white'>
           {campaign.endDate}
         </div>
 
-        <div className='text-white text-sm font-medium leading-5 w-[73px] flex-shrink-0'>
+        <div className='w-[73px] flex-shrink-0 text-sm leading-5 font-medium text-white'>
           {campaign.milestones}
         </div>
 
         <div className='w-[75px] flex-shrink-0'>
           <Badge
-            className={`${getStatusColor(campaign.status)} capitalize text-xs font-medium px-2.5 py-1 rounded-none border-none w-[75px] text-center flex items-center justify-center`}
+            className={`${getStatusColor(campaign.status)} flex w-[75px] items-center justify-center rounded-none border-none px-2.5 py-1 text-center text-xs font-medium capitalize`}
           >
             {campaign.status}
           </Badge>
         </div>
 
-        <div className='flex justify-end w-[64px] flex-shrink-0 ml-auto'>
+        <div className='ml-auto flex w-[64px] flex-shrink-0 justify-end'>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant='ghost'
                 size='sm'
-                className='h-8 w-8 p-0 bg-[#1C1C1C] border border-gray-800 hover:bg-[#374151] transition-colors duration-200'
+                className='h-8 w-8 border border-gray-800 bg-[#1C1C1C] p-0 transition-colors duration-200 hover:bg-[#374151]'
               >
-                <MoreVerticalIcon className='h-4 w-4 text-[#9CA3AF] group-hover:text-white transition-colors duration-200' />
+                <MoreVerticalIcon className='h-4 w-4 text-[#9CA3AF] transition-colors duration-200 group-hover:text-white' />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align='end'
-              className='w-[250px] gap-1 bg-[#101010] border-none rounded-[16px] p-2 shadow-[0_1px_4px_0_rgba(72,72,72,0.14),_0_0_4px_1px_#484848]'
+              className='w-[250px] gap-1 rounded-[16px] border-none bg-[#101010] p-2 shadow-[0_1px_4px_0_rgba(72,72,72,0.14),_0_0_4px_1px_#484848]'
             >
               {campaign.status === 'live' && (
                 <>
                   <DropdownMenuItem
                     onClick={() => handleAction('back-project')}
-                    className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                    className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                   >
                     Back Project
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleAction('share')}
-                    className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                    className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                   >
                     Share
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleAction('view-history')}
-                    className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                    className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                   >
                     View History
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleAction('like')}
-                    className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                    className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                   >
                     Like ({campaign.likes})
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleAction('comment')}
-                    className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                    className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                   >
                     Comment ({campaign.comments})
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleAction('campaign-details')}
-                    className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                    className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                   >
                     Campaign Details
                   </DropdownMenuItem>
@@ -195,19 +195,19 @@ const CampaignRow = ({
                 <>
                   <DropdownMenuItem
                     onClick={() => handleAction('view-summary')}
-                    className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                    className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                   >
                     View Summary
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleAction('like')}
-                    className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                    className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                   >
                     Like ({campaign.likes})
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleAction('comment')}
-                    className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                    className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                   >
                     Comment ({campaign.comments})
                   </DropdownMenuItem>
@@ -217,19 +217,19 @@ const CampaignRow = ({
                 <>
                   <DropdownMenuItem
                     onClick={() => handleAction('view-summary')}
-                    className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                    className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                   >
                     View Summary
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleAction('like')}
-                    className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                    className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                   >
                     Like ({campaign.likes})
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleAction('comment')}
-                    className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                    className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                   >
                     Comment ({campaign.comments})
                   </DropdownMenuItem>
@@ -240,30 +240,30 @@ const CampaignRow = ({
         </div>
       </div>
 
-      <div className='xl:hidden p-3 sm:p-4 border border-[#2B2B2B] bg-[#2B2B2B] rounded-[12px] hover:bg-[#171717] hover:border-[#1671D9] transition-all duration-200'>
-        <div className='flex items-start justify-between mb-3'>
-          <div className='flex items-center gap-2 sm:gap-3 flex-1 min-w-0'>
-            <div className='w-10 h-10 sm:w-12 sm:h-12 rounded-[4px] flex items-center justify-center flex-shrink-0'>
+      <div className='rounded-[12px] border border-[#2B2B2B] bg-[#2B2B2B] p-3 transition-all duration-200 hover:border-[#1671D9] hover:bg-[#171717] sm:p-4 xl:hidden'>
+        <div className='mb-3 flex items-start justify-between'>
+          <div className='flex min-w-0 flex-1 items-center gap-2 sm:gap-3'>
+            <div className='flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[4px] sm:h-12 sm:w-12'>
               <Image
                 src={'/campaign-banner.svg'}
                 alt={campaign.name}
                 width={48}
                 height={48}
-                className='object-cover w-full h-full rounded-[4px]'
+                className='h-full w-full rounded-[4px] object-cover'
               />
             </div>
             <div className='min-w-0 flex-1'>
-              <div className='text-white font-medium text-sm leading-5 truncate'>
+              <div className='truncate text-sm leading-5 font-medium text-white'>
                 {campaign.name}
               </div>
-              <div className='text-[#B5B5B5] text-xs leading-4 truncate mt-0.5'>
+              <div className='mt-0.5 truncate text-xs leading-4 text-[#B5B5B5]'>
                 {campaign.tags.join(' ')}
               </div>
             </div>
           </div>
           <div className='flex items-center gap-1 sm:gap-2'>
             <Badge
-              className={`${getStatusColor(campaign.status)} capitalize text-xs font-medium px-1.5 sm:px-2 py-1 rounded-none border-none w-[75px] text-center flex items-center justify-center`}
+              className={`${getStatusColor(campaign.status)} flex w-[75px] items-center justify-center rounded-none border-none px-1.5 py-1 text-center text-xs font-medium capitalize sm:px-2`}
             >
               {campaign.status}
             </Badge>
@@ -272,44 +272,44 @@ const CampaignRow = ({
                 <Button
                   variant='ghost'
                   size='sm'
-                  className='h-7 w-7 sm:h-8 sm:w-8 p-0 bg-[#1C1C1C] border border-gray-800 hover:bg-[#374151] transition-colors duration-200'
+                  className='h-7 w-7 border border-gray-800 bg-[#1C1C1C] p-0 transition-colors duration-200 hover:bg-[#374151] sm:h-8 sm:w-8'
                 >
-                  <MoreVerticalIcon className='h-3 w-3 sm:h-4 sm:w-4 text-[#9CA3AF]' />
+                  <MoreVerticalIcon className='h-3 w-3 text-[#9CA3AF] sm:h-4 sm:w-4' />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align='end'
-                className='w-[180px] sm:w-[200px] gap-1 bg-[#101010] border-none rounded-[16px] p-2 shadow-[0_1px_4px_0_rgba(72,72,72,0.14),_0_0_4px_1px_#484848]'
+                className='w-[180px] gap-1 rounded-[16px] border-none bg-[#101010] p-2 shadow-[0_1px_4px_0_rgba(72,72,72,0.14),_0_0_4px_1px_#484848] sm:w-[200px]'
               >
                 {campaign.status === 'live' && (
                   <>
                     <DropdownMenuItem
                       onClick={() => handleAction('share')}
-                      className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] transition-colors duration-200 cursor-pointer'
+                      className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white'
                     >
                       Share
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleAction('view-history')}
-                      className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] transition-colors duration-200 cursor-pointer'
+                      className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white'
                     >
                       View History
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleAction('like')}
-                      className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] transition-colors duration-200 cursor-pointer'
+                      className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white'
                     >
                       Like ({campaign.likes})
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleAction('comment')}
-                      className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] transition-colors duration-200 cursor-pointer'
+                      className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white'
                     >
                       Comment ({campaign.comments})
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleAction('campaign-details')}
-                      className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] transition-colors duration-200 cursor-pointer'
+                      className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white'
                     >
                       Campaign Details
                     </DropdownMenuItem>
@@ -319,19 +319,19 @@ const CampaignRow = ({
                   <>
                     <DropdownMenuItem
                       onClick={() => handleAction('view-summary')}
-                      className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] transition-colors duration-200 cursor-pointer'
+                      className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white'
                     >
                       View Summary
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleAction('like')}
-                      className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] transition-colors duration-200 cursor-pointer'
+                      className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white'
                     >
                       Like ({campaign.likes})
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleAction('comment')}
-                      className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] transition-colors duration-200 cursor-pointer'
+                      className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white'
                     >
                       Comment ({campaign.comments})
                     </DropdownMenuItem>
@@ -341,19 +341,19 @@ const CampaignRow = ({
                   <>
                     <DropdownMenuItem
                       onClick={() => handleAction('view-summary')}
-                      className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] transition-colors duration-200 cursor-pointer'
+                      className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white'
                     >
                       View Summary
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleAction('like')}
-                      className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] transition-colors duration-200 cursor-pointer'
+                      className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white'
                     >
                       Like ({campaign.likes})
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleAction('comment')}
-                      className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] transition-colors duration-200 cursor-pointer'
+                      className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white'
                     >
                       Comment ({campaign.comments})
                     </DropdownMenuItem>
@@ -367,12 +367,12 @@ const CampaignRow = ({
         <div className='space-y-2 sm:space-y-3'>
           <div className='flex items-center gap-2 sm:gap-3'>
             <div className='relative flex-shrink-0'>
-              <Avatar className='w-7 h-7 sm:w-8 sm:h-8'>
+              <Avatar className='h-7 w-7 sm:h-8 sm:w-8'>
                 <AvatarImage
                   src={campaign.creator.avatar}
                   alt={campaign.creator.name}
                 />
-                <AvatarFallback className='bg-[#1671D9] text-white text-xs font-medium'>
+                <AvatarFallback className='bg-[#1671D9] text-xs font-medium text-white'>
                   {campaign.creator.name
                     .split(' ')
                     .map(n => n[0])
@@ -380,22 +380,22 @@ const CampaignRow = ({
                 </AvatarFallback>
               </Avatar>
               {campaign.creator.verified && (
-                <div className='absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-[#2B2B2B] border border-[#2B2B2B] rounded-full flex items-center justify-center'>
-                  <CheckIcon className='w-1 h-1 sm:w-1.5 sm:h-1.5 text-[#787878]' />
+                <div className='absolute -right-0.5 -bottom-0.5 flex h-2.5 w-2.5 items-center justify-center rounded-full border border-[#2B2B2B] bg-[#2B2B2B] sm:h-3 sm:w-3'>
+                  <CheckIcon className='h-1 w-1 text-[#787878] sm:h-1.5 sm:w-1.5' />
                 </div>
               )}
             </div>
-            <span className='text-white text-sm font-medium leading-5 truncate'>
+            <span className='truncate text-sm leading-5 font-medium text-white'>
               {campaign.creator.name}
             </span>
           </div>
 
           <div className='space-y-1.5 sm:space-y-2'>
-            <div className='text-[#F5F5F5] text-sm font-medium leading-5'>
+            <div className='text-sm leading-5 font-medium text-[#F5F5F5]'>
               ${campaign.fundingProgress.current.toLocaleString()} / $
               {campaign.fundingProgress.target.toLocaleString()}
             </div>
-            <div className='w-full bg-[#484848] rounded-full h-1.5 sm:h-2 overflow-hidden'>
+            <div className='h-1.5 w-full overflow-hidden rounded-full bg-[#484848] sm:h-2'>
               <div
                 className={`h-full rounded-full transition-all duration-300 ${getProgressColor()}`}
                 style={{ width: `${Math.min(progressPercentage, 100)}%` }}
@@ -403,7 +403,7 @@ const CampaignRow = ({
             </div>
           </div>
 
-          <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm gap-1 sm:gap-4'>
+          <div className='flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-4'>
             <span className='text-[#B5B5B5]'>
               End Date: <span className='text-white'>{campaign.endDate}</span>
             </span>
@@ -528,17 +528,17 @@ const CampaignTable = ({
 
   if (loading) {
     return (
-      <div className='space-y-6 min-h-full'>
+      <div className='min-h-full space-y-6'>
         <CampaignTableSkeleton />
       </div>
     );
   }
 
   return (
-    <div className='space-y-6 min-h-full'>
-      <div className='flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 sm:gap-4 xl:gap-0'>
+    <div className='min-h-full space-y-6'>
+      <div className='flex flex-col items-start justify-between gap-3 sm:gap-4 xl:flex-row xl:items-center xl:gap-0'>
         <div className='flex items-center gap-2 sm:gap-3 xl:gap-5'>
-          <h2 className='text-white text-base sm:text-lg xl:text-xl font-semibold leading-[120%] tracking-[-0.4px]'>
+          <h2 className='text-base leading-[120%] font-semibold tracking-[-0.4px] text-white sm:text-lg xl:text-xl'>
             Campaigns
           </h2>
           {/* <Link href='/campaigns' className='text-sm text-white'>
@@ -551,22 +551,22 @@ const CampaignTable = ({
             </Button>
           </Link> */}
         </div>
-        <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full xl:w-auto'>
+        <div className='flex w-full flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3 xl:w-auto'>
           <Tabs
             value={tabFilter}
             onValueChange={value => setTabFilter(value as TabFilter)}
             className='w-full sm:w-auto'
           >
-            <TabsList className='bg-[#101010] border border-[#2B2B2B] p-1 gap-1 rounded-[12px] h-10 sm:h-11 text-sm w-full sm:w-auto'>
+            <TabsList className='h-10 w-full gap-1 rounded-[12px] border border-[#2B2B2B] bg-[#101010] p-1 text-sm sm:h-11 sm:w-auto'>
               <TabsTrigger
                 value='mine'
-                className='data-[state=active]:text-white text-[#B5B5B5] rounded-[8px] data-[state=active]:bg-[#2B2B2B] px-2 sm:px-3 xl:px-4 py-2 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
+                className='flex-1 rounded-[8px] px-2 py-2 text-xs text-[#B5B5B5] transition-all duration-200 data-[state=active]:bg-[#2B2B2B] data-[state=active]:text-white sm:flex-none sm:px-3 sm:text-sm xl:px-4'
               >
                 Mine
               </TabsTrigger>
               <TabsTrigger
                 value='others'
-                className='data-[state=active]:text-white text-[#B5B5B5] rounded-[8px] data-[state=active]:bg-[#2B2B2B] px-2 sm:px-3 xl:px-4 py-2 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
+                className='flex-1 rounded-[8px] px-2 py-2 text-xs text-[#B5B5B5] transition-all duration-200 data-[state=active]:bg-[#2B2B2B] data-[state=active]:text-white sm:flex-none sm:px-3 sm:text-sm xl:px-4'
               >
                 Others
               </TabsTrigger>
@@ -576,18 +576,18 @@ const CampaignTable = ({
             <DropdownMenuTrigger asChild>
               <BoundlessButton
                 variant='outline'
-                className='border-[#2B2B2B] hover:border-[#374151] transition-colors duration-200 w-full sm:w-auto h-10 sm:h-9 px-3 sm:px-4 text-xs sm:text-sm'
+                className='h-10 w-full border-[#2B2B2B] px-3 text-xs transition-colors duration-200 hover:border-[#374151] sm:h-9 sm:w-auto sm:px-4 sm:text-sm'
               >
                 {
                   filterOptions.find(option => option.value === statusFilter)
                     ?.label
                 }{' '}
-                <ChevronDown className='w-3 h-3 sm:w-4 sm:h-4' />
+                <ChevronDown className='h-3 w-3 sm:h-4 sm:w-4' />
               </BoundlessButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align='end'
-              className='w-[200px] sm:w-[250px] gap-1 bg-[#101010] border-none rounded-[16px] p-2 shadow-[0_1px_4px_0_rgba(72,72,72,0.14),_0_0_4px_1px_#484848]'
+              className='w-[200px] gap-1 rounded-[16px] border-none bg-[#101010] p-2 shadow-[0_1px_4px_0_rgba(72,72,72,0.14),_0_0_4px_1px_#484848] sm:w-[250px]'
             >
               {filterOptions.map(option => (
                 <DropdownMenuItem
@@ -597,7 +597,7 @@ const CampaignTable = ({
                       option.value as 'all' | 'live' | 'successful' | 'failed'
                     )
                   }
-                  className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                  className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                 >
                   {option.label}
                 </DropdownMenuItem>
@@ -607,21 +607,21 @@ const CampaignTable = ({
         </div>
       </div>
 
-      <div className='hidden xl:flex px-4 py-3 text-[#B5B5B5] text-sm font-medium border-b border-[#2B2B2B] gap-6'>
+      <div className='hidden gap-6 border-b border-[#2B2B2B] px-4 py-3 text-sm font-medium text-[#B5B5B5] xl:flex'>
         <div className='w-[200px] flex-shrink-0'>Campaign Name</div>
         <div className='w-[164px] flex-shrink-0'>Creator</div>
         <div className='w-[160px] flex-shrink-0'>Funding Progress</div>
         <div className='w-[100px] flex-shrink-0'>End Date</div>
         <div className='w-[73px] flex-shrink-0'>Milestones</div>
         <div className='w-[75px] flex-shrink-0'>Status</div>
-        <div className='w-[64px] flex-shrink-0 text-right ml-auto'>Actions</div>
+        <div className='ml-auto w-[64px] flex-shrink-0 text-right'>Actions</div>
       </div>
 
       <div className='space-y-3'>
         {error ? (
           <div className='flex items-center justify-center py-12'>
             <div className='text-center'>
-              <p className='text-red-400 mb-2'>{error}</p>
+              <p className='mb-2 text-red-400'>{error}</p>
               <Button
                 onClick={() => fetchCampaigns(1)}
                 variant='outline'
@@ -632,7 +632,7 @@ const CampaignTable = ({
             </div>
           </div>
         ) : campaigns.length === 0 ? (
-          <div className='flex items-center justify-center h-[60vh]'>
+          <div className='flex h-[60vh] items-center justify-center'>
             <div className='text-center'>
               <div className='mb-6'>
                 <Image
@@ -640,13 +640,13 @@ const CampaignTable = ({
                   alt='No campaigns available'
                   width={128}
                   height={128}
-                  className='w-32 h-32 mx-auto mb-4'
+                  className='mx-auto mb-4 h-32 w-32'
                 />
               </div>
-              <h3 className='text-xl font-semibold text-white mb-2'>
+              <h3 className='mb-2 text-xl font-semibold text-white'>
                 No Active Campaigns
               </h3>
-              <p className='text-gray-400 max-w-md mx-auto'>
+              <p className='mx-auto max-w-md text-gray-400'>
                 Projects you vote on, comment on, or fund will appear here. Get
                 involved and support ideas that matter to you.
               </p>

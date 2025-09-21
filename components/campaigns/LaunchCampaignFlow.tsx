@@ -240,7 +240,7 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
   ];
 
   return (
-    <div className='max-w-[500px] mx-auto space-y-6'>
+    <div className='mx-auto max-w-[500px] space-y-6'>
       {/* Header with Progress Steps */}
       <div className='space-y-4'>
         <h2 className='text-2xl font-semibold text-white'>
@@ -250,7 +250,7 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
           <div className='flex gap-1'>
             {phases.map((phase, index) => (
               <div key={index} className='flex-1'>
-                <div className='w-full bg-[#2B2B2B] rounded-full h-2'>
+                <div className='h-2 w-full rounded-full bg-[#2B2B2B]'>
                   <div
                     className={`h-2 rounded-full transition-all duration-500 ease-in-out ${
                       phase.state === 'completed'
@@ -369,23 +369,23 @@ const CampaignDetailsForm: React.FC<{
     <div className='space-y-6'>
       {/* Campaign Title */}
       <div className='flex flex-col gap-1'>
-        <label className='text-xs text-card font-medium'>
+        <label className='text-card text-xs font-medium'>
           Campaign Title <span className='text-red-500'>*</span>
         </label>
-        <div className='w-full h-12 flex items-center gap-3 p-4 rounded-[12px] bg-stepper-foreground border border-stepper-border'>
-          <Package className='size-5 text-card' />
+        <div className='bg-stepper-foreground border-stepper-border flex h-12 w-full items-center gap-3 rounded-[12px] border p-4'>
+          <Package className='text-card size-5' />
           <input
             value={formData.title}
             onChange={e => onInputChange('title', e.target.value)}
             type='text'
-            className='w-full bg-transparent font-normal text-base text-placeholder focus:outline-none'
+            className='text-placeholder w-full bg-transparent text-base font-normal focus:outline-none'
             placeholder='Enter campaign title'
           />
         </div>
       </div>
 
       <div className='flex flex-col gap-1'>
-        <label className='text-xs text-card font-medium flex justify-between'>
+        <label className='text-card flex justify-between text-xs font-medium'>
           <span>
             Project Description (Rich Text Editor or Markdown supported)
             <span className='text-red-500'>*</span>
@@ -398,22 +398,22 @@ const CampaignDetailsForm: React.FC<{
           value={formData.description}
           onChange={e => onInputChange('description', e.target.value)}
           maxLength={400}
-          className='resize-none font-normal text-base text-placeholder rounded-[12px] bg-stepper-foreground w-full min-h-[120px] border border-stepper-border focus-visible:ring-0'
+          className='text-placeholder bg-stepper-foreground border-stepper-border min-h-[120px] w-full resize-none rounded-[12px] border text-base font-normal focus-visible:ring-0'
           placeholder='Describe your campaign in a few words'
         />
       </div>
 
       <div className='flex flex-col gap-1'>
-        <label className='text-xs text-card font-medium'>
+        <label className='text-card text-xs font-medium'>
           Funding Goal <span className='text-red-500'>*</span>
         </label>
-        <div className='w-full h-12 flex items-center gap-3 p-4 rounded-[12px] bg-stepper-foreground border border-stepper-border'>
-          <DollarSign className='size-5 text-card' />
+        <div className='bg-stepper-foreground border-stepper-border flex h-12 w-full items-center gap-3 rounded-[12px] border p-4'>
+          <DollarSign className='text-card size-5' />
           <Input
             value={formData.fundingGoal}
             onChange={e => onInputChange('fundingGoal', e.target.value)}
             type='number'
-            className='w-full bg-transparent font-normal text-base text-placeholder focus:outline-none !border-none'
+            className='text-placeholder w-full !border-none bg-transparent text-base font-normal focus:outline-none'
             placeholder='Enter the amount you need to fund this campaign'
             disabled
           />
@@ -421,20 +421,20 @@ const CampaignDetailsForm: React.FC<{
       </div>
 
       <div className='flex flex-col gap-2'>
-        <label className='text-xs text-card font-medium flex items-center justify-between'>
+        <label className='text-card flex items-center justify-between text-xs font-medium'>
           Tags <span className='text-placeholder'>Optional</span>
         </label>
         <div className='relative'>
-          <div className='w-full min-h-12 flex items-center gap-2 p-2 rounded-[12px] bg-stepper-foreground border border-stepper-border flex-wrap'>
+          <div className='bg-stepper-foreground border-stepper-border flex min-h-12 w-full flex-wrap items-center gap-2 rounded-[12px] border p-2'>
             {selectedTags.map(tag => (
               <Badge
                 key={tag}
-                className='flex items-center gap-1 bg-background text-card'
+                className='bg-background text-card flex items-center gap-1'
               >
                 {projectTags.find(t => t.value === tag)?.label || tag}
                 <button
                   type='button'
-                  className='ml-1 rounded-full outline-none hover:bg-destructive/20'
+                  className='hover:bg-destructive/20 ml-1 rounded-full outline-none'
                   onClick={() => handleRemoveTag(tag)}
                   aria-label={`Remove tag ${tag}`}
                 >
@@ -466,7 +466,7 @@ const CampaignDetailsForm: React.FC<{
                   handleRemoveTag(selectedTags[selectedTags.length - 1]);
                 }
               }}
-              className='flex-1 min-w-[140px] bg-transparent font-normal text-base text-placeholder focus:outline-none placeholder:text-placeholder/60'
+              className='text-placeholder placeholder:text-placeholder/60 min-w-[140px] flex-1 bg-transparent text-base font-normal focus:outline-none'
               placeholder='Type and press Enter'
               aria-label='Add tag'
             />
@@ -474,7 +474,7 @@ const CampaignDetailsForm: React.FC<{
 
           {/* Suggestions dropdown */}
           {isSuggestionsOpen && tagQuery.trim().length > 0 && (
-            <div className='absolute z-50 mt-1 w-full max-h-40 overflow-auto bg-background border border-stepper-border rounded-md shadow-md'>
+            <div className='bg-background border-stepper-border absolute z-50 mt-1 max-h-40 w-full overflow-auto rounded-md border shadow-md'>
               <ul className='py-1'>
                 {projectTags
                   .filter(
@@ -489,7 +489,7 @@ const CampaignDetailsForm: React.FC<{
                         type='button'
                         onMouseDown={e => e.preventDefault()}
                         onClick={() => handleAddTag(t.value)}
-                        className='w-full text-left px-3 py-2 hover:bg-stepper-foreground text-card'
+                        className='hover:bg-stepper-foreground text-card w-full px-3 py-2 text-left'
                       >
                         {t.label}
                       </button>
@@ -507,7 +507,7 @@ const CampaignDetailsForm: React.FC<{
                         type='button'
                         onMouseDown={e => e.preventDefault()}
                         onClick={() => handleAddTag(tagQuery)}
-                        className='w-full text-left px-3 py-2 hover:bg-stepper-foreground text-card/80'
+                        className='hover:bg-stepper-foreground text-card/80 w-full px-3 py-2 text-left'
                       >
                         Create "{tagQuery.trim()}"
                       </button>
@@ -521,26 +521,26 @@ const CampaignDetailsForm: React.FC<{
 
       {/* Upload Campaign Images */}
       <div className='flex flex-col gap-1'>
-        <label className='text-xs text-card font-medium'>
+        <label className='text-card text-xs font-medium'>
           Upload Campaign Images <span className='text-red-500'>*</span>
         </label>
-        <div className='flex gap-3 justify-start items-center border border-[#2B2B2B] bg-[#1C1C1C] rounded-[12px] mt-2 p-4'>
+        <div className='mt-2 flex items-center justify-start gap-3 rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-4'>
           {formData.images.map((image: string, index: number) => (
             <div
               key={index}
-              className='relative w-12 h-12 rounded-full bg-[#1A1A1A] border border-[#2A2A2A]'
+              className='relative h-12 w-12 rounded-full border border-[#2A2A2A] bg-[#1A1A1A]'
             >
-              <div className='w-full h-full rounded-full overflow-hidden'>
+              <div className='h-full w-full overflow-hidden rounded-full'>
                 <Image
                   src={image}
                   alt={`Campaign image ${index + 1}`}
                   fill
-                  className='object-cover rounded-full'
+                  className='rounded-full object-cover'
                 />
               </div>
               <button
                 onClick={() => onRemoveImage(index)}
-                className='absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center z-50 hover:bg-red-600 transition-colors'
+                className='absolute -top-1 -right-1 z-50 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 transition-colors hover:bg-red-600'
                 style={{ zIndex: 50 }}
               >
                 <X className='size-3 text-white' />
@@ -548,7 +548,7 @@ const CampaignDetailsForm: React.FC<{
             </div>
           ))}
           {formData.images.length < 4 && (
-            <label className='relative w-12 h-12 rounded-full bg-white hover:bg-white/80 flex items-center justify-center cursor-pointer transition-colors'>
+            <label className='relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-white transition-colors hover:bg-white/80'>
               <div className='text-center'>
                 <ImagePlus className='size-6 text-[#1B1B1B]' />
               </div>
@@ -566,20 +566,20 @@ const CampaignDetailsForm: React.FC<{
 
       {/* Campaign Duration */}
       <div className='flex flex-col gap-1'>
-        <label className='text-xs text-card font-medium'>
+        <label className='text-card text-xs font-medium'>
           Campaign Duration <span className='text-red-500'>*</span>
         </label>
         <Select
           onValueChange={value => onInputChange('duration', value)}
           value={formData.duration}
         >
-          <SelectTrigger className='w-full !h-12 flex items-center !gap-3 text-white p-4 rounded-[12px] bg-[#1C1C1C] border border-[#2B2B2B] focus:ring-0'>
+          <SelectTrigger className='flex !h-12 w-full items-center !gap-3 rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-4 text-white focus:ring-0'>
             <div className='flex items-center gap-2'>
-              <Calendar className='size-5 text-card' />
+              <Calendar className='text-card size-5' />
               <SelectValue placeholder='Select a duration' />
             </div>
           </SelectTrigger>
-          <SelectContent className='max-h-[200px] text-white bg-[#1C1C1C] rounded-[12px] font-normal text-base text-placeholder border border-[#2B2B2B] overflow-y-auto'>
+          <SelectContent className='text-placeholder max-h-[200px] overflow-y-auto rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] text-base font-normal text-white'>
             <SelectItem defaultValue={formData.duration} value='30 Days'>
               30 Days
             </SelectItem>
@@ -604,7 +604,7 @@ const CampaignDetailsForm: React.FC<{
           disabled={!isFormValid()}
           className={cn(
             'bg-primary hover:bg-primary/80',
-            !isFormValid() && 'opacity-50 cursor-not-allowed'
+            !isFormValid() && 'cursor-not-allowed opacity-50'
           )}
         >
           Review & Submit
@@ -649,21 +649,21 @@ const EscrowSetupForm: React.FC<{
           {milestones.map((milestone, index) => (
             <div
               key={milestone.id}
-              className='border border-[#2B2B2B] rounded-xl overflow-hidden'
+              className='overflow-hidden rounded-xl border border-[#2B2B2B]'
             >
               <button
                 onClick={() => toggleMilestone(index)}
-                className='w-full flex items-center justify-between bg-[#2A2A2A] text-[#F5F5F5] hover:bg-[#2A2A2A]/80 transition-colors p-4'
+                className='flex w-full items-center justify-between bg-[#2A2A2A] p-4 text-[#F5F5F5] transition-colors hover:bg-[#2A2A2A]/80'
               >
                 <div className='text-left'>
-                  <h4 className='text-xs font-medium text-[#B5B5B5] mb-1'>
+                  <h4 className='mb-1 text-xs font-medium text-[#B5B5B5]'>
                     Milestone {index + 1}
                   </h4>
                   <span className='text-sm font-medium'>{milestone.title}</span>
                 </div>
                 {expandedMilestones.includes(index) ? (
                   <svg
-                    className='w-4 h-4'
+                    className='h-4 w-4'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'
@@ -677,7 +677,7 @@ const EscrowSetupForm: React.FC<{
                   </svg>
                 ) : (
                   <svg
-                    className='w-4 h-4'
+                    className='h-4 w-4'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'
@@ -693,13 +693,13 @@ const EscrowSetupForm: React.FC<{
               </button>
 
               {expandedMilestones.includes(index) && (
-                <div className='bg-[#1A1A1A] p-4 border-t border-[#2B2B2B]'>
-                  <p className='text-[#B5B5B5] text-sm mb-4'>
+                <div className='border-t border-[#2B2B2B] bg-[#1A1A1A] p-4'>
+                  <p className='mb-4 text-sm text-[#B5B5B5]'>
                     {milestone.description}
                   </p>
-                  <div className='flex items-center justify-between text-[#B5B5B5] text-sm'>
+                  <div className='flex items-center justify-between text-sm text-[#B5B5B5]'>
                     <div className='flex items-center space-x-2'>
-                      <Calendar className='w-4 h-4' />
+                      <Calendar className='h-4 w-4' />
                       <span>{milestone.deliveryDate}</span>
                     </div>
                     <div className='flex items-center space-x-2'>
@@ -715,15 +715,15 @@ const EscrowSetupForm: React.FC<{
       </div>
 
       {/* Escrow Terms */}
-      <div className='space-y-3 border border-[#2B2B2B] rounded-[12px] bg-[#1C1C1C] p-4'>
+      <div className='space-y-3 rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-4'>
         <h3 className='font-semibold text-white'>Escrow Terms</h3>
         <div className='space-y-4'>
           {escrowTerms.map((term, index) => (
             <div
               key={index}
-              className='flex flex-col items-start gap-1 text-white '
+              className='flex flex-col items-start gap-1 text-white'
             >
-              <h4 className=' font-semibold'>{term.title}</h4>
+              <h4 className='font-semibold'>{term.title}</h4>
               <p className='text-sm'>{term.description}</p>
             </div>
           ))}
@@ -743,9 +743,9 @@ const EscrowSetupForm: React.FC<{
               })
             }
           />
-          <label htmlFor='agree-terms' className='text-white text-sm'>
+          <label htmlFor='agree-terms' className='text-sm text-white'>
             I understand and agree to the above{' '}
-            <span className='text-primary underline cursor-pointer'>
+            <span className='text-primary cursor-pointer underline'>
               escrow terms.
             </span>
           </label>
@@ -757,7 +757,7 @@ const EscrowSetupForm: React.FC<{
         <BoundlessButton
           variant='outline'
           onClick={onBack}
-          className='flex-1 border-[#2B2B2B] bg-transparent text-white hover:bg-[#2A2A2A] border-none'
+          className='flex-1 border-none border-[#2B2B2B] bg-transparent text-white hover:bg-[#2A2A2A]'
         >
           <ArrowLeft className='size-4' /> Back
         </BoundlessButton>
@@ -765,8 +765,8 @@ const EscrowSetupForm: React.FC<{
           onClick={onComplete}
           disabled={!isEscrowValid()}
           className={cn(
-            'flex-1 bg-primary hover:bg-primary/80',
-            !isEscrowValid() && 'opacity-50 cursor-not-allowed'
+            'bg-primary hover:bg-primary/80 flex-1',
+            !isEscrowValid() && 'cursor-not-allowed opacity-50'
           )}
         >
           Submit

@@ -43,7 +43,7 @@ function Stepper({ steps }: StepperProps) {
   };
 
   return (
-    <div className='flex flex-col w-full max-w-[400px] sticky top-0'>
+    <div className='sticky top-0 flex w-full max-w-[400px] flex-col'>
       {steps.map((step, index) => {
         const styles = getStepStyles(step.state);
         const isLastStep = index === steps.length - 1;
@@ -52,21 +52,21 @@ function Stepper({ steps }: StepperProps) {
           <figure key={index} className='flex gap-4'>
             <div className='flex flex-col items-center'>
               {step.state === 'completed' ? (
-                <div className='size-[46px] bg-primary/25 rounded-full flex items-center justify-center'>
-                  <div className='bg-primary size-[32px] rounded-full flex items-center justify-center'>
-                    <Check className='size-5 text-background' strokeWidth={4} />
+                <div className='bg-primary/25 flex size-[46px] items-center justify-center rounded-full'>
+                  <div className='bg-primary flex size-[32px] items-center justify-center rounded-full'>
+                    <Check className='text-background size-5' strokeWidth={4} />
                   </div>
                 </div>
               ) : (
                 <div
-                  className={`size-[46px] rounded-full flex items-center justify-center font-bold text-xl ${styles.circle}`}
+                  className={`flex size-[46px] items-center justify-center rounded-full text-xl font-bold ${styles.circle}`}
                 >
                   {index + 1}
                 </div>
               )}
               {!isLastStep && (
                 <div
-                  className={`h-[49px] w-[1.5px] border-dashed border-l ${styles.line}`}
+                  className={`h-[49px] w-[1.5px] border-l border-dashed ${styles.line}`}
                 />
               )}
             </div>

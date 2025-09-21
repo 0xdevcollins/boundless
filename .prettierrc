@@ -11,5 +11,7 @@
   "endOfLine": "lf",
   "quoteProps": "as-needed",
   "jsxSingleQuote": true,
-  "proseWrap": "preserve"
+  "proseWrap": "preserve",
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindFunctions": ["clsx", "cn"]
 }

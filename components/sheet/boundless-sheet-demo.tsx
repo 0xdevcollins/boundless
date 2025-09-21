@@ -19,15 +19,15 @@ const BoundlessSheetDemo: React.FC = () => {
   const [openCustom, setOpenCustom] = useState(false);
 
   return (
-    <div className='p-6 space-y-6'>
+    <div className='space-y-6 p-6'>
       <div className='text-center'>
-        <h1 className='text-3xl font-bold mb-2'>BoundlessSheet Demo</h1>
+        <h1 className='mb-2 text-3xl font-bold'>BoundlessSheet Demo</h1>
         <p className='text-muted-foreground'>
           Responsive sheet component for mobile, tablet, and desktop
         </p>
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
         {/* Basic Bottom Sheet */}
         <Card>
           <CardHeader>
@@ -97,12 +97,12 @@ const BoundlessSheetDemo: React.FC = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+          <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
             <div className='text-center'>
               <Badge variant='secondary' className='mb-2'>
                 Mobile
               </Badge>
-              <p className='text-sm text-muted-foreground'>
+              <p className='text-muted-foreground text-sm'>
                 Full width, bottom sheet, 85% max height, close button at
                 -right-10
               </p>
@@ -111,7 +111,7 @@ const BoundlessSheetDemo: React.FC = () => {
               <Badge variant='secondary' className='mb-2'>
                 Tablet
               </Badge>
-              <p className='text-sm text-muted-foreground'>
+              <p className='text-muted-foreground text-sm'>
                 Centered with max-width, 80% max height, close button at
                 -right-14
               </p>
@@ -120,7 +120,7 @@ const BoundlessSheetDemo: React.FC = () => {
               <Badge variant='secondary' className='mb-2'>
                 Desktop
               </Badge>
-              <p className='text-sm text-muted-foreground'>
+              <p className='text-muted-foreground text-sm'>
                 Large max-width (6xl), optimized spacing, close button at
                 -right-14
               </p>
@@ -179,20 +179,20 @@ const BoundlessSheetDemo: React.FC = () => {
             menus, settings panels, or additional content.
           </p>
           <div className='space-y-3'>
-            <div className='p-3 bg-white/5 rounded-lg'>
-              <h4 className='font-medium text-white mb-1'>Navigation Item 1</h4>
+            <div className='rounded-lg bg-white/5 p-3'>
+              <h4 className='mb-1 font-medium text-white'>Navigation Item 1</h4>
               <p className='text-sm text-gray-400'>
                 Description for navigation item
               </p>
             </div>
-            <div className='p-3 bg-white/5 rounded-lg'>
-              <h4 className='font-medium text-white mb-1'>Navigation Item 2</h4>
+            <div className='rounded-lg bg-white/5 p-3'>
+              <h4 className='mb-1 font-medium text-white'>Navigation Item 2</h4>
               <p className='text-sm text-gray-400'>
                 Description for navigation item
               </p>
             </div>
-            <div className='p-3 bg-white/5 rounded-lg'>
-              <h4 className='font-medium text-white mb-1'>Navigation Item 3</h4>
+            <div className='rounded-lg bg-white/5 p-3'>
+              <h4 className='mb-1 font-medium text-white'>Navigation Item 3</h4>
               <p className='text-sm text-gray-400'>
                 Description for navigation item
               </p>
@@ -214,23 +214,23 @@ const BoundlessSheetDemo: React.FC = () => {
             is centered and styled consistently.
           </p>
           <Separator className='bg-white/20' />
-          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-            <Card className='bg-white/5 border-white/10'>
+          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+            <Card className='border-white/10 bg-white/5'>
               <CardHeader>
-                <CardTitle className='text-white text-lg'>Card 1</CardTitle>
+                <CardTitle className='text-lg text-white'>Card 1</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className='text-gray-300 text-sm'>
+                <p className='text-sm text-gray-300'>
                   This is a sample card within the sheet content.
                 </p>
               </CardContent>
             </Card>
-            <Card className='bg-white/5 border-white/10'>
+            <Card className='border-white/10 bg-white/5'>
               <CardHeader>
-                <CardTitle className='text-white text-lg'>Card 2</CardTitle>
+                <CardTitle className='text-lg text-white'>Card 2</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className='text-gray-300 text-sm'>
+                <p className='text-sm text-gray-300'>
                   Another sample card to demonstrate layout.
                 </p>
               </CardContent>
@@ -255,10 +255,10 @@ const BoundlessSheetDemo: React.FC = () => {
       >
         <div className='space-y-6'>
           <div className='text-center'>
-            <div className='w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mx-auto mb-4 flex items-center justify-center'>
+            <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-blue-500'>
               <span className='text-2xl'>✨</span>
             </div>
-            <h3 className='text-xl font-semibold text-white mb-2'>
+            <h3 className='mb-2 text-xl font-semibold text-white'>
               Custom Styled Sheet
             </h3>
             <p className='text-gray-300'>
@@ -270,16 +270,16 @@ const BoundlessSheetDemo: React.FC = () => {
           <Separator className='bg-white/20' />
 
           <div className='space-y-4'>
-            <div className='flex items-center justify-between p-4 bg-white/10 rounded-lg'>
-              <span className='text-white font-medium'>Feature 1</span>
+            <div className='flex items-center justify-between rounded-lg bg-white/10 p-4'>
+              <span className='font-medium text-white'>Feature 1</span>
               <Badge variant='secondary'>Active</Badge>
             </div>
-            <div className='flex items-center justify-between p-4 bg-white/10 rounded-lg'>
-              <span className='text-white font-medium'>Feature 2</span>
+            <div className='flex items-center justify-between rounded-lg bg-white/10 p-4'>
+              <span className='font-medium text-white'>Feature 2</span>
               <Badge variant='outline'>Pending</Badge>
             </div>
-            <div className='flex items-center justify-between p-4 bg-white/10 rounded-lg'>
-              <span className='text-white font-medium'>Feature 3</span>
+            <div className='flex items-center justify-between rounded-lg bg-white/10 p-4'>
+              <span className='font-medium text-white'>Feature 3</span>
               <Badge variant='secondary'>Active</Badge>
             </div>
           </div>

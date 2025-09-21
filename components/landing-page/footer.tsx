@@ -1,38 +1,159 @@
+'use client';
+
 import Link from 'next/link';
+import Image from 'next/image';
+import { socialLinks } from '@/lib/config';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className='bg-background/50 border-t border-border'>
-      <div className='max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8'>
-        <div className='flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0'>
-          {/* Copyright */}
-          <div className='text-muted-foreground text-sm'>
-            © {currentYear} Boundless. All rights reserved.
+    <footer className='border-t border-[#2B2B2B] bg-black' role='contentinfo'>
+      <div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
+        <div className='hidden items-start justify-between md:flex'>
+          <div className='flex flex-col space-y-4'>
+            <Link href='/' aria-label='Boundless homepage'>
+              <Image
+                src='/footer/logo.svg'
+                alt='Boundless logo'
+                width={120}
+                height={40}
+                className='mb-14 w-14'
+                priority
+              />
+            </Link>
+            <p className='text-sm text-gray-400'>
+              © {currentYear} Boundless — Transparent, Community-Driven,
+              Web3-Native Funding.
+            </p>
           </div>
 
-          {/* Links */}
-          <div className='flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6'>
+          <div className='flex flex-col items-end space-y-6'>
+            <nav className='mb-14 flex space-x-8' aria-label='Legal links'>
+              <Link
+                href='/terms'
+                className='rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+              >
+                Terms of Service
+              </Link>
+              <Link
+                href='/privacy'
+                className='rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+              >
+                Privacy Policy
+              </Link>
+            </nav>
+
+            <nav
+              className='flex items-center space-x-4'
+              aria-label='Social media links'
+            >
+              {Object.entries(socialLinks).map(([name, href], index) => (
+                <div key={name} className='flex items-center'>
+                  <Link
+                    href={href}
+                    className='rounded transition-opacity hover:opacity-80 focus:ring-2 focus:ring-white/50 focus:outline-none'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    aria-label={`Follow us on ${name}`}
+                  >
+                    <Image
+                      src={`/footer/${name}.svg`}
+                      alt={`${name} icon`}
+                      width={24}
+                      height={24}
+                      className='h-6 w-6'
+                    />
+                  </Link>
+                  {index < Object.keys(socialLinks).length - 1 && (
+                    <div
+                      className='ml-4 h-6 w-0.5 bg-[#2B2B2B]'
+                      aria-hidden='true'
+                    />
+                  )}
+                </div>
+              ))}
+              <div className='ml-4 h-6 w-0.5 bg-[#2B2B2B]' aria-hidden='true' />
+              <Link
+                href={`mailto:${socialLinks.gmail}`}
+                className='rounded transition-opacity hover:opacity-80 focus:ring-2 focus:ring-white/50 focus:outline-none'
+                aria-label='Contact us via email'
+              >
+                <Image
+                  src='/footer/gmail.svg'
+                  alt='Email contact'
+                  width={24}
+                  height={24}
+                  className='h-6 w-6'
+                />
+              </Link>
+            </nav>
+          </div>
+        </div>
+
+        <div className='flex flex-col items-center space-y-6 md:hidden'>
+          <Link href='/' aria-label='Boundless homepage'>
+            <Image
+              src='/footer/logo.svg'
+              alt='Boundless logo'
+              width={120}
+              height={40}
+              className='h-10 w-auto'
+              priority
+            />
+          </Link>
+
+          <nav className='flex space-x-8' aria-label='Legal links'>
             <Link
               href='/terms'
-              className='text-muted-foreground hover:text-white/80 text-sm transition-colors'
+              className='rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
             >
-              Terms
+              Terms of Service
             </Link>
             <Link
               href='/privacy'
-              className='text-muted-foreground hover:text-white/80 text-sm transition-colors'
+              className='rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
             >
-              Privacy
+              Privacy Policy
             </Link>
-            <Link
-              href='/code-of-conduct'
-              className='text-muted-foreground hover:text-white/80 text-sm transition-colors'
-            >
-              Code of Conduct
-            </Link>
-          </div>
+          </nav>
+
+          <nav
+            className='flex items-center space-x-4'
+            aria-label='Social media links'
+          >
+            {Object.entries(socialLinks).map(([name, href], index) => (
+              <div key={name} className='flex items-center'>
+                <Link
+                  href={href}
+                  className='rounded transition-opacity hover:opacity-80 focus:ring-2 focus:ring-white/50 focus:outline-none'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  aria-label={`Follow us on ${name}`}
+                >
+                  <Image
+                    src={`/footer/${name}.svg`}
+                    alt={`${name} icon`}
+                    width={24}
+                    height={24}
+                    className='h-6 w-6'
+                  />
+                </Link>
+                {index < Object.keys(socialLinks).length - 1 && (
+                  <div
+                    className='ml-4 h-6 w-0.5 bg-[#2B2B2B]'
+                    aria-hidden='true'
+                  />
+                )}
+              </div>
+            ))}
+          </nav>
+
+          <p className='text-center text-sm text-gray-400'>
+            © {currentYear} Boundless — Transparent,
+            <br />
+            Community-Driven, Web3-Native Funding.
+          </p>
         </div>
       </div>
     </footer>

@@ -33,18 +33,18 @@ const WalletRequiredModal: React.FC<WalletRequiredModalProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className='!max-w-[552px] !w-[95vw] max-h-[90vh] rounded-[16px] bg-[#030303] gap-6 p-4 sm:p-6 border-none shadow-[0_1px_4px_0_rgba(72,72,72,0.14),0_0_4px_1px_#484848] overflow-hidden'
+        className='max-h-[90vh] !w-[95vw] !max-w-[552px] gap-6 overflow-hidden rounded-[16px] border-none bg-[#030303] p-4 shadow-[0_1px_4px_0_rgba(72,72,72,0.14),0_0_4px_1px_#484848] sm:p-6'
       >
         <DialogHeader>
           <DialogClose
-            className='absolute top-2 right-2  rounded-full p-1'
+            className='absolute top-2 right-2 rounded-full p-1'
             asChild
           >
-            <XIcon className='w-8 h-8 text-white' />
+            <XIcon className='h-8 w-8 text-white' />
           </DialogClose>
         </DialogHeader>
 
-        <div className='space-y-4 flex flex-col items-center'>
+        <div className='flex flex-col items-center space-y-4'>
           <Image
             src={'/warning.svg'}
             alt='wallet-required'
@@ -52,7 +52,7 @@ const WalletRequiredModal: React.FC<WalletRequiredModalProps> = ({
             height={100}
             unoptimized={true}
           />
-          <DialogTitle className='flex justify-center items-center gap-2 text-center'>
+          <DialogTitle className='flex items-center justify-center gap-2 text-center'>
             <DialogDescription className='text-center text-white/80'>
               You need to connect your wallet to{' '}
               <span className='font-bold text-white'>{actionName}</span>. This

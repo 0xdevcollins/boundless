@@ -11,7 +11,7 @@ export default async function UserLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className='flex min-h-screen bg-[#0F0F0F] overflow-hidden'>
+    <div className='flex min-h-screen overflow-hidden bg-[#0F0F0F]'>
       <SidebarProvider>
         <SidebarLayout />
         <DashboardInset>{children}</DashboardInset>

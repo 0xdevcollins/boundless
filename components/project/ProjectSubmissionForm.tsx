@@ -15,7 +15,6 @@ import { Badge } from '../ui/badge';
 import { DollarSign, Package, Trash, X } from 'lucide-react';
 import { Input } from '../ui/input';
 
-// Dummy data for the Select components
 const fundingGoals = [
   { value: 'Technology', label: 'Technology' },
   { value: 'Healthcare', label: 'Healthcare' },
@@ -55,7 +54,6 @@ function ProjectSubmissionForm({
   initialData,
   onChange,
 }: ProjectSubmissionFormProps) {
-  // State for all form fields
   const [projectTitle, setProjectTitle] = useState(initialData?.title ?? '');
   const [projectTagline, setProjectTagline] = useState(
     initialData?.tagline ?? ''
@@ -78,11 +76,9 @@ function ProjectSubmissionForm({
   const [tagQuery, setTagQuery] = useState('');
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
 
-  // Refs for file inputs
   const whitepaperInputRef = useRef<HTMLInputElement>(null);
   const thumbnailInputRef = useRef<HTMLInputElement>(null);
 
-  // Check form validity
   useEffect(() => {
     const allFieldsFilled =
       projectTitle.trim() !== '' &&
@@ -116,7 +112,6 @@ function ProjectSubmissionForm({
     onChange,
   ]);
 
-  // Tag handlers
   const normalizeTag = (value: string) => value.trim();
 
   const handleAddTag = (rawTag: string) => {
@@ -132,7 +127,6 @@ function ProjectSubmissionForm({
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
-  // File removal handler
   const handleRemoveFile = (fileType: 'whitepaper' | 'thumbnail') => {
     if (fileType === 'whitepaper') {
       setWhitepaperFile(null);
@@ -165,40 +159,40 @@ function ProjectSubmissionForm({
   return (
     <div className='text-white'>
       <h5>Submit your project information</h5>
-      <div className='w-[500px] flex flex-col gap-3 pt-3 pb-6'>
+      <div className='flex w-[500px] flex-col gap-3 pt-3 pb-6'>
         <div className='flex flex-col gap-1'>
-          <label className='text-xs text-card font-medium'>
+          <label className='text-card text-xs font-medium'>
             Project Title <span className='text-red-500'>*</span>
           </label>
-          <div className='w-full h-12 flex items-center gap-3 p-4 rounded-[12px] bg-stepper-foreground border border-stepper-border'>
-            <Package className='size-5 text-card' />
+          <div className='bg-stepper-foreground border-stepper-border flex h-12 w-full items-center gap-3 rounded-[12px] border p-4'>
+            <Package className='text-card size-5' />
             <input
               value={projectTitle}
               onChange={e => setProjectTitle(e.target.value)}
               type='text'
-              className='w-full bg-transparent font-normal text-base text-placeholder focus:outline-none'
+              className='text-placeholder w-full bg-transparent text-base font-normal focus:outline-none'
               placeholder='Enter project title'
             />
           </div>
         </div>
 
         <div className='flex flex-col gap-1'>
-          <label className='text-xs text-card font-medium'>
+          <label className='text-card text-xs font-medium'>
             Project Tagline <span className='text-red-500'>*</span>
           </label>
-          <div className='w-full h-12 flex items-center gap-3 p-4 rounded-[12px] bg-stepper-foreground border border-stepper-border'>
+          <div className='bg-stepper-foreground border-stepper-border flex h-12 w-full items-center gap-3 rounded-[12px] border p-4'>
             <input
               value={projectTagline}
               onChange={e => setProjectTagline(e.target.value)}
               type='text'
-              className='w-full bg-transparent font-normal text-base text-placeholder focus:outline-none'
+              className='text-placeholder w-full bg-transparent text-base font-normal focus:outline-none'
               placeholder='Enter your one-liner'
             />
           </div>
         </div>
 
         <div className='flex flex-col gap-1'>
-          <label className='text-xs text-card font-medium flex justify-between'>
+          <label className='text-card flex justify-between text-xs font-medium'>
             <span>
               Project Description <span className='text-red-500'>*</span>
             </span>
@@ -210,24 +204,23 @@ function ProjectSubmissionForm({
             value={projectDescription}
             onChange={e => setProjectDescription(e.target.value)}
             maxLength={400}
-            className='resize-none font-normal text-base text-placeholder rounded-[12px] bg-stepper-foreground w-full min-h-[120px] border border-stepper-border focus-visible:ring-0'
+            className='text-placeholder bg-stepper-foreground border-stepper-border min-h-[120px] w-full resize-none rounded-[12px] border text-base font-normal focus-visible:ring-0'
             placeholder='Describe your project in a few words'
           />
         </div>
 
-        {/* Funding Goal */}
         <div className='flex flex-col gap-1'>
-          <label className='text-xs text-card font-medium'>
+          <label className='text-card text-xs font-medium'>
             Category <span className='text-red-500'>*</span>
           </label>
           <Select onValueChange={setCategory} value={category}>
-            <SelectTrigger className='w-full !h-12 flex items-center !gap-3 p-4 rounded-[12px] bg-stepper-foreground border border-stepper-border focus:ring-0'>
+            <SelectTrigger className='bg-stepper-foreground border-stepper-border flex !h-12 w-full items-center !gap-3 rounded-[12px] border p-4 focus:ring-0'>
               <div className='flex items-center gap-2'>
                 <Image src='/select.svg' width={20} height={20} alt='icon' />
                 <SelectValue placeholder='Select a category' />
               </div>
             </SelectTrigger>
-            <SelectContent className='max-h-[200px] bg-background rounded-[12px] font-normal text-base text-placeholder border border-stepper-border overflow-y-auto'>
+            <SelectContent className='bg-background text-placeholder border-stepper-border max-h-[200px] overflow-y-auto rounded-[12px] border text-base font-normal'>
               {fundingGoals.map(goal => (
                 <SelectItem key={goal.value} value={goal.value}>
                   {goal.label}
@@ -237,32 +230,30 @@ function ProjectSubmissionForm({
           </Select>
         </div>
 
-        {/* Fund Amount */}
         <div className='flex flex-col gap-1'>
-          <label className='text-xs text-card font-medium'>
+          <label className='text-card text-xs font-medium'>
             Fund Amount <span className='text-red-500'>*</span>
           </label>
-          <div className='w-full h-12 flex items-center gap-3 p-4 rounded-[12px] bg-stepper-foreground border border-stepper-border'>
-            <DollarSign className='size-5 text-card' />
+          <div className='bg-stepper-foreground border-stepper-border flex h-12 w-full items-center gap-3 rounded-[12px] border p-4'>
+            <DollarSign className='text-card size-5' />
             <Input
               value={fundAmount}
               onChange={e => setFundAmount(e.target.value)}
               type='number'
-              className='w-full bg-transparent font-normal text-base text-placeholder focus:outline-none !border-none'
+              className='text-placeholder w-full !border-none bg-transparent text-base font-normal focus:outline-none'
               placeholder='Enter the amount you need to fund this project'
             />
           </div>
         </div>
 
-        {/* Upload Whitepaper */}
         <div className='flex flex-col gap-1'>
-          <label htmlFor='' className='text-xs text-card font-medium'>
+          <label htmlFor='' className='text-card text-xs font-medium'>
             Upload Whitepaper or Detailed Proposal{' '}
             <span className='text-red-500'>*</span>
           </label>
-          <div className='w-full h-[83px] flex justify-between p-4 rounded-[12px] bg-stepper-foreground border border-stepper-border'>
-            <div className='flex gap-3 items-center'>
-              <div className='bg-card size-12 rounded-full justify-center items-center flex'>
+          <div className='bg-stepper-foreground border-stepper-border flex h-[83px] w-full justify-between rounded-[12px] border p-4'>
+            <div className='flex items-center gap-3'>
+              <div className='bg-card flex size-12 items-center justify-center rounded-full'>
                 {whitepaperFile ? (
                   <Image
                     src='/green-circle.svg'
@@ -282,12 +273,12 @@ function ProjectSubmissionForm({
               <div className='space-y-1'>
                 {whitepaperFile ? (
                   <>
-                    <h5 className='font-semibold text-card text-base'>
+                    <h5 className='text-card text-base font-semibold'>
                       {whitepaperFile.name}
                     </h5>
-                    <p className='font-normal text-sm text-[#40B869] flex gap-0.5 items-center'>
+                    <p className='flex items-center gap-0.5 text-sm font-normal text-[#40B869]'>
                       Upload complete
-                      <div className='size-1 bg-placeholder rounded-full' />
+                      <div className='bg-placeholder size-1 rounded-full' />
                       <span className='text-placeholder'>
                         {formatBytes(whitepaperFile.size)}
                       </span>
@@ -295,12 +286,12 @@ function ProjectSubmissionForm({
                   </>
                 ) : (
                   <>
-                    <h5 className='font-semibold text-card text-base'>
+                    <h5 className='text-card text-base font-semibold'>
                       Upload your document
                     </h5>
-                    <p className='font-normal text-sm text-placeholder flex gap-0.5 items-center'>
+                    <p className='text-placeholder flex items-center gap-0.5 text-sm font-normal'>
                       PDF, Docs{' '}
-                      <span className='size-1 bg-placeholder rounded-full'></span>
+                      <span className='bg-placeholder size-1 rounded-full'></span>
                       Max. 20MB
                     </p>
                   </>
@@ -317,7 +308,7 @@ function ProjectSubmissionForm({
             {whitepaperFile ? (
               <button
                 type='button'
-                className='text-base font-normal text-background bg-transparent px-4 py-2 rounded-[10px]'
+                className='text-background rounded-[10px] bg-transparent px-4 py-2 text-base font-normal'
                 onClick={() => handleRemoveFile('whitepaper')}
               >
                 <Trash className='text-red-500' />
@@ -325,7 +316,7 @@ function ProjectSubmissionForm({
             ) : (
               <button
                 type='button'
-                className='text-base font-normal text-background bg-primary px-4 py-2 rounded-[10px]'
+                className='text-background bg-primary rounded-[10px] px-4 py-2 text-base font-normal'
                 onClick={() => whitepaperInputRef.current?.click()}
               >
                 Upload
@@ -334,14 +325,13 @@ function ProjectSubmissionForm({
           </div>
         </div>
 
-        {/* Upload Project Thumbnail */}
         <div className='flex flex-col gap-1'>
-          <label htmlFor='' className='text-xs text-card font-medium'>
+          <label htmlFor='' className='text-card text-xs font-medium'>
             Upload Project Thumbnail <span className='text-red-500'>*</span>
           </label>
-          <div className='w-full h-[83px] flex justify-between p-4 rounded-[12px] bg-stepper-foreground border border-stepper-border'>
-            <div className='flex gap-3 items-center'>
-              <div className='bg-card size-12 rounded-full justify-center items-center flex'>
+          <div className='bg-stepper-foreground border-stepper-border flex h-[83px] w-full justify-between rounded-[12px] border p-4'>
+            <div className='flex items-center gap-3'>
+              <div className='bg-card flex size-12 items-center justify-center rounded-full'>
                 {thumbnailFile ? (
                   <Image
                     src='/green-circle.svg'
@@ -361,12 +351,12 @@ function ProjectSubmissionForm({
               <div className='space-y-1'>
                 {thumbnailFile ? (
                   <>
-                    <h5 className='font-semibold text-card text-base'>
+                    <h5 className='text-card text-base font-semibold'>
                       {thumbnailFile.name}
                     </h5>
-                    <p className='font-normal text-sm text-[#40B869] flex gap-0.5 items-center'>
+                    <p className='flex items-center gap-0.5 text-sm font-normal text-[#40B869]'>
                       Upload complete
-                      <div className='size-1 bg-placeholder rounded-full' />
+                      <div className='bg-placeholder size-1 rounded-full' />
                       <span className='text-placeholder'>
                         {formatBytes(thumbnailFile.size)}
                       </span>
@@ -374,12 +364,12 @@ function ProjectSubmissionForm({
                   </>
                 ) : (
                   <>
-                    <h5 className='font-semibold text-card text-base'>
+                    <h5 className='text-card text-base font-semibold'>
                       Upload your image
                     </h5>
-                    <p className='font-normal text-sm text-placeholder flex gap-0.5 items-center'>
+                    <p className='text-placeholder flex items-center gap-0.5 text-sm font-normal'>
                       JPG, PNG, GIF{' '}
-                      <span className='size-1 bg-placeholder rounded-full'></span>
+                      <span className='bg-placeholder size-1 rounded-full'></span>
                       Max. 5MB
                     </p>
                   </>
@@ -396,7 +386,7 @@ function ProjectSubmissionForm({
             {thumbnailFile ? (
               <button
                 type='button'
-                className='text-base font-normal text-background bg-transparent px-4 py-2 rounded-[10px]'
+                className='text-background rounded-[10px] bg-transparent px-4 py-2 text-base font-normal'
                 onClick={() => handleRemoveFile('thumbnail')}
               >
                 <Trash className='text-red-500' />
@@ -404,7 +394,7 @@ function ProjectSubmissionForm({
             ) : (
               <button
                 type='button'
-                className='text-base font-normal text-background bg-primary px-4 py-2 rounded-[10px]'
+                className='text-background bg-primary rounded-[10px] px-4 py-2 text-base font-normal'
                 onClick={() => thumbnailInputRef.current?.click()}
               >
                 Upload
@@ -413,22 +403,21 @@ function ProjectSubmissionForm({
           </div>
         </div>
 
-        {/* Add Tags */}
         <div className='flex flex-col gap-2'>
-          <label className='text-xs text-card font-medium flex items-center justify-between'>
+          <label className='text-card flex items-center justify-between text-xs font-medium'>
             Tags <span className='text-placeholder'>Optional</span>
           </label>
           <div className='relative'>
-            <div className='w-full min-h-12 flex items-center gap-2 p-2 rounded-[12px] bg-stepper-foreground border border-stepper-border flex-wrap'>
+            <div className='bg-stepper-foreground border-stepper-border flex min-h-12 w-full flex-wrap items-center gap-2 rounded-[12px] border p-2'>
               {tags.map(tag => (
                 <Badge
                   key={tag}
-                  className='flex items-center gap-1 bg-background text-card'
+                  className='bg-background text-card flex items-center gap-1'
                 >
                   {projectTags.find(t => t.value === tag)?.label || tag}
                   <button
                     type='button'
-                    className='ml-1 rounded-full outline-none hover:bg-destructive/20'
+                    className='hover:bg-destructive/20 ml-1 rounded-full outline-none'
                     onClick={() => handleRemoveTag(tag)}
                     aria-label={`Remove tag ${tag}`}
                   >
@@ -460,15 +449,14 @@ function ProjectSubmissionForm({
                     handleRemoveTag(tags[tags.length - 1]);
                   }
                 }}
-                className='flex-1 min-w-[140px] bg-transparent font-normal text-base text-placeholder focus:outline-none placeholder:text-placeholder/60'
+                className='text-placeholder placeholder:text-placeholder/60 min-w-[140px] flex-1 bg-transparent text-base font-normal focus:outline-none'
                 placeholder='Type and press Enter'
                 aria-label='Add tag'
               />
             </div>
 
-            {/* Suggestions dropdown */}
             {isSuggestionsOpen && tagQuery.trim().length > 0 && (
-              <div className='absolute z-50 mt-1 w-full max-h-40 overflow-auto bg-background border border-stepper-border rounded-md shadow-md'>
+              <div className='bg-background border-stepper-border absolute z-50 mt-1 max-h-40 w-full overflow-auto rounded-md border shadow-md'>
                 <ul className='py-1'>
                   {projectTags
                     .filter(
@@ -487,13 +475,13 @@ function ProjectSubmissionForm({
                           type='button'
                           onMouseDown={e => e.preventDefault()}
                           onClick={() => handleAddTag(t.value)}
-                          className='w-full text-left px-3 py-2 hover:bg-stepper-foreground text-card'
+                          className='hover:bg-stepper-foreground text-card w-full px-3 py-2 text-left'
                         >
                           {t.label}
                         </button>
                       </li>
                     ))}
-                  {/* Create custom tag */}
+
                   {!projectTags.some(
                     t =>
                       t.value.toLowerCase() === tagQuery.toLowerCase() ||
@@ -505,7 +493,7 @@ function ProjectSubmissionForm({
                           type='button'
                           onMouseDown={e => e.preventDefault()}
                           onClick={() => handleAddTag(tagQuery)}
-                          className='w-full text-left px-3 py-2 hover:bg-stepper-foreground text-card/80'
+                          className='hover:bg-stepper-foreground text-card/80 w-full px-3 py-2 text-left'
                         >
                           Create "{tagQuery.trim()}"
                         </button>
@@ -521,10 +509,10 @@ function ProjectSubmissionForm({
           type='button'
           disabled={!isFormValid}
           onClick={handleNext}
-          className={`w-[171px] mt-4 text-base font-medium px-4 py-2 rounded-[10px] transition-colors ${
+          className={`mt-4 w-[171px] rounded-[10px] px-4 py-2 text-base font-medium transition-colors ${
             isFormValid
-              ? 'bg-primary text-background border border-primary'
-              : 'bg-stepper-foreground text-card/30 border border-stepper-border cursor-not-allowed'
+              ? 'bg-primary text-background border-primary border'
+              : 'bg-stepper-foreground text-card/30 border-stepper-border cursor-not-allowed border'
           }`}
         >
           Set Milestone

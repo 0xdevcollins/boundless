@@ -1,12 +1,12 @@
 'use client';
-import React, { useRef } from 'react';
+import React, { useRef, useCallback, memo } from 'react';
 import { Project } from '@/types/project';
-import { Clock, User } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
-import { Button } from './ui/button';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import Image from 'next/image';
+import { Progress } from './ui/progress';
 
 interface ProjectCardProps {
   project: Project;
@@ -22,198 +22,219 @@ interface ProjectCardProps {
   className?: string;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({
-  project,
-  creatorName = 'Creator Name',
-  creatorAvatar,
-  daysLeft = 23,
-  votes = { current: 46, total: 100 },
-  onValidationClick,
-  onVoteClick,
-  className = '',
-}) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+const ProjectCard: React.FC<ProjectCardProps> = memo(
+  ({
+    project,
+    creatorName = 'Creator Name',
+    creatorAvatar,
+    className = '',
+  }) => {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const imageRef = useRef<HTMLDivElement>(null);
+    const contentRef = useRef<HTMLDivElement>(null);
+    const bottomRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
+    const handleMouseEnter = useCallback(() => {
       if (!cardRef.current) return;
 
-      // Initial state - elements start slightly hidden
-      gsap.set([imageRef.current, contentRef.current, bottomRef.current], {
-        opacity: 0,
-        y: 20,
-      });
-
-      // Staggered entrance animation
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: cardRef.current,
-          start: 'top 80%',
-          end: 'bottom 20%',
-          toggleActions: 'play none none reverse',
-        },
-      });
-
-      tl.to(imageRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
+      gsap.to(cardRef.current, {
+        y: -8,
+        scale: 1.02,
+        duration: 0.3,
         ease: 'power2.out',
-      })
-        .to(
-          contentRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power2.out',
-          },
-          '-=0.3'
-        )
-        .to(
-          bottomRef.current,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power2.out',
-          },
-          '-=0.3'
-        );
+        force3D: true,
+      });
 
-      // Hover animations
-      const handleMouseEnter = () => {
-        gsap.to(cardRef.current, {
-          y: -8,
-          scale: 1.02,
-          duration: 0.3,
-          ease: 'power2.out',
-        });
-
+      if (imageRef.current) {
         gsap.to(imageRef.current, {
           scale: 1.05,
           duration: 0.3,
           ease: 'power2.out',
+          force3D: true,
         });
-      };
+      }
+    }, []);
 
-      const handleMouseLeave = () => {
-        gsap.to(cardRef.current, {
-          y: 0,
-          scale: 1,
-          duration: 0.3,
-          ease: 'power2.out',
-        });
+    const handleMouseLeave = useCallback(() => {
+      if (!cardRef.current) return;
 
+      gsap.to(cardRef.current, {
+        y: 0,
+        scale: 1,
+        duration: 0.3,
+        ease: 'power2.out',
+        force3D: true,
+      });
+
+      if (imageRef.current) {
         gsap.to(imageRef.current, {
           scale: 1,
           duration: 0.3,
           ease: 'power2.out',
+          force3D: true,
         });
-      };
+      }
+    }, []);
 
-      cardRef.current.addEventListener('mouseenter', handleMouseEnter);
-      cardRef.current.addEventListener('mouseleave', handleMouseLeave);
+    useGSAP(
+      (context, contextSafe) => {
+        if (!cardRef.current) return;
 
-      return () => {
-        cardRef.current?.removeEventListener('mouseenter', handleMouseEnter);
-        cardRef.current?.removeEventListener('mouseleave', handleMouseLeave);
-      };
-    },
-    { scope: cardRef }
-  );
+        const elements = [
+          imageRef.current,
+          contentRef.current,
+          bottomRef.current,
+        ].filter(Boolean);
 
-  return (
-    <div
-      ref={cardRef}
-      className={`bg-black rounded-2xl p-3 sm:p-4 w-full max-w-sm mx-auto transition-all duration-300 cursor-pointer group overflow-hidden ${className}`}
-    >
-      {/* Top Section - Creator Info and Category */}
-      <div className='flex items-center justify-between mb-3 sm:mb-4'>
-        <div className='flex items-center space-x-2 sm:space-x-3'>
-          <Avatar className='w-8 h-8 sm:w-10 sm:h-10'>
-            <AvatarImage src={creatorAvatar} alt={creatorName} />
-            <AvatarFallback className='bg-gray-700 text-white'>
-              <User className='w-4 h-4 sm:w-5 sm:h-5' />
-            </AvatarFallback>
-          </Avatar>
-          <span className='text-gray-300 text-xs sm:text-sm font-medium truncate max-w-24 sm:max-w-none'>
-            {creatorName}
-          </span>
-        </div>
-        <Badge className='bg-[#4A5D23] text-[#F7E98E] px-2 py-1 sm:px-3 sm:py-1 rounded-lg text-xs font-medium flex-shrink-0'>
-          {project.category}
-        </Badge>
-      </div>
+        gsap.set(elements, {
+          opacity: 0,
+          y: 20,
+          force3D: true,
+        });
 
-      {/* Middle Section - Image and Content Side by Side */}
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: cardRef.current,
+            start: 'top 85%',
+            end: 'bottom 15%',
+            toggleActions: 'play none none reverse',
+            once: true,
+          },
+        });
+
+        tl.to(imageRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          force3D: true,
+        })
+          .to(
+            contentRef.current,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.5,
+              ease: 'power2.out',
+              force3D: true,
+            },
+            '-=0.2'
+          )
+          .to(
+            bottomRef.current,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.5,
+              ease: 'power2.out',
+              force3D: true,
+            },
+            '-=0.2'
+          );
+
+        const safeHandleMouseEnter =
+          contextSafe?.(handleMouseEnter) || handleMouseEnter;
+        const safeHandleMouseLeave =
+          contextSafe?.(handleMouseLeave) || handleMouseLeave;
+
+        cardRef.current.addEventListener('mouseenter', safeHandleMouseEnter);
+        cardRef.current.addEventListener('mouseleave', safeHandleMouseLeave);
+
+        return () => {
+          cardRef.current?.removeEventListener(
+            'mouseenter',
+            safeHandleMouseEnter
+          );
+          cardRef.current?.removeEventListener(
+            'mouseleave',
+            safeHandleMouseLeave
+          );
+        };
+      },
+      {
+        scope: cardRef,
+        dependencies: [handleMouseEnter, handleMouseLeave],
+      }
+    );
+
+    return (
       <div
-        ref={imageRef}
-        className='flex items-start space-x-3 sm:space-x-4 mb-3 sm:mb-4'
+        ref={cardRef}
+        className={`group mx-auto w-full max-w-[397px] cursor-pointer overflow-hidden rounded-[8px] border border-[#2B2B2B] bg-[#030303] p-3 will-change-transform sm:p-5 ${className}`}
+        style={{ transform: 'translateZ(0)' }}
       >
-        {/* Image on the left */}
-        <div className='relative h-24 w-24 sm:h-32 sm:w-32 rounded-xl overflow-hidden bg-gradient-to-br from-[#D4AF37] to-[#B8860B] flex-shrink-0'>
-          {/* 3D Ethereum Logo and Architectural Elements */}
-          <div className='absolute inset-0 flex items-center justify-center'>
-            <div className='relative w-16 h-16 sm:w-20 sm:h-20'>
-              {/* Architectural elements */}
-              <div className='absolute left-0 top-1/2 transform -translate-y-1/2 w-6 h-8 sm:w-8 sm:h-10 bg-gray-800 rounded-l-full opacity-60'></div>
-              <div className='absolute right-0 top-1/2 transform -translate-y-1/2 w-6 h-8 sm:w-8 sm:h-10 bg-gray-800 rounded-r-full opacity-60'></div>
-
-              {/* Ethereum Logo */}
-              <div className='absolute inset-0 flex items-center justify-center'>
-                <div className='w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-gray-300 to-gray-500 rounded-lg transform rotate-45 flex items-center justify-center'>
-                  <div className='w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-br from-gray-100 to-gray-300 rounded transform -rotate-45'></div>
-                </div>
-              </div>
-            </div>
+        <div className='mb-3 flex items-center justify-between sm:mb-4'>
+          <div className='flex items-center space-x-2 sm:space-x-3'>
+            <Avatar className='h-8 w-8 sm:h-6 sm:w-6'>
+              <AvatarImage src={creatorAvatar} alt={creatorName} />
+              <AvatarFallback className='bg-gray-700 text-white'>
+                <Image
+                  src='/globe.svg'
+                  alt={creatorName}
+                  width={24}
+                  height={24}
+                />
+              </AvatarFallback>
+            </Avatar>
+            <span className='max-w-24 truncate text-xs font-medium text-gray-300 sm:max-w-none sm:text-sm'>
+              {creatorName}
+            </span>
+          </div>
+          <div className='flex items-center space-x-2'>
+            <Badge className='flex-shrink-0 rounded-[4px] border border-[#645D5D] bg-[#E4DBDB] px-1 py-0.5 text-xs font-medium text-[#645D5D]'>
+              {project.category}
+            </Badge>
+            <Badge className='flex-shrink-0 rounded-[4px] border border-[#A7F950] bg-[rgba(167,249,80,0.08)] px-1 py-0.5 text-xs font-medium text-[#A7F950]'>
+              {project.category}
+            </Badge>
           </div>
         </div>
 
-        {/* Content on the right */}
-        <div ref={contentRef} className='flex-1 min-w-0'>
-          <h3 className='text-white text-lg sm:text-xl font-bold mb-2 line-clamp-1'>
-            {project.name}
-          </h3>
-          <p className='text-gray-300 text-xs sm:text-sm leading-relaxed line-clamp-2 sm:line-clamp-3'>
-            {project.description}
-          </p>
-        </div>
-      </div>
+        <div
+          ref={imageRef}
+          className='mb-3 flex items-start space-x-3 will-change-transform sm:mb-4 sm:space-x-4'
+          style={{ transform: 'translateZ(0)' }}
+        >
+          <div className='relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl sm:h-[90px] sm:w-[80px]'>
+            <Image
+              src='/bitmed.png'
+              alt={project.name}
+              fill
+              className='object-cover'
+              priority={false}
+              loading='lazy'
+            />
+          </div>
 
-      {/* Bottom Section - Actions and Info */}
-      <div
-        ref={bottomRef}
-        className='flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0'
-      >
-        <div className='flex items-center space-x-2 sm:space-x-4'>
-          <Button
-            onClick={onValidationClick}
-            className='bg-[#1E3A8A] hover:bg-[#1E40AF] text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium flex items-center space-x-1 sm:space-x-2 transition-colors duration-200'
-          >
-            <Clock className='w-3 h-3 sm:w-4 sm:h-4' />
-            <span>Validation</span>
-          </Button>
-          <span className='text-gray-300 text-xs sm:text-sm whitespace-nowrap'>
-            {daysLeft} days left
-          </span>
+          <div ref={contentRef} className='min-w-0 flex-1 text-left'>
+            <h3 className='mb-2 line-clamp-1 text-lg font-bold text-white sm:text-base'>
+              {project.name}
+            </h3>
+            <p className='line-clamp-2 text-left text-xs leading-relaxed text-gray-300 sm:line-clamp-3 sm:text-sm'>
+              {project.description}
+            </p>
+          </div>
         </div>
 
-        <div className='flex items-center space-x-2'>
-          <div className='w-px h-4 sm:h-6 bg-white opacity-30'></div>
-          <Button
-            onClick={onVoteClick}
-            className='bg-[#1E3A8A] hover:bg-[#1E40AF] text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors duration-200'
-          >
-            {votes.current}/{votes.total} votes
-          </Button>
+        <div ref={bottomRef} className='flex flex-col gap-2'>
+          <div className='flex items-center justify-between space-x-2'>
+            <div className='flex items-center space-x-2'>
+              <span className='text-xs text-white sm:text-sm'>
+                120/300 USDC
+              </span>
+              <span className='text-xs text-[#B5B5B5] sm:text-xs'>Raised</span>
+            </div>
+            <span className='text-xs text-[#F5B546] sm:text-xs'>
+              15 days to deadline
+            </span>
+          </div>
+          <Progress value={50} className='h-2' />
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
+
+ProjectCard.displayName = 'ProjectCard';
 
 export default ProjectCard;

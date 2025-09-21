@@ -123,14 +123,14 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
       {/* Center value */}
       {showValue && (
         <div
-          className='absolute inset-0 flex items-center justify-center pointer-events-none'
+          className='pointer-events-none absolute inset-0 flex items-center justify-center'
           style={{
             width: size,
             height: size,
           }}
         >
           <span
-            className={`font-bold text-gray-300 select-none leading-none ${valueClassName}`}
+            className={`leading-none font-bold text-gray-300 select-none ${valueClassName}`}
             style={{
               fontSize: Math.max(size * 0.25, 12),
               lineHeight: 1,

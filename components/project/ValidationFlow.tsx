@@ -123,12 +123,12 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
 
   return (
     <div>
-      <div className='w-[500px] flex flex-col gap-3 pt-3 pb-6 space-y-6'>
-        <div className='flex justify-between items-start'>
+      <div className='flex w-[500px] flex-col gap-3 space-y-6 pt-3 pb-6'>
+        <div className='flex items-start justify-between'>
           <div className='flex items-center space-x-4'>
-            <div className='w-12 h-12 bg-[#2A2A2A] rounded-full flex items-center justify-center'>
+            <div className='flex h-12 w-12 items-center justify-center rounded-full bg-[#2A2A2A]'>
               <svg
-                className='w-6 h-6 text-[#B5B5B5]'
+                className='h-6 w-6 text-[#B5B5B5]'
                 fill='currentColor'
                 viewBox='0 0 20 20'
               >
@@ -140,8 +140,8 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
               </svg>
             </div>
             <div>
-              <h3 className='text-[#F5F5F5] font-medium'>Collins Odumeje</h3>
-              <h1 className='text-2xl font-bold text-[#F5F5F5] flex items-center'>
+              <h3 className='font-medium text-[#F5F5F5]'>Collins Odumeje</h3>
+              <h1 className='flex items-center text-2xl font-bold text-[#F5F5F5]'>
                 {project.name}
                 <div className='w-4' />
                 <Badge
@@ -158,7 +158,7 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
         </div>
 
         <div>
-          <h2 className='text-3xl font-bold mb-2'>
+          <h2 className='mb-2 text-3xl font-bold'>
             <span className='text-[#F5F5F5]'>
               ${project.amount.toLocaleString()}
             </span>
@@ -167,7 +167,7 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
         </div>
 
         <div>
-          <p className='text-[#F5F5F5] text-base leading-relaxed'>
+          <p className='text-base leading-relaxed text-[#F5F5F5]'>
             {project.description}
           </p>
         </div>
@@ -183,24 +183,24 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
         </div>
 
         <div>
-          <div className='flex justify-between items-center mb-3'>
-            <h3 className='text-[#F5F5F5] font-medium'>Vote count</h3>
-            <span className='text-[#F5F5F5] text-sm'>
+          <div className='mb-3 flex items-center justify-between'>
+            <h3 className='font-medium text-[#F5F5F5]'>Vote count</h3>
+            <span className='text-sm text-[#F5F5F5]'>
               {voteCount} <span className='text-[#B5B5B5]'>of</span> 100 votes
             </span>
           </div>
-          <Progress value={(voteCount / 100) * 100} className='h-2 mb-4' />
+          <Progress value={(voteCount / 100) * 100} className='mb-4 h-2' />
 
           <div className='flex items-center justify-between'>
             <div className='flex items-center space-x-4'>
               <Button
                 variant='outline'
                 onClick={handleVote}
-                className='flex items-center space-x-2 border-[#2B2B2B] bg-[#212121] hover:bg-[#2A2A2A] text-[#F5F5F5]'
+                className='flex items-center space-x-2 border-[#2B2B2B] bg-[#212121] text-[#F5F5F5] hover:bg-[#2A2A2A]'
               >
                 <ThumbsUp
                   className={cn(
-                    'w-4 h-4',
+                    'h-4 w-4',
                     hasVoted ? 'fill-white' : 'fill-transparent'
                   )}
                 />
@@ -214,23 +214,23 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
               >
                 <Button
                   variant='outline'
-                  className='flex items-center space-x-2 border-[#2B2B2B] bg-[#212121] hover:bg-[#2A2A2A] text-[#F5F5F5]'
+                  className='flex items-center space-x-2 border-[#2B2B2B] bg-[#212121] text-[#F5F5F5] hover:bg-[#2A2A2A]'
                 >
-                  <MessageCircle className='w-4 h-4 fill-transparent' />
+                  <MessageCircle className='h-4 w-4 fill-transparent' />
                   <span className='font-semibold'>{commentCount}</span>
                 </Button>
               </CommentModal>
             </div>
 
-            <div className='flex items-center space-x-2 text-[#B5B5B5] text-sm'>
-              <Clock className='w-4 h-4' />
+            <div className='flex items-center space-x-2 text-sm text-[#B5B5B5]'>
+              <Clock className='h-4 w-4' />
               <span>{daysLeft} days left</span>
             </div>
           </div>
         </div>
 
         <div>
-          <h3 className='text-[#F5F5F5] mb-4 text-base font-semibold'>
+          <h3 className='mb-4 text-base font-semibold text-[#F5F5F5]'>
             Milestones
           </h3>
 
@@ -238,14 +238,14 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
             {milestones.map((milestone, index) => (
               <div
                 key={index}
-                className='border border-[#2B2B2B] rounded-xl overflow-hidden'
+                className='overflow-hidden rounded-xl border border-[#2B2B2B]'
               >
                 <button
                   onClick={() => toggleMilestone(index)}
-                  className='w-full flex items-center justify-between bg-[#2A2A2A] text-[#F5F5F5] hover:bg-[#2A2A2A]/80 transition-colors p-4'
+                  className='flex w-full items-center justify-between bg-[#2A2A2A] p-4 text-[#F5F5F5] transition-colors hover:bg-[#2A2A2A]/80'
                 >
                   <div className='text-left'>
-                    <h4 className='text-xs font-medium text-[#B5B5B5] mb-1'>
+                    <h4 className='mb-1 text-xs font-medium text-[#B5B5B5]'>
                       {milestone.title}
                     </h4>
                     <span className='text-sm font-medium'>
@@ -253,24 +253,24 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
                     </span>
                   </div>
                   {expandedMilestones.includes(index) ? (
-                    <ChevronUp className='w-4 h-4' />
+                    <ChevronUp className='h-4 w-4' />
                   ) : (
-                    <ChevronDown className='w-4 h-4' />
+                    <ChevronDown className='h-4 w-4' />
                   )}
                 </button>
 
                 {expandedMilestones.includes(index) && (
-                  <div className='bg-[#1A1A1A] p-4 border-t border-[#2B2B2B]'>
-                    <p className='text-[#B5B5B5] text-sm mb-4'>
+                  <div className='border-t border-[#2B2B2B] bg-[#1A1A1A] p-4'>
+                    <p className='mb-4 text-sm text-[#B5B5B5]'>
                       {milestone.description}
                     </p>
-                    <div className='flex items-center justify-between text-[#B5B5B5] text-sm'>
+                    <div className='flex items-center justify-between text-sm text-[#B5B5B5]'>
                       <div className='flex items-center space-x-2'>
-                        <Calendar className='w-4 h-4' />
+                        <Calendar className='h-4 w-4' />
                         <span>{milestone.date}</span>
                       </div>
                       <div className='flex items-center space-x-2'>
-                        <Coins className='w-4 h-4' />
+                        <Coins className='h-4 w-4' />
                         <span>{milestone.amount}</span>
                       </div>
                     </div>
@@ -282,7 +282,7 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
         </div>
 
         <div>
-          <h3 className='text-[#F5F5F5] font-medium mb-4'>Timeline</h3>
+          <h3 className='mb-4 font-medium text-[#F5F5F5]'>Timeline</h3>
           <TimelineStepper project={project} />
         </div>
       </div>

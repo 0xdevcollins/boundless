@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '@/lib/stores/auth-store';
-import Loading from '../loading/Loading';
+import React, { useEffect, useState } from 'react';
+import AuthLoadingState from '../auth/AuthLoadingState';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -13,9 +13,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { isAuthenticated, accessToken, refreshUser, clearAuth } =
     useAuthStore();
 
-  // Handle store hydration
   useEffect(() => {
-    // Check if already hydrated
     if (useAuthStore.persist.hasHydrated()) {
       setIsHydrated(true);
       return;
@@ -25,7 +23,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsHydrated(true);
     });
 
-    // Fallback timeout to prevent infinite loading
     const timeout = setTimeout(() => {
       setIsHydrated(true);
     }, 2000);
@@ -36,21 +33,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     };
   }, []);
 
-  // Initialize auth state on mount
   useEffect(() => {
     if (!isHydrated) return;
 
     const initializeAuth = async () => {
       try {
-        // If we have a token but no user data, try to refresh
         if (accessToken && isAuthenticated) {
           await refreshUser();
         } else if (accessToken) {
-          // Try to refresh user data to validate token
           try {
             await refreshUser();
           } catch {
-            // If refresh fails, clear auth data
             clearAuth();
           }
         }
@@ -62,15 +55,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     initializeAuth();
   }, [isHydrated, accessToken, isAuthenticated, refreshUser, clearAuth]);
 
-  // Show loading state while hydrating
   if (!isHydrated) {
-    return <Loading />;
+    return <AuthLoadingState message='Initializing...' />;
   }
 
   return <>{children}</>;
 }
 
-// Hook to check if auth is hydrated
 export function useAuthHydration() {
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -85,7 +76,6 @@ export function useAuthHydration() {
   return isHydrated;
 }
 
-// Component to show loading while auth is initializing
 export function AuthLoadingProvider({
   children,
 }: {
@@ -95,7 +85,7 @@ export function AuthLoadingProvider({
   const { isLoading } = useAuthStore();
 
   if (!isHydrated || isLoading) {
-    return <Loading />;
+    return <AuthLoadingState message='Loading...' />;
   }
 
   return <>{children}</>;

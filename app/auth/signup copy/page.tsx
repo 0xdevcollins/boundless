@@ -106,8 +106,8 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8'>
-      <div className='max-w-md w-full space-y-8'>
+    <div className='flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8'>
+      <div className='w-full max-w-md space-y-8'>
         <div className='text-center'>
           <h2 className='mt-6 text-3xl font-extrabold text-gray-900'>
             Create your account
@@ -150,7 +150,7 @@ export default function SignUpPage() {
                 <div className='space-y-2'>
                   <Label htmlFor='firstName'>First Name</Label>
                   <div className='relative'>
-                    <User className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
+                    <User className='absolute top-3 left-3 h-4 w-4 text-gray-400' />
                     <Input
                       id='firstName'
                       name='firstName'
@@ -167,7 +167,7 @@ export default function SignUpPage() {
                 <div className='space-y-2'>
                   <Label htmlFor='lastName'>Last Name</Label>
                   <div className='relative'>
-                    <User className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
+                    <User className='absolute top-3 left-3 h-4 w-4 text-gray-400' />
                     <Input
                       id='lastName'
                       name='lastName'
@@ -185,7 +185,7 @@ export default function SignUpPage() {
               <div className='space-y-2'>
                 <Label htmlFor='email'>Email</Label>
                 <div className='relative'>
-                  <Mail className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
+                  <Mail className='absolute top-3 left-3 h-4 w-4 text-gray-400' />
                   <Input
                     id='email'
                     name='email'
@@ -202,7 +202,7 @@ export default function SignUpPage() {
               <div className='space-y-2'>
                 <Label htmlFor='password'>Password</Label>
                 <div className='relative'>
-                  <Lock className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
+                  <Lock className='absolute top-3 left-3 h-4 w-4 text-gray-400' />
                   <Input
                     id='password'
                     name='password'
@@ -210,13 +210,13 @@ export default function SignUpPage() {
                     value={formData.password}
                     onChange={handleInputChange}
                     placeholder='Create a password'
-                    className='pl-10 pr-10'
+                    className='pr-10 pl-10'
                     required
                   />
                   <button
                     type='button'
                     onClick={() => setShowPassword(!showPassword)}
-                    className='absolute right-3 top-3 text-gray-400 hover:text-gray-600'
+                    className='absolute top-3 right-3 text-gray-400 hover:text-gray-600'
                   >
                     {showPassword ? (
                       <EyeOff className='h-4 w-4' />
@@ -230,7 +230,7 @@ export default function SignUpPage() {
               <div className='space-y-2'>
                 <Label htmlFor='confirmPassword'>Confirm Password</Label>
                 <div className='relative'>
-                  <Lock className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
+                  <Lock className='absolute top-3 left-3 h-4 w-4 text-gray-400' />
                   <Input
                     id='confirmPassword'
                     name='confirmPassword'
@@ -238,13 +238,13 @@ export default function SignUpPage() {
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     placeholder='Confirm your password'
-                    className='pl-10 pr-10'
+                    className='pr-10 pl-10'
                     required
                   />
                   <button
                     type='button'
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className='absolute right-3 top-3 text-gray-400 hover:text-gray-600'
+                    className='absolute top-3 right-3 text-gray-400 hover:text-gray-600'
                   >
                     {showConfirmPassword ? (
                       <EyeOff className='h-4 w-4' />
@@ -266,7 +266,7 @@ export default function SignUpPage() {
                 <Separator className='w-full' />
               </div>
               <div className='relative flex justify-center text-xs uppercase'>
-                <span className='bg-background px-2 text-muted-foreground'>
+                <span className='bg-background text-muted-foreground px-2'>
                   Or continue with
                 </span>
               </div>
@@ -278,7 +278,7 @@ export default function SignUpPage() {
                 window.location.href = '/api/auth/signin/google';
               }}
               disabled={isLoading}
-              className='w-full hidden'
+              className='hidden w-full'
             >
               <svg className='mr-2 h-4 w-4' viewBox='0 0 24 24'>
                 <path

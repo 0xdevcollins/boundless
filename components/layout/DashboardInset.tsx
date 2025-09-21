@@ -14,8 +14,8 @@ export default function DashboardInset({ children }: { children: ReactNode }) {
       <motion.div
         className={
           state === 'collapsed'
-            ? 'overflow-hidden w-full fixed top-0 left-0 right-0 bottom-0 md:w-[calc(100%-3rem)] md:left-[3rem]'
-            : 'overflow-hidden w-full fixed top-0 left-0 right-0 bottom-0 md:w-[calc(100%-16rem)] md:left-[16rem]'
+            ? 'fixed top-0 right-0 bottom-0 left-0 w-full overflow-hidden md:left-[3rem] md:w-[calc(100%-3rem)]'
+            : 'fixed top-0 right-0 bottom-0 left-0 w-full overflow-hidden md:left-[16rem] md:w-[calc(100%-16rem)]'
         }
         initial='hidden'
         animate='visible'

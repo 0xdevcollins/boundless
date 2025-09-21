@@ -19,7 +19,7 @@ const EmptyState = ({
 }: EmptyStateProps) => {
   return (
     <motion.div
-      className='flex flex-col items-center justify-center h-full'
+      className='flex h-full flex-col items-center justify-center'
       initial='hidden'
       animate='visible'
       variants={fadeInUp}
@@ -46,8 +46,8 @@ const EmptyState = ({
           </motion.div>
         )}
         <motion.div className='space-y-1' variants={fadeInUp}>
-          <h3 className='text-xl text-white leading-[30px]'>{title}</h3>
-          <p className='text-sm text-white/60 leading-[145%]'>{description}</p>
+          <h3 className='text-xl leading-[30px] text-white'>{title}</h3>
+          <p className='text-sm leading-[145%] text-white/60'>{description}</p>
         </motion.div>
       </div>
       {action && (

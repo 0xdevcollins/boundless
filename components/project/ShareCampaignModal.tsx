@@ -99,53 +99,51 @@ const ShareCampaignModal: React.FC<ShareCampaignModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='bg-[#1A1A1A] border-[#2B2B2B] text-white max-w-md'>
+      <DialogContent className='max-w-md border-[#2B2B2B] bg-[#1A1A1A] text-white'>
         <DialogHeader>
-          <DialogTitle className='text-[#F5F5F5] text-xl font-semibold'>
+          <DialogTitle className='text-xl font-semibold text-[#F5F5F5]'>
             Share Campaign
           </DialogTitle>
         </DialogHeader>
 
         <div className='space-y-6'>
-
           <div className='space-y-3'>
-            <label className='text-[#B5B5B5] text-sm font-medium'>
+            <label className='text-sm font-medium text-[#B5B5B5]'>
               Campaign Link
             </label>
             <div className='flex items-center space-x-2'>
               <Input
                 value={campaignLink}
                 readOnly
-                className='flex-1 bg-[#2A2A2A] border-[#2B2B2B] text-[#F5F5F5] placeholder:text-[#B5B5B5]'
+                className='flex-1 border-[#2B2B2B] bg-[#2A2A2A] text-[#F5F5F5] placeholder:text-[#B5B5B5]'
                 placeholder='Campaign link will appear here...'
               />
               <Button
                 variant='outline'
                 size='sm'
                 onClick={copyToClipboard}
-                className='border-[#2B2B2B] bg-[#2A2A2A] text-[#F5F5F5] hover:bg-[#1A1A1A] min-w-[40px]'
+                className='min-w-[40px] border-[#2B2B2B] bg-[#2A2A2A] text-[#F5F5F5] hover:bg-[#1A1A1A]'
               >
-                <Copy className='w-4 h-4' />
+                <Copy className='h-4 w-4' />
               </Button>
               <Button
                 variant='outline'
                 size='sm'
                 onClick={() => window.open(campaignLink, '_blank')}
-                className='border-[#2B2B2B] bg-[#2A2A2A] text-[#F5F5F5] hover:bg-[#1A1A1A] min-w-[40px]'
+                className='min-w-[40px] border-[#2B2B2B] bg-[#2A2A2A] text-[#F5F5F5] hover:bg-[#1A1A1A]'
               >
-                <ExternalLink className='w-4 h-4' />
+                <ExternalLink className='h-4 w-4' />
               </Button>
             </div>
             {copied && (
-              <p className='text-green-500 text-xs'>
+              <p className='text-xs text-green-500'>
                 Link copied to clipboard!
               </p>
             )}
           </div>
 
-
           <div className='space-y-3'>
-            <label className='text-[#B5B5B5] text-sm font-medium'>
+            <label className='text-sm font-medium text-[#B5B5B5]'>
               Share on Social Media
             </label>
             <div className='grid grid-cols-2 gap-3'>
@@ -153,25 +151,25 @@ const ShareCampaignModal: React.FC<ShareCampaignModalProps> = ({
                 <Button
                   key={option.name}
                   onClick={option.onClick}
-                  className={`${option.color} text-white border-0 hover:scale-105 transition-transform`}
+                  className={`${option.color} border-0 text-white transition-transform hover:scale-105`}
                 >
-                  <option.icon className='w-4 h-4 mr-2' />
+                  <option.icon className='mr-2 h-4 w-4' />
                   {option.name}
                 </Button>
               ))}
             </div>
           </div>
 
-          <div className='bg-[#2A2A2A] rounded-lg p-4 border border-[#2B2B2B]'>
-            <h4 className='text-[#F5F5F5] font-medium mb-2'>Preview</h4>
+          <div className='rounded-lg border border-[#2B2B2B] bg-[#2A2A2A] p-4'>
+            <h4 className='mb-2 font-medium text-[#F5F5F5]'>Preview</h4>
             <div className='space-y-2'>
-              <p className='text-[#F5F5F5] font-medium text-sm'>
+              <p className='text-sm font-medium text-[#F5F5F5]'>
                 {campaignTitle}
               </p>
-              <p className='text-[#B5B5B5] text-xs'>
+              <p className='text-xs text-[#B5B5B5]'>
                 Check out this amazing campaign on Boundless!
               </p>
-              <p className='text-[#B5B5B5] text-xs truncate'>{campaignLink}</p>
+              <p className='truncate text-xs text-[#B5B5B5]'>{campaignLink}</p>
             </div>
           </div>
         </div>
