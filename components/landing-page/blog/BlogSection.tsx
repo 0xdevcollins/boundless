@@ -332,7 +332,7 @@ const BlogSection = () => {
         </div>
       ) : (
         <div
-          className='grid w-full max-w-none grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8 xl:grid-cols-3'
+          className='grid w-full max-w-none grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-6 xl:grid-cols-3'
           role='list'
           aria-label='Blog posts grid'
         >
