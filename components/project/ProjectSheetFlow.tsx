@@ -136,7 +136,7 @@ const ProjectSheetFlow: React.FC<ProjectSheetFlowProps> = ({
   return (
     <BoundlessSheet open={open} setOpen={handleClose} contentClassName='h-full'>
       <div className='flex justify-between'>
-        <div className='flex-1 sticky top-0'>
+        <div className='sticky top-0 flex-1'>
           <Stepper steps={steps} />
         </div>
         <div className='flex-1'>{renderContent()}</div>

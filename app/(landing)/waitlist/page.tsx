@@ -13,7 +13,7 @@ export default function WaitlistPage() {
         src='/waitlist-bg.svg'
         alt='waitlist-bg'
         fill
-        className='absolute top-0 left-0 bg-acscent h-screen w-screen'
+        className='bg-acscent absolute top-0 left-0 h-screen w-screen'
       />
       <BeamBackground />
 

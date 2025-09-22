@@ -227,35 +227,35 @@ const CommentModal: React.FC<CommentModalProps> = ({
         maxHeight='90vh'
         minHeight='60vh'
         contentClassName='h-[95vh]'
-        className='bg-black border-[#2A2A2A] text-white p-0'
+        className='border-[#2A2A2A] bg-black p-0 text-white'
       >
-        <div className='flex flex-col xl:flex-row h-full overflow-hidden'>
-          <div className='lg:p-6 p-4 lg:border-b-0 flex-shrink-0'>
-            <div className='lg:block flex flex-row justify-center'>
+        <div className='flex h-full flex-col overflow-hidden xl:flex-row'>
+          <div className='flex-shrink-0 p-4 lg:border-b-0 lg:p-6'>
+            <div className='flex flex-row justify-center lg:block'>
               <Stepper steps={campaignSteps} />
             </div>
           </div>
 
-          <div className='flex-1 flex flex-col lg:w-[50%] w-full overflow-y-auto'>
+          <div className='flex w-full flex-1 flex-col overflow-y-auto lg:w-[50%]'>
             {!replyMode.isActive && (
-              <div className='p-6 w-[80%] xl:w-[70%] mx-auto'>
+              <div className='mx-auto w-[80%] p-6 xl:w-[70%]'>
                 <div className='flex items-center gap-3 py-6'>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className='p-2 hover:bg-[#2A2A2A] rounded-full transition-colors'
+                    className='rounded-full p-2 transition-colors hover:bg-[#2A2A2A]'
                   >
-                    <ArrowLeft className='w-5 h-5 text-white' />
+                    <ArrowLeft className='h-5 w-5 text-white' />
                   </button>
                   <h2 className='text-xl font-semibold text-white'>Comments</h2>
                 </div>
-                <div className='flex items-center justify-between gap-3  border px-3  rounded-lg border-[#2A2A2A]'>
+                <div className='flex items-center justify-between gap-3 rounded-lg border border-[#2A2A2A] px-3'>
                   <div className='flex-shrink-0'>
                     <Image
                       src='/empty/user.svg'
                       alt='User avatar'
                       width={40}
                       height={40}
-                      className='w-12 h-12'
+                      className='h-12 w-12'
                     />
                   </div>
                   <div className='flex-1 pt-6'>
@@ -265,32 +265,32 @@ const CommentModal: React.FC<CommentModalProps> = ({
                       value={comment}
                       onChange={e => setComment(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      className='py-2 text-white placeholder:text-gray-400 w-full bg-transparent text-md leading-none min-h-[60px] border-none outline-none shadow-none focus:border-none focus:outline-none focus:ring-0'
+                      className='text-md min-h-[60px] w-full border-none bg-transparent py-2 leading-none text-white shadow-none outline-none placeholder:text-gray-400 focus:border-none focus:ring-0 focus:outline-none'
                     />
                   </div>
                   <div className='flex-shrink-0'>
                     <Button
                       onClick={handleSubmit}
                       disabled={!comment.trim()}
-                      className='px-6 py-2 bg-[#2A2A2A] hover:bg-[#3A3A3A] text-white border border-[#3A3A3A] disabled:opacity-50 disabled:cursor-not-allowed'
+                      className='border border-[#3A3A3A] bg-[#2A2A2A] px-6 py-2 text-white hover:bg-[#3A3A3A] disabled:cursor-not-allowed disabled:opacity-50'
                     >
                       Post
                     </Button>
                   </div>
                 </div>
-                <div className='border-b border-[#2A2A2A] my-6 ' />
+                <div className='my-6 border-b border-[#2A2A2A]' />
               </div>
             )}
 
             {replyMode.isActive && (
-              <div className='p-6 w-[80%] xl:w-[70%] mx-auto'>
+              <div className='mx-auto w-[80%] p-6 xl:w-[70%]'>
                 {/* Reply Header */}
                 <div className='flex items-center gap-3 py-6'>
                   <button
                     onClick={handleBackToComments}
-                    className='p-2 hover:bg-[#2A2A2A] rounded-full transition-colors'
+                    className='rounded-full p-2 transition-colors hover:bg-[#2A2A2A]'
                   >
-                    <ArrowLeft className='w-5 h-5 text-white' />
+                    <ArrowLeft className='h-5 w-5 text-white' />
                   </button>
                   <h2 className='text-xl font-semibold text-white'>Reply</h2>
                 </div>
@@ -303,36 +303,36 @@ const CommentModal: React.FC<CommentModalProps> = ({
 
                   return (
                     <div className='mb-6'>
-                      <div className='flex gap-3 p-4 rounded-lg bg-[#1A1A1A]/50'>
+                      <div className='flex gap-3 rounded-lg bg-[#1A1A1A]/50 p-4'>
                         <div className='flex-shrink-0'>
                           <Image
                             src='/empty/user.svg'
                             alt='User avatar'
                             width={40}
                             height={40}
-                            className='w-12 h-12'
+                            className='h-12 w-12'
                           />
                         </div>
                         <div className='flex-1'>
-                          <div className='flex items-center gap-2 mb-2'>
+                          <div className='mb-2 flex items-center gap-2'>
                             <span className='font-medium text-white'>
                               {parentComment.author}
                             </span>
-                            <span className='text-gray-400 text-sm'>
+                            <span className='text-sm text-gray-400'>
                               {parentComment.timestamp}
                             </span>
                           </div>
-                          <p className='text-white/90 mb-4 leading-relaxed'>
+                          <p className='mb-4 leading-relaxed text-white/90'>
                             {parentComment.text}
                           </p>
 
-                          <div className='flex items-center gap-4 text-gray-400 text-sm'>
+                          <div className='flex items-center gap-4 text-sm text-gray-400'>
                             <div className='flex items-center gap-1'>
-                              <MessageCircle className='w-4 h-4' />
+                              <MessageCircle className='h-4 w-4' />
                               <span>{parentComment.replies.length}</span>
                             </div>
                             <div className='flex items-center gap-1'>
-                              <Heart className='w-4 h-4' />
+                              <Heart className='h-4 w-4' />
                               <span>{parentComment.likes}</span>
                             </div>
                           </div>
@@ -342,14 +342,14 @@ const CommentModal: React.FC<CommentModalProps> = ({
                   );
                 })()}
 
-                <div className='flex items-center justify-between gap-3 border px-3 py-3 rounded-lg border-[#2A2A2A]'>
+                <div className='flex items-center justify-between gap-3 rounded-lg border border-[#2A2A2A] px-3 py-3'>
                   <div className='flex-shrink-0'>
                     <Image
                       src='/empty/user.svg'
                       alt='User avatar'
                       width={40}
                       height={40}
-                      className='w-12 h-12'
+                      className='h-12 w-12'
                     />
                   </div>
                   <div className='flex-1'>
@@ -367,7 +367,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                           handleReplySubmit();
                         }
                       }}
-                      className='py-2 text-white placeholder:text-gray-400 w-full bg-transparent text-md leading-none min-h-[60px] resize-none border-none outline-none shadow-none focus:border-none focus:outline-none focus:ring-0'
+                      className='text-md min-h-[60px] w-full resize-none border-none bg-transparent py-2 leading-none text-white shadow-none outline-none placeholder:text-gray-400 focus:border-none focus:ring-0 focus:outline-none'
                       autoFocus
                     />
                   </div>
@@ -379,7 +379,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                         handleReplySubmit();
                       }}
                       disabled={!replyText.trim()}
-                      className='px-6 py-2 bg-[#2A2A2A] hover:bg-[#3A3A3A] text-white border border-[#3A3A3A] disabled:opacity-50 disabled:cursor-not-allowed'
+                      className='border border-[#3A3A3A] bg-[#2A2A2A] px-6 py-2 text-white hover:bg-[#3A3A3A] disabled:cursor-not-allowed disabled:opacity-50'
                     >
                       Reply
                     </Button>
@@ -403,19 +403,19 @@ const CommentModal: React.FC<CommentModalProps> = ({
                               alt='User avatar'
                               width={40}
                               height={40}
-                              className='w-12 h-12'
+                              className='h-12 w-12'
                             />
                           </div>
                           <div className='flex-1'>
-                            <div className='flex items-center gap-2 mb-2'>
+                            <div className='mb-2 flex items-center gap-2'>
                               <span className='font-medium text-white'>
                                 {reply.author}
                               </span>
-                              <span className='text-gray-400 text-sm'>
+                              <span className='text-sm text-gray-400'>
                                 {reply.timestamp}
                               </span>
                             </div>
-                            <p className='text-white/90 leading-relaxed'>
+                            <p className='leading-relaxed text-white/90'>
                               {reply.text}
                             </p>
                           </div>
@@ -437,32 +437,32 @@ const CommentModal: React.FC<CommentModalProps> = ({
                           alt='No comments available'
                           width={128}
                           height={128}
-                          className='w-32 h-32 mx-auto mb-4'
+                          className='mx-auto mb-4 h-32 w-32'
                         />
                       </div>
 
-                      <h3 className='text-xl font-semibold text-white mb-2'>
+                      <h3 className='mb-2 text-xl font-semibold text-white'>
                         No Comments Available
                       </h3>
-                      <p className='text-gray-400 max-w-md mx-auto'>
+                      <p className='mx-auto max-w-md text-gray-400'>
                         Share your insights or questions to kick off meaningful
                         discussions.
                       </p>
                     </div>
                   </div>
                 ) : (
-                  <div className='p-6 space-y-6 mx-auto w-[70%] pb-8'>
+                  <div className='mx-auto w-[70%] space-y-6 p-6 pb-8'>
                     {comments.map(comment => (
                       <div
                         key={comment.id}
-                        className='flex gap-3 p-4 rounded-lg bg-[#1A1A1A]/50 transition-all duration-200 cursor-pointer group relative'
+                        className='group relative flex cursor-pointer gap-3 rounded-lg bg-[#1A1A1A]/50 p-4 transition-all duration-200'
                       >
                         <button
                           onClick={() => handleDelete(comment.id)}
-                          className='absolute top-3 right-3 p-1.5 hover:bg-[#2A2A2A] rounded-full transition-colors opacity-0 group-hover:opacity-100'
+                          className='absolute top-3 right-3 rounded-full p-1.5 opacity-0 transition-colors group-hover:opacity-100 hover:bg-[#2A2A2A]'
                           title='Delete comment'
                         >
-                          <Trash2 className='w-4 h-4 text-red-400 transition-colors' />
+                          <Trash2 className='h-4 w-4 text-red-400 transition-colors' />
                         </button>
 
                         <div className='flex-shrink-0'>
@@ -471,37 +471,37 @@ const CommentModal: React.FC<CommentModalProps> = ({
                             alt='User avatar'
                             width={40}
                             height={40}
-                            className='w-12 h-12'
+                            className='h-12 w-12'
                           />
                         </div>
                         <div className='flex-1'>
-                          <div className='flex items-center gap-2 mb-2'>
+                          <div className='mb-2 flex items-center gap-2'>
                             <span className='font-medium text-white'>
                               {comment.author}
                             </span>
-                            <span className='text-gray-400 text-sm'>
+                            <span className='text-sm text-gray-400'>
                               {comment.timestamp}
                             </span>
                           </div>
-                          <p className='text-white/90 mb-3 leading-relaxed'>
+                          <p className='mb-3 leading-relaxed text-white/90'>
                             {comment.text}
                           </p>
-                          <div className='flex items-center gap-4 text-gray-400 text-sm'>
+                          <div className='flex items-center gap-4 text-sm text-gray-400'>
                             <button
                               onClick={() => handleReplyClick(comment.id)}
-                              className='flex items-center gap-1 hover:text-white transition-colors'
+                              className='flex items-center gap-1 transition-colors hover:text-white'
                             >
-                              <MessageCircle className='w-4 h-4' />
+                              <MessageCircle className='h-4 w-4' />
                               <span>{comment.replies.length}</span>
                             </button>
                             <button
                               onClick={() => handleLike(comment.id)}
-                              className='flex items-center gap-1 hover:text-white transition-colors'
+                              className='flex items-center gap-1 transition-colors hover:text-white'
                             >
                               <Heart
-                                className={`w-4 h-4 transition-colors duration-200 ${
+                                className={`h-4 w-4 transition-colors duration-200 ${
                                   comment.isLiked
-                                    ? 'text-white fill-white'
+                                    ? 'fill-white text-white'
                                     : 'text-gray-400'
                                 }`}
                               />

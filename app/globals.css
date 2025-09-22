@@ -1,8 +1,11 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-inter: 'Inter', sans-serif;
+}
 /* Custom scrollbar styles for comment modal */
 .custom-scrollbar {
   scrollbar-width: thin;
@@ -35,8 +38,8 @@
   --color-stepper-border-active: var(--stepper-border-active);
   --color-stepper-border: var(--stepper-border);
   --color-placeholder: var(--placeholder);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-inter);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -70,6 +73,15 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-office-brown: var(--office-brown);
+  --color-office-brown-darker: var(--office-brown-darker);
+  --color-warning-orange: var(--warning-orange);
+  --color-warning-orange-darker: var(--warning-orange-darker);
+  --color-blue-ish: var(--blue-ish);
+  --color-blue-ish-darker: var(--blue-ish-darker);
+  --color-success-green: var(--success-green);
+  --color-success-green-darker: var(--success-green-darker);
+  --color-error-status: var(--error-status);
 
   /* Custom breakpoints for 4K screens */
   --breakpoint-4xl: 2560px;
@@ -113,6 +125,15 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --office-brown: #e4dbdb;
+  --office-brown-darker: #645d5d;
+  --warning-orange: #fbe2b7;
+  --warning-orange-darker: #ad6f07;
+  --blue-ish: #c6ddf7;
+  --blue-ish-darker: #034592;
+  --success-green: #b5e3c4;
+  --success-green-darker: #04802e;
+  --error-status: #034592;
 }
 
 .dark {
@@ -147,6 +168,15 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --office-brown: #645d5d;
+  --office-brown-darker: #e4dbdb;
+  --warning-orange: #ad6f07;
+  --warning-orange-darker: #fbe2b7;
+  --blue-ish: #034592;
+  --blue-ish-darker: #c6ddf7;
+  --success-green: #04802e;
+  --success-green-darker: #b5e3c4;
+  --error-status: #034592;
 }
 
 @layer base {
@@ -196,7 +226,9 @@ input[type='number'] {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
+.font-inter {
+  font-family: 'Inter', sans-serif;
+}
 /* Dropdown menu item animations */
 @keyframes dropdownItemSlideIn {
   from {
@@ -413,271 +445,5 @@ input[type='number'] {
   }
   .time-card-background-image-three {
     background-image: url('/landing/about/Abstract_03md.png');
-  }
-}
-
-/* Custom 4K breakpoint media queries */
-@media (min-width: 2560px) {
-  .4xl\:text-7xl {
-    font-size: 5rem;
-    line-height: 1;
-  }
-  .4xl\:text-2xl {
-    font-size: 1.5rem;
-    line-height: 2rem;
-  }
-  .4xl\:px-16 {
-    padding-left: 4rem;
-    padding-right: 4rem;
-  }
-  .4xl\:px-32 {
-    padding-left: 8rem;
-    padding-right: 8rem;
-  }
-  .4xl\:py-8 {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-  }
-  .4xl\:py-6 {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-  }
-  .4xl\:py-5 {
-    padding-top: 1.25rem;
-    padding-bottom: 1.25rem;
-  }
-  .4xl\:py-4 {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
-  .4xl\:px-10 {
-    padding-left: 2.5rem;
-    padding-right: 2.5rem;
-  }
-  .4xl\:px-12 {
-    padding-left: 3rem;
-    padding-right: 3rem;
-  }
-  .4xl\:px-16 {
-    padding-left: 4rem;
-    padding-right: 4rem;
-  }
-  .4xl\:px-5 {
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
-  }
-  .4xl\:px-6 {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-  .4xl\:gap-10 {
-    gap: 2.5rem;
-  }
-  .4xl\:gap-8 {
-    gap: 2rem;
-  }
-  .4xl\:gap-6 {
-    gap: 1.5rem;
-  }
-  .4xl\:gap-4 {
-    gap: 1rem;
-  }
-  .4xl\:gap-3 {
-    gap: 0.75rem;
-  }
-  .4xl\:space-x-3 > :not([hidden]) ~ :not([hidden]) {
-    margin-left: 0.75rem;
-  }
-  .4xl\:space-y-3 > :not([hidden]) ~ :not([hidden]) {
-    margin-top: 0.75rem;
-  }
-  .4xl\:space-y-2 > :not([hidden]) ~ :not([hidden]) {
-    margin-top: 0.5rem;
-  }
-  .4xl\:space-y-1 > :not([hidden]) ~ :not([hidden]) {
-    margin-top: 0.25rem;
-  }
-  .4xl\:w-8 {
-    width: 2rem;
-  }
-  .4xl\:h-8 {
-    height: 2rem;
-  }
-  .4xl\:w-7 {
-    width: 1.75rem;
-  }
-  .4xl\:h-7 {
-    height: 1.75rem;
-  }
-  .4xl\:w-6 {
-    width: 1.5rem;
-  }
-  .4xl\:h-6 {
-    height: 1.5rem;
-  }
-  .4xl\:w-5 {
-    width: 1.25rem;
-  }
-  .4xl\:h-5 {
-    height: 1.25rem;
-  }
-  .4xl\:w-4 {
-    width: 1rem;
-  }
-  .4xl\:h-4 {
-    height: 1rem;
-  }
-  .4xl\:w-3 {
-    width: 0.75rem;
-  }
-  .4xl\:h-3 {
-    height: 0.75rem;
-  }
-  .4xl\:w-2 {
-    width: 0.5rem;
-  }
-  .4xl\:h-2 {
-    height: 0.5rem;
-  }
-  .4xl\:w-1 {
-    width: 0.25rem;
-  }
-  .4xl\:h-1 {
-    height: 0.25rem;
-  }
-  .4xl\:max-w-7xl {
-    max-width: 80rem;
-  }
-  .4xl\:max-w-6xl {
-    max-width: 72rem;
-  }
-  .4xl\:max-w-5xl {
-    max-width: 64rem;
-  }
-  .4xl\:max-w-4xl {
-    max-width: 56rem;
-  }
-  .4xl\:max-w-3xl {
-    max-width: 48rem;
-  }
-  .4xl\:max-w-2xl {
-    max-width: 42rem;
-  }
-  .4xl\:max-w-xl {
-    max-width: 36rem;
-  }
-  .4xl\:max-w-lg {
-    max-width: 32rem;
-  }
-  .4xl\:max-w-md {
-    max-width: 28rem;
-  }
-  .4xl\:max-w-sm {
-    max-width: 24rem;
-  }
-  .4xl\:max-w-xs {
-    max-width: 20rem;
-  }
-  .4xl\:max-w-\[600px\] {
-    max-width: 600px;
-  }
-  .4xl\:max-w-\[500px\] {
-    max-width: 500px;
-  }
-  .4xl\:max-w-\[400px\] {
-    max-width: 400px;
-  }
-  .4xl\:max-w-\[300px\] {
-    max-width: 300px;
-  }
-  .4xl\:max-w-\[280px\] {
-    max-width: 280px;
-  }
-  .4xl\:max-w-\[320px\] {
-    max-width: 320px;
-  }
-  .4xl\:grid-cols-5 {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-  .4xl\:grid-cols-4 {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-  .4xl\:grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .4xl\:grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .4xl\:grid-cols-1 {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-  .4xl\:col-span-5 {
-    grid-column: span 5 / span 5;
-  }
-  .4xl\:col-span-4 {
-    grid-column: span 4 / span 4;
-  }
-  .4xl\:col-span-3 {
-    grid-column: span 3 / span 3;
-  }
-  .4xl\:col-span-2 {
-    grid-column: span 2 / span 2;
-  }
-  .4xl\:col-span-1 {
-    grid-column: span 1 / span 1;
-  }
-  .4xl\:h-\[900px\] {
-    height: 900px;
-  }
-  .4xl\:h-\[800px\] {
-    height: 800px;
-  }
-  .4xl\:h-\[700px\] {
-    height: 700px;
-  }
-  .4xl\:h-\[600px\] {
-    height: 600px;
-  }
-  .4xl\:h-\[500px\] {
-    height: 500px;
-  }
-  .4xl\:h-\[400px\] {
-    height: 400px;
-  }
-  .4xl\:rounded-2xl {
-    border-radius: 1rem;
-  }
-  .4xl\:rounded-xl {
-    border-radius: 0.75rem;
-  }
-  .4xl\:rounded-lg {
-    border-radius: 0.5rem;
-  }
-  .4xl\:rounded-md {
-    border-radius: 0.375rem;
-  }
-  .4xl\:rounded-sm {
-    border-radius: 0.125rem;
-  }
-  .4xl\:rounded {
-    border-radius: 0.25rem;
-  }
-  .4xl\:tracking-\[0\.84px\] {
-    letter-spacing: 0.84px;
-  }
-  .4xl\:tracking-\[0\.72px\] {
-    letter-spacing: 0.72px;
-  }
-  .4xl\:tracking-\[0\.6px\] {
-    letter-spacing: 0.6px;
-  }
-  .4xl\:tracking-\[0\.48px\] {
-    letter-spacing: 0.48px;
-  }
-  .4xl\:tracking-\[0\.36px\] {
-    letter-spacing: 0.36px;
-  }
-  .4xl\:tracking-\[0\.24px\] {
-    letter-spacing: 0.24px;
   }
 }

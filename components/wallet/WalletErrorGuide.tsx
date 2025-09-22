@@ -85,10 +85,10 @@ const WalletErrorGuide: React.FC<WalletErrorGuideProps> = ({
   const guidance = getErrorGuidance(error);
 
   return (
-    <Card className='bg-red-500/10 border-red-500/20'>
+    <Card className='border-red-500/20 bg-red-500/10'>
       <CardHeader>
         <CardTitle className='flex items-center gap-2 text-red-400'>
-          <AlertTriangle className='w-5 h-5' />
+          <AlertTriangle className='h-5 w-5' />
           {guidance.title}
         </CardTitle>
         <CardDescription className='text-red-300'>
@@ -97,8 +97,8 @@ const WalletErrorGuide: React.FC<WalletErrorGuideProps> = ({
       </CardHeader>
       <CardContent className='space-y-4'>
         <div className='space-y-2'>
-          <h4 className='text-white font-medium'>Steps to resolve:</h4>
-          <ol className='list-decimal list-inside space-y-1 text-sm text-gray-300'>
+          <h4 className='font-medium text-white'>Steps to resolve:</h4>
+          <ol className='list-inside list-decimal space-y-1 text-sm text-gray-300'>
             {guidance.steps.map((step, index) => (
               <li key={index}>{step}</li>
             ))}
@@ -112,7 +112,7 @@ const WalletErrorGuide: React.FC<WalletErrorGuideProps> = ({
             size='sm'
             className='flex items-center gap-2'
           >
-            <RefreshCw className='w-4 h-4' />
+            <RefreshCw className='h-4 w-4' />
             {guidance.action}
           </Button>
 
@@ -123,7 +123,7 @@ const WalletErrorGuide: React.FC<WalletErrorGuideProps> = ({
                 target='_blank'
                 rel='noopener noreferrer'
               >
-                <ExternalLink className='w-4 h-4' />
+                <ExternalLink className='h-4 w-4' />
                 Download Freighter
               </a>
             </Button>

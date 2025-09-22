@@ -122,7 +122,7 @@ const RecentProjects = () => {
   if (loading) {
     return (
       <motion.div
-        className='bg-[#1C1C1C] p-4 sm:p-6 rounded-[12px] flex flex-col gap-6 sm:gap-8 w-full'
+        className='flex w-full flex-col gap-6 rounded-[12px] bg-[#1C1C1C] p-4 sm:gap-8 sm:p-6'
         initial='hidden'
         animate='visible'
         variants={fadeInUp}
@@ -134,13 +134,13 @@ const RecentProjects = () => {
 
   return (
     <motion.div
-      className='bg-[#1C1C1C] p-4 sm:p-6 rounded-[12px] flex flex-col gap-6 sm:gap-8 w-full'
+      className='flex w-full flex-col gap-6 rounded-[12px] bg-[#1C1C1C] p-4 sm:gap-8 sm:p-6'
       initial='hidden'
       animate='visible'
       variants={fadeInUp}
     >
       <motion.div
-        className='flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 sm:gap-4 xl:gap-0'
+        className='flex flex-col items-start justify-between gap-3 sm:gap-4 xl:flex-row xl:items-center xl:gap-0'
         variants={fadeInUp}
       >
         <div className='flex items-center gap-2 sm:gap-3 xl:gap-5'>
@@ -149,23 +149,23 @@ const RecentProjects = () => {
             onValueChange={value => setTabFilter(value as TabFilter)}
             className='w-full sm:w-auto'
           >
-            <TabsList className='bg-transparent rounded-none border-b p-0 border-[#484848] gap-2'>
+            <TabsList className='gap-2 rounded-none border-b border-[#484848] bg-transparent p-0'>
               <TabsTrigger
                 value='mine'
-                className=' border-0 rounded-none border-primary data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-white text-[#B5B5B5] data-[state=active]:bg-transparent px-0  py-0 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
+                className='border-primary data-[state=active]:border-primary flex-1 rounded-none border-0 px-0 py-0 text-xs text-[#B5B5B5] transition-all duration-200 data-[state=active]:border-b-2 data-[state=active]:bg-transparent data-[state=active]:text-white sm:flex-none sm:text-sm'
               >
                 My Projects
               </TabsTrigger>
               <TabsTrigger
                 value='others'
-                className='border-0 rounded-none border-primary data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-white text-[#B5B5B5] data-[state=active]:bg-transparent px-0  py-0 transition-all duration-200 flex-1 sm:flex-none text-xs sm:text-sm'
+                className='border-primary data-[state=active]:border-primary flex-1 rounded-none border-0 px-0 py-0 text-xs text-[#B5B5B5] transition-all duration-200 data-[state=active]:border-b-2 data-[state=active]:bg-transparent data-[state=active]:text-white sm:flex-none sm:text-sm'
               >
                 Explore ({projects.length})
               </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
-        <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full xl:w-auto'>
+        <div className='flex w-full flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3 xl:w-auto'>
           {/* <Tabs
             value={statusFilter}
             onValueChange={value => setStatusFilter(value as StatusFilter)}
@@ -196,24 +196,24 @@ const RecentProjects = () => {
             <DropdownMenuTrigger asChild>
               <BoundlessButton
                 variant='outline'
-                className='border-[#2B2B2B] hover:border-[#374151] transition-colors duration-200 w-full sm:w-auto h-10 sm:h-9 px-3 sm:px-4 text-xs sm:text-sm'
+                className='h-10 w-full border-[#2B2B2B] px-3 text-xs transition-colors duration-200 hover:border-[#374151] sm:h-9 sm:w-auto sm:px-4 sm:text-sm'
               >
                 {
                   filterOptions.find(option => option.value === statusFilter)
                     ?.label
                 }{' '}
-                <ChevronDown className='w-3 h-3 sm:w-4 sm:h-4' />
+                <ChevronDown className='h-3 w-3 sm:h-4 sm:w-4' />
               </BoundlessButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align='end'
-              className='w-[200px] sm:w-[250px] gap-1 bg-[#101010] border-none rounded-[16px] p-2 shadow-[0_1px_4px_0_rgba(72,72,72,0.14),_0_0_4px_1px_#484848]'
+              className='w-[200px] gap-1 rounded-[16px] border-none bg-[#101010] p-2 shadow-[0_1px_4px_0_rgba(72,72,72,0.14),_0_0_4px_1px_#484848] sm:w-[250px]'
             >
               {filterOptions.map(option => (
                 <DropdownMenuItem
                   key={option.value}
                   onClick={() => setStatusFilter(option.value as StatusFilter)}
-                  className='text-white font-medium hover:!text-white text-sm py-2 px-3 rounded-md hover:!bg-[#2B2B2B] hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)] transition-colors duration-200 cursor-pointer'
+                  className='cursor-pointer rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:!bg-[#2B2B2B] hover:!text-white hover:shadow-[0_1px_4px_0_rgba(40,45,40,0.04),_0_0_24px_1px_rgba(10,15,10,0.14)]'
                 >
                   {option.label}
                 </DropdownMenuItem>
@@ -226,10 +226,10 @@ const RecentProjects = () => {
       {/* Authentication Notice */}
       {!isAuthenticated && (
         <motion.div
-          className='w-full mb-4 p-3 bg-yellow-900/20 border border-yellow-600/30 rounded-lg'
+          className='mb-4 w-full rounded-lg border border-yellow-600/30 bg-yellow-900/20 p-3'
           variants={fadeInUp}
         >
-          <p className='text-yellow-400 text-sm'>
+          <p className='text-sm text-yellow-400'>
             🔐 You're not signed in. Sign in to see your projects in the "Mine"
             tab.
           </p>
@@ -238,14 +238,14 @@ const RecentProjects = () => {
 
       {/* Projects Grid */}
       <motion.div
-        className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols- xl:grid-cols-3 gap-4 sm:gap-6'
+        className='lg:grid-cols- grid grid-cols-1 gap-4 sm:grid-cols-1 sm:gap-6 md:grid-cols-2 xl:grid-cols-3'
         variants={staggerContainer}
       >
         {error ? (
           <motion.div className='col-span-full' variants={fadeInUp}>
             <div className='flex items-center justify-center py-12'>
               <div className='text-center'>
-                <p className='text-red-400 mb-2'>{error}</p>
+                <p className='mb-2 text-red-400'>{error}</p>
                 <Button
                   onClick={fetchProjects}
                   variant='outline'
@@ -319,7 +319,7 @@ const RecentProjects = () => {
                     </motion.div>
                   ))}
                   {/* Show "View All" button when there are projects */}
-                  <div className='col-span-full flex justify-center items-center'>
+                  <div className='col-span-full flex items-center justify-center'>
                     <Link href='/projects'>
                       <BoundlessButton variant='outline' className=''>
                         View All
@@ -331,7 +331,7 @@ const RecentProjects = () => {
             } else {
               return (
                 <motion.div className='col-span-full' variants={fadeInUp}>
-                  <div className='w-full max-w-md mx-auto'>
+                  <div className='mx-auto w-full max-w-md'>
                     <EmptyState
                       title={
                         tabFilter === 'mine'
@@ -353,7 +353,7 @@ const RecentProjects = () => {
                           <BoundlessButton
                             variant='default'
                             size='lg'
-                            icon={<Plus className='w-5 h-5' />}
+                            icon={<Plus className='h-5 w-5' />}
                             iconPosition='right'
                           >
                             New Project

@@ -160,12 +160,12 @@ const ProjectCard: React.FC<ProjectCardProps> = memo(
     return (
       <div
         ref={cardRef}
-        className={`bg-[#030303] rounded-[8px] border border-[#2B2B2B] p-3 sm:p-5 w-full max-w-[397px] mx-auto cursor-pointer group overflow-hidden will-change-transform ${className}`}
+        className={`group mx-auto w-full max-w-[397px] cursor-pointer overflow-hidden rounded-[8px] border border-[#2B2B2B] bg-[#030303] p-3 will-change-transform sm:p-5 ${className}`}
         style={{ transform: 'translateZ(0)' }}
       >
-        <div className='flex items-center justify-between mb-3 sm:mb-4'>
+        <div className='mb-3 flex items-center justify-between sm:mb-4'>
           <div className='flex items-center space-x-2 sm:space-x-3'>
-            <Avatar className='w-8 h-8 sm:w-6 sm:h-6'>
+            <Avatar className='h-8 w-8 sm:h-6 sm:w-6'>
               <AvatarImage src={creatorAvatar} alt={creatorName} />
               <AvatarFallback className='bg-gray-700 text-white'>
                 <Image
@@ -176,15 +176,15 @@ const ProjectCard: React.FC<ProjectCardProps> = memo(
                 />
               </AvatarFallback>
             </Avatar>
-            <span className='text-gray-300 text-xs sm:text-sm font-medium truncate max-w-24 sm:max-w-none'>
+            <span className='max-w-24 truncate text-xs font-medium text-gray-300 sm:max-w-none sm:text-sm'>
               {creatorName}
             </span>
           </div>
           <div className='flex items-center space-x-2'>
-            <Badge className='bg-[#E4DBDB] border border-[#645D5D] text-[#645D5D] px-1 py-0.5 rounded-[4px] text-xs font-medium flex-shrink-0'>
+            <Badge className='flex-shrink-0 rounded-[4px] border border-[#645D5D] bg-[#E4DBDB] px-1 py-0.5 text-xs font-medium text-[#645D5D]'>
               {project.category}
             </Badge>
-            <Badge className='bg-[rgba(167,249,80,0.08)] border border-[#A7F950] text-[#A7F950] px-1 py-0.5 rounded-[4px] text-xs font-medium flex-shrink-0'>
+            <Badge className='flex-shrink-0 rounded-[4px] border border-[#A7F950] bg-[rgba(167,249,80,0.08)] px-1 py-0.5 text-xs font-medium text-[#A7F950]'>
               {project.category}
             </Badge>
           </div>
@@ -192,10 +192,10 @@ const ProjectCard: React.FC<ProjectCardProps> = memo(
 
         <div
           ref={imageRef}
-          className='flex items-start space-x-3 sm:space-x-4 mb-3 sm:mb-4 will-change-transform'
+          className='mb-3 flex items-start space-x-3 will-change-transform sm:mb-4 sm:space-x-4'
           style={{ transform: 'translateZ(0)' }}
         >
-          <div className='relative h-24 w-24 sm:h-[90px] sm:w-[80px] rounded-xl overflow-hidden flex-shrink-0'>
+          <div className='relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl sm:h-[90px] sm:w-[80px]'>
             <Image
               src='/bitmed.png'
               alt={project.name}
@@ -206,11 +206,11 @@ const ProjectCard: React.FC<ProjectCardProps> = memo(
             />
           </div>
 
-          <div ref={contentRef} className='flex-1 min-w-0 text-left'>
-            <h3 className='text-white text-lg sm:text-base font-bold mb-2 line-clamp-1'>
+          <div ref={contentRef} className='min-w-0 flex-1 text-left'>
+            <h3 className='mb-2 line-clamp-1 text-lg font-bold text-white sm:text-base'>
               {project.name}
             </h3>
-            <p className='text-gray-300 text-xs sm:text-sm text-left leading-relaxed line-clamp-2 sm:line-clamp-3'>
+            <p className='line-clamp-2 text-left text-xs leading-relaxed text-gray-300 sm:line-clamp-3 sm:text-sm'>
               {project.description}
             </p>
           </div>
@@ -219,12 +219,12 @@ const ProjectCard: React.FC<ProjectCardProps> = memo(
         <div ref={bottomRef} className='flex flex-col gap-2'>
           <div className='flex items-center justify-between space-x-2'>
             <div className='flex items-center space-x-2'>
-              <span className='text-white text-xs sm:text-sm'>
+              <span className='text-xs text-white sm:text-sm'>
                 120/300 USDC
               </span>
-              <span className='text-[#B5B5B5] text-xs sm:text-xs'>Raised</span>
+              <span className='text-xs text-[#B5B5B5] sm:text-xs'>Raised</span>
             </div>
-            <span className='text-[#F5B546] text-xs sm:text-xs'>
+            <span className='text-xs text-[#F5B546] sm:text-xs'>
               15 days to deadline
             </span>
           </div>

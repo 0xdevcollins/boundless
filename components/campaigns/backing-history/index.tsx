@@ -118,20 +118,20 @@ const BackingHistory: React.FC<BackingHistoryProps> = ({
   return (
     <BoundlessSheet open={open} setOpen={setOpen} contentClassName='h-[100vh]'>
       <section className=''>
-        <div className='space-y-4 max-h-screen w-full max-w-[564px] mx-auto px-4'>
-          <h1 className='text-white text-lg font-semibold'>Backing History</h1>
+        <div className='mx-auto max-h-screen w-full max-w-[564px] space-y-4 px-4'>
+          <h1 className='text-lg font-semibold text-white'>Backing History</h1>
           {/* Search and Controls */}
-          <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-2'>
-            <div className='relative flex-1 min-w-0'>
-              <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4' />
+          <div className='flex flex-col items-stretch gap-2 sm:flex-row sm:items-center'>
+            <div className='relative min-w-0 flex-1'>
+              <Search className='text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform' />
               <Input
                 placeholder='Search backer or wallet...'
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className='pl-10 py-5 focus:outline-none placeholder:font-medium bg-[#1c1c1c] border-muted-foreground/20 text-placeholder placeholder:text-muted-foreground w-full'
+                className='border-muted-foreground/20 text-placeholder placeholder:text-muted-foreground w-full bg-[#1c1c1c] py-5 pl-10 placeholder:font-medium focus:outline-none'
               />
             </div>
-            <div className='flex gap-2 flex-shrink-0'>
+            <div className='flex flex-shrink-0 gap-2'>
               <SortFilterPopover
                 sortBy={sortBy}
                 setSortBy={setSortBy}

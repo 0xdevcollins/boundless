@@ -27,7 +27,7 @@ const Page = () => {
     <div className='p-8'>
       <Button
         onClick={() => setIsSheetOpen(true)}
-        className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700'
+        className='rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700'
       >
         Open Comment Sheet
       </Button>
@@ -39,13 +39,13 @@ const Page = () => {
         side='bottom'
       >
         <div className='space-y-4'>
-          <div className='text-center text-gray-300 mb-6'>
+          <div className='mb-6 text-center text-gray-300'>
             <p>Share your thoughts and feedback</p>
           </div>
 
           <textarea
             placeholder='Write your comment here...'
-            className='w-full p-3 border border-gray-600 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+            className='w-full rounded-lg border border-gray-600 bg-gray-800 p-3 text-white placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none'
             rows={4}
             id='comment-input'
           />

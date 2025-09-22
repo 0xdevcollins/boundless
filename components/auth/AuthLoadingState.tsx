@@ -20,15 +20,15 @@ const AuthLoadingState = ({
       )}
     >
       <div className='absolute inset-0 overflow-hidden'>
-        <div className='absolute top-0 right-0 w-96 h-96 bg-green-500/5 rounded-full blur-3xl' />
-        <div className='absolute bottom-0 left-0 w-80 h-80 bg-green-400/5 rounded-full blur-3xl' />
-        <div className='absolute bottom-1/3 right-1/3 w-64 h-64 bg-green-600/5 rounded-full blur-3xl' />
+        <div className='absolute top-0 right-0 h-96 w-96 rounded-full bg-green-500/5 blur-3xl' />
+        <div className='absolute bottom-0 left-0 h-80 w-80 rounded-full bg-green-400/5 blur-3xl' />
+        <div className='absolute right-1/3 bottom-1/3 h-64 w-64 rounded-full bg-green-600/5 blur-3xl' />
       </div>
 
       <div className='relative z-10 flex flex-col items-center'>
-        <div className='relative flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6 h-10 sm:h-12'>
+        <div className='relative mb-4 flex h-10 items-center space-x-2 sm:mb-6 sm:h-12 sm:space-x-3'>
           <motion.div
-            className='w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full'
+            className='h-2 w-2 rounded-full sm:h-2.5 sm:w-2.5'
             animate={{
               height: ['8px', '32px', '8px', '40px', '8px'],
               backgroundColor: [
@@ -47,7 +47,7 @@ const AuthLoadingState = ({
           />
 
           <motion.div
-            className='w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full'
+            className='h-2 w-2 rounded-full sm:h-2.5 sm:w-2.5'
             animate={{
               height: ['8px', '32px', '8px', '40px', '8px'],
               backgroundColor: [
@@ -66,7 +66,7 @@ const AuthLoadingState = ({
           />
 
           <motion.div
-            className='w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full'
+            className='h-2 w-2 rounded-full sm:h-2.5 sm:w-2.5'
             animate={{
               height: ['8px', '32px', '8px', '40px', '8px'],
               backgroundColor: [
@@ -86,7 +86,7 @@ const AuthLoadingState = ({
         </div>
 
         <motion.h2
-          className='text-white text-base sm:text-lg font-normal tracking-wide px-4 text-center'
+          className='px-4 text-center text-base font-normal tracking-wide text-white sm:text-lg'
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}

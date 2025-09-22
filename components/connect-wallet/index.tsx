@@ -211,31 +211,31 @@ const ConnectWallet = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='!max-w-[552px] !w-[95vw] max-h-[90vh] rounded-[16px] bg-[#030303] gap-6 p-4 sm:p-6 border-none shadow-[0_1px_4px_0_rgba(72,72,72,0.14),0_0_4px_1px_#484848] overflow-hidden'>
+      <DialogContent className='max-h-[90vh] !w-[95vw] !max-w-[552px] gap-6 overflow-hidden rounded-[16px] border-none bg-[#030303] p-4 shadow-[0_1px_4px_0_rgba(72,72,72,0.14),0_0_4px_1px_#484848] sm:p-6'>
         {/* Header */}
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-2'>
-            <DialogTitle className='text-white text-xl sm:text-2xl font-medium'>
+            <DialogTitle className='text-xl font-medium text-white sm:text-2xl'>
               Connect Wallet
             </DialogTitle>
-            <CircleQuestionMark className='w-4 h-4 text-[#484848]' />
+            <CircleQuestionMark className='h-4 w-4 text-[#484848]' />
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-                  <CircleQuestionMark className='w-4 h-4 text-[#484848]' />
+                  <CircleQuestionMark className='h-4 w-4 text-[#484848]' />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <h4 className='text-white text-lg font-medium'>
+                  <h4 className='text-lg font-medium text-white'>
                     What is a Wallet?
                   </h4>
-                  <p className='text-[#B5B5B5] text-sm'>
+                  <p className='text-sm text-[#B5B5B5]'>
                     Wallets are used to send, receive, and store the keys you
                     use to sign blockchain transactions.
                   </p>
-                  <h4 className='text-white text-lg font-medium'>
+                  <h4 className='text-lg font-medium text-white'>
                     What is a Stellar Blockchain?
                   </h4>
-                  <p className='text-[#B5B5B5] text-sm'>
+                  <p className='text-sm text-[#B5B5B5]'>
                     Stellar is a decentralized network that allows you to send
                     and receive digital assets.
                   </p>
@@ -247,33 +247,33 @@ const ConnectWallet = ({
             variant='ghost'
             size='sm'
             onClick={() => onOpenChange(false)}
-            className='h-8 w-8 p-0 hover:bg-[#1a1a1a] rounded-lg'
+            className='h-8 w-8 rounded-lg p-0 hover:bg-[#1a1a1a]'
             aria-label='Close modal'
             disabled={isConnecting}
           >
-            <X className='w-4 h-4 text-white' />
+            <X className='h-4 w-4 text-white' />
           </Button>
         </div>
 
         {/* Description and Terms */}
         <DialogDescription className='!mt-0 !p-0'>
-          <p className='text-[#B5B5B5] font-normal mb-4 text-sm'>
+          <p className='mb-4 text-sm font-normal text-[#B5B5B5]'>
             Select what network and wallet below
           </p>
 
-          <div className='space-y-3 mb-6'>
-            <p className='text-[#B5B5B5] font-normal text-sm leading-relaxed'>
+          <div className='mb-6 space-y-3'>
+            <p className='text-sm leading-relaxed font-normal text-[#B5B5B5]'>
               Accept{' '}
               <Link
                 href='/terms-of-service'
-                className='text-[#A7F950] hover:text-[#86C939] transition-colors underline underline-offset-2'
+                className='text-[#A7F950] underline underline-offset-2 transition-colors hover:text-[#86C939]'
               >
                 Terms of Service
               </Link>{' '}
               and{' '}
               <Link
                 href='/privacy-policy'
-                className='text-[#A7F950] hover:text-[#86C939] transition-colors underline underline-offset-2'
+                className='text-[#A7F950] underline underline-offset-2 transition-colors hover:text-[#86C939]'
               >
                 Privacy Policy
               </Link>
@@ -284,12 +284,12 @@ const ConnectWallet = ({
                 onCheckedChange={checked =>
                   setAcceptedTerms(checked as boolean)
                 }
-                className='data-[state=checked]:bg-[#A7F950] data-[state=checked]:border-[#A7F950]'
+                className='data-[state=checked]:border-[#A7F950] data-[state=checked]:bg-[#A7F950]'
                 id='terms-checkbox'
               />
               <label
                 htmlFor='terms-checkbox'
-                className='text-white text-sm cursor-pointer'
+                className='cursor-pointer text-sm text-white'
               >
                 I read and accept
               </label>
@@ -299,13 +299,13 @@ const ConnectWallet = ({
 
         {/* Network Selection */}
         <div className='space-y-3'>
-          <h3 className='text-white font-medium text-base'>Choose Network</h3>
+          <h3 className='text-base font-medium text-white'>Choose Network</h3>
           <div className='grid grid-cols-2 gap-3'>
             {networks.map(network => (
               <Button
                 key={network.id}
                 variant='outline'
-                className={`h-auto p-4 flex flex-col items-center gap-2 rounded-lg border transition-all ${
+                className={`flex h-auto flex-col items-center gap-2 rounded-lg border p-4 transition-all ${
                   selectedNetwork === network.id
                     ? 'border-[#A7F950] bg-[#0a0a0a]'
                     : 'border-[#2B2B2B] bg-[#101010] hover:border-[#404040]'
@@ -313,10 +313,10 @@ const ConnectWallet = ({
                 onClick={() => handleNetworkChange(network.id)}
                 disabled={isConnecting}
               >
-                <div className='w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center'>
-                  <div className='w-3 h-0.5 bg-white'></div>
+                <div className='flex h-8 w-8 items-center justify-center rounded-full bg-blue-500'>
+                  <div className='h-0.5 w-3 bg-white'></div>
                 </div>
-                <span className='text-white text-sm font-medium'>
+                <span className='text-sm font-medium text-white'>
                   {network.name}
                 </span>
               </Button>
@@ -325,12 +325,12 @@ const ConnectWallet = ({
         </div>
 
         {/* Wallet Selection */}
-        <div className='space-y-3 flex-1 min-h-0'>
+        <div className='min-h-0 flex-1 space-y-3'>
           <div className='flex items-center justify-between'>
-            <h3 className='text-white font-medium text-base'>Choose Wallet</h3>
+            <h3 className='text-base font-medium text-white'>Choose Wallet</h3>
             {isLoading && (
-              <div className='flex items-center gap-2 text-[#B5B5B5] text-sm'>
-                <Loader2 className='w-4 h-4 animate-spin' />
+              <div className='flex items-center gap-2 text-sm text-[#B5B5B5]'>
+                <Loader2 className='h-4 w-4 animate-spin' />
                 Loading wallets...
               </div>
             )}
@@ -338,16 +338,16 @@ const ConnectWallet = ({
 
           {/* Connection Status */}
           {isConnecting && connectingWallet && (
-            <div className='flex items-center gap-2 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg'>
-              <Loader2 className='w-4 h-4 animate-spin text-blue-500' />
-              <span className='text-blue-500 text-sm'>
+            <div className='flex items-center gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3'>
+              <Loader2 className='h-4 w-4 animate-spin text-blue-500' />
+              <span className='text-sm text-blue-500'>
                 Connecting to {connectingWallet}...
               </span>
             </div>
           )}
 
-          <ScrollArea className='h-[280px] sm:h-[225px] pr-2'>
-            <div className='grid grid-cols-2 sm:grid-cols-3 gap-3 p-1'>
+          <ScrollArea className='h-[280px] pr-2 sm:h-[225px]'>
+            <div className='grid grid-cols-2 gap-3 p-1 sm:grid-cols-3'>
               {wallets.map(wallet => (
                 <WalletCard
                   key={wallet.id}
@@ -363,14 +363,14 @@ const ConnectWallet = ({
 
         {/* Error Display */}
         {error && (
-          <div className='bg-red-500/10 border border-red-500/20 rounded-lg p-3'>
-            <div className='flex items-center gap-2 mb-2'>
-              <AlertCircle className='w-4 h-4 text-red-400' />
-              <span className='text-red-400 text-sm font-medium'>
+          <div className='rounded-lg border border-red-500/20 bg-red-500/10 p-3'>
+            <div className='mb-2 flex items-center gap-2'>
+              <AlertCircle className='h-4 w-4 text-red-400' />
+              <span className='text-sm font-medium text-red-400'>
                 Connection Error
               </span>
             </div>
-            <p className='text-red-400 text-sm'>{error}</p>
+            <p className='text-sm text-red-400'>{error}</p>
           </div>
         )}
       </DialogContent>

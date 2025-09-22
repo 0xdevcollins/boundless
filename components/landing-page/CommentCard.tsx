@@ -19,26 +19,26 @@ const CommentCard: React.FC<CommentCardProps> = ({
   icon,
 }) => {
   return (
-    <div className='mb-6 flex flex-col gap-6 border border-[#1B1B1B] bg-[#101010] p-4 md:p-6 rounded-[8px]'>
-      <div className='grid grid-cols-[1fr_auto] gap-2 md:gap-4 items-start'>
+    <div className='mb-6 flex flex-col gap-6 rounded-[8px] border border-[#1B1B1B] bg-[#101010] p-4 md:p-6'>
+      <div className='grid grid-cols-[1fr_auto] items-start gap-2 md:gap-4'>
         <div className='flex gap-3 md:gap-4'>
           <Avatar className='size-12 md:size-14'>
             <AvatarImage src={avatarSrc} />
             <AvatarFallback>{avatarFallback}</AvatarFallback>
           </Avatar>
           <div className='flex flex-col gap-1'>
-            <p className='text-white text-base md:text-lg font-semibold'>
+            <p className='text-base font-semibold text-white md:text-lg'>
               {name}
             </p>
-            <p className='text-[#B5B5B5] text-sm md:text-base font-medium'>
+            <p className='text-sm font-medium text-[#B5B5B5] md:text-base'>
               @{username}
             </p>
           </div>
         </div>
-        <div className='flex justify-end items-start'>{icon}</div>
+        <div className='flex items-start justify-end'>{icon}</div>
       </div>
 
-      <p className='text-[#B5B5B5] text-sm md:text-base leading-relaxed md:leading-[160%]'>
+      <p className='text-sm leading-relaxed text-[#B5B5B5] md:text-base md:leading-[160%]'>
         {content}
       </p>
     </div>

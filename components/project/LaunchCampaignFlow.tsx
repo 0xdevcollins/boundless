@@ -106,13 +106,13 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
 
       case 'launching':
         return (
-          <div className='flex flex-col items-center justify-center h-64 space-y-4'>
+          <div className='flex h-64 flex-col items-center justify-center space-y-4'>
             <LoadingSpinner size='lg' color='white' />
             <div className='text-center'>
-              <h3 className='text-[#F5F5F5] text-lg font-medium mb-2'>
+              <h3 className='mb-2 text-lg font-medium text-[#F5F5F5]'>
                 Launching Campaign...
               </h3>
-              <p className='text-[#B5B5B5] text-sm'>
+              <p className='text-sm text-[#B5B5B5]'>
                 Please wait while we deploy your campaign and set up the smart
                 escrow.
               </p>
@@ -127,8 +127,8 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
             onBackToDashboard={handleBackToDashboard}
           />
         ) : (
-          <div className='text-center py-8'>
-            <p className='text-red-500 mb-4'>Campaign details not available</p>
+          <div className='py-8 text-center'>
+            <p className='mb-4 text-red-500'>Campaign details not available</p>
             <button
               onClick={handleBackToDashboard}
               className='text-[#F5F5F5] hover:text-[#B5B5B5]'
@@ -146,7 +146,7 @@ const LaunchCampaignFlow: React.FC<LaunchCampaignFlowProps> = ({
   return (
     <>
       <div className='flex h-full'>
-        <div className='flex-1 sticky top-0'>
+        <div className='sticky top-0 flex-1'>
           <Stepper steps={steps} />
         </div>
 

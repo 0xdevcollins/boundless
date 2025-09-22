@@ -102,8 +102,8 @@ export default function VerifyEmailPage() {
   return (
     <>
       {isLoading && <AuthLoadingState />}
-      <div className='min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8'>
-        <div className='max-w-md w-full space-y-8'>
+      <div className='flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8'>
+        <div className='w-full max-w-md space-y-8'>
           <div className='text-center'>
             <h2 className='mt-6 text-3xl font-extrabold text-gray-900'>
               Verify your email
@@ -139,7 +139,7 @@ export default function VerifyEmailPage() {
                 <div className='space-y-2'>
                   <Label htmlFor='email'>Email Address</Label>
                   <div className='relative'>
-                    <Mail className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
+                    <Mail className='absolute top-3 left-3 h-4 w-4 text-gray-400' />
                     <Input
                       id='email'
                       type='email'
@@ -174,7 +174,7 @@ export default function VerifyEmailPage() {
                 </Button>
               </form>
 
-              <div className='text-center space-y-2'>
+              <div className='space-y-2 text-center'>
                 <Button
                   variant='outline'
                   onClick={handleResendOtp}
