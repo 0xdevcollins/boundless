@@ -6,8 +6,11 @@ export const metadata: Metadata = generatePageMetadata('projects');
 
 const ProjectsPage = () => {
   return (
-    <div className='text-white text-4xl font-bold text-center mt-10'>
-      Projects Page
+    <div className='mt-10 text-center text-4xl font-bold text-white'>
+      <h1 className='mb-10'>Projects</h1>
+      <div className='flex flex-wrap justify-center gap-8'>
+        {/* Project cards will be rendered here */}
+      </div>
     </div>
   );
 };

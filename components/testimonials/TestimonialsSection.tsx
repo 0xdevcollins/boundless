@@ -7,6 +7,7 @@ import { BoundlessButton } from '../buttons';
 import { gsap } from 'gsap';
 import TestimonialCard from './TestimonialCard';
 import Image from 'next/image';
+import Newsletter from '../overview/Newsletter';
 
 type TestimonialsWallProps = {
   testimonials: Testimonial[];
@@ -19,7 +20,7 @@ export default function TestimonialsSection({
   const columnRefs = useRef<HTMLDivElement[]>([]);
   const animations = useRef<gsap.core.Tween[]>([]);
   const [numColumns, setNumColumns] = useState<number>(4);
-
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     animations.current.forEach(anim => anim.kill());
     animations.current = [];
@@ -48,10 +49,16 @@ export default function TestimonialsSection({
       });
       wrapper.appendChild(cloneContainer);
 
-      gsap.set(wrapper, { y: 0, force3D: true, willChange: 'transform' });
+      const isEvenColumn = index % 2 === 0;
+      const initialY = isEvenColumn ? 0 : -totalHeight;
+      gsap.set(wrapper, {
+        y: initialY,
+        force3D: true,
+        willChange: 'transform',
+      });
 
       const anim = gsap.to(wrapper, {
-        y: -totalHeight,
+        y: isEvenColumn ? -totalHeight : 0,
         duration: 60,
         ease: 'none',
         repeat: -1,
@@ -113,7 +120,7 @@ export default function TestimonialsSection({
 
   return (
     <section
-      className='relative py-20 text-white overflow-hidden bg-[#030303]'
+      className='relative overflow-hidden bg-[#030303] py-20 text-white'
       aria-labelledby='testimonials-heading'
     >
       <div className='w-full'>
@@ -121,7 +128,7 @@ export default function TestimonialsSection({
           What our users say
         </h2>
 
-        <div className='relative overflow-hidden shadow-2xl backdrop-blur-sm md:max-h-[600px] max-h-[470px]'>
+        <div className='relative max-h-[470px] overflow-hidden shadow-2xl backdrop-blur-sm md:max-h-[600px]'>
           <div className='absolute inset-0 bg-[#CCFF95] opacity-95'></div>
 
           <Image
@@ -129,24 +136,24 @@ export default function TestimonialsSection({
             alt='Gradient top'
             width={1000}
             height={100}
-            className='absolute top-[-10px] left-0 w-full h-[150px] z-20 pointer-events-none'
+            className='pointer-events-none absolute top-[-10px] left-0 z-20 h-[150px] w-full'
           />
           <Image
             src='/fade.png'
             alt='Gradient bottom'
             width={1000}
             height={100}
-            className='absolute bottom-[-10px] transform rotate-180 left-0 w-full h-[150px] z-20 pointer-events-none'
+            className='pointer-events-none absolute bottom-[-10px] left-0 z-20 h-[150px] w-full rotate-180 transform'
           />
           <div
-            className='absolute top-[-10px] left-0 w-full h-[150px] z-10 pointer-events-none'
+            className='pointer-events-none absolute top-[-10px] left-0 z-10 h-[150px] w-full'
             style={{
               background:
                 'linear-gradient(180deg, #030303 0%, rgba(3, 3, 3, 0.00) 100%)',
             }}
           />
           <div
-            className='absolute bottom-0 left-0 w-full h-[150px] z-10 pointer-events-none'
+            className='pointer-events-none absolute bottom-0 left-0 z-10 h-[150px] w-full'
             style={{
               background:
                 'linear-gradient(0deg, #030303 0%, rgba(3, 3, 3, 0.00) 100%)',
@@ -154,14 +161,14 @@ export default function TestimonialsSection({
           />
 
           <div
-            className='-mx-6 overflow-x-auto relative z-[10]'
+            className='relative z-[10] -mx-6 overflow-x-auto'
             ref={el => {
               if (el) el.scrollLeft = 100;
             }}
           >
             <div
               ref={scrollContainerRef}
-              className='flex px-6 space-x-8'
+              className='flex space-x-8 px-6'
               style={{
                 willChange: 'transform',
                 backfaceVisibility: 'hidden',
@@ -175,7 +182,7 @@ export default function TestimonialsSection({
                     ref={el => {
                       if (el) columnRefs.current[colIdx] = el;
                     }}
-                    className='flex flex-col space-y-8 flex-shrink-0 w-[300px] scroll-wrapper'
+                    className='scroll-wrapper flex w-[300px] flex-shrink-0 flex-col space-y-8'
                   >
                     {testimonials
                       .filter((_, i) => i % numColumns === colIdx)
@@ -205,19 +212,19 @@ export default function TestimonialsSection({
             </div>
           </div>
 
-          <div className='absolute lg:bottom-[60px] bottom-14  lg:mt-0 mt-20 left-1/2 -translate-x-1/2 md:max-h-[212px] w-[90%] max-w-6xl bg-primary rounded-xl shadow-lg p-8 md:p-12 text-black z-40'>
-            <div className='flex flex-col md:flex-row items-center md:justify-between gap-6'>
+          <div className='bg-primary absolute bottom-14 left-1/2 z-40 mt-20 w-full max-w-[90vw] -translate-x-1/2 rounded-xl p-8 text-black shadow-lg md:max-h-[212px] md:p-12 lg:bottom-[60px] lg:mt-0'>
+            <div className='flex flex-col items-center gap-6 md:flex-row md:justify-between'>
               <div>
-                <h2 className='text-3xl lg:text-5xl font-medium tracking-[-1.92px] leading-[100%] md:text-left text-center mb-2'>
+                <h2 className='mb-2 text-center text-3xl leading-[100%] font-medium tracking-[-1.92px] md:text-left lg:text-5xl'>
                   Shape the Future <br /> With Us
                 </h2>
               </div>
               <div className='flex flex-col gap-4'>
-                <p className='text-base md:text-left text-center font-normal text-[#2B2B2B] max-w-md'>
+                <p className='max-w-md text-center text-base font-normal text-[#2B2B2B] md:text-left'>
                   We're building a future where ideas are truly boundless,
                   unlocking opportunities for innovators. Be part of it!
                 </p>
-                <div className='flex md:flex-row flex-col gap-2'>
+                <div className='flex flex-col gap-2 md:flex-row'>
                   <BoundlessButton
                     variant='secondary'
                     className='bg-background hover:text-background'
@@ -231,8 +238,9 @@ export default function TestimonialsSection({
                     variant='ghost'
                     size='xl'
                     fullWidth
-                    className='bg-transparent border border-black'
+                    className='border border-black bg-transparent'
                     aria-label='Subscribe for updates'
+                    onClick={() => setOpen(true)}
                   >
                     Subscribe for Updates
                   </BoundlessButton>
@@ -242,6 +250,7 @@ export default function TestimonialsSection({
           </div>
         </div>
       </div>
+      <Newsletter open={open} onOpenChange={setOpen} />
     </section>
   );
 }

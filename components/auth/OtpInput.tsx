@@ -108,7 +108,7 @@ export function OtpInput({
   };
 
   return (
-    <div className={cn('flex gap-2 justify-center', className)}>
+    <div className={cn('flex justify-center gap-2', className)}>
       {otp.map((digit, index) => (
         <Input
           key={index}
@@ -125,10 +125,10 @@ export function OtpInput({
           onPaste={handlePaste}
           disabled={disabled}
           className={cn(
-            'w-12 h-12 text-center text-lg font-semibold',
+            'h-12 w-12 text-center text-lg font-semibold',
             'border-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-200',
             digit && 'border-green-500 bg-green-50',
-            disabled && 'opacity-50 cursor-not-allowed'
+            disabled && 'cursor-not-allowed opacity-50'
           )}
           placeholder='•'
         />

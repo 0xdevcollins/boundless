@@ -123,7 +123,7 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
         <div className='space-y-6'>
           <div className='flex justify-center'>
             <div className='text-left' style={{ width: '500px' }}>
-              <h2 className='text-xl font-semibold text-white mb-2'>
+              <h2 className='mb-2 text-xl font-semibold text-white'>
                 Milestone Summary
               </h2>
               <p className='text-sm text-gray-400'>Milestone 1</p>
@@ -132,7 +132,7 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
 
           <div className='flex justify-center'>
             <div
-              className='bg-[#1C1C1C] border border-[#2B2B2B] rounded-[12px]'
+              className='rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C]'
               style={{
                 width: '500px',
                 height: '210px',
@@ -140,22 +140,22 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
                 gap: '12px',
               }}
             >
-              <div className='flex items-start justify-between mb-3'>
-                <h3 className='text-white font-semibold text-base'>
+              <div className='mb-3 flex items-start justify-between'>
+                <h3 className='text-base font-semibold text-white'>
                   {milestone.title}
                 </h3>
                 <div className='flex items-center gap-2'>
-                  <span className='px-2 py-1 rounded-full text-xs font-medium bg-[#012657] text-white'>
+                  <span className='rounded-full bg-[#012657] px-2 py-1 text-xs font-medium text-white'>
                     {milestone.status.charAt(0).toUpperCase() +
                       milestone.status.slice(1)}
                   </span>
                   <button
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className='text-white hover:text-gray-300 transition-colors'
+                    className='text-white transition-colors hover:text-gray-300'
                   >
                     <ChevronUp
                       className={cn(
-                        'w-4 h-4 transition-transform',
+                        'h-4 w-4 transition-transform',
                         !isExpanded && 'rotate-180'
                       )}
                     />
@@ -165,17 +165,17 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
 
               {isExpanded && (
                 <>
-                  <p className='text-gray-300 text-sm mb-4 leading-relaxed'>
+                  <p className='mb-4 text-sm leading-relaxed text-gray-300'>
                     {milestone.description}
                   </p>
 
                   <div className='flex items-center gap-6 text-sm text-gray-400'>
                     <div className='flex items-center gap-2'>
-                      <Calendar className='w-4 h-4' />
+                      <Calendar className='h-4 w-4' />
                       <span>1 {formatDate(milestone.deliveryDate)}</span>
                     </div>
                     <div className='flex items-center gap-2'>
-                      <Coins className='w-4 h-4' />
+                      <Coins className='h-4 w-4' />
                       <span>{formatCurrency(milestone.fundAmount)}</span>
                     </div>
                   </div>
@@ -186,20 +186,20 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
 
           <div className='flex justify-center'>
             <div className='space-y-3' style={{ width: '500px' }}>
-              <h3 className='text-white font-medium text-lg'>
+              <h3 className='text-lg font-medium text-white'>
                 Upload Proof of Completion
               </h3>
 
               <div className='text-left'>
-                <Label className='text-white font-medium'>
+                <Label className='font-medium text-white'>
                   File Upload <span className='text-red-500'>*</span>
                 </Label>
               </div>
 
-              <div className='border-2 border-dashed border-[#2B2B2B] rounded-xl p-6 bg-[#1C1C1C] flex items-center justify-between'>
+              <div className='flex items-center justify-between rounded-xl border-2 border-dashed border-[#2B2B2B] bg-[#1C1C1C] p-6'>
                 <div className='flex items-center gap-4'>
                   <div
-                    className='rounded-full flex items-center justify-center'
+                    className='flex items-center justify-center rounded-full'
                     style={{
                       width: '48px',
                       height: '48px',
@@ -207,12 +207,12 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
                       opacity: 1,
                     }}
                   >
-                    <CloudUpload className='w-6 h-6 text-[#1C1C1C]' />
+                    <CloudUpload className='h-6 w-6 text-[#1C1C1C]' />
                   </div>
 
                   <div className='text-left'>
-                    <p className='text-white font-medium'>Upload your files</p>
-                    <p className='text-gray-400 text-sm'>
+                    <p className='font-medium text-white'>Upload your files</p>
+                    <p className='text-sm text-gray-400'>
                       JPEG, PNG, PDF, Docs • Max. 20MB
                     </p>
                   </div>
@@ -240,9 +240,9 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
               {files.length > 0 && (
                 <div className='space-y-3'>
                   <div className='flex items-center gap-2'>
-                    <h3 className='text-white font-medium'>Uploaded Files</h3>
-                    <div className='w-6 h-6 rounded-full bg-[#1C1C1C] border border-white flex items-center justify-center'>
-                      <span className='text-white text-xs font-medium'>
+                    <h3 className='font-medium text-white'>Uploaded Files</h3>
+                    <div className='flex h-6 w-6 items-center justify-center rounded-full border border-white bg-[#1C1C1C]'>
+                      <span className='text-xs font-medium text-white'>
                         {files.length}
                       </span>
                     </div>
@@ -252,23 +252,23 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
                     {files.map((file, index) => (
                       <div
                         key={index}
-                        className='flex items-center justify-between bg-[#1C1C1C] border border-[#2B2B2B] rounded-lg p-3'
+                        className='flex items-center justify-between rounded-lg border border-[#2B2B2B] bg-[#1C1C1C] p-3'
                       >
                         <div className='flex items-center gap-3'>
-                          <div className='w-6 h-6 rounded-full bg-green-500 flex items-center justify-center'>
-                            <Check className='w-3 h-3 text-white' />
+                          <div className='flex h-6 w-6 items-center justify-center rounded-full bg-green-500'>
+                            <Check className='h-3 w-3 text-white' />
                           </div>
 
                           <div className='flex flex-col'>
-                            <span className='text-white text-sm font-medium'>
+                            <span className='text-sm font-medium text-white'>
                               {file.name}
                             </span>
                             <div className='flex items-center gap-2'>
-                              <span className='text-green-400 text-xs'>
+                              <span className='text-xs text-green-400'>
                                 Upload complete
                               </span>
-                              <span className='text-gray-400 text-xs'>•</span>
-                              <span className='text-white text-xs'>
+                              <span className='text-xs text-gray-400'>•</span>
+                              <span className='text-xs text-white'>
                                 {(file.size / (1024 * 1024)).toFixed(1)}MB
                               </span>
                             </div>
@@ -277,9 +277,9 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
 
                         <button
                           onClick={() => handleRemoveFile(index)}
-                          className='w-8 h-8 rounded-lg bg-red-500 hover:bg-red-600 flex items-center justify-center transition-colors'
+                          className='flex h-8 w-8 items-center justify-center rounded-lg bg-red-500 transition-colors hover:bg-red-600'
                         >
-                          <Trash2 className='w-4 h-4 text-white' />
+                          <Trash2 className='h-4 w-4 text-white' />
                         </button>
                       </div>
                     ))}
@@ -291,14 +291,14 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
 
           <div className='flex justify-center'>
             <div className='space-y-3' style={{ width: '500px' }}>
-              <Label className='text-white font-medium'>
+              <Label className='font-medium text-white'>
                 Links to External Evidence
               </Label>
 
               {externalLinks.map((link, index) => (
                 <div key={index} className='flex items-center gap-2'>
-                  <div className='flex-1 relative'>
-                    <LinkIcon className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400' />
+                  <div className='relative flex-1'>
+                    <LinkIcon className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400' />
                     <input
                       type='url'
                       placeholder=''
@@ -333,7 +333,7 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
 
                     {link.trim() && link !== 'www.' && (
                       <BoundlessButton
-                        className='absolute right-2 top-1/2 transform -translate-y-1/2 w-[65px] h-[36px] rounded-[10px] border-[0.3px] border-[#A7F950] bg-[#A7F950] text-black text-[14px] font-[500] transition-colors'
+                        className='absolute top-1/2 right-2 h-[36px] w-[65px] -translate-y-1/2 transform rounded-[10px] border-[0.3px] border-[#A7F950] bg-[#A7F950] text-[14px] font-[500] text-black transition-colors'
                         style={{
                           backgroundImage:
                             'linear-gradient(314.7deg, rgba(147, 229, 60, 0.14) 3.33%, rgba(117, 199, 30, 0) 21.54%, rgba(107, 185, 20, 0.14) 87.82%)',
@@ -354,9 +354,9 @@ const MilestoneSubmissionModal: React.FC<MilestoneSubmissionModalProps> = ({
               onClick={handleSubmit}
               disabled={files.length === 0 || loading}
               className={cn(
-                'w-[500px] h-[40px] rounded-[10px] border-[1.4px] text-[14px] font-[500] transition-all duration-200',
+                'h-[40px] w-[500px] rounded-[10px] border-[1.4px] text-[14px] font-[500] transition-all duration-200',
                 files.length === 0 || loading
-                  ? 'border-[#2B2B2B] bg-[#1C1C1C] text-white opacity-50 cursor-not-allowed'
+                  ? 'cursor-not-allowed border-[#2B2B2B] bg-[#1C1C1C] text-white opacity-50'
                   : 'border-[#A7F950] bg-[#A7F950] text-black hover:bg-[#8BE03A]'
               )}
               style={{

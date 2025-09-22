@@ -30,13 +30,13 @@ export default function TestEmptyStatePage() {
   return (
     <div className='min-h-screen bg-black'>
       {/* Header */}
-      <div className='bg-black border-b border-gray-700'>
-        <div className='px-4 sm:px-6 py-4 flex items-center justify-between'>
-          <h1 className='text-white text-lg sm:text-xl font-bold'>
+      <div className='border-b border-gray-700 bg-black'>
+        <div className='flex items-center justify-between px-4 py-4 sm:px-6'>
+          <h1 className='text-lg font-bold text-white sm:text-xl'>
             Explore Boundless Projects
           </h1>
           <button
-            className='lg:hidden text-gray-300 hover:text-white p-2'
+            className='p-2 text-gray-300 hover:text-white lg:hidden'
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             <Menu size={20} />
@@ -44,13 +44,13 @@ export default function TestEmptyStatePage() {
         </div>
 
         {/* Controls */}
-        <div className='px-4 sm:px-6 pb-4'>
-          <div className='hidden lg:flex items-center justify-between'>
+        <div className='px-4 pb-4 sm:px-6'>
+          <div className='hidden items-center justify-between lg:flex'>
             <div className='flex items-center gap-3'>
               {['Sort', 'Status', 'Category'].map(label => (
                 <button
                   key={label}
-                  className='flex items-center gap-1 text-gray-300 hover:text-white px-3 py-2 rounded border border-gray-600 transition-colors'
+                  className='flex items-center gap-1 rounded border border-gray-600 px-3 py-2 text-gray-300 transition-colors hover:text-white'
                 >
                   <span className='text-sm'>{label}</span>
                   <ChevronDown size={16} />
@@ -59,37 +59,37 @@ export default function TestEmptyStatePage() {
             </div>
             <div className='relative'>
               <Search
-                className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400'
+                className='absolute top-1/2 left-3 -translate-y-1/2 transform text-gray-400'
                 size={16}
               />
               <input
                 type='text'
                 placeholder='Search project or creator...'
-                className='w-80 bg-gray-800 text-white placeholder-gray-400 pl-10 pr-4 py-2 rounded-lg border border-gray-600 focus:border-green-400 focus:outline-none transition-colors'
+                className='w-80 rounded-lg border border-gray-600 bg-gray-800 py-2 pr-4 pl-10 text-white placeholder-gray-400 transition-colors focus:border-green-400 focus:outline-none'
               />
             </div>
           </div>
 
           {/* Mobile */}
           <div className='lg:hidden'>
-            <div className='mb-4 relative'>
+            <div className='relative mb-4'>
               <Search
-                className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400'
+                className='absolute top-1/2 left-3 -translate-y-1/2 transform text-gray-400'
                 size={16}
               />
               <input
                 type='text'
                 placeholder='Search project or creator...'
-                className='w-full bg-gray-800 text-white placeholder-gray-400 pl-10 pr-4 py-2 rounded-lg border border-gray-600 focus:border-green-400 focus:outline-none transition-colors'
+                className='w-full rounded-lg border border-gray-600 bg-gray-800 py-2 pr-4 pl-10 text-white placeholder-gray-400 transition-colors focus:border-green-400 focus:outline-none'
               />
             </div>
 
             <div className={`${mobileMenuOpen ? 'block' : 'hidden'} space-y-2`}>
-              <div className='flex flex-col sm:flex-row gap-2'>
+              <div className='flex flex-col gap-2 sm:flex-row'>
                 {['Sort', 'Status', 'Category'].map(label => (
                   <button
                     key={label}
-                    className='flex items-center justify-between text-gray-300 hover:text-white px-3 py-2 rounded transition-colors bg-gray-800 w-full sm:w-auto'
+                    className='flex w-full items-center justify-between rounded bg-gray-800 px-3 py-2 text-gray-300 transition-colors hover:text-white sm:w-auto'
                   >
                     <span className='text-sm'>{label}</span>
                     <ChevronDown size={16} />
@@ -102,7 +102,7 @@ export default function TestEmptyStatePage() {
       </div>
 
       {/* Main */}
-      <div className='flex-1 min-h-96 flex items-center justify-center p-4 sm:p-8'>
+      <div className='flex min-h-96 flex-1 items-center justify-center p-4 sm:p-8'>
         <EmptyState
           title='No Projects'
           description='There are currently no projects here. Go ahead and create the first one!'
@@ -113,9 +113,9 @@ export default function TestEmptyStatePage() {
       </div>
 
       {/* Footer */}
-      <div className='border-t border-gray-700 px-4 sm:px-6 py-6'>
-        <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 text-sm text-gray-400'>
-          <div className='flex items-center gap-2 mb-2 lg:mb-0'>
+      <div className='border-t border-gray-700 px-4 py-6 sm:px-6'>
+        <div className='flex flex-col items-start justify-between gap-4 text-sm text-gray-400 lg:flex-row lg:items-center'>
+          <div className='mb-2 flex items-center gap-2 lg:mb-0'>
             <Image
               src='/test_footer_logo.png'
               alt='Logo'
@@ -123,18 +123,18 @@ export default function TestEmptyStatePage() {
               height={40}
             />
           </div>
-          <div className='flex flex-col sm:flex-row gap-2 sm:gap-6'>
-            <a href='#' className='hover:text-white transition-colors'>
+          <div className='flex flex-col gap-2 sm:flex-row sm:gap-6'>
+            <a href='#' className='transition-colors hover:text-white'>
               Terms of Service
             </a>
-            <a href='#' className='hover:text-white transition-colors'>
+            <a href='#' className='transition-colors hover:text-white'>
               Privacy Policy
             </a>
           </div>
         </div>
 
-        <div className='flex pt-5 flex-col lg:flex-row items-start lg:items-center justify-between gap-4 text-sm text-gray-400'>
-          <span className='text-center lg:text-left leading-relaxed'>
+        <div className='flex flex-col items-start justify-between gap-4 pt-5 text-sm text-gray-400 lg:flex-row lg:items-center'>
+          <span className='text-center leading-relaxed lg:text-left'>
             © 2023 Boundless — Transparent, Community-Driven, Web3-Native
             Funding
           </span>
@@ -145,9 +145,9 @@ export default function TestEmptyStatePage() {
                 href={href}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='hover:text-white transition-colors'
+                className='transition-colors hover:text-white'
               >
-                <Icon className='w-5 h-5' />
+                <Icon className='h-5 w-5' />
               </a>
             ))}
           </div>

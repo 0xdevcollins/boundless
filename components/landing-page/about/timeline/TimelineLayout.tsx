@@ -1,15 +1,23 @@
-// components/DashboardLayout.tsx
-import React, { ReactNode } from 'react';
-type TimelineLayoutProps = {
-  children: ReactNode;
-};
+'use client';
 
-const TimelineLayout = ({ children }: TimelineLayoutProps) => {
+import { ReactNode } from 'react';
+
+interface TimelineLayoutProps {
+  children: ReactNode;
+  className?: string;
+}
+
+export default function TimelineLayout({
+  children,
+  className = '',
+}: TimelineLayoutProps) {
   return (
-    <main className='flex flex-col gap-8 overflow-hidden justify-center items-center px-5 relative min-h-screen'>
+    <main
+      className={`relative flex min-h-screen flex-col items-center justify-center gap-8 overflow-hidden px-5 ${className}`}
+      role='main'
+      aria-label='Timeline section'
+    >
       {children}
     </main>
   );
-};
-
-export default TimelineLayout;
+}

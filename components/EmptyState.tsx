@@ -59,7 +59,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`flex flex-col items-center justify-center min-h-[400px] p-8 ${className}`}
+      className={`flex min-h-[400px] flex-col items-center justify-center p-8 ${className}`}
     >
       {/* Illustration */}
       <div className='relative mb-8'>
@@ -75,7 +75,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
       {/* Title */}
       <h2
         ref={titleRef}
-        className='text-white text-2xl md:text-3xl font-semibold mb-3 text-center'
+        className='mb-3 text-center text-2xl font-semibold text-white md:text-3xl'
       >
         {title}
       </h2>
@@ -83,7 +83,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
       {/* Description */}
       <p
         ref={descriptionRef}
-        className='text-gray-400 text-center max-w-md mb-8 leading-relaxed px-4'
+        className='mb-8 max-w-md px-4 text-center leading-relaxed text-gray-400'
       >
         {description}
       </p>
@@ -95,7 +95,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
         <button
           ref={buttonRef}
           onClick={onAddClick}
-          className={`flex items-center justify-center gap-2 w-auto bg-[#00D2A4] hover:bg-[#00B894] text-black font-medium rounded-[8px] transition-all duration-200 ease-out transform focus:outline-none focus:ring-2 focus:ring-[#00D2A4] focus:ring-opacity-50 shadow-[0_2px_8px_rgba(0,210,164,0.2)] ${buttonStyle}`}
+          className={`focus:ring-opacity-50 flex w-auto transform items-center justify-center gap-2 rounded-[8px] bg-[#00D2A4] font-medium text-black shadow-[0_2px_8px_rgba(0,210,164,0.2)] transition-all duration-200 ease-out hover:bg-[#00B894] focus:ring-2 focus:ring-[#00D2A4] focus:outline-none ${buttonStyle}`}
         >
           <Plus size={18} />
           {buttonText}

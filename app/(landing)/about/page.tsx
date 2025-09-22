@@ -11,6 +11,7 @@ import { testimonials } from '@/components/testimonials/data/testimonial';
 import AboutUsHero from './AboutUsHero';
 import OurTeam from './OurTeam';
 import Partners from './Partners';
+import { Footer } from '@/components/landing-page';
 
 export const metadata: Metadata = generatePageMetadata('about');
 
@@ -18,14 +19,15 @@ const AboutPage = () => {
   return (
     <section>
       <AboutUsHero />
-      <div className='relative z-10 space-y-[23px] md:space-y-[80px] max-w-[1300px] mx-auto'>
+      <div className='relative z-10 mx-auto max-w-[1440px] space-y-[23px] md:space-y-[80px]'>
         <Missionpage />
         <AboutUsDifferent />
         <Timeline />
         <OurTeam />
         <Partners />
-        <TestimonialsSection testimonials={testimonials} />
       </div>
+      <TestimonialsSection testimonials={testimonials} />
+      <Footer />
     </section>
   );
 };

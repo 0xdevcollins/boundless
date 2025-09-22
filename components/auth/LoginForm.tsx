@@ -1,22 +1,21 @@
 'use client';
-import React from 'react';
+import { Eye, EyeOff, LockIcon, MailIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { UseFormReturn } from 'react-hook-form';
+import z from 'zod';
 import { BoundlessButton } from '../buttons';
+import { Checkbox } from '../ui/checkbox';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from '../ui/form';
-import { FormLabel } from '../ui/form';
 import { Input } from '../ui/input';
-import { Eye, EyeOff, LockIcon, MailIcon } from 'lucide-react';
-import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
-import Link from 'next/link';
-import Image from 'next/image';
-import { UseFormReturn } from 'react-hook-form';
-import z from 'zod';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -45,10 +44,10 @@ const LoginForm = ({
   return (
     <>
       <div className='space-y-2'>
-        <h2 className='text-2xl text-center md:text-left lg:text-[40px] font-medium text-white mb-3'>
+        <h2 className='mb-3 text-center text-2xl font-medium text-white md:text-left lg:text-[40px]'>
           Sign in
         </h2>
-        <p className='text-sm text-center md:text-left lg:text-base text-[#D9D9D9] leading-relaxed'>
+        <p className='text-center text-sm leading-relaxed text-[#D9D9D9] md:text-left lg:text-base'>
           Sign in to manage campaigns, apply for grants, and track your funding
           progress — all in one dashboard.
         </p>
@@ -69,32 +68,32 @@ const LoginForm = ({
           Continue with Google
         </BoundlessButton>
 
-        <div className='flex items-center gap-2.5 justify-center'>
-          <div className='h-[1px] bg-[#2B2B2B] w-full'></div>
-          <p className='text-[#B5B5B5] text-center text-sm'>Or</p>
-          <div className='h-[1px] bg-[#2B2B2B] w-full'></div>
+        <div className='flex items-center justify-center gap-2.5'>
+          <div className='h-[1px] w-full bg-[#2B2B2B]'></div>
+          <p className='text-center text-sm text-[#B5B5B5]'>Or</p>
+          <div className='h-[1px] w-full bg-[#2B2B2B]'></div>
         </div>
 
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className='space-y-4 w-full'
+            className='w-full space-y-4'
           >
             <FormField
               control={form.control}
               name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='text-white text-xs font-medium'>
+                  <FormLabel className='text-xs font-medium text-white'>
                     Email
                   </FormLabel>
-                  <FormControl className='rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-2.5 h-11 w-full'>
-                    <div className='flex items-center gap-2.5 w-full'>
-                      <MailIcon className='w-5 h-5 text-[#B5B5B5] flex-shrink-0' />
+                  <FormControl className='h-11 w-full rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-2.5'>
+                    <div className='flex w-full items-center gap-2.5'>
+                      <MailIcon className='h-5 w-5 flex-shrink-0 text-[#B5B5B5]' />
                       <Input
                         {...field}
                         placeholder='Enter your email'
-                        className='bg-transparent text-white placeholder:text-[#B5B5B5] border-none focus-visible:ring-0 focus-visible:ring-offset-0 caret-white w-full'
+                        className='w-full border-none bg-transparent text-white caret-white placeholder:text-[#B5B5B5] focus-visible:ring-0 focus-visible:ring-offset-0'
                       />
                     </div>
                   </FormControl>
@@ -108,22 +107,22 @@ const LoginForm = ({
               name='password'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='text-white text-xs font-medium'>
+                  <FormLabel className='text-xs font-medium text-white'>
                     Password
                   </FormLabel>
-                  <FormControl className='rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-2.5 h-11 w-full'>
-                    <div className='relative flex items-center gap-2.5 w-full'>
-                      <LockIcon className='w-5 h-5 text-[#B5B5B5] flex-shrink-0' />
+                  <FormControl className='h-11 w-full rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-2.5'>
+                    <div className='relative flex w-full items-center gap-2.5'>
+                      <LockIcon className='h-5 w-5 flex-shrink-0 text-[#B5B5B5]' />
                       <Input
                         {...field}
                         type={showPassword ? 'text' : 'password'}
                         placeholder='Enter your password'
-                        className='bg-transparent text-white placeholder:text-[#B5B5B5] border-none focus-visible:ring-0 focus-visible:ring-offset-0 caret-white w-full pl-2 pr-10'
+                        className='w-full border-none bg-transparent pr-10 pl-2 text-white caret-white placeholder:text-[#B5B5B5] focus-visible:ring-0 focus-visible:ring-offset-0'
                       />
                       <button
                         type='button'
                         onClick={() => setShowPassword(!showPassword)}
-                        className='absolute right-3 top-3 text-gray-400 hover:text-gray-600'
+                        className='absolute top-3 right-3 text-gray-400 hover:text-gray-600'
                       >
                         {showPassword ? (
                           <EyeOff className='h-4 w-4' />
@@ -138,19 +137,19 @@ const LoginForm = ({
               )}
             />
 
-            <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3'>
+            <div className='flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center'>
               <div className='flex items-center gap-2'>
                 <Checkbox
                   id='remember'
-                  className='border-[#6D6D6D] w-6.5 h-6.5'
+                  className='h-6.5 w-6.5 border-[#6D6D6D]'
                 />
-                <Label htmlFor='remember' className='text-white text-sm'>
+                <Label htmlFor='remember' className='text-sm text-white'>
                   Remember me for 30 days
                 </Label>
               </div>
               <Link
                 href='/auth/forgot-password'
-                className='text-[#D9D9D9] underline text-sm'
+                className='text-sm text-[#D9D9D9] underline'
               >
                 Forgot password?
               </Link>
@@ -168,7 +167,7 @@ const LoginForm = ({
           </form>
         </Form>
 
-        <p className='text-[#D9D9D9] text-xs lg:text-sm text-center'>
+        <p className='text-center text-xs text-[#D9D9D9] lg:text-sm'>
           Don&apos;t have an account?{' '}
           <Link href='/auth/signup' className='text-primary underline'>
             Sign up

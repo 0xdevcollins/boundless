@@ -1,11 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import AuthLoadingState from '@/components/auth/AuthLoadingState';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
@@ -13,8 +10,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Mail, ArrowLeft, RefreshCw } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ArrowLeft, Loader2, Mail, RefreshCw } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function VerifyEmailPage() {
   const [otp, setOtp] = useState('');
@@ -99,109 +100,114 @@ export default function VerifyEmailPage() {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8'>
-      <div className='max-w-md w-full space-y-8'>
-        <div className='text-center'>
-          <h2 className='mt-6 text-3xl font-extrabold text-gray-900'>
-            Verify your email
-          </h2>
-          <p className='mt-2 text-sm text-gray-600'>
-            Enter the verification code sent to your email
-          </p>
-        </div>
+    <>
+      {isLoading && <AuthLoadingState />}
+      <div className='flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8'>
+        <div className='w-full max-w-md space-y-8'>
+          <div className='text-center'>
+            <h2 className='mt-6 text-3xl font-extrabold text-gray-900'>
+              Verify your email
+            </h2>
+            <p className='mt-2 text-sm text-gray-600'>
+              Enter the verification code sent to your email
+            </p>
+          </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Email Verification</CardTitle>
-            <CardDescription>
-              Check your email for the verification code
-            </CardDescription>
-          </CardHeader>
-          <CardContent className='space-y-4'>
-            {error && (
-              <Alert variant='destructive'>
-                <AlertDescription>
-                  {typeof error === 'string' ? error : 'An error occurred'}
-                </AlertDescription>
-              </Alert>
-            )}
+          <Card>
+            <CardHeader>
+              <CardTitle>Email Verification</CardTitle>
+              <CardDescription>
+                Check your email for the verification code
+              </CardDescription>
+            </CardHeader>
+            <CardContent className='space-y-4'>
+              {error && (
+                <Alert variant='destructive'>
+                  <AlertDescription>
+                    {typeof error === 'string' ? error : 'An error occurred'}
+                  </AlertDescription>
+                </Alert>
+              )}
 
-            {success && (
-              <Alert>
-                <AlertDescription>{success}</AlertDescription>
-              </Alert>
-            )}
+              {success && (
+                <Alert>
+                  <AlertDescription>{success}</AlertDescription>
+                </Alert>
+              )}
 
-            <form onSubmit={handleSubmit} className='space-y-4'>
-              <div className='space-y-2'>
-                <Label htmlFor='email'>Email Address</Label>
-                <div className='relative'>
-                  <Mail className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
+              <form onSubmit={handleSubmit} className='space-y-4'>
+                <div className='space-y-2'>
+                  <Label htmlFor='email'>Email Address</Label>
+                  <div className='relative'>
+                    <Mail className='absolute top-3 left-3 h-4 w-4 text-gray-400' />
+                    <Input
+                      id='email'
+                      type='email'
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      placeholder='Enter your email'
+                      className='pl-10'
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className='space-y-2'>
+                  <Label htmlFor='otp'>Verification Code</Label>
                   <Input
-                    id='email'
-                    type='email'
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    placeholder='Enter your email'
-                    className='pl-10'
+                    id='otp'
+                    type='text'
+                    value={otp}
+                    onChange={e => setOtp(e.target.value)}
+                    placeholder='Enter 6-digit code'
+                    maxLength={6}
+                    className='text-center text-lg tracking-widest'
                     required
                   />
                 </div>
-              </div>
 
-              <div className='space-y-2'>
-                <Label htmlFor='otp'>Verification Code</Label>
-                <Input
-                  id='otp'
-                  type='text'
-                  value={otp}
-                  onChange={e => setOtp(e.target.value)}
-                  placeholder='Enter 6-digit code'
-                  maxLength={6}
-                  className='text-center text-lg tracking-widest'
-                  required
-                />
-              </div>
-
-              <Button type='submit' className='w-full' disabled={isLoading}>
-                {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
-                Verify Email
-              </Button>
-            </form>
-
-            <div className='text-center space-y-2'>
-              <Button
-                variant='outline'
-                onClick={handleResendOtp}
-                disabled={isResending || !email}
-                className='w-full'
-              >
-                {isResending ? (
-                  <>
+                <Button type='submit' className='w-full' disabled={isLoading}>
+                  {isLoading && (
                     <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                    Resending...
-                  </>
-                ) : (
-                  <>
-                    <RefreshCw className='mr-2 h-4 w-4' />
-                    Resend Code
-                  </>
-                )}
-              </Button>
+                  )}
+                  Verify Email
+                </Button>
+              </form>
 
-              <div>
-                <Link
-                  href='/auth/signin'
-                  className='inline-flex items-center text-sm text-blue-600 hover:text-blue-500'
+              <div className='space-y-2 text-center'>
+                <Button
+                  variant='outline'
+                  onClick={handleResendOtp}
+                  disabled={isResending || !email}
+                  className='w-full'
                 >
-                  <ArrowLeft className='mr-1 h-4 w-4' />
-                  Back to sign in
-                </Link>
+                  {isResending ? (
+                    <>
+                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                      Resending...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className='mr-2 h-4 w-4' />
+                      Resend Code
+                    </>
+                  )}
+                </Button>
+
+                <div>
+                  <Link
+                    href='/auth/signin'
+                    className='inline-flex items-center text-sm text-blue-600 hover:text-blue-500'
+                  >
+                    <ArrowLeft className='mr-1 h-4 w-4' />
+                    Back to sign in
+                  </Link>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

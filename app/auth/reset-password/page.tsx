@@ -1,12 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
+import AuthLoadingState from '@/components/auth/AuthLoadingState';
+import { BoundlessButton } from '@/components/buttons';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Lock, Eye, EyeOff } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -15,10 +12,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useForm } from 'react-hook-form';
+import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Eye, EyeOff, Lock } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { BoundlessButton } from '@/components/buttons';
 
 const resetPasswordSchema = z
   .object({
@@ -103,8 +104,8 @@ export default function ResetPasswordPage() {
 
   if (!token) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8'>
-        <div className='max-w-md w-full space-y-8'>
+      <div className='flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8'>
+        <div className='w-full max-w-md space-y-8'>
           <Card>
             <CardContent className='pt-6'>
               <Alert variant='destructive'>
@@ -128,121 +129,124 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8'>
-      <div className='max-w-md w-full space-y-8'>
-        <div className='text-center'>
-          <h2 className='mt-6 text-[40px] font-medium text-white'>
-            Reset your password
-          </h2>
-          <p className='mt-2 text-[#D9D9D9]'>Enter your new password below</p>
-        </div>
+    <>
+      {isLoading && <AuthLoadingState message='Signing in...' />}
+      <div className='bg-background flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8'>
+        <div className='w-full max-w-md space-y-8'>
+          <div className='text-center'>
+            <h2 className='mt-6 text-[40px] font-medium text-white'>
+              Reset your password
+            </h2>
+            <p className='mt-2 text-[#D9D9D9]'>Enter your new password below</p>
+          </div>
 
-        {successMessage && (
-          <div className='text-sm text-green-500'>{successMessage}</div>
-        )}
+          {successMessage && (
+            <div className='text-sm text-green-500'>{successMessage}</div>
+          )}
 
-        {errorMessage && (
-          <div className='text-sm text-red-500'>{errorMessage}</div>
-        )}
+          {errorMessage && (
+            <div className='text-sm text-red-500'>{errorMessage}</div>
+          )}
 
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className='space-y-4'
-          >
-            <FormField
-              control={form.control}
-              name='password'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-white text-xs font-medium'>
-                    New Password
-                  </FormLabel>
-                  <FormControl>
-                    <div className='relative'>
-                      <Lock className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
-                      <Input
-                        {...field}
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder='Enter new password'
-                        className='pl-10 pr-10 text-white placeholder:text-[#B5B5B5] border-[#2B2B2B] bg-[#1C1C1C] focus-visible:ring-0 focus-visible:ring-offset-0 caret-white w-full'
-                      />
-                      <button
-                        type='button'
-                        onClick={() => setShowPassword(!showPassword)}
-                        className='absolute right-3 top-3 text-gray-400 hover:text-gray-600'
-                      >
-                        {showPassword ? (
-                          <EyeOff className='h-4 w-4' />
-                        ) : (
-                          <Eye className='h-4 w-4' />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='confirmPassword'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-white text-xs font-medium'>
-                    Confirm New Password
-                  </FormLabel>
-                  <FormControl>
-                    <div className='relative'>
-                      <Lock className='absolute left-3 top-3 h-4 w-4 text-gray-400' />
-                      <Input
-                        {...field}
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder='Confirm new password'
-                        className='pl-10 pr-10 text-white placeholder:text-[#B5B5B5] border-[#2B2B2B] bg-[#1C1C1C] focus-visible:ring-0 focus-visible:ring-offset-0 caret-white w-full'
-                      />
-                      <button
-                        type='button'
-                        onClick={() =>
-                          setShowConfirmPassword(!showConfirmPassword)
-                        }
-                        className='absolute right-3 top-3 text-gray-400 hover:text-gray-600'
-                      >
-                        {showConfirmPassword ? (
-                          <EyeOff className='h-4 w-4' />
-                        ) : (
-                          <Eye className='h-4 w-4' />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <BoundlessButton
-              type='submit'
-              className='w-full'
-              disabled={isLoading}
-              fullWidth
-              loading={isLoading}
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className='space-y-4'
             >
-              Reset Password
-            </BoundlessButton>
-          </form>
-        </Form>
+              <FormField
+                control={form.control}
+                name='password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-xs font-medium text-white'>
+                      New Password
+                    </FormLabel>
+                    <FormControl>
+                      <div className='relative'>
+                        <Lock className='absolute top-3 left-3 h-4 w-4 text-gray-400' />
+                        <Input
+                          {...field}
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder='Enter new password'
+                          className='w-full border-[#2B2B2B] bg-[#1C1C1C] pr-10 pl-10 text-white caret-white placeholder:text-[#B5B5B5] focus-visible:ring-0 focus-visible:ring-offset-0'
+                        />
+                        <button
+                          type='button'
+                          onClick={() => setShowPassword(!showPassword)}
+                          className='absolute top-3 right-3 text-gray-400 hover:text-gray-600'
+                        >
+                          {showPassword ? (
+                            <EyeOff className='h-4 w-4' />
+                          ) : (
+                            <Eye className='h-4 w-4' />
+                          )}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-        <div className='text-center'>
-          <Link
-            href='/auth/signin'
-            className='text-sm text-primary hover:text-primary/80'
-          >
-            Back to sign in
-          </Link>
+              <FormField
+                control={form.control}
+                name='confirmPassword'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-xs font-medium text-white'>
+                      Confirm New Password
+                    </FormLabel>
+                    <FormControl>
+                      <div className='relative'>
+                        <Lock className='absolute top-3 left-3 h-4 w-4 text-gray-400' />
+                        <Input
+                          {...field}
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          placeholder='Confirm new password'
+                          className='w-full border-[#2B2B2B] bg-[#1C1C1C] pr-10 pl-10 text-white caret-white placeholder:text-[#B5B5B5] focus-visible:ring-0 focus-visible:ring-offset-0'
+                        />
+                        <button
+                          type='button'
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                          className='absolute top-3 right-3 text-gray-400 hover:text-gray-600'
+                        >
+                          {showConfirmPassword ? (
+                            <EyeOff className='h-4 w-4' />
+                          ) : (
+                            <Eye className='h-4 w-4' />
+                          )}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <BoundlessButton
+                type='submit'
+                className='w-full'
+                disabled={isLoading}
+                fullWidth
+                loading={isLoading}
+              >
+                Reset Password
+              </BoundlessButton>
+            </form>
+          </Form>
+
+          <div className='text-center'>
+            <Link
+              href='/auth/signin'
+              className='text-primary hover:text-primary/80 text-sm'
+            >
+              Back to sign in
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

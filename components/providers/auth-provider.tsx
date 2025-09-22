@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '@/lib/stores/auth-store';
-import Loading from '../loading/Loading';
+import React, { useEffect, useState } from 'react';
+import AuthLoadingState from '../auth/AuthLoadingState';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -56,7 +56,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [isHydrated, accessToken, isAuthenticated, refreshUser, clearAuth]);
 
   if (!isHydrated) {
-    return <Loading />;
+    return <AuthLoadingState message='Initializing...' />;
   }
 
   return <>{children}</>;
@@ -85,7 +85,7 @@ export function AuthLoadingProvider({
   const { isLoading } = useAuthStore();
 
   if (!isHydrated || isLoading) {
-    return <Loading />;
+    return <AuthLoadingState message='Loading...' />;
   }
 
   return <>{children}</>;

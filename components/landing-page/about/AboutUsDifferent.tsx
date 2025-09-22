@@ -1,123 +1,190 @@
+'use client';
+
+import { useMemo } from 'react';
 import Image from 'next/image';
 
-function AboutUsDifferent() {
+interface AboutUsDifferentProps {
+  className?: string;
+}
+
+interface FeatureCard {
+  id: string;
+  title: string;
+  description: string;
+  image: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+  };
+  className?: string;
+}
+
+function AboutUsDifferent({ className = '' }: AboutUsDifferentProps) {
+  const features = useMemo<FeatureCard[]>(
+    () => [
+      {
+        id: 'validation-first',
+        title: 'Validation First',
+        description:
+          'Ideas are filtered through community-driven voting and feedback before funds are raised.',
+        image: {
+          src: 'card1.svg',
+          alt: 'Validation First - Community-driven idea validation process',
+          width: 520,
+          height: 241,
+        },
+        className: 'lg:flex-[1.4]',
+      },
+      {
+        id: 'milestone-escrow',
+        title: 'Milestone Escrow',
+        description:
+          'Backers are protected. Funds are only released when project milestones are achieved and verified.',
+        image: {
+          src: 'card2.svg',
+          alt: 'Milestone Escrow - Secure milestone-based funding system',
+          width: 452,
+          height: 205,
+        },
+      },
+      {
+        id: 'inclusive-growth',
+        title: 'Inclusive Growth',
+        description:
+          'Crowdfunding, grants, and hackathons all opportunities in one ecosystem.',
+        image: {
+          src: 'card3.svg',
+          alt: 'Inclusive Growth - Multiple funding opportunities in one platform',
+          width: 452,
+          height: 205,
+        },
+        className: 'lg:flex-1',
+      },
+      {
+        id: 'blockchain-powered',
+        title: 'Blockchain-Powered',
+        description:
+          'Built on Stellar and integrated with Trustless Work for secure, transparent funding.',
+        image: {
+          src: 'card4.svg',
+          alt: 'Blockchain-Powered - Stellar blockchain integration for secure funding',
+          width: 620,
+          height: 258,
+        },
+        className: 'lg:flex-[1.4]',
+      },
+    ],
+    []
+  );
+
   return (
-    <section className='flex flex-col items-center gap-8 md:gap-10 relative overflow-hidden py-8 md:py-16 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16'>
+    <section
+      className={`relative mx-6 my-5 flex flex-col items-center gap-8 overflow-hidden md:mx-12 md:my-16 lg:mx-[100px] ${className}`}
+      id='what-makes-different'
+      role='region'
+      aria-labelledby='different-heading'
+    >
       <Image
         src='bg-header-about.svg'
-        alt='Header background'
+        alt=''
         width={1240}
         height={1324}
-        className='absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-none h-auto opacity-80'
+        className='absolute -top-12 left-1/2 h-auto w-full max-w-none -translate-x-1/2 transform'
+        priority
+        quality={85}
+        sizes='100vw'
+        aria-hidden='true'
       />
 
-      {/* Header Section */}
-      <div className='relative w-full max-w-6xl flex items-center justify-center pb-4 md:pb-6'>
-        <h1 className='font-normal text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white text-center leading-tight'>
+      <header className='relative mt-[130px] flex w-full items-center justify-center pb-4 md:pb-6'>
+        <h2
+          id='different-heading'
+          className='text-center text-2xl leading-tight font-normal text-white sm:text-3xl md:text-4xl lg:text-5xl'
+        >
           What Makes Boundless
           <br className='sm:hidden' />
           <span className='hidden sm:inline'> </span>Different
-        </h1>
-      </div>
+        </h2>
+      </header>
 
-      {/* Cards Grid */}
-      <div className='w-full max-w-6xl flex flex-col gap-4 md:gap-6'>
-        {/* First Row */}
-        <div className='flex flex-col lg:flex-row gap-4 md:gap-6 items-stretch'>
-          <div className='flex-1 lg:flex-[1.4]  rounded-[12px] p-[1px] bg-gradient-to-b from-white/48 to-white/8'>
-            <div className='w-full h-full rounded-[12px] bg-black/85 bg-[url("/card-bg.svg")] bg-no-repeat bg-center backdrop-blur-2xl p-4 md:p-6 flex flex-col items-center gap-4 md:gap-6'>
-              <div className='w-full max-w-[520px] h-[200px] md:h-[240px] flex justify-center items-center'>
+      <div
+        className='flex w-full flex-col gap-4 md:gap-6'
+        role='list'
+        aria-label='Key features that make Boundless different'
+      >
+        <div
+          className='flex flex-col items-stretch gap-4 md:gap-6 lg:flex-row'
+          role='listitem'
+        >
+          {features.slice(0, 2).map(feature => (
+            <article
+              key={feature.id}
+              className={`flex h-full w-full flex-1 flex-col items-center gap-4 rounded-[12px] border border-white/48 bg-[#101010A3] bg-[url("/card-bg.svg")] bg-center bg-no-repeat p-4 backdrop-blur-[7px] md:gap-6 md:p-6 ${feature.className || ''}`}
+              role='listitem'
+              aria-labelledby={`${feature.id}-title`}
+            >
+              <div className='flex h-[200px] w-full max-w-[520px] items-center justify-center md:h-[240px]'>
                 <Image
-                  src='card1.svg'
-                  width={520}
-                  height={241}
-                  alt='Validation First'
-                  className='w-full h-auto max-w-full max-h-full object-contain'
+                  src={feature.image.src}
+                  width={feature.image.width}
+                  height={feature.image.height}
+                  alt={feature.image.alt}
+                  className='h-auto max-h-full w-full max-w-full object-contain'
+                  loading='lazy'
+                  quality={90}
                 />
               </div>
-              <div className='px-4 md:px-8 py-4 md:py-6 flex flex-col gap-2 md:gap-2.5'>
-                <h4 className='font-semibold text-base md:text-lg text-white'>
-                  Validation First
-                </h4>
-                <p className='font-normal text-sm md:text-base text-stepper-text-inactive leading-relaxed'>
-                  Ideas are filtered through community-driven voting and
-                  feedback before funds are raised.
+              <div className='flex flex-col gap-2 px-4 py-4 md:gap-2.5 md:px-8 md:py-6'>
+                <h3
+                  id={`${feature.id}-title`}
+                  className='text-base font-semibold text-white md:text-lg'
+                >
+                  {feature.title}
+                </h3>
+                <p className='text-stepper-text-inactive text-sm leading-relaxed font-normal md:text-base'>
+                  {feature.description}
                 </p>
               </div>
-            </div>
-          </div>
-
-          <div className='flex-1 lg:flex-1 rounded-[12px] p-[1px] bg-gradient-to-b from-white/48 to-white/8'>
-            <div className='w-full h-full rounded-[12px] bg-black/85 bg-[url("/card-bg.svg")] bg-no-repeat bg-center backdrop-blur-2xl p-4 md:p-6 flex flex-col items-center gap-4 md:gap-6'>
-              <div className='w-full max-w-[452px] h-[200px] md:h-[240px] flex justify-center items-center'>
-                <Image
-                  src='card2.svg'
-                  width={452}
-                  height={205}
-                  alt='Milestone Escrow'
-                  className='w-full h-auto max-w-full max-h-full object-contain'
-                />
-              </div>
-              <div className='px-4 md:px-8 py-4 md:py-6 flex flex-col gap-2 md:gap-2.5'>
-                <h4 className='font-semibold text-base md:text-lg text-white'>
-                  Milestone Escrow
-                </h4>
-                <p className='font-normal text-sm md:text-base text-stepper-text-inactive leading-relaxed'>
-                  Backers are protected. Funds are only released when project
-                  milestones are achieved and verified.
-                </p>
-              </div>
-            </div>
-          </div>
+            </article>
+          ))}
         </div>
 
-        {/* Second Row */}
-        <div className='flex flex-col lg:flex-row gap-4 md:gap-6 items-stretch'>
-          <div className='flex-1 lg:flex-1 rounded-[12px] p-[1px] bg-gradient-to-b from-white/48 to-white/8'>
-            <div className='w-full h-full rounded-[12px] bg-black/85 bg-[url("/card-bg.svg")] bg-no-repeat bg-center backdrop-blur-2xl p-4 md:p-6 flex flex-col items-center gap-4 md:gap-6'>
-              <div className='w-full max-w-[452px] h-[200px] md:h-[240px] flex justify-center items-center'>
+        <div
+          className='flex flex-col items-stretch gap-4 md:gap-6 lg:flex-row'
+          role='listitem'
+        >
+          {features.slice(2, 4).map(feature => (
+            <article
+              key={feature.id}
+              className={`flex h-full w-full flex-1 flex-col items-center gap-4 rounded-[12px] border border-white/48 bg-black/85 bg-[url("/card-bg.svg")] bg-center bg-no-repeat p-4 backdrop-blur-2xl md:gap-6 md:p-6 ${feature.className || ''}`}
+              role='listitem'
+              aria-labelledby={`${feature.id}-title`}
+            >
+              <div className='flex h-[200px] w-full max-w-[620px] items-center justify-center md:h-[240px]'>
                 <Image
-                  src='card3.svg'
-                  width={452}
-                  height={205}
-                  alt='Inclusive Growth'
-                  className='w-full h-auto max-w-full max-h-full object-contain'
+                  src={feature.image.src}
+                  width={feature.image.width}
+                  height={feature.image.height}
+                  alt={feature.image.alt}
+                  className='h-auto max-h-full w-full max-w-full object-contain'
+                  loading='lazy'
+                  quality={90}
                 />
               </div>
-              <div className='px-4 md:px-8 py-4 md:py-6 flex flex-col gap-2 md:gap-2.5'>
-                <h4 className='font-semibold text-base md:text-lg text-white'>
-                  Inclusive Growth
-                </h4>
-                <p className='font-normal text-sm md:text-base text-stepper-text-inactive leading-relaxed'>
-                  Crowdfunding, grants, and hackathons all opportunities in one
-                  ecosystem.
+              <div className='flex flex-col gap-2 px-4 py-4 md:gap-2.5 md:px-8 md:py-6'>
+                <h3
+                  id={`${feature.id}-title`}
+                  className='text-base font-semibold text-white md:text-lg'
+                >
+                  {feature.title}
+                </h3>
+                <p className='text-stepper-text-inactive text-sm leading-relaxed font-normal md:text-base'>
+                  {feature.description}
                 </p>
               </div>
-            </div>
-          </div>
-
-          <div className='flex-1 lg:flex-[1.4] rounded-[12px] p-[1px] bg-gradient-to-b from-white/48 to-white/8'>
-            <div className='w-full h-full rounded-[12px] bg-black/85 bg-[url("/card-bg.svg")] bg-no-repeat bg-center backdrop-blur-2xl p-4 md:p-6 flex flex-col items-center gap-4 md:gap-6'>
-              <div className='w-full max-w-[620px] h-[200px] md:h-[240px] flex justify-center items-center'>
-                <Image
-                  src='card4.svg'
-                  width={620}
-                  height={258}
-                  alt='Blockchain-Powered'
-                  className='w-full h-auto max-w-full max-h-full object-contain'
-                />
-              </div>
-              <div className='px-4 md:px-8 py-4 md:py-6 flex flex-col gap-2 md:gap-2.5'>
-                <h4 className='font-semibold text-base md:text-lg text-white'>
-                  Blockchain-Powered
-                </h4>
-                <p className='font-normal text-sm md:text-base text-stepper-text-inactive leading-relaxed'>
-                  Built on Stellar and integrated with Trustless Work for
-                  secure, transparent funding.
-                </p>
-              </div>
-            </div>
-          </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>

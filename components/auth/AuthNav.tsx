@@ -20,8 +20,8 @@ export function AuthNav() {
   if (status === 'loading') {
     return (
       <div className='flex items-center space-x-2'>
-        <div className='w-8 h-8 bg-gray-200 rounded-full animate-pulse' />
-        <div className='w-20 h-4 bg-gray-200 rounded animate-pulse' />
+        <div className='h-8 w-8 animate-pulse rounded-full bg-gray-200' />
+        <div className='h-4 w-20 animate-pulse rounded bg-gray-200' />
       </div>
     );
   }
@@ -57,15 +57,15 @@ export function AuthNav() {
       <DropdownMenuContent className='w-56' align='end' forceMount>
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-medium leading-none'>
+            <p className='text-sm leading-none font-medium'>
               {session.user.name || 'User'}
             </p>
-            <p className='text-xs leading-none text-muted-foreground'>
+            <p className='text-muted-foreground text-xs leading-none'>
               {session.user.email}
             </p>
             <div className='flex items-center space-x-1'>
               <Shield className='h-3 w-3' />
-              <span className='text-xs text-muted-foreground capitalize'>
+              <span className='text-muted-foreground text-xs capitalize'>
                 {session.user.role}
               </span>
             </div>

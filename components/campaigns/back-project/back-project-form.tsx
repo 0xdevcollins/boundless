@@ -79,42 +79,42 @@ export function BackProjectForm({
 
   return (
     <div className='text-white'>
-      <div className='mb-5 flex gap-10 '>
+      <div className='mb-5 flex gap-10'>
         <ArrowLeft className='cursor-pointer' />
-        <h1 className='text-white text-lg font-semibold'>Back Project</h1>
+        <h1 className='text-lg font-semibold text-white'>Back Project</h1>
       </div>
-      <div className='w-[500px] flex flex-col gap-3 pt-3 pb-6'>
+      <div className='flex w-[500px] flex-col gap-3 pt-3 pb-6'>
         <div className='space-y-2'>
-          <p className='text-orange-400 text-sm'>
+          <p className='text-sm text-orange-400'>
             Funds will be held in escrow and released only upon milestone
             approvals.
           </p>
         </div>
 
         <div className='flex flex-col gap-1'>
-          <label className='text-xs text-card font-medium'>
+          <label className='text-card text-xs font-medium'>
             Amount <span className='text-red-500'>*</span>
           </label>
-          <div className='w-full h-12 flex items-center gap-3 p-4 rounded-[12px] bg-stepper-foreground border border-stepper-border'>
+          <div className='bg-stepper-foreground border-stepper-border flex h-12 w-full items-center gap-3 rounded-[12px] border p-4'>
             <span className='text-card text-sm'>{currency}</span>
             <input
               value={amount}
               onChange={e => setAmount(e.target.value)}
               type='number'
-              className='w-full bg-transparent font-normal text-base text-placeholder focus:outline-none'
+              className='text-placeholder w-full bg-transparent text-base font-normal focus:outline-none'
               placeholder='1000'
               disabled={isLoading}
             />
           </div>
           <p className='text-card/60 text-xs'>min. amount: $10</p>
 
-          <div className='flex flex-wrap gap-2 mt-2'>
+          <div className='mt-2 flex flex-wrap gap-2'>
             {QUICK_AMOUNTS.map(quickAmount => (
               <button
                 key={quickAmount}
                 type='button'
                 onClick={() => handleQuickAmount(quickAmount)}
-                className='px-3 py-1 text-sm bg-stepper-foreground border border-stepper-border text-card rounded-[8px] hover:bg-stepper-foreground/80 transition-colors'
+                className='bg-stepper-foreground border-stepper-border text-card hover:bg-stepper-foreground/80 rounded-[8px] border px-3 py-1 text-sm transition-colors'
                 disabled={isLoading}
               >
                 ${quickAmount}
@@ -124,14 +124,14 @@ export function BackProjectForm({
         </div>
 
         <div className='flex flex-col gap-1'>
-          <label className='text-xs text-card font-medium'>
+          <label className='text-card text-xs font-medium'>
             Select Token <span className='text-red-500'>*</span>
           </label>
           <Select value={token} onValueChange={setToken} disabled={isLoading}>
-            <SelectTrigger className='w-full !h-12 flex items-center !gap-3 p-4 rounded-[12px] bg-stepper-foreground border border-stepper-border focus:ring-0'>
+            <SelectTrigger className='bg-stepper-foreground border-stepper-border flex !h-12 w-full items-center !gap-3 rounded-[12px] border p-4 focus:ring-0'>
               <SelectValue placeholder='Select' />
             </SelectTrigger>
-            <SelectContent className='max-h-[200px] bg-background rounded-[12px] font-normal text-base text-placeholder border border-stepper-border overflow-y-auto'>
+            <SelectContent className='bg-background text-placeholder border-stepper-border max-h-[200px] overflow-y-auto rounded-[12px] border text-base font-normal'>
               <SelectItem value='XLM'>XLM</SelectItem>
               <SelectItem value='USDT'>USDT</SelectItem>
               <SelectItem value='USDC'>USDC</SelectItem>
@@ -140,37 +140,37 @@ export function BackProjectForm({
         </div>
 
         <div className='flex flex-col gap-1'>
-          <label className='text-xs text-card font-medium'>
+          <label className='text-card text-xs font-medium'>
             Network <span className='text-red-500'>*</span>
           </label>
-          <div className='w-full h-12 flex items-center gap-3 p-4 rounded-[12px] bg-stepper-foreground border border-stepper-border'>
+          <div className='bg-stepper-foreground border-stepper-border flex h-12 w-full items-center gap-3 rounded-[12px] border p-4'>
             <input
               value={network}
               onChange={e => setNetwork(e.target.value)}
               type='text'
-              className='w-full bg-transparent font-normal text-base text-placeholder focus:outline-none'
+              className='text-placeholder w-full bg-transparent text-base font-normal focus:outline-none'
               disabled={isLoading}
             />
           </div>
         </div>
 
         <div className='flex flex-col gap-1'>
-          <label className='text-xs text-card font-medium'>
+          <label className='text-card text-xs font-medium'>
             Wallet Address <span className='text-red-500'>*</span>
           </label>
           <BoundlessButton
             type='button'
             onClick={handleCopyAddress}
-            className='w-full h-12 flex items-center justify-center gap-3 p-4 rounded-[12px] bg-blue-600 hover:bg-blue-700 text-white transition-colors'
+            className='flex h-12 w-full items-center justify-center gap-3 rounded-[12px] bg-blue-600 p-4 text-white transition-colors hover:bg-blue-700'
             disabled={isLoading}
           >
-            <Check className='w-4 h-4' />
-            <span className='font-normal text-base'>{walletAddress}</span>
-            <Copy className='w-4 h-4' />
+            <Check className='h-4 w-4' />
+            <span className='text-base font-normal'>{walletAddress}</span>
+            <Copy className='h-4 w-4' />
           </BoundlessButton>
         </div>
 
-        <div className='flex items-center gap-2 mt-2'>
+        <div className='mt-2 flex items-center gap-2'>
           <Checkbox
             id='anonymous'
             checked={keepAnonymous}
@@ -187,10 +187,10 @@ export function BackProjectForm({
           type='button'
           disabled={!isFormValid || isLoading}
           onClick={handleSubmit}
-          className={`w-full mt-4 h-12 text-base font-medium   transition-colors ${
+          className={`mt-4 h-12 w-full text-base font-medium transition-colors ${
             isFormValid && !isLoading
-              ? 'bg-primary text-background border border-primary hover:bg-primary/90'
-              : 'bg-stepper-foreground text-card/30 border border-stepper-border cursor-not-allowed'
+              ? 'bg-primary text-background border-primary hover:bg-primary/90 border'
+              : 'bg-stepper-foreground text-card/30 border-stepper-border cursor-not-allowed border'
           }`}
         >
           Confirm Contribution

@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Badge } from '../ui/badge';
 import {
   Carousel,
@@ -69,14 +69,14 @@ const AuthLayout = ({ children, showCarousel = true }: AuthLayoutProps) => {
   }, [api]);
 
   return (
-    <div className='bg-background min-h-screen w-full flex justify-center'>
-      <div className='flex flex-col lg:flex-row h-screen w-full max-w-[1920px] xl:max-w-[1600px] 2xl:max-w-[1800px] mx-auto'>
+    <div className='bg-background flex min-h-screen w-full justify-center'>
+      <div className='mx-auto flex h-screen w-full max-w-[1920px] flex-col lg:flex-row xl:max-w-[1600px] 2xl:max-w-[1800px]'>
         <Image
           src='/auth/top-left.png'
           alt='auth'
           width={248}
           height={231}
-          className='absolute top-0 left-0 object-contain pointer-events-none z-0'
+          className='pointer-events-none absolute top-0 left-0 z-[-1] object-contain'
           unoptimized
         />
         <Image
@@ -84,17 +84,17 @@ const AuthLayout = ({ children, showCarousel = true }: AuthLayoutProps) => {
           alt='grid'
           width={248}
           height={231}
-          className='absolute bottom-0 left-0 object-cover pointer-events-none w-1/2 min-w-[500px] max-h-[254px] z-0'
+          className='pointer-events-none absolute bottom-0 left-0 z-[-1] max-h-[254px] w-1/2 min-w-[500px] object-cover'
           unoptimized
         />
-        <div className='w-full h-full lg:basis-1/2 relative flex items-center justify-center px-6 py-10 lg:px-16 xl:px-24 2xl:px-32 overflow-hidden'>
-          <div className='flex flex-col justify-center h-full max-w-[500px] w-full gap-6 lg:gap-10 relative z-10'>
+        <div className='relative flex h-full w-full items-center justify-center overflow-hidden px-6 py-10 lg:basis-1/2 lg:px-16 xl:px-24 2xl:px-32'>
+          <div className='relative z-[1] flex h-full w-full max-w-[500px] flex-col justify-center gap-6 lg:gap-10'>
             <Image
               src='/auth/logo.svg'
               alt='auth-logo'
               width={160}
               height={30}
-              className='object-contain mx-auto lg:mx-0'
+              className='mx-auto object-contain lg:mx-0'
               unoptimized
             />
             <div className='space-y-6 lg:space-y-10'>{children}</div>
@@ -102,28 +102,28 @@ const AuthLayout = ({ children, showCarousel = true }: AuthLayoutProps) => {
         </div>
 
         {showCarousel && (
-          <div className='hidden lg:flex w-full lg:basis-1/2 items-center justify-center p-6 lg:p-8 xl:p-10'>
-            <div className="relative w-full max-w-[500px] md:max-w-[600px] xl:max-w-[700px] 2xl:max-w-[800px] aspect-[4/3] lg:aspect-[3/4] xl:aspect-[4/3] h-full rounded-2xl border border-[#2B2B2B] overflow-hidden bg-[url('/auth/bg.png')] bg-cover bg-center shadow-xl">
-              <div className='flex flex-col items-center justify-center h-full p-6 lg:p-8 relative z-10'>
+          <div className='hidden w-full items-center justify-center p-6 lg:flex lg:basis-1/2 lg:p-8 xl:p-10'>
+            <div className="relative aspect-[4/3] h-full w-full max-w-[500px] overflow-hidden rounded-2xl border border-[#2B2B2B] bg-[url('/auth/bg.png')] bg-cover bg-center shadow-xl md:max-w-[600px] lg:aspect-[3/4] xl:aspect-[4/3] xl:max-w-[700px] 2xl:max-w-[800px]">
+              <div className='relative z-[1] flex h-full flex-col items-center justify-center p-6 lg:p-8'>
                 <Carousel
                   opts={{ align: 'start', loop: true }}
                   setApi={setApi}
-                  className='w-full h-full flex'
+                  className='flex h-full w-full'
                 >
-                  <CarouselContent className=' h-full'>
+                  <CarouselContent className='h-full'>
                     {slides.map(slide => (
                       <CarouselItem key={slide.id} className='h-full'>
-                        <div className='flex flex-col items-center justify-between h-full gap-6 lg:gap-8'>
-                          <div className='relative w-full max-w-[400px] lg:max-w-[500px] aspect-[5/3]'>
+                        <div className='flex h-full flex-col items-center justify-between gap-6 lg:gap-8'>
+                          <div className='relative aspect-[5/3] w-full max-w-[400px] lg:max-w-[500px]'>
                             <Image
                               src='/auth/image-card.png'
                               alt='Glass card'
                               fill
-                              className='object-cover rounded-2xl'
+                              className='rounded-2xl object-cover'
                               unoptimized
                             />
                             <div className='absolute inset-0 flex items-center justify-center'>
-                              <div className='relative w-[100px] h-[40px] sm:w-[120px] sm:h-[48px] lg:w-[160px] lg:h-[64px] xl:w-[200px] xl:h-[80px]'>
+                              <div className='relative h-[40px] w-[100px] sm:h-[48px] sm:w-[120px] lg:h-[64px] lg:w-[160px] xl:h-[80px] xl:w-[200px]'>
                                 <Image
                                   src={slide.logo}
                                   alt={`${slide.title} logo`}
@@ -134,14 +134,14 @@ const AuthLayout = ({ children, showCarousel = true }: AuthLayoutProps) => {
                             </div>
                           </div>
 
-                          <div className='text-center w-full max-w-[300px] lg:max-w-[400px] px-2 mb-8'>
-                            <Badge className='inline-flex items-center text-xs font-medium backdrop-blur-md bg-white/10 border border-white/20 rounded-full px-3 py-1 text-white mb-4 hover:bg-white/15 transition-colors'>
+                          <div className='mb-8 w-full max-w-[300px] px-2 text-center lg:max-w-[400px]'>
+                            <Badge className='mb-4 inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur-md transition-colors hover:bg-white/15'>
                               {slide.badge}
                             </Badge>
-                            <h3 className='text-white text-lg lg:text-xl font-semibold mb-3'>
+                            <h3 className='mb-3 text-lg font-semibold text-white lg:text-xl'>
                               {slide.title}
                             </h3>
-                            <p className='text-sm lg:text-base text-[#D9D9D9] leading-relaxed'>
+                            <p className='text-sm leading-relaxed text-[#D9D9D9] lg:text-base'>
                               {slide.description}
                             </p>
                           </div>
@@ -150,8 +150,8 @@ const AuthLayout = ({ children, showCarousel = true }: AuthLayoutProps) => {
                     ))}
                   </CarouselContent>
 
-                  <div className='flex items-center justify-between w-full mt-6 absolute bottom-0'>
-                    <CarouselPrevious className='relative left-0 translate-y-0 bg-transparent border-none text-white hover:text-gray-300 hover:scale-110 transition-all duration-200 h-8 w-8' />
+                  <div className='absolute bottom-0 mt-6 flex w-full items-center justify-between'>
+                    <CarouselPrevious className='relative left-0 h-8 w-8 translate-y-0 border-none bg-transparent text-white transition-all duration-200 hover:scale-110 hover:text-gray-300' />
 
                     <div className='flex items-center gap-2'>
                       {slides.map((_, i) => (
@@ -160,15 +160,15 @@ const AuthLayout = ({ children, showCarousel = true }: AuthLayoutProps) => {
                           onClick={() => api?.scrollTo(i)}
                           className={`h-2 rounded-full transition-all duration-300 ${
                             i === currentSlide
-                              ? 'bg-white w-8'
-                              : 'bg-gray-600 hover:bg-gray-500 w-2'
+                              ? 'w-8 bg-white'
+                              : 'w-2 bg-gray-600 hover:bg-gray-500'
                           }`}
                           aria-label={`Go to slide ${i + 1}`}
                         />
                       ))}
                     </div>
 
-                    <CarouselNext className='relative right-0 translate-y-0 bg-transparent border-none text-white hover:text-gray-300 hover:scale-110 transition-all duration-200 h-8 w-8' />
+                    <CarouselNext className='relative right-0 h-8 w-8 translate-y-0 border-none bg-transparent text-white transition-all duration-200 hover:scale-110 hover:text-gray-300' />
                   </div>
                 </Carousel>
               </div>
