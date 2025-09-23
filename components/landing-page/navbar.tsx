@@ -208,7 +208,16 @@ export function Navbar() {
   );
 }
 
-function AuthenticatedNav({ user }: { user: any }) {
+function AuthenticatedNav({
+  user,
+}: {
+  user: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    profile?: { firstName?: string | null; avatar?: string | null };
+  } | null;
+}) {
   const { logout } = useZustandAuth(false);
 
   return (
@@ -294,7 +303,12 @@ function MobileMenu({
 }: {
   isAuthenticated: boolean;
   isLoading: boolean;
-  user: any;
+  user: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    profile?: { firstName?: string | null; avatar?: string | null };
+  } | null;
 }) {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileButtonRef = useRef<HTMLButtonElement>(null);
