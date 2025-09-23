@@ -40,7 +40,7 @@ export default function LooperSVG() {
       viewBox='0 0 403 452'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
-      className='sphere-image absolute top-1/2 left-1/2 z-20 h-[75%] w-[75%] -translate-x-1/2 -translate-y-1/2'
+      className='sphere-image absolute top-1/2 left-1/2 z-20 h-[75%] w-[75%] -translate-x-1/2 -translate-y-1/2 opacity-70'
     >
       <ellipse
         opacity='0.0169492'

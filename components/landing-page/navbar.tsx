@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { Menu, XIcon } from 'lucide-react';
+import { Menu, XIcon, Plus, ChevronDown, Building2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
@@ -8,6 +8,19 @@ import gsap from 'gsap';
 import { BoundlessButton } from '../buttons';
 import { useRouter } from 'next/navigation';
 import { Sheet, SheetTrigger, SheetContent, SheetClose } from '../ui/sheet';
+import { useAuthStatus, useZustandAuth } from '@/hooks/use-auth';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import { User, LogOut, Settings } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import WalletConnectButton from '../wallet/WalletConnectButton';
 
 gsap.registerPlugin(useGSAP);
 
@@ -25,6 +38,7 @@ export function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { isAuthenticated, isLoading, user } = useAuthStatus();
   useGSAP(
     () => {
       gsap.fromTo(
@@ -138,7 +152,12 @@ export function Navbar() {
       className='blur-s[12px] sticky top-0 z-50 -mt-11 max-h-[88px] bg-[#030303A3]'
     >
       <div className='px-5 py-5 md:px-[50px] lg:px-[100px]'>
-        <div className='gap- flex items-center justify-between'>
+        <div
+          className={cn(
+            'grid grid-cols-2 items-center md:grid-cols-[auto_1fr_auto] md:justify-items-center',
+            isAuthenticated && 'md:justify-items-start'
+          )}
+        >
           <div className='flex-shrink-0'>
             <Link
               ref={logoRef}
@@ -165,23 +184,138 @@ export function Navbar() {
           </div>
 
           <div ref={ctaRef} className='hidden md:block'>
-            <BoundlessButton>
-              <Link href='/auth/signin'>Get Started</Link>
-            </BoundlessButton>
+            {isLoading ? (
+              <div className='flex items-center space-x-2'>
+                <div className='h-8 w-8 animate-pulse rounded-full bg-gray-200' />
+                <div className='h-4 w-20 animate-pulse rounded bg-gray-200' />
+              </div>
+            ) : isAuthenticated ? (
+              <AuthenticatedNav user={user} />
+            ) : (
+              <BoundlessButton>
+                <Link href='/auth/signin'>Get Started</Link>
+              </BoundlessButton>
+            )}
           </div>
-          <MobileMenu />
+          <MobileMenu
+            isAuthenticated={isAuthenticated}
+            isLoading={isLoading}
+            user={user}
+          />
         </div>
       </div>
     </nav>
   );
 }
 
-function MobileMenu() {
+function AuthenticatedNav({
+  user,
+}: {
+  user: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    profile?: { firstName?: string | null; avatar?: string | null };
+  } | null;
+}) {
+  const { logout } = useZustandAuth(false);
+
+  return (
+    <div className='flex items-center space-x-3'>
+      <WalletConnectButton />
+      <BoundlessButton>
+        <Plus className='h-4 w-4' />
+      </BoundlessButton>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className='flex items-center space-x-2 rounded-full p-1 transition-colors hover:bg-white/10'>
+            <Avatar className='h-12 w-12'>
+              <AvatarImage
+                src={user?.image || user?.profile?.avatar || ''}
+                alt={user?.name || user?.profile?.firstName || ''}
+              />
+              <AvatarFallback>
+                {user?.name?.charAt(0) ||
+                  user?.profile?.firstName?.charAt(0) ||
+                  user?.email?.charAt(0) ||
+                  'U'}
+              </AvatarFallback>
+            </Avatar>
+            <ChevronDown className='h-5 w-5 text-white' />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          className='bg-background w-[350px] rounded-[8px] border border-[#2B2B2B] p-0 text-white shadow-[0_4px_4px_0_rgba(26,26,26,0.25)]'
+          align='end'
+          forceMount
+        >
+          <DropdownMenuLabel className='p-6 !pb-3 font-normal'>
+            <div className='flex flex-col space-y-1'>
+              <p className='text-sm leading-[160%]'>
+                Signed in as{' '}
+                <span className='leading-[145%] font-semibold'>
+                  {user?.name || user?.profile?.firstName || 'User'}
+                </span>
+              </p>
+              <p className='text-sm leading-[145%] text-[#B5B5B5]'>
+                {user?.email}
+              </p>
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator className='h-[0.5px] bg-[#2B2B2B]' />
+          <DropdownMenuItem className='px-6 py-3.5 pt-3' asChild>
+            <Link href='/profile' className='flex items-center'>
+              <User className='teext-white mr-2 h-4 w-4' />
+              Profile
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem className='px-6 py-3.5' asChild>
+            <Link href='/organizations' className='flex items-center'>
+              <Building2 className='mr-2 h-4 w-4 text-white' />
+              Organizations
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem className='px-6 py-3.5 pb-6' asChild>
+            <Link href='/settings' className='flex items-center'>
+              <Settings className='mr-2 h-4 w-4 text-white' />
+              Settings
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator className='h-[0.5px] bg-[#2B2B2B]' />
+          <DropdownMenuItem
+            onClick={() => logout()}
+            className='flex items-center px-6 pt-3 pb-6 text-red-600'
+          >
+            <LogOut className='mr-2 h-4 w-4 text-white' />
+            Sign Out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+}
+
+function MobileMenu({
+  isAuthenticated,
+  isLoading,
+  user,
+}: {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  user: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    profile?: { firstName?: string | null; avatar?: string | null };
+  } | null;
+}) {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileButtonRef = useRef<HTMLButtonElement>(null);
   const mobileLogoRef = useRef<HTMLAnchorElement>(null);
   const mobileMenuItemsRef = useRef<HTMLDivElement>(null);
   const mobileCTARef = useRef<HTMLDivElement>(null);
+  const { logout } = useZustandAuth(false);
 
   useGSAP(
     () => {
@@ -272,7 +406,7 @@ function MobileMenu() {
   };
 
   return (
-    <div ref={mobileMenuRef} className='md:hidden'>
+    <div ref={mobileMenuRef} className='justify-self-end md:hidden'>
       <Sheet
         onOpenChange={open => {
           if (open) {
@@ -325,9 +459,96 @@ function MobileMenu() {
             ))}
           </div>
           <div ref={mobileCTARef}>
-            <BoundlessButton size='xl' className='w-full' fullWidth>
-              <Link href='/auth/signin'>Get Started</Link>
-            </BoundlessButton>
+            {isLoading ? (
+              <div className='flex items-center justify-center space-x-2 py-4'>
+                <div className='h-8 w-8 animate-pulse rounded-full bg-gray-200' />
+                <div className='h-4 w-20 animate-pulse rounded bg-gray-200' />
+              </div>
+            ) : isAuthenticated ? (
+              <div className='space-y-4'>
+                <div className='flex items-center space-x-3 rounded-lg bg-white/10 p-3'>
+                  <Avatar className='h-10 w-10'>
+                    <AvatarImage
+                      src={user?.image || user?.profile?.avatar || ''}
+                      alt={user?.name || user?.profile?.firstName || ''}
+                    />
+                    <AvatarFallback>
+                      {user?.name?.charAt(0) ||
+                        user?.profile?.firstName?.charAt(0) ||
+                        user?.email?.charAt(0) ||
+                        'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className='flex-1'>
+                    <p className='text-sm font-medium text-white'>
+                      {user?.name || user?.profile?.firstName || 'User'}
+                    </p>
+                    <p className='text-xs text-white/70'>{user?.email}</p>
+                  </div>
+                </div>
+
+                {/* Wallet Connection */}
+                <div className='space-y-2'>
+                  <p className='text-xs font-medium tracking-wide text-white/70 uppercase'>
+                    Wallet
+                  </p>
+                  <WalletConnectButton
+                    variant='outline'
+                    size='sm'
+                    className='w-full border-white/20 bg-transparent text-white hover:bg-white/10'
+                  />
+                </div>
+
+                <div className='space-y-2'>
+                  <p className='text-xs font-medium tracking-wide text-white/70 uppercase'>
+                    Navigation
+                  </p>
+                  <Link
+                    href='/profile'
+                    className='block rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10'
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    href='/organizations'
+                    className='block rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10'
+                  >
+                    Organizations
+                  </Link>
+                  <Link
+                    href='/settings'
+                    className='block rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10'
+                  >
+                    Settings
+                  </Link>
+                </div>
+                <BoundlessButton
+                  size='xl'
+                  className='w-full'
+                  fullWidth
+                  variant='outline'
+                  onClick={() => logout()}
+                >
+                  Sign Out
+                </BoundlessButton>
+              </div>
+            ) : (
+              <div className='space-y-4'>
+                <div className='space-y-2'>
+                  <p className='text-xs font-medium tracking-wide text-white/70 uppercase'>
+                    Wallet
+                  </p>
+                  <WalletConnectButton
+                    variant='outline'
+                    size='sm'
+                    className='w-full border-white/20 bg-transparent text-white hover:bg-white/10'
+                  />
+                </div>
+                <BoundlessButton size='xl' className='w-full' fullWidth>
+                  <Link href='/auth/signin'>Get Started</Link>
+                </BoundlessButton>
+              </div>
+            )}
           </div>
         </SheetContent>
       </Sheet>

@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   outputFileTracingRoot: __dirname,
   images: {
+    domains: ['i.pravatar.cc'],
     remotePatterns: [
       {
         protocol: 'https',

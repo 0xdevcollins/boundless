@@ -13,7 +13,7 @@ const WalletCard = ({ disabled, onClick, icon, label }: WalletCardProps) => {
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`flex h-auto w-full flex-col items-center justify-center gap-3 rounded-lg border-2 border-[#2B2B2B] bg-[#101010] p-4 text-white transition-all duration-200 hover:border-[#404040] hover:bg-[#151515] focus:ring-2 focus:ring-[#00FF88] focus:ring-offset-2 focus:ring-offset-[#030303] focus:outline-none active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-[#2B2B2B] disabled:hover:bg-[#101010]`}
+      className={`flex h-auto w-full items-center justify-start gap-3 rounded-lg bg-[#101010] px-4 py-2 text-white transition-all duration-200 hover:border-[#404040] hover:bg-[#151515] focus:ring-2 focus:ring-[#00FF88] focus:ring-offset-2 focus:ring-offset-[#030303] focus:outline-none active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-[#2B2B2B] disabled:hover:bg-[#101010]`}
     >
       <div className='relative flex h-8 w-8 items-center justify-center'>
         <Image
