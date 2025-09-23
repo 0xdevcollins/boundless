@@ -76,7 +76,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
 
   if (loading) {
     return (
-      <div className='flex items-center justify-center h-64'>
+      <div className='flex h-64 items-center justify-center'>
         <LoadingSpinner size='lg' />
       </div>
     );
@@ -84,8 +84,8 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
 
   if (error || !campaignDetails) {
     return (
-      <div className='text-center py-8'>
-        <p className='text-red-500 mb-4'>
+      <div className='py-8 text-center'>
+        <p className='mb-4 text-red-500'>
           {error || 'Campaign details not found'}
         </p>
         <Button onClick={onBack} variant='outline'>
@@ -95,7 +95,6 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
     );
   }
 
-  // Use mock data as fallback if API fails
   const displayData = campaignDetails || {
     id: 'fallback-campaign',
     title: 'Boundless',
@@ -158,51 +157,49 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
 
   return (
     <div className='max-w-lg space-y-6'>
-      {/* Campaign Banner */}
-      <div className='w-full h-60 md:h-64'>
+      <div className='h-60 w-full md:h-64'>
         <Image
           src={displayData.photos[0]}
           alt={displayData.title}
           width={192}
           height={192}
-          className='w-full h-full object-cover rounded-xl'
+          className='h-full w-full rounded-xl object-cover'
         />
       </div>
-      {/* Campaign Header */}
+
       <div className=''>
-        <div className='flex items-center justify-between mb-4'>
+        <div className='mb-4 flex items-center justify-between'>
           <div className='flex items-center space-x-4'>
-            <div className='w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center'>
-              <UserCheck2 className='w-6 h-6 md:w-8 md:h-8 text-blue-100 bg-blue-500 rounded-full' />
+            <div className='flex h-12 w-12 items-center justify-center rounded-full bg-blue-500'>
+              <UserCheck2 className='h-6 w-6 rounded-full bg-blue-500 text-blue-100 md:h-8 md:w-8' />
             </div>
             <div>
-              <h3 className='text-[#F5F5F5] font-medium md:font-semibold'>
+              <h3 className='font-medium text-[#F5F5F5] md:font-semibold'>
                 {displayData.creator.name}
               </h3>
             </div>
           </div>
         </div>
 
-        {/* Financials */}
         <div className='mb-4'>
-          <div className='flex justify-between items-center mb-4'>
+          <div className='mb-4 flex items-center justify-between'>
             <div className='text-center'>
-              <p className='text-[#B5B5B5] text-sm'>Raised</p>
-              <p className='text-[#F5F5F5] text-xl font-bold'>
+              <p className='text-sm text-[#B5B5B5]'>Raised</p>
+              <p className='text-xl font-bold text-[#F5F5F5]'>
                 ${displayData.raisedAmount.toLocaleString()}.00
               </p>
             </div>
             <div className='text-center'>
-              <p className='text-[#B5B5B5] text-sm'>Target</p>
-              <p className='text-[#F5F5F5] text-xl font-bold'>
+              <p className='text-sm text-[#B5B5B5]'>Target</p>
+              <p className='text-xl font-bold text-[#F5F5F5]'>
                 ${displayData.fundAmount.toLocaleString()}.00
               </p>
             </div>
           </div>
-          {/* progress bar */}
-          <div className='w-full h-2 bg-[#2A2A2A] rounded-full'>
+
+          <div className='h-2 w-full rounded-full bg-[#2A2A2A]'>
             <div
-              className='h-full bg-primary rounded-full'
+              className='bg-primary h-full rounded-full'
               style={{
                 width: `${(displayData.raisedAmount / displayData.fundAmount) * 100}%`,
               }}
@@ -210,54 +207,51 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
           </div>
         </div>
 
-        {/* Engagement Metrics */}
-        <div className='w-full flex items-center justify-between font-semibold'>
+        <div className='flex w-full items-center justify-between font-semibold'>
           <div className='flex items-center space-x-3'>
-            <div className='flex items-center space-x-2 bg-[#212121] rounded-lg p-2'>
-              <ThumbsUp className='w-4 h-4 text-[#B5B5B5]' />
-              <span className='text-[#F5F5F5] text-sm'>
+            <div className='flex items-center space-x-2 rounded-lg bg-[#212121] p-2'>
+              <ThumbsUp className='h-4 w-4 text-[#B5B5B5]' />
+              <span className='text-sm text-[#F5F5F5]'>
                 {displayData.engagement.likes}
               </span>
             </div>
-            <div className='flex items-center space-x-2 bg-[#212121] rounded-lg p-2'>
-              <MessageCircle className='w-4 h-4 text-[#B5B5B5]' />
-              <span className='text-[#F5F5F5] text-sm'>
+            <div className='flex items-center space-x-2 rounded-lg bg-[#212121] p-2'>
+              <MessageCircle className='h-4 w-4 text-[#B5B5B5]' />
+              <span className='text-sm text-[#F5F5F5]'>
                 {displayData.engagement.comments}
               </span>
             </div>
           </div>
           <div className='flex items-center space-x-2 border-x border-gray-900 px-6'>
-            <Users className='w-4 h-4 text-[#B5B5B5]' />
-            <span className='text-[#F5F5F5] text-sm'>
+            <Users className='h-4 w-4 text-[#B5B5B5]' />
+            <span className='text-sm text-[#F5F5F5]'>
               {displayData.engagement.backers} Backers
             </span>
           </div>
           <div className='flex items-center space-x-2'>
-            <Clock className='w-4 h-4 text-[#B5B5B5]' />
-            <span className='text-[#F5F5F5] text-sm'>
+            <Clock className='h-4 w-4 text-[#B5B5B5]' />
+            <span className='text-sm text-[#F5F5F5]'>
               {displayData.engagement.daysLeft} days left
             </span>
           </div>
         </div>
       </div>
 
-      {/* Campaign Details */}
       <div className='space-y-4'>
-        <h3 className='text-[#F5F5F5] font-semibold'>Campaign Details</h3>
-        <p className='text-[#B5B5B5] text-sm leading-relaxed'>
+        <h3 className='font-semibold text-[#F5F5F5]'>Campaign Details</h3>
+        <p className='text-sm leading-relaxed text-[#B5B5B5]'>
           {displayData.description}
         </p>
       </div>
 
-      {/* Tags */}
       <div className='space-y-3'>
-        <h3 className='text-[#F5F5F5] font-medium'>Tags</h3>
+        <h3 className='font-medium text-[#F5F5F5]'>Tags</h3>
         <div className='flex flex-wrap gap-2'>
           {displayData.tags.map((tag, index) => (
             <Badge
               key={index}
               variant='secondary'
-              className='bg-[#2A2A2A] text-[#F5F5F5] border-[#2B2B2B]'
+              className='border-[#2B2B2B] bg-[#2A2A2A] text-[#F5F5F5]'
             >
               #{tag}
             </Badge>
@@ -265,14 +259,13 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
         </div>
       </div>
 
-      {/* Campaign Photos */}
       <div className='space-y-3'>
-        <h3 className='text-[#F5F5F5] font-medium'>Campaign Photos</h3>
+        <h3 className='font-medium text-[#F5F5F5]'>Campaign Photos</h3>
         <div className='flex space-x-3 overflow-x-auto'>
           {displayData.photos.map((photo, index) => (
             <div
               key={index}
-              className='relative w-20 h-20 rounded-lg overflow-hidden flex-1'
+              className='relative h-20 w-20 flex-1 overflow-hidden rounded-lg'
             >
               <Image
                 src={photo}
@@ -285,44 +278,43 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
         </div>
       </div>
 
-      {/* Milestones */}
       <div className='space-y-3'>
-        <h3 className='text-[#F5F5F5] font-medium'>Milestones</h3>
+        <h3 className='font-medium text-[#F5F5F5]'>Milestones</h3>
         <div className='space-y-3'>
           {displayData.milestones.map((milestone, index) => (
             <div
               key={milestone.id}
-              className='border border-[#2B2B2B] rounded-xl overflow-hidden'
+              className='overflow-hidden rounded-xl border border-[#2B2B2B]'
             >
               <button
                 onClick={() => toggleMilestone(index)}
-                className='w-full flex items-center justify-between bg-[#2A2A2A] text-[#F5F5F5] hover:bg-[#2A2A2A]/80 transition-colors p-4'
+                className='flex w-full items-center justify-between bg-[#2A2A2A] p-4 text-[#F5F5F5] transition-colors hover:bg-[#2A2A2A]/80'
               >
                 <div className='text-left'>
-                  <h4 className='text-xs font-medium text-[#B5B5B5] mb-1'>
+                  <h4 className='mb-1 text-xs font-medium text-[#B5B5B5]'>
                     Milestone {index + 1}
                   </h4>
                   <span className='text-sm font-medium'>{milestone.title}</span>
                 </div>
                 {expandedMilestones.includes(index) ? (
-                  <ChevronUp className='w-4 h-4' />
+                  <ChevronUp className='h-4 w-4' />
                 ) : (
-                  <ChevronDown className='w-4 h-4' />
+                  <ChevronDown className='h-4 w-4' />
                 )}
               </button>
 
               {expandedMilestones.includes(index) && (
-                <div className='bg-[#1A1A1A] p-4 border-t border-[#2B2B2B]'>
-                  <p className='text-[#B5B5B5] text-sm mb-4'>
+                <div className='border-t border-[#2B2B2B] bg-[#1A1A1A] p-4'>
+                  <p className='mb-4 text-sm text-[#B5B5B5]'>
                     {milestone.description}
                   </p>
-                  <div className='flex items-center justify-between text-[#B5B5B5] text-sm'>
+                  <div className='flex items-center justify-between text-sm text-[#B5B5B5]'>
                     <div className='flex items-center space-x-2'>
-                      <Calendar className='w-4 h-4' />
+                      <Calendar className='h-4 w-4' />
                       <span>{milestone.deliveryDate}</span>
                     </div>
                     <div className='flex items-center space-x-2'>
-                      <Coins className='w-4 h-4' />
+                      <Coins className='h-4 w-4' />
                       <span>${milestone.fundAmount.toLocaleString()}.00</span>
                     </div>
                   </div>
@@ -333,18 +325,17 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
         </div>
       </div>
 
-      {/* Confirmation and Actions */}
       <div className='space-y-4 pt-6'>
         <div className='flex items-center space-x-3'>
           <Checkbox
             id='confirm-details'
             checked={isConfirmed}
             onCheckedChange={checked => setIsConfirmed(checked as boolean)}
-            className='border-[#2B2B2B] bg-[#1A1A1A] data-[state=checked]:bg-primary data-[state=checked]:border-primary'
+            className='data-[state=checked]:bg-primary data-[state=checked]:border-primary border-[#2B2B2B] bg-[#1A1A1A]'
           />
           <label
             htmlFor='confirm-details'
-            className='text-[#F5F5F5] text-sm cursor-pointer'
+            className='cursor-pointer text-sm text-[#F5F5F5]'
           >
             I confirm all details are correct
           </label>
@@ -361,7 +352,7 @@ const ReviewCampaign: React.FC<ReviewCampaignProps> = ({
           <Button
             onClick={handleLaunch}
             disabled={!isConfirmed}
-            className='flex-1 bg-primary text-background hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed'
+            className='bg-primary text-background hover:bg-primary/90 flex-1 disabled:cursor-not-allowed disabled:opacity-50'
           >
             Launch Campaign
           </Button>

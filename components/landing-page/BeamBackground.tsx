@@ -198,10 +198,10 @@ export default function BeamBackground() {
   });
 
   return (
-    <div className='fixed inset-0 z-0 grid grid-cols-[5%_90%_5%] max-h-full overflow-hidden'>
+    <div className='fixed inset-0 z-0 grid max-h-full grid-cols-[5%_90%_5%] overflow-hidden'>
       {/* Left Beam Placeholder */}
       <div className='flex items-center justify-center'>
-        <div id='left-beam' className='w-full h-screen hidden md:block'>
+        <div id='left-beam' className='hidden h-screen w-full md:block'>
           <svg
             width='72'
             height='900'
@@ -304,14 +304,14 @@ export default function BeamBackground() {
       </div>
 
       {/* Pattern Placeholder */}
-      <div className='flex items-center bg-acscent'>
-        <div id='pattern' className='w-full h-screen'>
+      <div className='bg-acscent flex items-center'>
+        <div id='pattern' className='h-screen w-full'>
           <svg
             width='1252'
             height='810'
             id='pattern'
             viewBox='0 0 1252 810'
-            className='justify-self-center w-full h-screen'
+            className='h-screen w-full justify-self-center'
             fill='none'
             xmlns='http://www.w3.org/2000/svg'
           >
@@ -10750,8 +10750,8 @@ export default function BeamBackground() {
       </div>
 
       {/* Right Beam Placeholder */}
-      <div className=' items-center justify-center hidden md:flex'>
-        <div id='right-beam' className='w-full h-screen'>
+      <div className='hidden items-center justify-center md:flex'>
+        <div id='right-beam' className='h-screen w-full'>
           <svg
             width='72'
             height='900'

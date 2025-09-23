@@ -18,19 +18,19 @@ const Header = () => {
 
   return (
     <motion.header
-      className='bg-transparent border-none flex flex-col sm:flex-row shrink-0 items-start sm:items-center gap-4 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 sticky top-0 z-50'
+      className='sticky top-0 z-50 flex shrink-0 flex-col items-start gap-4 border-none bg-transparent px-4 py-4 sm:flex-row sm:items-center sm:px-6 sm:py-6 lg:px-8'
       initial='hidden'
       animate='visible'
       variants={fadeInUp}
     >
       {/* Mobile Menu Trigger - Only visible on mobile */}
       <motion.div
-        className='flex items-center gap-3 w-full sm:hidden'
+        className='flex w-full items-center gap-3 sm:hidden'
         variants={slideInFromLeft}
       >
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <SidebarTrigger className='text-white hover:text-gray-300 transition-colors bg-[#2A2A2A] p-2 rounded-lg'>
-            <Menu className='w-5 h-5' />
+          <SidebarTrigger className='rounded-lg bg-[#2A2A2A] p-2 text-white transition-colors hover:text-gray-300'>
+            <Menu className='h-5 w-5' />
           </SidebarTrigger>
         </motion.div>
         <motion.div
@@ -44,17 +44,17 @@ const Header = () => {
 
       {/* Search Bar */}
       <motion.div
-        className='flex-1 flex items-center w-full sm:w-auto'
+        className='flex w-full flex-1 items-center sm:w-auto'
         variants={fadeInUp}
       >
         <div className='relative w-full max-w-md'>
           <motion.span
-            className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'
+            className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-400'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <Search className='w-4 h-4 sm:w-5 sm:h-5' />
+            <Search className='h-4 w-4 sm:h-5 sm:w-5' />
           </motion.span>
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -64,7 +64,7 @@ const Header = () => {
             <Input
               type='text'
               placeholder='Search project...'
-              className='pl-9 sm:pl-10 pr-4 py-2 rounded-xl bg-[#1C1C1C] border border-[#2B2B2B] text-white placeholder:text-gray-400 focus:ring-0 focus:outline-none w-full h-10 sm:h-9 shadow-none text-sm sm:text-base'
+              className='h-10 w-full rounded-xl border border-[#2B2B2B] bg-[#1C1C1C] py-2 pr-4 pl-9 text-sm text-white shadow-none placeholder:text-gray-400 focus:ring-0 focus:outline-none sm:h-9 sm:pl-10 sm:text-base'
             />
           </motion.div>
         </div>
@@ -72,7 +72,7 @@ const Header = () => {
 
       {/* Action Buttons */}
       <motion.div
-        className='flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto'
+        className='flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4'
         variants={slideInFromRight}
       >
         {/* New Project Button */}
@@ -80,7 +80,7 @@ const Header = () => {
           <BoundlessButton
             variant='secondary'
             size='default'
-            icon={<Plus className='w-4 h-4 sm:w-5 sm:h-5' />}
+            icon={<Plus className='h-4 w-4 sm:h-5 sm:w-5' />}
             iconPosition='right'
             onClick={() => {
               sheet.openInitialize();
@@ -96,7 +96,7 @@ const Header = () => {
           <WalletConnectButton
             variant='default'
             size='default'
-            className='min-w-[140px] bg-[#101010] border border-[#2B2B2B] text-[#fff] hover:bg-[#101010] hover:border-[#2B2B2B]'
+            className='min-w-[140px] border border-[#2B2B2B] bg-[#101010] text-[#fff] hover:border-[#2B2B2B] hover:bg-[#101010]'
           />
         </motion.div>
       </motion.div>

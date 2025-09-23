@@ -6,7 +6,7 @@ interface TopRightSvgProps {
 
 const TopRightSvg: React.FC<TopRightSvgProps> = ({ svgRefs }) => {
   return (
-    <div className='absolute top-0 md:right-12 lg:right-24 hidden md:block'>
+    <div className='absolute top-0 hidden md:right-12 md:block lg:right-24'>
       <svg
         width='295'
         height='62'

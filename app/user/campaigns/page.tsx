@@ -9,11 +9,11 @@ export default function CampaignsPage() {
   return (
     <PageTransition>
       <div className='min-h-screen'>
-        <div className='p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto pb-16'>
+        <div className='mx-auto max-w-7xl p-4 pb-16 sm:p-6 lg:p-8'>
           {/* Header Section */}
           <div className='mb-8 flex items-center justify-between'>
             <div>
-              <h1 className='text-2xl sm:text-3xl lg:text-[32px] font-medium leading-[120%] tracking-[-0.64px] text-white'>
+              <h1 className='text-2xl leading-[120%] font-medium tracking-[-0.64px] text-white sm:text-3xl lg:text-[32px]'>
                 Campaigns
               </h1>
               <p className='mt-2 text-white/60'>
@@ -24,15 +24,15 @@ export default function CampaignsPage() {
               onClick={() => {
                 /* TODO: Implement create campaign modal */
               }}
-              className='bg-primary hover:bg-primary/90 text-black font-medium flex items-center gap-2'
+              className='bg-primary hover:bg-primary/90 flex items-center gap-2 font-medium text-black'
             >
-              <PlusIcon className='w-4 h-4' />
+              <PlusIcon className='h-4 w-4' />
               Create Campaign
             </Button>
           </div>
 
           {/* Campaign Table Section */}
-          <div className='bg-[#1C1C1C] p-4 sm:p-6 rounded-[12px] pb-[5em]'>
+          <div className='rounded-[12px] bg-[#1C1C1C] p-4 pb-[5em] sm:p-6'>
             <CampaignTable limit={10} showPagination={true} />
           </div>
         </div>

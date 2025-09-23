@@ -107,7 +107,7 @@ const MilestoneManager: React.FC<MilestoneManagerProps> = ({
   };
 
   return (
-    <div className='w-full  mx-auto space-y-6'>
+    <div className='mx-auto w-full space-y-6'>
       <div className='space-y-4'>
         {milestones.map(milestone => (
           <MilestoneForm
@@ -122,15 +122,15 @@ const MilestoneManager: React.FC<MilestoneManagerProps> = ({
 
       {milestones.length < 6 && (
         <div className=''>
-          <Label className='text-xs font-medium text-white flex justify-between items-center mb-3'>
+          <Label className='mb-3 flex items-center justify-between text-xs font-medium text-white'>
             Milestone {milestones.length + 1}
           </Label>
           <Button
             onClick={handleAddMilestone}
-            className='!w-full  p-5 rounded-[12px] bg-[#1C1C1C] border border-[#2B2B2B] text-[#787878] flex justify-between items-center'
+            className='flex !w-full items-center justify-between rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-5 text-[#787878]'
           >
             <span>Add Milestone</span>
-            <Plus className='w-4 h-4' />
+            <Plus className='h-4 w-4' />
           </Button>
         </div>
       )}

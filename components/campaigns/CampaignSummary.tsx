@@ -59,21 +59,21 @@ const CampaignSummary = ({
         title='Campaign Summary'
         side='bottom'
       >
-        <div className='max-w-[500px] mx-auto space-y-7'>
+        <div className='mx-auto max-w-[500px] space-y-7'>
           <div className='space-y-4'>
-            <div className='relative w-full rounded-[12px] overflow-hidden'>
+            <div className='relative w-full overflow-hidden rounded-[12px]'>
               <Image
                 src='/banner.png'
                 alt='Campaign Summary'
                 width={500}
                 height={500}
-                className='object-cover w-full h-full'
+                className='h-full w-full object-cover'
               />
             </div>
             <div className='space-y-4'>
               <div>
                 <div className='flex items-center gap-3'>
-                  <h2 className='text-white text-2xl font-medium'>Boundless</h2>
+                  <h2 className='text-2xl font-medium text-white'>Boundless</h2>
                   <Badge className='rounded-none'>Successful</Badge>
                 </div>
                 <div className='flex items-center gap-2 text-[#B5B5B5]'>
@@ -87,7 +87,7 @@ const CampaignSummary = ({
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div>
-                  <h2 className='text-white text-lg font-medium'>
+                  <h2 className='text-lg font-medium text-white'>
                     Collins Odumeje
                   </h2>
                 </div>
@@ -104,14 +104,14 @@ const CampaignSummary = ({
             <div className='space-y-2'>
               <div className='flex justify-between'>
                 <div className='flex flex-col'>
-                  <p className='text-[#B5B5B5] text-xs font-medium'>Raised</p>
-                  <p className='text-[#F5F5F5] text-sm font-medium'>
+                  <p className='text-xs font-medium text-[#B5B5B5]'>Raised</p>
+                  <p className='text-sm font-medium text-[#F5F5F5]'>
                     $123,000.00
                   </p>
                 </div>
                 <div className='flex flex-col'>
-                  <p className='text-[#B5B5B5] text-xs font-medium'>Target</p>
-                  <p className='text-[#F5F5F5] text-sm font-medium'>
+                  <p className='text-xs font-medium text-[#B5B5B5]'>Target</p>
+                  <p className='text-sm font-medium text-[#F5F5F5]'>
                     $123,000.00
                   </p>
                 </div>
@@ -120,14 +120,14 @@ const CampaignSummary = ({
                 value={50}
                 className='h-2 bg-[#1671D9]/20 [&>div]:bg-[#1671D9]'
               />
-              <div className='flex justify-between items-center'>
+              <div className='flex items-center justify-between'>
                 <div className='flex gap-3'>
                   <BoundlessButton
                     variant='outline'
                     size='sm'
                     className='bg-[#212121]'
                   >
-                    <ThumbsUp className='w-4 h-4 text-white fill-white' />
+                    <ThumbsUp className='h-4 w-4 fill-white text-white' />
                     <span className='text-white'>100k</span>
                   </BoundlessButton>
                   <BoundlessButton
@@ -135,18 +135,18 @@ const CampaignSummary = ({
                     size='sm'
                     className='bg-[#212121]'
                   >
-                    <MessageCircleMore className='w-4 h-4 text-white' />
+                    <MessageCircleMore className='h-4 w-4 text-white' />
                     <span className='text-white'>100k</span>
                   </BoundlessButton>
                 </div>
-                <div className='w-px h-6 bg-white/20'></div>
+                <div className='h-6 w-px bg-white/20'></div>
                 <div className='flex items-center gap-2'>
-                  <Users className='w-4 h-4 text-white' />
+                  <Users className='h-4 w-4 text-white' />
                   <span className='text-white'>100 backers</span>
                 </div>
-                <div className='w-px h-6 bg-white/20'></div>
+                <div className='h-6 w-px bg-white/20'></div>
                 <div className='flex items-center gap-2'>
-                  <Clock className='w-4 h-4 text-white' />
+                  <Clock className='h-4 w-4 text-white' />
                   <span className='text-white'>100 days left</span>
                 </div>
               </div>
@@ -154,10 +154,10 @@ const CampaignSummary = ({
           </div>
           <div className='space-y-4'>
             <div>
-              <h2 className='text-white text-lg font-semibold'>
+              <h2 className='text-lg font-semibold text-white'>
                 Campaign Details
               </h2>
-              <ScrollArea className='h-[159px] pr-4 mt-2' type='always'>
+              <ScrollArea className='mt-2 h-[159px] pr-4' type='always'>
                 <p className='text-[#B5B5B5]'>
                   Boundless is a trustless, decentralized application (dApp)
                   that empowers changemakers and builders to raise funds
@@ -172,7 +172,7 @@ const CampaignSummary = ({
               </ScrollArea>
             </div>
             <div>
-              <h2 className='text-white text-lg font-semibold'>Milestones</h2>
+              <h2 className='text-lg font-semibold text-white'>Milestones</h2>
               <div className='space-y-3'>
                 {milestones.map((milestone, idx) => {
                   const isExpanded = expandedMilestone === milestone.id;
@@ -181,12 +181,12 @@ const CampaignSummary = ({
                       <div className='text-xs text-white'>
                         Milestone {idx + 1}
                       </div>
-                      <div className='rounded-[12px] bg-[#1C1C1C] border border-[#2B2B2B]'>
+                      <div className='rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C]'>
                         <div
-                          className='flex items-center justify-between p-3 pb-3 cursor-pointer select-none'
+                          className='flex cursor-pointer items-center justify-between p-3 pb-3 select-none'
                           onClick={() => toggle(milestone.id)}
                         >
-                          <div className='text-white text-base font-semibold'>
+                          <div className='text-base font-semibold text-white'>
                             {milestone.title || `Milestone ${idx + 1}`}
                           </div>
                           <button
@@ -200,11 +200,11 @@ const CampaignSummary = ({
                           </button>
                         </div>
                         {isExpanded && (
-                          <div className='p-5 pt-0 space-y-3'>
+                          <div className='space-y-3 p-5 pt-0'>
                             <div className='text-[#fff]'>
                               {milestone.description}
                             </div>
-                            <div className='flex gap-6 text-gray-300 text-sm'>
+                            <div className='flex gap-6 text-sm text-gray-300'>
                               <div className='flex items-center gap-2'>
                                 <CalendarIcon className='h-4 w-4' />
                                 <span className='text-white'>
@@ -230,8 +230,8 @@ const CampaignSummary = ({
               </div>
             </div>
             <div>
-              <div className='flex justify-between items-center'>
-                <h2 className='text-white text-lg font-semibold'>
+              <div className='flex items-center justify-between'>
+                <h2 className='text-lg font-semibold text-white'>
                   Backing History
                 </h2>
                 <Button
@@ -239,46 +239,46 @@ const CampaignSummary = ({
                   className='text-white underline'
                   onClick={() => setOpenHistory(true)}
                 >
-                  View all <ChevronRight className='w-4 h-4' />
+                  View all <ChevronRight className='h-4 w-4' />
                 </Button>
               </div>
               <div className='mt-4 space-y-3'>
                 {backingHistory.map(backer => (
                   <div
                     key={backer.id}
-                    className='flex items-center py-2 border-t border-[#2B2B2B] gap-16'
+                    className='flex items-center gap-16 border-t border-[#2B2B2B] py-2'
                   >
-                    <div className='flex items-center gap-3 flex-1'>
+                    <div className='flex flex-1 items-center gap-3'>
                       <div className='relative'>
-                        <Avatar className='w-10 h-10'>
+                        <Avatar className='h-10 w-10'>
                           <AvatarImage src={backer.avatar || undefined} />
                           <AvatarFallback className='bg-blue-500 text-white'>
                             {backer.name.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                         {backer.isVerified && (
-                          <div className='absolute -bottom-1 -right-1 bg-gray-600 rounded-full p-0.5'>
-                            <Check className='w-3 h-3 text-white' />
+                          <div className='absolute -right-1 -bottom-1 rounded-full bg-gray-600 p-0.5'>
+                            <Check className='h-3 w-3 text-white' />
                           </div>
                         )}
                       </div>
                       <div>
-                        <div className='text-white font-medium'>
+                        <div className='font-medium text-white'>
                           {backer.name}
                         </div>
-                        <div className='flex items-center gap-1 text-[#B5B5B5] text-sm'>
-                          <Wallet className='w-3 h-3' />
+                        <div className='flex items-center gap-1 text-sm text-[#B5B5B5]'>
+                          <Wallet className='h-3 w-3' />
                           <span>{backer.wallet}</span>
                         </div>
                       </div>
                     </div>
-                    <div className='text-center w-24'>
-                      <div className='text-[#B5B5B5] font-medium'>
+                    <div className='w-24 text-center'>
+                      <div className='font-medium text-[#B5B5B5]'>
                         ${backer.amount.toLocaleString()}
                       </div>
                     </div>
-                    <div className='text-right w-20'>
-                      <div className='text-[#B5B5B5] text-sm'>
+                    <div className='w-20 text-right'>
+                      <div className='text-sm text-[#B5B5B5]'>
                         {backer.time}
                       </div>
                     </div>

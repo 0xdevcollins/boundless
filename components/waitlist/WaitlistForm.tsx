@@ -466,13 +466,13 @@ export default function WaitlistForm() {
   return (
     <div
       ref={container}
-      className=' max-w-[446px] mx-auto flex flex-col gap-16 items-center justify-start px-4 mt-[65px] bg-center'
+      className='mx-auto mt-[65px] flex max-w-[446px] flex-col items-center justify-start gap-16 bg-center px-4'
     >
-      <div className={cn(' w-full text-center', isSubmitted && 'hidden')}>
+      <div className={cn('w-full text-center', isSubmitted && 'hidden')}>
         <h1
           ref={titleRef}
           onClick={handleTitleClick}
-          className='md:text-[48px] text-[40px] cursor-pointer hover:opacity-80 transition-opacity leading-[140%]'
+          className='cursor-pointer text-[40px] leading-[140%] transition-opacity hover:opacity-80 md:text-[48px]'
           style={{
             background: 'linear-gradient(180deg, #69726D 0%, #FFF 100%)',
             WebkitBackgroundClip: 'text',
@@ -487,7 +487,7 @@ export default function WaitlistForm() {
         <p
           ref={subtitleRef}
           onClick={handleSubtitleClick}
-          className='md:text-[48px] text-[40px] cursor-pointer hover:opacity-80 transition-opacity leading-[140%]'
+          className='cursor-pointer text-[40px] leading-[140%] transition-opacity hover:opacity-80 md:text-[48px]'
           style={{
             background:
               'linear-gradient(273deg, rgba(167, 249, 80, 0.50) 13.84%, #3AE6B2 73.28%)',
@@ -513,15 +513,15 @@ export default function WaitlistForm() {
                     <FormControl>
                       <div
                         ref={nameFieldRef}
-                        className='relative h-12 flex items-center p-4 rounded-lg border border-[#2B2B2B] bg-background backdrop-blur-sm transition-all duration-300'
+                        className='bg-background relative flex h-12 items-center rounded-lg border border-[#2B2B2B] p-4 backdrop-blur-sm transition-all duration-300'
                         onFocus={() => animateFieldFocus(nameFieldRef)}
                         onBlur={() => animateFieldBlur(nameFieldRef)}
                       >
-                        <User className='w-5 h-5 text-[#B5B5B5]' />
+                        <User className='h-5 w-5 text-[#B5B5B5]' />
                         <Input
                           {...field}
                           placeholder='Enter your name'
-                          className='pl-10 placeholder:text-[#B5B5B5] text-white caret-[rgb(167,249,80)] absolute left-0 top-0 h-full bg-transparent border-none focus-visible:ring-none focus-visible:ring-[0px]'
+                          className='focus-visible:ring-none absolute top-0 left-0 h-full border-none bg-transparent pl-10 text-white caret-[rgb(167,249,80)] placeholder:text-[#B5B5B5] focus-visible:ring-[0px]'
                         />
                       </div>
                     </FormControl>
@@ -538,15 +538,15 @@ export default function WaitlistForm() {
                     <FormControl>
                       <div
                         ref={emailFieldRef}
-                        className='relative h-12 flex items-center p-4 rounded-lg border border-[#2B2B2B] bg-background backdrop-blur-sm transition-all duration-300'
+                        className='bg-background relative flex h-12 items-center rounded-lg border border-[#2B2B2B] p-4 backdrop-blur-sm transition-all duration-300'
                         onFocus={() => animateFieldFocus(emailFieldRef)}
                         onBlur={() => animateFieldBlur(emailFieldRef)}
                       >
-                        <Mail className='w-5 h-5 text-[#B5B5B5]' />
+                        <Mail className='h-5 w-5 text-[#B5B5B5]' />
                         <Input
                           {...field}
                           placeholder='Enter your email'
-                          className='pl-10 placeholder:text-[#B5B5B5] text-white caret-[#A7F950] absolute left-0 top-0 h-full bg-transparent border-none focus-visible:ring-none focus-visible:ring-[0px]'
+                          className='focus-visible:ring-none absolute top-0 left-0 h-full border-none bg-transparent pl-10 text-white caret-[#A7F950] placeholder:text-[#B5B5B5] focus-visible:ring-[0px]'
                         />
                       </div>
                     </FormControl>
@@ -560,21 +560,21 @@ export default function WaitlistForm() {
                 disabled={isSubmitting || !form.formState.isValid}
                 type='submit'
                 fullWidth
-                className='w-full mt-8'
+                className='mt-8 w-full'
               >
                 {isSubmitting ? 'Submitting...' : 'Join the waitlist'}{' '}
                 <ArrowRight />
               </BoundlessButton>
 
               {error && (
-                <p className='text-red-500 text-sm mt-2 text-center'>{error}</p>
+                <p className='mt-2 text-center text-sm text-red-500'>{error}</p>
               )}
             </form>
           </Form>
         </div>
       ) : (
         <div ref={successRef} className='w-full text-center opacity-0'>
-          <div className='p-8 flex flex-col items-center justify-center'>
+          <div className='flex flex-col items-center justify-center p-8'>
             <svg
               width='100'
               height='100'
@@ -592,7 +592,7 @@ export default function WaitlistForm() {
               />
             </svg>
 
-            <h3 className='text-[35px] font-medium text-white mb-3 leading-[120%] tracking-[-0.64px]  mt-[33px]'>
+            <h3 className='mt-[33px] mb-3 text-[35px] leading-[120%] font-medium tracking-[-0.64px] text-white'>
               You have been added to the waitlist
             </h3>
             <p className='text-[#B5B5B5]'>

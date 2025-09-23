@@ -57,7 +57,7 @@ function ProjectSubmissionFlow() {
     <div>
       <button
         onClick={() => setOpen(true)}
-        className='bg-primary text-background p-2 rounded'
+        className='bg-primary text-background rounded p-2'
       >
         Submit Project
       </button>

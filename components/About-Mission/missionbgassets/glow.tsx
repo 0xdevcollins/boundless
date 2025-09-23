@@ -13,7 +13,7 @@ export default function GlowBackground() {
         /> */}
       {/* </div> */}
       <div
-        className='w-[862px] h-[733px] rounded-full absolute top-[-30%] left-[-30%] '
+        className='absolute top-[-30%] left-[-30%] h-[733px] w-[862px] rounded-full'
         style={{
           background:
             'linear-gradient(273deg, rgba(167, 249, 80, 0.25) 13.84%, rgba(58, 230, 178, 0.50) 73.28%)',
@@ -22,7 +22,7 @@ export default function GlowBackground() {
         }}
       ></div>
       <div
-        className='w-[862px] h-[733px] rounded-full absolute bottom-[-30%] right-[-30%] '
+        className='absolute right-[-30%] bottom-[-30%] h-[733px] w-[862px] rounded-full'
         style={{
           background:
             'linear-gradient(273deg, rgba(167, 249, 80, 0.25) 13.84%, rgba(58, 230, 178, 0.50) 73.28%)',
@@ -31,7 +31,7 @@ export default function GlowBackground() {
         }}
       ></div>
       <div
-        className='w-[1170px] h-[733px] rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 '
+        className='absolute top-1/2 left-1/2 h-[733px] w-[1170px] -translate-x-1/2 -translate-y-1/2 rounded-full'
         style={{
           background: '#030303',
           padding: '146px 527px 555px 303px',

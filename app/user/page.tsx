@@ -25,22 +25,22 @@ export default function UserPage() {
   return (
     <PageTransition>
       <div className='min-h-screen'>
-        <div className='p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto'>
+        <div className='mx-auto max-w-7xl p-4 sm:p-6 lg:p-8'>
           {/* Header Section */}
           <div className='mb-8'>
-            <h1 className='text-2xl sm:text-3xl lg:text-[32px] font-medium leading-[120%] tracking-[-0.64px] text-white '>
+            <h1 className='text-2xl leading-[120%] font-medium tracking-[-0.64px] text-white sm:text-3xl lg:text-[32px]'>
               Hello, {user?.name?.split(' ')[0] || 'User'}
             </h1>
           </div>
           {/* Stats Cards Grid */}
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8'>
+          <div className='mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
             <Card
               title='Pending Submissions'
               value='0'
               bottomText={
                 <div className='flex items-center gap-2'>
-                  <History className='w-4 h-4 text-white/60' />
-                  <span className='text-white/60 text-sm'>
+                  <History className='h-4 w-4 text-white/60' />
+                  <span className='text-sm text-white/60'>
                     No recent submissions
                   </span>
                 </div>
@@ -52,7 +52,7 @@ export default function UserPage() {
               bottomText={
                 <div className='flex items-center gap-2'>
                   <span className='text-white/90'>0</span>
-                  <span className='text-white/90 text-sm'>
+                  <span className='text-sm text-white/90'>
                     Approved Submissions
                   </span>
                 </div>
@@ -72,7 +72,7 @@ export default function UserPage() {
               value='10'
               bottomText={
                 <div className='flex items-center gap-2'>
-                  <Coins className='w-4 h-4 text-white/60' />
+                  <Coins className='h-4 w-4 text-white/60' />
                   <PriceDisplay
                     price={0}
                     className='!text-xs !tracking-[-0.06px]'
@@ -86,7 +86,7 @@ export default function UserPage() {
           <div className='space-y-8'>
             {/* Recent Projects - Full Width */}
             <RecentProjects />
-            <div className='bg-[#1C1C1C] p-4 sm:p-6 rounded-[12px] flex flex-col gap-6 sm:gap-8 w-full'>
+            <div className='flex w-full flex-col gap-6 rounded-[12px] bg-[#1C1C1C] p-4 sm:gap-8 sm:p-6'>
               <CampaignTable limit={5} showPagination={false} />
             </div>
 
