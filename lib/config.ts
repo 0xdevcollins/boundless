@@ -8,7 +8,7 @@ export const socialLinks = {
   github: 'https://github.com/boundlessfi',
   discord: 'https://discord.gg/boundlessfi',
   telegram: 'https://t.me/boundlessfi',
-  email: 'hello@boundlessfi.xyz',
+  gmail: 'hello@boundlessfi.xyz',
 };
 
 export const backedBy = [

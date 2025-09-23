@@ -59,8 +59,8 @@ export function ProtectedRoute({
   if (isLoading) {
     return (
       fallback || (
-        <div className='flex items-center justify-center min-h-screen'>
-          <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-white'></div>
+        <div className='flex min-h-screen items-center justify-center'>
+          <div className='h-8 w-8 animate-spin rounded-full border-b-2 border-white'></div>
         </div>
       )
     );
@@ -70,8 +70,8 @@ export function ProtectedRoute({
   if (requireAuth && !isAuthenticated) {
     return (
       fallback || (
-        <div className='flex items-center justify-center min-h-screen'>
-          <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-white'></div>
+        <div className='flex min-h-screen items-center justify-center'>
+          <div className='h-8 w-8 animate-spin rounded-full border-b-2 border-white'></div>
         </div>
       )
     );
@@ -81,9 +81,9 @@ export function ProtectedRoute({
   if (requireVerified && user && !user.isVerified) {
     return (
       fallback || (
-        <div className='flex items-center justify-center min-h-screen'>
+        <div className='flex min-h-screen items-center justify-center'>
           <div className='text-center'>
-            <h2 className='text-xl font-semibold mb-2'>
+            <h2 className='mb-2 text-xl font-semibold'>
               Email Verification Required
             </h2>
             <p className='text-gray-600'>
@@ -99,9 +99,9 @@ export function ProtectedRoute({
   if (requireRole && user && user.role !== requireRole) {
     return (
       fallback || (
-        <div className='flex items-center justify-center min-h-screen'>
+        <div className='flex min-h-screen items-center justify-center'>
           <div className='text-center'>
-            <h2 className='text-xl font-semibold mb-2'>Access Denied</h2>
+            <h2 className='mb-2 text-xl font-semibold'>Access Denied</h2>
             <p className='text-gray-600'>
               You don't have permission to access this page.
             </p>

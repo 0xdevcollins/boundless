@@ -8,7 +8,7 @@ on:
   workflow_dispatch: # Allow manual triggering
 
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: '20'
   PNPM_VERSION: '8'
 
 jobs:
@@ -77,6 +77,15 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Set up environment variables
+        run: |
+          echo "🔧 Setting up environment variables for build..."
+          echo "NEXT_PUBLIC_API_URL=http://localhost:3000/api" >> .env.local
+          echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" >> .env.local
+          echo "NEXTAUTH_SECRET=ci-test-secret-key" >> .env.local
+          echo "NEXTAUTH_URL=http://localhost:3000" >> .env.local
+          echo "DATABASE_URL=postgresql://test:test@localhost:5432/test_db" >> .env.local
 
       - name: Build application
         run: npm run build
@@ -191,6 +200,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Set up environment variables
+        run: |
+          echo "🔧 Setting up environment variables for build..."
+          echo "NEXT_PUBLIC_API_URL=http://localhost:3000/api" >> .env.local
+          echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" >> .env.local
+          echo "NEXTAUTH_SECRET=ci-test-secret-key" >> .env.local
+          echo "NEXTAUTH_URL=http://localhost:3000" >> .env.local
+          echo "DATABASE_URL=postgresql://test:test@localhost:5432/test_db" >> .env.local
+
       - name: Build with bundle analysis
         run: |
           npm run build
@@ -222,6 +240,15 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Set up environment variables
+        run: |
+          echo "🔧 Setting up environment variables for build..."
+          echo "NEXT_PUBLIC_API_URL=http://localhost:3000/api" >> .env.local
+          echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" >> .env.local
+          echo "NEXTAUTH_SECRET=ci-test-secret-key" >> .env.local
+          echo "NEXTAUTH_URL=http://localhost:3000" >> .env.local
+          echo "DATABASE_URL=postgresql://test:test@localhost:5432/test_db" >> .env.local
 
       - name: Build application
         run: npm run build
@@ -264,6 +291,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Set up environment variables
+        run: |
+          echo "🔧 Setting up environment variables for build..."
+          echo "NEXT_PUBLIC_API_URL=http://localhost:3000/api" >> .env.local
+          echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" >> .env.local
+          echo "NEXTAUTH_SECRET=ci-test-secret-key" >> .env.local
+          echo "NEXTAUTH_URL=http://localhost:3000" >> .env.local
+          echo "DATABASE_URL=postgresql://test:test@localhost:5432/test_db" >> .env.local
+
       - name: Build application
         run: npm run build
 
@@ -294,6 +330,15 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Set up environment variables
+        run: |
+          echo "🔧 Setting up environment variables for build..."
+          echo "NEXT_PUBLIC_API_URL=http://localhost:3000/api" >> .env.local
+          echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" >> .env.local
+          echo "NEXTAUTH_SECRET=ci-test-secret-key" >> .env.local
+          echo "NEXTAUTH_URL=http://localhost:3000" >> .env.local
+          echo "DATABASE_URL=postgresql://test:test@localhost:5432/test_db" >> .env.local
 
       - name: Build application
         run: npm run build

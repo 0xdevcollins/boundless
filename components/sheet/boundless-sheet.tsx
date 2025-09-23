@@ -106,7 +106,7 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
         ref={sheetRef}
         side={responsiveConfig.side}
         className={cn(
-          'bg-[#030303] border-[rgba(255,255,255,0.10)] backdrop-blur-[10px]',
+          'border-[rgba(255,255,255,0.10)] bg-[#030303] backdrop-blur-[10px]',
           'transition-all duration-300 ease-in-out',
           'focus:outline-none',
           responsiveConfig.className,
@@ -121,7 +121,7 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
         <SheetHeader className='relative pb-4'>
           <SheetTitle
             className={cn(
-              title ? 'text-white text-lg font-semibold text-center' : 'sr-only'
+              title ? 'text-center text-lg font-semibold text-white' : 'sr-only'
             )}
           >
             {title || 'Dialog'}
@@ -131,25 +131,25 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
             <SheetClose
               onClick={() => setOpen(false)}
               className={cn(
-                'absolute bg-white hover:bg-white/20 rounded-full p-2',
-                'w-10 h-10 flex items-center justify-center',
+                'absolute rounded-full bg-white p-2 hover:bg-white/20',
+                'flex h-10 w-10 items-center justify-center',
                 'border border-white/20 backdrop-blur-[10px]',
                 'transition-all duration-200 ease-in-out',
-                'focus:outline-none focus:ring-2 focus:ring-white/30',
+                'focus:ring-2 focus:ring-white/30 focus:outline-none',
                 'hover:scale-105 active:scale-95',
                 'shadow-lg',
                 responsiveConfig.closeButtonPosition
               )}
               aria-label='Close sheet'
             >
-              <XIcon className='w-5 h-5 text-background' />
+              <XIcon className='text-background h-5 w-5' />
             </SheetClose>
           )}
         </SheetHeader>
 
         <div
           className={cn(
-            'flex-1 overflow-y-auto relative ',
+            'relative flex-1 overflow-y-auto',
             'custom-scrollbar',
             'px-4 pb-4'
           )}

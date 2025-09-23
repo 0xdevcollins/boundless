@@ -6,7 +6,7 @@ interface MiddleRightSvgProps {
 
 const MiddleRightSvg: React.FC<MiddleRightSvgProps> = ({ svgRefs }) => {
   return (
-    <div className='absolute top-1/2 -translate-y-1/2 md:-right-8 lg:right-8 xl:right-64 hidden md:block'>
+    <div className='absolute top-1/2 hidden -translate-y-1/2 md:-right-8 md:block lg:right-8 xl:right-64'>
       <svg
         width='366'
         height='14'

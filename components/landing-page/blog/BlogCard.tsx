@@ -1,5 +1,9 @@
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { ArrowRight } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from '@/components/ui/card';
 import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
@@ -18,42 +22,48 @@ const BlogCard = ({ blog }: { blog: Blog }) => {
   return (
     <Card
       key={blog.id}
-      className='rounded-xl p-0 border border-[#1B1B1B] bg-[#101010] overflow-hidden hover:border-[#2A2A2A] transition-colors duration-300 flex flex-col'
+      className='max-w-noneflex h-full w-full flex-col gap-0 overflow-hidden rounded-[8px] border-[#1B1B1B] bg-[#101010] p-0 transition-colors duration-300 hover:border-[#2A2A2A]'
     >
-      {/* Image Section */}
-      <div className='relative h-[200px] w-full'>
-        <Image
-          src={blog.image}
-          alt={blog.title}
-          fill
-          className='object-cover'
-        />
-      </div>
+      <CardHeader className='relative p-0 !pb-0'>
+        <div className='h-[214px] w-full'>
+          <Image
+            src={blog.image}
+            alt={blog.title}
+            width={397}
+            height={214}
+            className='h-full w-full object-cover'
+          />
+        </div>
+      </CardHeader>
 
-      {/* Content */}
-      <CardContent className='flex flex-col flex-1'>
-        <div className='flex items-center justify-between text-xs sm:text-sm mb-3'>
-          <span className='px-2 py-0.5 rounded-md bg-[#a7f94d]/10  text-[#a7f94d] font-medium'>
+      <CardContent className='flex-1 border-b border-[#2B2B2B] px-4 pt-4 pb-5'>
+        <div className='mb-3 flex items-center justify-between text-xs leading-[145%] text-[#b5b5b5] sm:text-sm'>
+          <span className='inline-block rounded-[8px] bg-[#A7F95014] px-2.5 py-1 text-sm font-medium text-[#A7F950]'>
             {blog.category}
           </span>
-          <span className='text-[#B5B5B5]'>{blog.date}</span>
+          <span className='font-normal'>{blog.date}</span>
         </div>
-
-        <h2 className='text-white font-semibold text-base sm:text-lg leading-snug line-clamp-2 mb-2'>
+        <h2 className='line-clamp-2 text-[16px] leading-[145%] font-semibold text-white sm:text-base'>
           {blog.title}
         </h2>
-        <p className='text-[#B5B5B5] text-sm sm:text-base leading-[160%] line-clamp-2'>
+        <p className='mt-3 line-clamp-3 text-sm leading-[145%] font-normal tracking-[-0.48px] text-[#B5B5B5] sm:text-base'>
           {blog.excerpt}
         </p>
       </CardContent>
 
-      {/* Footer */}
-      <CardFooter className='px-5 pb-5 border-t border-t-[#1B1B1B] justify-end'>
+      <CardFooter className='mt-auto px-5 pt-5 pb-4'>
         <Link
           href={`/blog/${blog.slug}`}
-          className='text-[#a7f94d] flex items-center gap-1 text-xs font-medium hover:text-[rgb(133,249,8)] transition-colors duration-200'
+          className='flex w-full items-center justify-end gap-2 text-right text-sm font-medium text-[#A7F950]'
         >
-          Continue reading <ArrowRight className='w-4 h-4' />
+          Continue reading
+          <Image
+            src='/right.svg'
+            alt='right icon'
+            width={40}
+            height={40}
+            className='inline-block w-4 pt-1'
+          />
         </Link>
       </CardFooter>
     </Card>

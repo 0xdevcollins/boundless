@@ -20,18 +20,18 @@ function ProjectSubmissionSuccess({
   continueAction,
 }: ProjectSubmissionSuccessProps) {
   return (
-    <main className='w-[600px] flex flex-col gap-6 items-center justify-center'>
-      <h5 className='font-medium text-xl text-card'>{title}</h5>
+    <main className='flex w-[600px] flex-col items-center justify-center gap-6'>
+      <h5 className='text-card text-xl font-medium'>{title}</h5>
       <div>
         <Image width={150} height={150} src='/done-check.svg' alt='done' />
       </div>
       <article className='space-y-3'>
-        <p className='text-base font-normal text-card/60 text-center'>
+        <p className='text-card/60 text-center text-base font-normal'>
           {description}
         </p>
-        <p className='text-base font-normal text-card/60 text-center'>
+        <p className='text-card/60 text-center text-base font-normal'>
           {linkSection}{' '}
-          <Link href={url} className='text-primary underline cursor-pointer'>
+          <Link href={url} className='text-primary cursor-pointer underline'>
             {linkName}
           </Link>
         </p>
@@ -39,7 +39,7 @@ function ProjectSubmissionSuccess({
 
       <button
         onClick={continueAction}
-        className='w-[198px] mt-4 text-base font-medium text-background bg-primary px-16 py-2 rounded-[10px]'
+        className='text-background bg-primary mt-4 w-[198px] rounded-[10px] px-16 py-2 text-base font-medium'
       >
         Continue
       </button>

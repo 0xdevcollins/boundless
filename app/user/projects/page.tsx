@@ -19,7 +19,7 @@ const Page = () => {
   return (
     <PageTransition>
       <div className='min-h-screen'>
-        <div className='p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto'>
+        <div className='mx-auto max-w-7xl p-4 sm:p-6 lg:p-8'>
           <Projects />
         </div>
       </div>

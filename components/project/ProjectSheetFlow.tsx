@@ -3,12 +3,10 @@
 import React, { useState } from 'react';
 import BoundlessSheet from '../sheet/boundless-sheet';
 import { Stepper } from '../stepper';
-// import { MilestoneReview } from './';
 import Initialize from './Initialize';
 import ValidationFlow from './ValidationFlow';
 import LaunchCampaignFlow from './LaunchCampaignFlow';
 import { useProjectSheetStore } from '@/lib/stores/project-sheet-store';
-// import ValidationFlow from './ValidationFlow';
 
 type StepState = 'pending' | 'active' | 'completed';
 
@@ -47,7 +45,6 @@ const ProjectSheetFlow: React.FC<ProjectSheetFlowProps> = ({
   open,
   onOpenChange,
 }) => {
-  // Note: sub-steps handled internally by Initialize and ValidationFlow
   const [steps, setSteps] = useState<Step[]>(initialSteps);
   const [currentStep, setCurrentStep] = useState<
     'initialize' | 'validate' | 'launch'
@@ -105,8 +102,6 @@ const ProjectSheetFlow: React.FC<ProjectSheetFlowProps> = ({
     );
   };
 
-  // Milestone handling moved inside Initialize; no-op here
-
   const handleClose = () => {
     onOpenChange(false);
     sheet.reset();
@@ -141,7 +136,7 @@ const ProjectSheetFlow: React.FC<ProjectSheetFlowProps> = ({
   return (
     <BoundlessSheet open={open} setOpen={handleClose} contentClassName='h-full'>
       <div className='flex justify-between'>
-        <div className='flex-1 sticky top-0'>
+        <div className='sticky top-0 flex-1'>
           <Stepper steps={steps} />
         </div>
         <div className='flex-1'>{renderContent()}</div>

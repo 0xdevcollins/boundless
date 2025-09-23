@@ -160,7 +160,7 @@ const Initialize: React.FC<InitializeProps> = ({ onSuccess }) => {
 
   return (
     <>
-      <div className='space-y-6 w-[500px]'>
+      <div className='w-[500px] space-y-6'>
         {isSubmitting && <Loading />}
         <InitialSteps steps={localSteps} />
 
@@ -258,13 +258,13 @@ const MilestonesPhase = ({
 export const InitialSteps = ({ steps }: { steps: Step[] }) => {
   return (
     <div className='w-full'>
-      <div className='text-lg text-white font-medium leading-[120%] tracking-[-0.4px] text-center max-w-fit mb-3'>
+      <div className='mb-3 max-w-fit text-center text-lg leading-[120%] font-medium tracking-[-0.4px] text-white'>
         {steps.find(step => step.state === 'active')?.title}
       </div>
       <div className='flex gap-1'>
         {steps.map((step, index) => (
           <div key={index} className='flex-1'>
-            <div className='w-full bg-[#2B2B2B] rounded-full h-2'>
+            <div className='h-2 w-full rounded-full bg-[#2B2B2B]'>
               <div
                 className={`h-2 rounded-full transition-all duration-500 ease-in-out ${
                   step.state === 'completed'
@@ -287,7 +287,7 @@ export const InitialSteps = ({ steps }: { steps: Step[] }) => {
 
       {steps.find(step => step.state === 'active') && (
         <div className='mt-3'>
-          <p className='text-[#F5B546] text-sm'>
+          <p className='text-sm text-[#F5B546]'>
             {steps.find(step => step.state === 'active')?.description}
           </p>
         </div>

@@ -74,23 +74,23 @@ export default function PreviewPage() {
   };
 
   return (
-    <div className='min-h-screen bg-gray-900 py-12 px-4'>
-      <div className='max-w-7xl mx-auto'>
-        <div className='text-center mb-12'>
-          <h1 className='text-4xl font-bold text-white mb-4'>
+    <div className='min-h-screen bg-gray-900 px-4 py-12'>
+      <div className='mx-auto max-w-7xl'>
+        <div className='mb-12 text-center'>
+          <h1 className='mb-4 text-4xl font-bold text-white'>
             Project Card Component Preview
           </h1>
-          <p className='text-gray-400 text-lg'>
+          <p className='text-lg text-gray-400'>
             Responsive design with GSAP animations
           </p>
         </div>
 
         {/* Desktop Layout */}
         <div className='hidden lg:block'>
-          <h2 className='text-2xl font-semibold text-gray-300 mb-8'>
+          <h2 className='mb-8 text-2xl font-semibold text-gray-300'>
             Desktop Layout (3 columns)
           </h2>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
+          <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'>
             {mockProjects.map((project, index) => (
               <ProjectCard
                 key={project.id}
@@ -111,10 +111,10 @@ export default function PreviewPage() {
 
         {/* Tablet Layout */}
         <div className='hidden md:block lg:hidden'>
-          <h2 className='text-2xl font-semibold text-gray-300 mb-8'>
+          <h2 className='mb-8 text-2xl font-semibold text-gray-300'>
             Tablet Layout (2 columns)
           </h2>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+          <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
             {mockProjects.slice(0, 2).map((project, index) => (
               <ProjectCard
                 key={project.id}
@@ -135,7 +135,7 @@ export default function PreviewPage() {
 
         {/* Mobile Layout */}
         <div className='block md:hidden'>
-          <h2 className='text-2xl font-semibold text-gray-300 mb-8'>
+          <h2 className='mb-8 text-2xl font-semibold text-gray-300'>
             Mobile Layout (1 column)
           </h2>
           <div className='space-y-6'>
@@ -159,10 +159,10 @@ export default function PreviewPage() {
 
         {/* Responsive Grid Test */}
         <div className='mt-16'>
-          <h2 className='text-2xl font-semibold text-gray-300 mb-8'>
+          <h2 className='mb-8 text-2xl font-semibold text-gray-300'>
             Responsive Grid Test
           </h2>
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6'>
+          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4'>
             {Array.from({ length: 8 }, (_, i) => {
               const project = mockProjects[i % mockProjects.length];
               return (
@@ -190,11 +190,11 @@ export default function PreviewPage() {
         </div>
 
         {/* Instructions */}
-        <div className='mt-16 bg-gray-800 rounded-lg p-6'>
-          <h3 className='text-xl font-semibold text-white mb-4'>
+        <div className='mt-16 rounded-lg bg-gray-800 p-6'>
+          <h3 className='mb-4 text-xl font-semibold text-white'>
             Preview Instructions
           </h3>
-          <ul className='text-gray-300 space-y-2'>
+          <ul className='space-y-2 text-gray-300'>
             <li>
               • <strong>Hover</strong> over cards to see GSAP hover animations
             </li>

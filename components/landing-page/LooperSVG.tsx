@@ -1,0 +1,1284 @@
+'use client';
+
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+
+export default function LooperSVG() {
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    if (svgRef.current) {
+      const ellipses = svgRef.current.querySelectorAll('ellipse');
+
+      ellipses.forEach(ellipse => {
+        ellipse.addEventListener('mouseenter', () => {
+          gsap.to(ellipse, {
+            scale: 1.2,
+            duration: 0.3,
+            ease: 'power2.out',
+            transformOrigin: 'center center',
+          });
+        });
+
+        ellipse.addEventListener('mouseleave', () => {
+          gsap.to(ellipse, {
+            scale: 1,
+            duration: 0.3,
+            ease: 'power2.out',
+            transformOrigin: 'center center',
+          });
+        });
+      });
+    }
+  }, []);
+
+  return (
+    <svg
+      ref={svgRef}
+      width='403'
+      height='452'
+      viewBox='0 0 403 452'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      className='sphere-image absolute top-1/2 left-1/2 z-20 h-[75%] w-[75%] -translate-x-1/2 -translate-y-1/2 opacity-70'
+    >
+      <ellipse
+        opacity='0.0169492'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='234.578'
+        transform='rotate(140 201.583 225.918)'
+        stroke='url(#paint0_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.0338983'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='231.024'
+        transform='rotate(150 201.583 225.918)'
+        stroke='url(#paint1_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.0508475'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='227.47'
+        transform='rotate(160 201.583 225.918)'
+        stroke='url(#paint2_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.0677966'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='223.916'
+        transform='rotate(170 201.583 225.919)'
+        stroke='url(#paint3_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.0847458'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='220.361'
+        transform='rotate(-180 201.583 225.919)'
+        stroke='url(#paint4_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.101695'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='216.807'
+        transform='rotate(-170 201.583 225.918)'
+        stroke='url(#paint5_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.118644'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='213.253'
+        transform='rotate(-160 201.583 225.918)'
+        stroke='url(#paint6_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.135593'
+        cx='201.584'
+        cy='225.918'
+        rx='28.4337'
+        ry='209.699'
+        transform='rotate(-150 201.584 225.918)'
+        stroke='url(#paint7_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.152542'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='206.145'
+        transform='rotate(-140 201.583 225.918)'
+        stroke='url(#paint8_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.169492'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='202.59'
+        transform='rotate(-130 201.583 225.918)'
+        stroke='url(#paint9_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.186441'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='199.036'
+        transform='rotate(-120 201.583 225.918)'
+        stroke='url(#paint10_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.20339'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='195.482'
+        transform='rotate(-110 201.583 225.918)'
+        stroke='url(#paint11_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.220339'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='191.928'
+        transform='rotate(-100 201.583 225.919)'
+        stroke='url(#paint12_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.237288'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='188.374'
+        transform='rotate(-90 201.583 225.919)'
+        stroke='url(#paint13_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.254237'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='184.819'
+        transform='rotate(-80 201.583 225.918)'
+        stroke='url(#paint14_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.271186'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='181.265'
+        transform='rotate(-70 201.583 225.918)'
+        stroke='url(#paint15_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.288136'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='177.711'
+        transform='rotate(-60 201.583 225.918)'
+        stroke='url(#paint16_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.305085'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='174.157'
+        transform='rotate(-50 201.583 225.918)'
+        stroke='url(#paint17_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.322034'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='170.602'
+        transform='rotate(-40 201.583 225.918)'
+        stroke='url(#paint18_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.338983'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='167.048'
+        transform='rotate(-30 201.583 225.918)'
+        stroke='url(#paint19_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.355932'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='163.494'
+        transform='rotate(-20 201.583 225.918)'
+        stroke='url(#paint20_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.372881'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='159.94'
+        transform='rotate(-10 201.583 225.919)'
+        stroke='url(#paint21_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.38983'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='156.386'
+        stroke='url(#paint22_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.40678'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='152.831'
+        transform='rotate(10 201.583 225.918)'
+        stroke='url(#paint23_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.423729'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='149.277'
+        transform='rotate(20 201.583 225.918)'
+        stroke='url(#paint24_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.440678'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='145.723'
+        transform='rotate(30 201.583 225.919)'
+        stroke='url(#paint25_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.457627'
+        cx='201.584'
+        cy='225.918'
+        rx='28.4337'
+        ry='142.169'
+        transform='rotate(40 201.584 225.918)'
+        stroke='url(#paint26_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.474576'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='138.614'
+        transform='rotate(50 201.583 225.919)'
+        stroke='url(#paint27_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.491525'
+        cx='201.584'
+        cy='225.918'
+        rx='28.4337'
+        ry='135.06'
+        transform='rotate(60 201.584 225.918)'
+        stroke='url(#paint28_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.508475'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='131.506'
+        transform='rotate(70 201.583 225.919)'
+        stroke='url(#paint29_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.525424'
+        cx='201.584'
+        cy='225.918'
+        rx='28.4337'
+        ry='127.952'
+        transform='rotate(80 201.584 225.918)'
+        stroke='url(#paint30_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.542373'
+        cx='201.584'
+        cy='225.919'
+        rx='28.4337'
+        ry='124.398'
+        transform='rotate(90 201.584 225.919)'
+        stroke='url(#paint31_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.559322'
+        cx='201.584'
+        cy='225.919'
+        rx='28.4337'
+        ry='120.843'
+        transform='rotate(100 201.584 225.919)'
+        stroke='url(#paint32_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.576271'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='117.289'
+        transform='rotate(110 201.583 225.919)'
+        stroke='url(#paint33_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.59322'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='113.735'
+        transform='rotate(120 201.583 225.918)'
+        stroke='url(#paint34_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.610169'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='110.181'
+        transform='rotate(130 201.583 225.919)'
+        stroke='url(#paint35_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.627119'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='106.627'
+        transform='rotate(140 201.583 225.919)'
+        stroke='url(#paint36_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.644068'
+        cx='201.584'
+        cy='225.918'
+        rx='28.4337'
+        ry='103.072'
+        transform='rotate(150 201.584 225.918)'
+        stroke='url(#paint37_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.661017'
+        cx='201.584'
+        cy='225.918'
+        rx='28.4337'
+        ry='99.5181'
+        transform='rotate(160 201.584 225.918)'
+        stroke='url(#paint38_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.677966'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='95.9639'
+        transform='rotate(170 201.583 225.919)'
+        stroke='url(#paint39_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.694915'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='92.4096'
+        transform='rotate(-180 201.583 225.918)'
+        stroke='url(#paint40_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.711864'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='88.8554'
+        transform='rotate(-170 201.583 225.919)'
+        stroke='url(#paint41_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.728814'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='85.3012'
+        transform='rotate(-160 201.583 225.918)'
+        stroke='url(#paint42_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.745763'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='81.747'
+        transform='rotate(-150 201.583 225.919)'
+        stroke='url(#paint43_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.762712'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='78.1928'
+        transform='rotate(-140 201.583 225.918)'
+        stroke='url(#paint44_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.779661'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='74.6386'
+        transform='rotate(-130 201.583 225.919)'
+        stroke='url(#paint45_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.79661'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='71.0843'
+        transform='rotate(-120 201.583 225.918)'
+        stroke='url(#paint46_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.813559'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='67.5301'
+        transform='rotate(-110 201.583 225.918)'
+        stroke='url(#paint47_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.830508'
+        cx='201.584'
+        cy='225.918'
+        rx='28.4337'
+        ry='63.9759'
+        transform='rotate(-100 201.584 225.918)'
+        stroke='url(#paint48_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.847458'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='60.4217'
+        transform='rotate(-90 201.583 225.919)'
+        stroke='url(#paint49_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.864407'
+        cx='201.584'
+        cy='225.918'
+        rx='28.4337'
+        ry='56.8675'
+        transform='rotate(-80 201.584 225.918)'
+        stroke='url(#paint50_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.881356'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='53.3133'
+        transform='rotate(-70 201.583 225.918)'
+        stroke='url(#paint51_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.898305'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='49.759'
+        transform='rotate(-60 201.583 225.918)'
+        stroke='url(#paint52_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.915254'
+        cx='201.583'
+        cy='225.919'
+        rx='28.4337'
+        ry='46.2048'
+        transform='rotate(-50 201.583 225.919)'
+        stroke='url(#paint53_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.932203'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='42.6506'
+        transform='rotate(-40 201.583 225.918)'
+        stroke='url(#paint54_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.949153'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='39.0964'
+        transform='rotate(-30 201.583 225.918)'
+        stroke='url(#paint55_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.966102'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='35.5422'
+        transform='rotate(-20 201.583 225.918)'
+        stroke='url(#paint56_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <ellipse
+        opacity='0.983051'
+        cx='201.583'
+        cy='225.918'
+        rx='28.4337'
+        ry='31.988'
+        transform='rotate(-10 201.583 225.918)'
+        stroke='url(#paint57_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <circle
+        cx='201.583'
+        cy='225.918'
+        r='28.4337'
+        stroke='url(#paint58_linear_3349_41627)'
+        stroke-width='1.42169'
+      />
+      <defs>
+        <linearGradient
+          id='paint0_linear_3349_41627'
+          x1='201.583'
+          y1='-8.65984'
+          x2='201.583'
+          y2='478.09'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint1_linear_3349_41627'
+          x1='201.583'
+          y1='-5.1057'
+          x2='201.583'
+          y2='474.269'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint2_linear_3349_41627'
+          x1='201.583'
+          y1='-1.55157'
+          x2='201.583'
+          y2='470.448'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint3_linear_3349_41627'
+          x1='201.583'
+          y1='2.00287'
+          x2='201.583'
+          y2='466.628'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint4_linear_3349_41627'
+          x1='201.583'
+          y1='5.55713'
+          x2='201.583'
+          y2='462.807'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint5_linear_3349_41627'
+          x1='201.583'
+          y1='9.11111'
+          x2='201.583'
+          y2='458.986'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint6_linear_3349_41627'
+          x1='201.583'
+          y1='12.6653'
+          x2='201.583'
+          y2='455.165'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint7_linear_3349_41627'
+          x1='201.584'
+          y1='16.2193'
+          x2='201.584'
+          y2='451.344'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint8_linear_3349_41627'
+          x1='201.583'
+          y1='19.7739'
+          x2='201.583'
+          y2='447.524'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint9_linear_3349_41627'
+          x1='201.583'
+          y1='23.328'
+          x2='201.583'
+          y2='443.703'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint10_linear_3349_41627'
+          x1='201.583'
+          y1='26.8821'
+          x2='201.583'
+          y2='439.882'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint11_linear_3349_41627'
+          x1='201.583'
+          y1='30.4365'
+          x2='201.584'
+          y2='436.061'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint12_linear_3349_41627'
+          x1='201.583'
+          y1='33.9909'
+          x2='201.583'
+          y2='432.241'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint13_linear_3349_41627'
+          x1='201.583'
+          y1='37.545'
+          x2='201.583'
+          y2='428.42'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint14_linear_3349_41627'
+          x1='201.583'
+          y1='41.0992'
+          x2='201.583'
+          y2='424.599'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint15_linear_3349_41627'
+          x1='201.583'
+          y1='44.6531'
+          x2='201.583'
+          y2='420.778'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint16_linear_3349_41627'
+          x1='201.583'
+          y1='48.2074'
+          x2='201.583'
+          y2='416.957'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint17_linear_3349_41627'
+          x1='201.583'
+          y1='51.7615'
+          x2='201.583'
+          y2='413.136'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint18_linear_3349_41627'
+          x1='201.583'
+          y1='55.3158'
+          x2='201.583'
+          y2='409.316'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint19_linear_3349_41627'
+          x1='201.583'
+          y1='58.8703'
+          x2='201.583'
+          y2='405.495'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint20_linear_3349_41627'
+          x1='201.583'
+          y1='62.4244'
+          x2='201.583'
+          y2='401.674'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint21_linear_3349_41627'
+          x1='201.583'
+          y1='65.9788'
+          x2='201.583'
+          y2='397.854'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint22_linear_3349_41627'
+          x1='201.583'
+          y1='69.533'
+          x2='201.583'
+          y2='394.033'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint23_linear_3349_41627'
+          x1='201.583'
+          y1='73.0871'
+          x2='201.583'
+          y2='390.212'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint24_linear_3349_41627'
+          x1='201.583'
+          y1='76.6412'
+          x2='201.583'
+          y2='386.391'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint25_linear_3349_41627'
+          x1='201.583'
+          y1='80.1958'
+          x2='201.583'
+          y2='382.571'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint26_linear_3349_41627'
+          x1='201.584'
+          y1='83.7498'
+          x2='201.584'
+          y2='378.75'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint27_linear_3349_41627'
+          x1='201.583'
+          y1='87.3043'
+          x2='201.584'
+          y2='374.929'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint28_linear_3349_41627'
+          x1='201.584'
+          y1='90.8581'
+          x2='201.584'
+          y2='371.108'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint29_linear_3349_41627'
+          x1='201.583'
+          y1='94.4129'
+          x2='201.583'
+          y2='367.288'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint30_linear_3349_41627'
+          x1='201.584'
+          y1='97.9667'
+          x2='201.584'
+          y2='363.467'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint31_linear_3349_41627'
+          x1='201.584'
+          y1='101.521'
+          x2='201.584'
+          y2='359.646'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint32_linear_3349_41627'
+          x1='201.584'
+          y1='105.075'
+          x2='201.584'
+          y2='355.825'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint33_linear_3349_41627'
+          x1='201.583'
+          y1='108.63'
+          x2='201.583'
+          y2='352.005'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint34_linear_3349_41627'
+          x1='201.583'
+          y1='112.183'
+          x2='201.583'
+          y2='348.183'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint35_linear_3349_41627'
+          x1='201.583'
+          y1='115.738'
+          x2='201.583'
+          y2='344.363'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint36_linear_3349_41627'
+          x1='201.583'
+          y1='119.292'
+          x2='201.584'
+          y2='340.542'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint37_linear_3349_41627'
+          x1='201.584'
+          y1='122.846'
+          x2='201.584'
+          y2='336.721'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint38_linear_3349_41627'
+          x1='201.584'
+          y1='126.4'
+          x2='201.584'
+          y2='332.9'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint39_linear_3349_41627'
+          x1='201.583'
+          y1='129.955'
+          x2='201.583'
+          y2='329.08'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint40_linear_3349_41627'
+          x1='201.583'
+          y1='133.509'
+          x2='201.583'
+          y2='325.259'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint41_linear_3349_41627'
+          x1='201.583'
+          y1='137.063'
+          x2='201.583'
+          y2='321.438'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint42_linear_3349_41627'
+          x1='201.583'
+          y1='140.617'
+          x2='201.583'
+          y2='317.617'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint43_linear_3349_41627'
+          x1='201.583'
+          y1='144.172'
+          x2='201.583'
+          y2='313.797'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint44_linear_3349_41627'
+          x1='201.583'
+          y1='147.725'
+          x2='201.583'
+          y2='309.975'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint45_linear_3349_41627'
+          x1='201.583'
+          y1='151.28'
+          x2='201.583'
+          y2='306.155'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint46_linear_3349_41627'
+          x1='201.583'
+          y1='154.834'
+          x2='201.583'
+          y2='302.334'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint47_linear_3349_41627'
+          x1='201.583'
+          y1='158.388'
+          x2='201.583'
+          y2='298.513'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint48_linear_3349_41627'
+          x1='201.584'
+          y1='161.943'
+          x2='201.584'
+          y2='294.693'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint49_linear_3349_41627'
+          x1='201.583'
+          y1='165.497'
+          x2='201.583'
+          y2='290.872'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint50_linear_3349_41627'
+          x1='201.584'
+          y1='169.051'
+          x2='201.584'
+          y2='287.051'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint51_linear_3349_41627'
+          x1='201.583'
+          y1='172.605'
+          x2='201.583'
+          y2='283.23'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint52_linear_3349_41627'
+          x1='201.583'
+          y1='176.159'
+          x2='201.583'
+          y2='279.409'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint53_linear_3349_41627'
+          x1='201.583'
+          y1='179.714'
+          x2='201.583'
+          y2='275.589'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint54_linear_3349_41627'
+          x1='201.583'
+          y1='183.268'
+          x2='201.583'
+          y2='271.768'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint55_linear_3349_41627'
+          x1='201.583'
+          y1='186.822'
+          x2='201.583'
+          y2='267.947'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint56_linear_3349_41627'
+          x1='201.583'
+          y1='190.376'
+          x2='201.583'
+          y2='264.126'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint57_linear_3349_41627'
+          x1='201.583'
+          y1='193.93'
+          x2='201.583'
+          y2='260.305'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+        <linearGradient
+          id='paint58_linear_3349_41627'
+          x1='201.583'
+          y1='197.485'
+          x2='201.583'
+          y2='256.485'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop stop-color='#A7F950' />
+          <stop offset='1' stop-color='#00F0FF' />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}

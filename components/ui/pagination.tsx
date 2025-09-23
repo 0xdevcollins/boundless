@@ -19,8 +19,8 @@ const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <div className={`border-t border-[#2B2B2B] w-full mt-6 pt-4 ${className}`}>
-      <div className='flex justify-between items-center'>
+    <div className={`mt-6 w-full border-t border-[#2B2B2B] pt-4 ${className}`}>
+      <div className='flex items-center justify-between'>
         <span className='text-sm text-gray-400'>
           Page {currentPage} of {totalPages}
         </span>

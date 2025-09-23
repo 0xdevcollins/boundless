@@ -2,8 +2,8 @@ import React from 'react';
 
 const Indicator = () => {
   return (
-    <div className='min-h-[46px] max-h-[46px] h-full min-w-[46px] max-w-[46px] w-full bg-[#A7F9503D] rounded-full'>
-      <div className='w-1/2 h-full bg-white rounded-full'></div>
+    <div className='h-full max-h-[46px] min-h-[46px] w-full max-w-[46px] min-w-[46px] rounded-full bg-[#A7F9503D]'>
+      <div className='h-full w-1/2 rounded-full bg-white'></div>
     </div>
   );
 };

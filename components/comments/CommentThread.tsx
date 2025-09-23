@@ -154,7 +154,7 @@ const CommentThread: React.FC<CommentThreadProps> = ({
       size='sm'
       onClick={onClick}
       className={cn(
-        'flex items-center space-x-1 text-[#B5B5B5] hover:text-[#F5F5F5] p-1 h-auto',
+        'flex h-auto items-center space-x-1 p-1 text-[#B5B5B5] hover:text-[#F5F5F5]',
         isActive && 'text-blue-400'
       )}
     >
@@ -167,11 +167,11 @@ const CommentThread: React.FC<CommentThreadProps> = ({
     <div className='space-y-6'>
       {/* Comment Input */}
       <div className='space-y-3'>
-        <h3 className='text-[#F5F5F5] font-medium'>Comments</h3>
+        <h3 className='font-medium text-[#F5F5F5]'>Comments</h3>
         <div className='flex space-x-3'>
-          <Avatar className='w-8 h-8 flex-shrink-0'>
+          <Avatar className='h-8 w-8 flex-shrink-0'>
             <AvatarImage src='https://github.com/shadcn.png' />
-            <AvatarFallback className='bg-blue-500 text-white text-xs'>
+            <AvatarFallback className='bg-blue-500 text-xs text-white'>
               U
             </AvatarFallback>
           </Avatar>
@@ -180,15 +180,15 @@ const CommentThread: React.FC<CommentThreadProps> = ({
               placeholder='Add a comment...'
               value={newComment}
               onChange={e => setNewComment(e.target.value)}
-              className='min-h-[80px] bg-[#212121] border-[#2B2B2B] text-[#F5F5F5] placeholder:text-[#B5B5B5] resize-none'
+              className='min-h-[80px] resize-none border-[#2B2B2B] bg-[#212121] text-[#F5F5F5] placeholder:text-[#B5B5B5]'
             />
             <div className='flex justify-end'>
               <Button
                 onClick={handleSubmitComment}
                 disabled={!newComment.trim()}
-                className='bg-[#04326B] hover:bg-[#034592] text-white px-4 py-2'
+                className='bg-[#04326B] px-4 py-2 text-white hover:bg-[#034592]'
               >
-                <Send className='w-4 h-4 mr-2' />
+                <Send className='mr-2 h-4 w-4' />
                 Comment
               </Button>
             </div>
@@ -200,9 +200,9 @@ const CommentThread: React.FC<CommentThreadProps> = ({
       <div className='space-y-4'>
         {comments.map(comment => (
           <div key={comment.id} className='flex space-x-3'>
-            <Avatar className='w-8 h-8 flex-shrink-0'>
+            <Avatar className='h-8 w-8 flex-shrink-0'>
               <AvatarImage src={comment.author.avatar} />
-              <AvatarFallback className='bg-blue-500 text-white text-xs'>
+              <AvatarFallback className='bg-blue-500 text-xs text-white'>
                 {comment.author.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
@@ -217,27 +217,27 @@ const CommentThread: React.FC<CommentThreadProps> = ({
                 </span>
               </div>
 
-              <p className='text-[#F5F5F5] text-sm leading-relaxed'>
+              <p className='text-sm leading-relaxed text-[#F5F5F5]'>
                 {comment.content}
               </p>
 
               <div className='flex items-center space-x-1'>
                 <ReactionButton
-                  icon={<ThumbsUp className='w-3 h-3' />}
+                  icon={<ThumbsUp className='h-3 w-3' />}
                   count={comment.reactions.thumbsUp}
                   reaction='thumbsUp'
                   isActive={comment.userReactions.includes('thumbsUp')}
                   onClick={() => handleReaction(comment.id, 'thumbsUp')}
                 />
                 <ReactionButton
-                  icon={<Heart className='w-3 h-3' />}
+                  icon={<Heart className='h-3 w-3' />}
                   count={comment.reactions.heart}
                   reaction='heart'
                   isActive={comment.userReactions.includes('heart')}
                   onClick={() => handleReaction(comment.id, 'heart')}
                 />
                 <ReactionButton
-                  icon={<Eye className='w-3 h-3' />}
+                  icon={<Eye className='h-3 w-3' />}
                   count={comment.reactions.eye}
                   reaction='eye'
                   isActive={comment.userReactions.includes('eye')}
@@ -246,9 +246,9 @@ const CommentThread: React.FC<CommentThreadProps> = ({
                 <Button
                   variant='ghost'
                   size='sm'
-                  className='flex items-center space-x-1 text-[#B5B5B5] hover:text-[#F5F5F5] p-1 h-auto'
+                  className='flex h-auto items-center space-x-1 p-1 text-[#B5B5B5] hover:text-[#F5F5F5]'
                 >
-                  <MessageCircle className='w-3 h-3' />
+                  <MessageCircle className='h-3 w-3' />
                   <span className='text-xs'>Reply</span>
                 </Button>
               </div>

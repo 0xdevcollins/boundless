@@ -1,112 +1,192 @@
+'use client';
+
+import { useMemo } from 'react';
 import Image from 'next/image';
 
-function AboutUsDifferent() {
+interface AboutUsDifferentProps {
+  className?: string;
+}
+
+interface FeatureCard {
+  id: string;
+  title: string;
+  description: string;
+  image: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+  };
+  className?: string;
+}
+
+function AboutUsDifferent({ className = '' }: AboutUsDifferentProps) {
+  const features = useMemo<FeatureCard[]>(
+    () => [
+      {
+        id: 'validation-first',
+        title: 'Validation First',
+        description:
+          'Ideas are filtered through community-driven voting and feedback before funds are raised.',
+        image: {
+          src: 'card1.svg',
+          alt: 'Validation First - Community-driven idea validation process',
+          width: 520,
+          height: 241,
+        },
+        className: 'lg:flex-[1.4]',
+      },
+      {
+        id: 'milestone-escrow',
+        title: 'Milestone Escrow',
+        description:
+          'Backers are protected. Funds are only released when project milestones are achieved and verified.',
+        image: {
+          src: 'card2.svg',
+          alt: 'Milestone Escrow - Secure milestone-based funding system',
+          width: 452,
+          height: 205,
+        },
+      },
+      {
+        id: 'inclusive-growth',
+        title: 'Inclusive Growth',
+        description:
+          'Crowdfunding, grants, and hackathons all opportunities in one ecosystem.',
+        image: {
+          src: 'card3.svg',
+          alt: 'Inclusive Growth - Multiple funding opportunities in one platform',
+          width: 452,
+          height: 205,
+        },
+        className: 'lg:flex-1',
+      },
+      {
+        id: 'blockchain-powered',
+        title: 'Blockchain-Powered',
+        description:
+          'Built on Stellar and integrated with Trustless Work for secure, transparent funding.',
+        image: {
+          src: 'card4.svg',
+          alt: 'Blockchain-Powered - Stellar blockchain integration for secure funding',
+          width: 620,
+          height: 258,
+        },
+        className: 'lg:flex-[1.4]',
+      },
+    ],
+    []
+  );
+
   return (
-    <section className='flex flex-col items-center gap-10 md:py-[100px] py-8 relative overflow-hidden md:px-0 px-4'>
+    <section
+      className={`relative mx-6 my-5 flex flex-col items-center gap-8 overflow-hidden md:mx-12 md:my-16 lg:mx-[100px] ${className}`}
+      id='what-makes-different'
+      role='region'
+      aria-labelledby='different-heading'
+    >
       <Image
         src='bg-header-about.svg'
-        alt='Header background'
+        alt=''
         width={1240}
         height={1324}
-        className='absolute top-0'
+        className='absolute -top-12 left-1/2 h-auto w-full max-w-none -translate-x-1/2 transform'
+        priority
+        quality={85}
+        sizes='100vw'
+        aria-hidden='true'
       />
-      <div className='relative md:w-[1240px] w-full md:h-[200px] flex items-center justify-center pb-6'>
-        <h1 className='font-normal text--[32px] md:text-5xl text-white text-center'>
-          What Makes Boundless
-          <br className='md:hidden block' /> Different
-        </h1>
-      </div>
-      <main className='flex flex-col gap-6  md:w-[1240px] w-full md:h-[884px]'>
-        <div className='flex gap-6 justify-center md:flex-row flex-col items-center '>
-          <main className='md:w-[716px] w-[350px]   h-[430px] rounded-[12px] p-[1px] bg-gradient-to-b from-white/48 to-white/8'>
-            <div className='w-full h-full rounded-[12px] bg-black/85 bg-[url("/card-bg.svg")] bg-no-repeat bg-center backdrop:blur-2xl p-6 flex flex-col items-center gap-6 text-left'>
-              <div className='md:w-[668px] w-[302px] md:h-[269px] h-[243px] flex justify-center items-center'>
-                <Image
-                  src='card1.svg'
-                  width='520'
-                  height='241'
-                  alt='Milestone Escrow'
-                />
-              </div>
-              <div className='px-8 py-6 pb-1 flex flex-col  gap-2.5'>
-                <h4 className='font-semibold text-base text-white'>
-                  Validation First
-                </h4>
-                <p className='font-normal text-base text-stepper-text-inactive'>
-                  Ideas are filtered through community-driven voting and
-                  feedback before funds <br /> are raised.
-                </p>
-              </div>
-            </div>
-          </main>
 
-          <main className='md:w-[500px] w-[350px] h-[430px] rounded-[12px] p-[1px] bg-gradient-to-b from-white/48 to-white/8'>
-            <div className='w-full h-full rounded-[12px] bg-black/85 bg-[url("/card-bg.svg")] bg-no-repeat bg-center backdrop:blur-2xl p-6 flex flex-col items-center gap-6 text-left'>
-              <div className='md:w-[452px] w-[302px] md:h-[269px] h-[243px] flex justify-center items-center'>
+      <header className='relative mt-[130px] flex w-full items-center justify-center pb-4 md:pb-6'>
+        <h2
+          id='different-heading'
+          className='text-center text-2xl leading-tight font-normal text-white sm:text-3xl md:text-4xl lg:text-5xl'
+        >
+          What Makes Boundless
+          <br className='sm:hidden' />
+          <span className='hidden sm:inline'> </span>Different
+        </h2>
+      </header>
+
+      <div
+        className='flex w-full flex-col gap-4 md:gap-6'
+        role='list'
+        aria-label='Key features that make Boundless different'
+      >
+        <div
+          className='flex flex-col items-stretch gap-4 md:gap-6 lg:flex-row'
+          role='listitem'
+        >
+          {features.slice(0, 2).map(feature => (
+            <article
+              key={feature.id}
+              className={`flex h-full w-full flex-1 flex-col items-center gap-4 rounded-[12px] border border-white/48 bg-[#101010A3] bg-[url("/card-bg.svg")] bg-center bg-no-repeat p-4 backdrop-blur-[7px] md:gap-6 md:p-6 ${feature.className || ''}`}
+              role='listitem'
+              aria-labelledby={`${feature.id}-title`}
+            >
+              <div className='flex h-[200px] w-full max-w-[520px] items-center justify-center md:h-[240px]'>
                 <Image
-                  src='card2.svg'
-                  width={452}
-                  height={205}
-                  alt='Milestone Escrow'
+                  src={feature.image.src}
+                  width={feature.image.width}
+                  height={feature.image.height}
+                  alt={feature.image.alt}
+                  className='h-auto max-h-full w-full max-w-full object-contain'
+                  loading='lazy'
+                  quality={90}
                 />
               </div>
-              <div className='px-8 py-6 pb-1 flex flex-col  gap-2.5'>
-                <h4 className='font-semibold text-base text-white'>
-                  Milestone Escrow
-                </h4>
-                <p className='font-normal text-base text-stepper-text-inactive'>
-                  Backers are protected. Funds are only released <br /> when
-                  project milestones are achieved and verified.
+              <div className='flex flex-col gap-2 px-4 py-4 md:gap-2.5 md:px-8 md:py-6'>
+                <h3
+                  id={`${feature.id}-title`}
+                  className='text-base font-semibold text-white md:text-lg'
+                >
+                  {feature.title}
+                </h3>
+                <p className='text-stepper-text-inactive text-sm leading-relaxed font-normal md:text-base'>
+                  {feature.description}
                 </p>
               </div>
-            </div>
-          </main>
+            </article>
+          ))}
         </div>
-        <div className='flex gap-6 justify-center md:flex-row flex-col items-center'>
-          <main className='md:w-[500px] w-[350px] h-[430px] rounded-[12px] p-[1px] bg-gradient-to-b from-white/48 to-white/8'>
-            <div className='w-full h-full rounded-[12px] bg-black/85 bg-[url("/card-bg.svg")] bg-no-repeat bg-center backdrop:blur-2xl p-6 flex flex-col items-center gap-6 text-left'>
-              <div className='md:w-[452px] w-[302px] md:h-[269px] h-[243px] flex justify-center items-center'>
+
+        <div
+          className='flex flex-col items-stretch gap-4 md:gap-6 lg:flex-row'
+          role='listitem'
+        >
+          {features.slice(2, 4).map(feature => (
+            <article
+              key={feature.id}
+              className={`flex h-full w-full flex-1 flex-col items-center gap-4 rounded-[12px] border border-white/48 bg-black/85 bg-[url("/card-bg.svg")] bg-center bg-no-repeat p-4 backdrop-blur-2xl md:gap-6 md:p-6 ${feature.className || ''}`}
+              role='listitem'
+              aria-labelledby={`${feature.id}-title`}
+            >
+              <div className='flex h-[200px] w-full max-w-[620px] items-center justify-center md:h-[240px]'>
                 <Image
-                  src='card3.svg'
-                  width={452}
-                  height={205}
-                  alt='Milestone Escrow'
+                  src={feature.image.src}
+                  width={feature.image.width}
+                  height={feature.image.height}
+                  alt={feature.image.alt}
+                  className='h-auto max-h-full w-full max-w-full object-contain'
+                  loading='lazy'
+                  quality={90}
                 />
               </div>
-              <div className='px-8 py-6 pb-1 flex flex-col  gap-2.5'>
-                <h4 className='font-semibold text-base text-white'>
-                  Inclusive Growth
-                </h4>
-                <p className='font-normal text-base text-stepper-text-inactive'>
-                  Crowdfunding, grants, and hackathons all opportunities in one
-                  ecosystem.
+              <div className='flex flex-col gap-2 px-4 py-4 md:gap-2.5 md:px-8 md:py-6'>
+                <h3
+                  id={`${feature.id}-title`}
+                  className='text-base font-semibold text-white md:text-lg'
+                >
+                  {feature.title}
+                </h3>
+                <p className='text-stepper-text-inactive text-sm leading-relaxed font-normal md:text-base'>
+                  {feature.description}
                 </p>
               </div>
-            </div>
-          </main>
-          <main className='md:w-[716px] w-[350px] h-[430px] rounded-[12px] p-[1px] bg-gradient-to-b from-white/48 to-white/8'>
-            <div className='w-full h-full rounded-[12px] bg-black/85 bg-[url("/card-bg.svg")] bg-no-repeat bg-center backdrop:blur-2xl p-6 flex flex-col items-center gap-6 text-left'>
-              <div className='md:w-[668px] w-[302px] md:h-[269px] h-[243px] flex justify-center items-center'>
-                <Image
-                  src='card4.svg'
-                  width='620'
-                  height='258'
-                  alt='Milestone Escrow'
-                />
-              </div>
-              <div className='px-8 py-6 pb-1 flex flex-col  gap-2.5'>
-                <h4 className='font-semibold text-base text-white'>
-                  Blockchain-Powered
-                </h4>
-                <p className='font-normal text-base text-stepper-text-inactive'>
-                  Built on Stellar and integrated with Trustless Work for
-                  secure, transparent funding.
-                </p>
-              </div>
-            </div>
-          </main>
+            </article>
+          ))}
         </div>
-      </main>
+      </div>
     </section>
   );
 }

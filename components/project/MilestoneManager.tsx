@@ -26,7 +26,6 @@ const MilestoneManager: React.FC<MilestoneManagerProps> = ({
     const count = ms.length;
     if (count === 0) return ms;
 
-    // Exponential growth weights to bias later milestones
     const growthFactor = 1.35;
     const weights = Array.from({ length: count }, (_, i) =>
       Math.pow(growthFactor, i)
@@ -34,16 +33,13 @@ const MilestoneManager: React.FC<MilestoneManagerProps> = ({
     const sumWeights = weights.reduce((a, b) => a + b, 0);
     const rawPercents = weights.map(w => (w / sumWeights) * 100);
 
-    // Ensure first milestone gets at least a minimal percentage
-    const MIN_FIRST = 8; // minimum 8%
+    const MIN_FIRST = 8;
     if (rawPercents[0] < MIN_FIRST) {
       const delta = MIN_FIRST - rawPercents[0];
       rawPercents[0] = MIN_FIRST;
-      // subtract delta from the last milestone (most weighted)
       rawPercents[count - 1] = Math.max(0, rawPercents[count - 1] - delta);
     }
 
-    // Largest Remainder Method to make integers summing to 100
     const floors = rawPercents.map(p => Math.floor(p));
     const remainder = 100 - floors.reduce((a, b) => a + b, 0);
     const remainders = rawPercents.map((p, i) => ({ i, frac: p - floors[i] }));
@@ -70,7 +66,6 @@ const MilestoneManager: React.FC<MilestoneManagerProps> = ({
       isExpanded: true,
     };
 
-    // Expand only the newly added milestone
     let updated = [
       ...milestones.map(m => ({ ...m, isExpanded: false })),
       newMilestone,
@@ -80,7 +75,6 @@ const MilestoneManager: React.FC<MilestoneManagerProps> = ({
   };
 
   const handleUpdateMilestone = (updatedMilestone: Milestone) => {
-    // If the updated milestone is being expanded, collapse others
     if (updatedMilestone.isExpanded) {
       const updated = milestones.map(m =>
         m.id === updatedMilestone.id
@@ -91,7 +85,6 @@ const MilestoneManager: React.FC<MilestoneManagerProps> = ({
       return;
     }
 
-    // Otherwise, just update the fields without changing others
     const updated = milestones.map(m =>
       m.id === updatedMilestone.id ? updatedMilestone : m
     );
@@ -105,7 +98,6 @@ const MilestoneManager: React.FC<MilestoneManagerProps> = ({
       return;
     }
 
-    // Ensure at least one remains expanded
     const anyExpanded = remaining.some(m => m.isExpanded);
     if (!anyExpanded) {
       remaining[0] = { ...remaining[0], isExpanded: true };
@@ -114,11 +106,8 @@ const MilestoneManager: React.FC<MilestoneManagerProps> = ({
     onChange?.(remaining, isValid(remaining));
   };
 
-  // Keep onNext for backward compatibility (not used when parent renders actions)
-
   return (
-    <div className='w-full  mx-auto space-y-6'>
-      {/* Milestones List */}
+    <div className='mx-auto w-full space-y-6'>
       <div className='space-y-4'>
         {milestones.map(milestone => (
           <MilestoneForm
@@ -131,23 +120,20 @@ const MilestoneManager: React.FC<MilestoneManagerProps> = ({
         ))}
       </div>
 
-      {/* Add Milestone Button */}
       {milestones.length < 6 && (
         <div className=''>
-          <Label className='text-xs font-medium text-white flex justify-between items-center mb-3'>
+          <Label className='mb-3 flex items-center justify-between text-xs font-medium text-white'>
             Milestone {milestones.length + 1}
           </Label>
           <Button
             onClick={handleAddMilestone}
-            className='!w-full  p-5 rounded-[12px] bg-[#1C1C1C] border border-[#2B2B2B] text-[#787878] flex justify-between items-center'
+            className='flex !w-full items-center justify-between rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-5 text-[#787878]'
           >
             <span>Add Milestone</span>
-            <Plus className='w-4 h-4' />
+            <Plus className='h-4 w-4' />
           </Button>
         </div>
       )}
-
-      {/* Actions are rendered by parent (Initialize) */}
     </div>
   );
 };

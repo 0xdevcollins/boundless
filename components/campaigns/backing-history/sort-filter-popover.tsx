@@ -30,20 +30,20 @@ const SortFilterPopover: React.FC<SortFilterPopoverProps> = ({
         <Button
           variant='outline'
           size='sm'
-          className='bg-[#1c1c1c] hover:border-primary border-muted-foreground/20 text-white hover:text-white hover:bg-[#1c1c1c] w-12 h-12'
+          className='hover:border-primary border-muted-foreground/20 h-12 w-12 bg-[#1c1c1c] text-white hover:bg-[#1c1c1c] hover:text-white'
         >
-          <Filter className='w-4 h-4' />
+          <Filter className='h-4 w-4' />
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className='w-80 border border-muted-foreground/20 p-4'
+        className='border-muted-foreground/20 w-80 border p-4'
         align='start'
         style={{ backgroundColor: '#101010' }}
       >
         <div className='space-y-4'>
           {/* Time based Section */}
           <div className='space-y-2'>
-            <h3 className='text-sm font-medium text-muted-foreground'>
+            <h3 className='text-muted-foreground text-sm font-medium'>
               Time based
             </h3>
             <div className='space-y-1'>
@@ -53,12 +53,12 @@ const SortFilterPopover: React.FC<SortFilterPopoverProps> = ({
                   setSortBy('newest');
                   setShowFilterPopover(false);
                 }}
-                className={`w-full justify-between bg-transparent text-white hover:bg-muted/30 ${
-                  sortBy === 'newest' ? 'bg-[#2b2b2b] border-none' : ''
+                className={`hover:bg-muted/30 w-full justify-between bg-transparent text-white ${
+                  sortBy === 'newest' ? 'border-none bg-[#2b2b2b]' : ''
                 }`}
               >
                 Newest first
-                {sortBy === 'newest' && <Check className='w-4 h-4' />}
+                {sortBy === 'newest' && <Check className='h-4 w-4' />}
               </Button>
               <Button
                 // variant='outline'
@@ -66,19 +66,19 @@ const SortFilterPopover: React.FC<SortFilterPopoverProps> = ({
                   setSortBy('oldest');
                   setShowFilterPopover(false);
                 }}
-                className={`w-full justify-between bg-transparent text-white hover:bg-muted/30 ${
-                  sortBy === 'oldest' ? 'bg-[#2b2b2b] border-none' : ''
+                className={`hover:bg-muted/30 w-full justify-between bg-transparent text-white ${
+                  sortBy === 'oldest' ? 'border-none bg-[#2b2b2b]' : ''
                 }`}
               >
                 Oldest first
-                {sortBy === 'oldest' && <Check className='w-4 h-4' />}
+                {sortBy === 'oldest' && <Check className='h-4 w-4' />}
               </Button>
             </div>
           </div>
 
           {/* Backer name Section */}
           <div className='space-y-2'>
-            <h3 className='text-sm font-medium text-muted-foreground'>
+            <h3 className='text-muted-foreground text-sm font-medium'>
               Backer name
             </h3>
             <Button
@@ -87,18 +87,18 @@ const SortFilterPopover: React.FC<SortFilterPopoverProps> = ({
                 setSortBy('alphabetical');
                 setShowFilterPopover(false);
               }}
-              className={`w-full justify-between bg-transparent text-white hover:bg-muted/30 ${
-                sortBy === 'alphabetical' ? 'bg-[#2b2b2b] border-none' : ''
+              className={`hover:bg-muted/30 w-full justify-between bg-transparent text-white ${
+                sortBy === 'alphabetical' ? 'border-none bg-[#2b2b2b]' : ''
               }`}
             >
               Alphabetical
-              {sortBy === 'alphabetical' && <Check className='w-4 h-4' />}
+              {sortBy === 'alphabetical' && <Check className='h-4 w-4' />}
             </Button>
           </div>
 
           {/* Funding amount Section */}
           <div className='space-y-2'>
-            <h3 className='text-sm font-medium text-muted-foreground'>
+            <h3 className='text-muted-foreground text-sm font-medium'>
               Funding amount
             </h3>
             <div className='space-y-1'>
@@ -108,12 +108,12 @@ const SortFilterPopover: React.FC<SortFilterPopoverProps> = ({
                   setSortBy('highest');
                   setShowFilterPopover(false);
                 }}
-                className={`w-full justify-between bg-transparent text-white hover:bg-muted/30 ${
-                  sortBy === 'highest' ? 'bg-[#2b2b2b] border-none' : ''
+                className={`hover:bg-muted/30 w-full justify-between bg-transparent text-white ${
+                  sortBy === 'highest' ? 'border-none bg-[#2b2b2b]' : ''
                 }`}
               >
                 Highest first
-                {sortBy === 'highest' && <Check className='w-4 h-4' />}
+                {sortBy === 'highest' && <Check className='h-4 w-4' />}
               </Button>
               <Button
                 // variant='outline'
@@ -121,12 +121,12 @@ const SortFilterPopover: React.FC<SortFilterPopoverProps> = ({
                   setSortBy('lowest');
                   setShowFilterPopover(false);
                 }}
-                className={`w-full justify-between bg-transparent text-white hover:bg-muted/30 ${
-                  sortBy === 'lowest' ? 'bg-[#2b2b2b] border-none' : ''
+                className={`hover:bg-muted/30 w-full justify-between bg-transparent text-white ${
+                  sortBy === 'lowest' ? 'border-none bg-[#2b2b2b]' : ''
                 }`}
               >
                 Lowest first
-                {sortBy === 'lowest' && <Check className='w-4 h-4' />}
+                {sortBy === 'lowest' && <Check className='h-4 w-4' />}
               </Button>
             </div>
           </div>

@@ -34,7 +34,6 @@ const MilestoneReview: React.FC<MilestoneReviewProps> = ({
     return (totalFundAmount * numPercentage) / 100;
   };
 
-  // Multi-open accordion behavior
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const toggle = (id: string) => {
     setExpandedIds(prev => {
@@ -58,12 +57,12 @@ const MilestoneReview: React.FC<MilestoneReviewProps> = ({
         return (
           <div key={m.id} className='space-y-2'>
             <div className='text-xs text-gray-400'>Milestone {idx + 1}</div>
-            <div className='rounded-[12px] bg-[#1C1C1C] border border-[#2B2B2B]'>
+            <div className='rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C]'>
               <div
-                className='flex items-center justify-between p-5 pb-3 cursor-pointer select-none'
+                className='flex cursor-pointer items-center justify-between p-5 pb-3 select-none'
                 onClick={() => toggle(m.id)}
               >
-                <div className='text-white text-base font-semibold'>
+                <div className='text-base font-semibold text-white'>
                   {m.title || `Milestone ${idx + 1}`}
                 </div>
                 <button
@@ -77,9 +76,9 @@ const MilestoneReview: React.FC<MilestoneReviewProps> = ({
                 </button>
               </div>
               {isExpanded && (
-                <div className='p-5 pt-0 space-y-3'>
+                <div className='space-y-3 p-5 pt-0'>
                   <div className='text-[#fff]'>{m.description}</div>
-                  <div className='flex gap-6 text-gray-300 text-sm'>
+                  <div className='flex gap-6 text-sm text-gray-300'>
                     <div className='flex items-center gap-2'>
                       <CalendarIcon className='h-4 w-4' />
                       <span className='text-white'>

@@ -61,7 +61,7 @@ export const testimonials: Testimonial[] = [
     username: 'liam_creator',
     message:
       'The feedback from early backers helped us pivot in the right direction quickly.',
-    avatarUrl: 'https://i.pravatar.cc/150?img=77',
+    avatarUrl: 'https://i.pravatar.cc/150?img=66',
   },
   {
     id: 8,
@@ -69,7 +69,7 @@ export const testimonials: Testimonial[] = [
     username: 'emma_studio',
     message:
       'I loved how transparent the platform was. Every milestone unlocked brought peace of mind to my team.',
-    avatarUrl: 'https://i.pravatar.cc/150?img=88',
+    avatarUrl: 'https://i.pravatar.cc/150?img=12',
   },
   {
     id: 9,
@@ -77,7 +77,7 @@ export const testimonials: Testimonial[] = [
     username: 'noah_tech',
     message:
       'The Boundless community is incredibly supportive. It gave our startup credibility we never expected.',
-    avatarUrl: 'https://i.pravatar.cc/150?img=99',
+    avatarUrl: 'https://i.pravatar.cc/150?img=10',
   },
   {
     id: 10,

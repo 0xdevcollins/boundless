@@ -1,20 +1,104 @@
+'use client';
+
 import { backedBy, socialLinks } from '@/lib/config';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Linkedin } from 'lucide-react';
 import CommentCard from './CommentCard';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { Skeleton } from '@/components/ui/skeleton';
+
+interface Testimonial {
+  id: string;
+  name: string;
+  username: string;
+  content: string;
+  avatarSrc: string;
+  avatarFallback: string;
+}
+
+const testimonials: Testimonial[] = [
+  {
+    id: '1',
+    name: 'David Chen',
+    username: 'davidchen',
+    content:
+      'Boundless gave our team the confidence to launch. The milestone-based funding kept us accountable every step of the way.',
+    avatarSrc: '/globe.svg',
+    avatarFallback: 'D',
+  },
+  {
+    id: '2',
+    name: 'Sarah Johnson',
+    username: 'sarahj',
+    content:
+      'The milestone-based escrow changed everything. Backers trusted us because they knew funds would only unlock on real progress.',
+    avatarSrc: '/globe.svg',
+    avatarFallback: 'S',
+  },
+  {
+    id: '3',
+    name: 'Alex Rodriguez',
+    username: 'alexr',
+    content: 'It feels like the future of crowdfunding.',
+    avatarSrc: '/globe.svg',
+    avatarFallback: 'A',
+  },
+  {
+    id: '4',
+    name: 'Maria Garcia',
+    username: 'mariag',
+    content:
+      'Raising funds on Boundless was simple, transparent, and faster than I imagined.',
+    avatarSrc: '/globe.svg',
+    avatarFallback: 'M',
+  },
+  {
+    id: '5',
+    name: 'James Wilson',
+    username: 'jamesw',
+    content: 'Every startup needs this kind of system.',
+    avatarSrc: '/globe.svg',
+    avatarFallback: 'J',
+  },
+  {
+    id: '6',
+    name: 'Lisa Park',
+    username: 'lisap',
+    content:
+      'Community voting gave us early validation before launch. It felt amazing to know backers believed in our vision from day one.',
+    avatarSrc: '/globe.svg',
+    avatarFallback: 'L',
+  },
+  {
+    id: '7',
+    name: 'Michael Brown',
+    username: 'michaelb',
+    content:
+      'Before Boundless, raising funds was overwhelming. Now, I can focus on building while the platform handles trust and transparency.',
+    avatarSrc: '/globe.svg',
+    avatarFallback: 'M',
+  },
+];
 
 const BackedBy = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const column1Ref = useRef<HTMLDivElement>(null);
   const column2Ref = useRef<HTMLDivElement>(null);
   const column3Ref = useRef<HTMLDivElement>(null);
+  const [imageLoading, setImageLoading] = useState<Record<string, boolean>>({});
 
-  // Register useGSAP as a GSAP plugin (best practice)
   gsap.registerPlugin(useGSAP);
+
+  const handleImageLoad = (itemName: string) => {
+    setImageLoading(prev => ({ ...prev, [itemName]: false }));
+  };
+
+  const handleImageError = (itemName: string) => {
+    setImageLoading(prev => ({ ...prev, [itemName]: false }));
+  };
 
   useGSAP(
     (context, contextSafe) => {
@@ -28,71 +112,57 @@ const BackedBy = () => {
 
       const container = containerRef.current;
 
-      // Create seamless infinite scroll animation using GSAP best practices
       const createSeamlessScrollAnimation = (
         element: HTMLElement,
         direction: 'up' | 'down' = 'up'
       ) => {
         const children = Array.from(element.children);
-
-        // Calculate total height more accurately
         const totalHeight = children.reduce((acc, child) => {
           const rect = child.getBoundingClientRect();
-          return acc + rect.height + 24; // 24px gap
+          return acc + rect.height + 24;
         }, 0);
 
-        // Clone children for seamless loop (GSAP best practice)
-        // Create a wrapper for better performance
         const wrapper = document.createElement('div');
         wrapper.style.position = 'relative';
 
-        // Move original children to wrapper
         children.forEach(child => {
           wrapper.appendChild(child);
         });
 
-        // Clone the wrapper for seamless loop
         const clone = wrapper.cloneNode(true) as HTMLElement;
         wrapper.appendChild(clone);
 
-        // Clear element and add wrapper
         element.innerHTML = '';
         element.appendChild(wrapper);
 
         const scrollDistance = direction === 'up' ? -totalHeight : totalHeight;
 
-        // Use GSAP set for initial positioning with performance optimizations
         gsap.set(wrapper, {
           y: 0,
-          force3D: true, // Enable hardware acceleration
-          willChange: 'transform', // Hint to browser for optimization
+          force3D: true,
+          willChange: 'transform',
         });
 
-        // Create animation with advanced performance optimizations
         const animation = gsap.to(wrapper, {
           y: scrollDistance,
-          duration: 30, // Slower for better readability
-          ease: 'none', // Linear for consistent speed
-          repeat: -1, // Infinite repeat
-          // Advanced performance optimizations
-          force3D: true, // Enable hardware acceleration
+          duration: 30,
+          ease: 'none',
+          repeat: -1,
+          force3D: true,
           transformOrigin: 'center center',
-          // Use GSAP's built-in performance features
-          immediateRender: false, // Don't render immediately
-          lazy: false, // Don't use lazy rendering for smooth animation
+          immediateRender: false,
+          lazy: false,
         });
 
         return animation;
       };
 
-      // Create animations with staggered timing for visual variety
       const animations = [
         createSeamlessScrollAnimation(column1Ref.current, 'up'),
         createSeamlessScrollAnimation(column2Ref.current, 'down'),
         createSeamlessScrollAnimation(column3Ref.current, 'up'),
       ];
 
-      // Context-safe event handlers (GSAP best practice)
       const handleMouseEnter =
         contextSafe?.(() => {
           animations.forEach(anim => anim.pause());
@@ -109,166 +179,168 @@ const BackedBy = () => {
           animations.forEach(anim => anim.resume());
         });
 
-      // Add event listeners with proper cleanup
       container.addEventListener('mouseenter', handleMouseEnter);
       container.addEventListener('mouseleave', handleMouseLeave);
 
-      // Cleanup function (automatically handled by useGSAP)
       return () => {
         container.removeEventListener('mouseenter', handleMouseEnter);
         container.removeEventListener('mouseleave', handleMouseLeave);
       };
     },
     {
-      scope: containerRef, // Scope GSAP selectors to this container
-      dependencies: [], // Empty array means run once on mount
-      revertOnUpdate: false, // Don't revert on updates since we have no dependencies
+      scope: containerRef,
+      dependencies: [],
+      revertOnUpdate: false,
     }
   );
 
   return (
-    <div
-      className='w-full h-full md:py-16 py-5 px-6 md:px-12 lg:px-[100px] relative'
+    <section
+      className='relative my-[70px] h-full w-full px-6 py-[59px] md:px-12 md:py-16 lg:px-[100px]'
       id='backed-by'
+      aria-labelledby='backed-by-heading'
     >
-      <div className='mx-auto relative max-w-[1200px]'>
-        <h2 className='text-white text-3xl md:text-4xl lg:text-[48px] leading-[140%] tracking-[0.48px] text-center'>
-          Backed By trusted partners
+      <header className='relative mx-auto max-w-[1200px]'>
+        <h2
+          id='backed-by-heading'
+          className='text-center text-3xl leading-[140%] tracking-[0.48px] text-white md:text-4xl lg:text-[48px]'
+        >
+          Backed By Trusted Partners
         </h2>
-        <p className='text-[#B5B5B5] text-center text-sm md:text-base mt-2 md:mt-4'>
-          <Link href={socialLinks.x} className='text-white underline'>
+        <p className='mt-2 text-center text-sm text-[#B5B5B5] md:mt-4 md:text-base'>
+          <Link
+            href={socialLinks.x}
+            className='text-white underline transition-colors hover:text-gray-300'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
             Follow us on X
           </Link>{' '}
           and{' '}
-          <Link href={socialLinks.linkedin} className='text-white underline'>
+          <Link
+            href={socialLinks.linkedin}
+            className='text-white underline transition-colors hover:text-gray-300'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
             LinkedIn
           </Link>{' '}
           to join the conversation
         </p>
-      </div>
+      </header>
 
-      {/* Logos */}
-      <div className='grid grid-cols-2 md:grid-cols-4 justify-center items-center gap-6 mx-auto max-w-[872px] my-11'>
+      <div className='mx-auto my-11 grid max-w-[872px] grid-cols-2 items-center justify-center gap-6 md:grid-cols-4'>
         {backedBy.map(item => (
-          <Link href={item.url} key={item.name}>
-            <Image
-              src={item.image}
-              alt={item.name}
-              width={100}
-              height={100}
-              className='h-auto w-full  object-contain'
-            />
+          <Link
+            href={item.url}
+            key={item.name}
+            className='group relative flex items-center justify-center p-4 transition-transform hover:scale-105'
+            target='_blank'
+            rel='noopener noreferrer'
+            aria-label={`Visit ${item.name} website`}
+          >
+            <div className='relative'>
+              {imageLoading[item.name] !== false && (
+                <Skeleton className='absolute inset-0 h-16 w-24' />
+              )}
+              <Image
+                src={item.image}
+                alt={`${item.name} logo`}
+                width={100}
+                height={100}
+                loading='lazy'
+                className={`h-auto w-full object-contain transition-opacity duration-300 ${
+                  imageLoading[item.name] !== false
+                    ? 'opacity-0'
+                    : 'opacity-100'
+                }`}
+                onLoad={() => handleImageLoad(item.name)}
+                onError={() => handleImageError(item.name)}
+              />
+            </div>
           </Link>
         ))}
       </div>
 
-      {/* Scrolling Testimonials */}
       <div
         ref={containerRef}
-        className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-hidden max-h-[600px] md:max-h-[550px] relative'
+        className='relative grid max-h-[600px] grid-cols-1 gap-6 overflow-hidden md:max-h-[550px] md:grid-cols-2 lg:grid-cols-3'
         style={{
           willChange: 'transform',
           backfaceVisibility: 'hidden',
           perspective: '1000px',
         }}
       >
-        {/* Gradient overlays */}
         <div
-          className='absolute -top-3 left-0 w-full h-[150px] z-10 pointer-events-none'
+          className='pointer-events-none absolute -top-3 left-0 z-10 h-[150px] w-full'
           style={{
             background:
               'linear-gradient(0deg, rgba(3, 3, 3, 0.00) 32.3%, #030303 84.8%)',
           }}
         />
         <div
-          className='absolute -bottom-3 left-0 w-full h-[150px] z-10 pointer-events-none'
+          className='pointer-events-none absolute -bottom-3 left-0 z-10 h-[150px] w-full'
           style={{
             background:
               'linear-gradient(180deg, rgba(3, 3, 3, 0.00) 32.3%, #030303 84.8%)',
           }}
         />
 
-        {/* Column 1 */}
         <div
           ref={column1Ref}
           className='flex flex-col gap-6'
           style={{ willChange: 'transform' }}
         >
-          <CommentCard
-            avatarSrc='/globe.svg'
-            avatarFallback='D'
-            name='David'
-            username='david'
-            content='Boundless gave our team the confidence to launch. The milestone-based funding kept us accountable every step of the way.'
-            icon={<Linkedin className='w-4 h-4 text-white' />}
-          />
-          <CommentCard
-            avatarSrc='/globe.svg'
-            avatarFallback='D'
-            name='David'
-            username='david'
-            content='The milestone-based escrow changed everything. Backers trusted us because they knew funds would only unlock on real progress. That accountability made our campaign stronger.'
-            icon={<Linkedin className='w-4 h-4 text-white' />}
-          />
+          {testimonials.slice(0, 2).map(testimonial => (
+            <CommentCard
+              key={testimonial.id}
+              avatarSrc={testimonial.avatarSrc}
+              avatarFallback={testimonial.avatarFallback}
+              name={testimonial.name}
+              username={testimonial.username}
+              content={testimonial.content}
+              icon={<Linkedin className='h-4 w-4 text-white' />}
+            />
+          ))}
         </div>
 
-        {/* Column 2 */}
         <div
           ref={column2Ref}
-          className='flex flex-col gap-6 -translate-y-1/2'
+          className='flex -translate-y-1/2 flex-col gap-6'
           style={{ willChange: 'transform' }}
         >
-          <CommentCard
-            avatarSrc='/globe.svg'
-            avatarFallback='D'
-            name='David'
-            username='david'
-            content='It feels like the future of crowdfunding.'
-            icon={<Linkedin className='w-4 h-4 text-white' />}
-          />
-          <CommentCard
-            avatarSrc='/globe.svg'
-            avatarFallback='D'
-            name='David'
-            username='david'
-            content='Raising funds on Boundless was simple, transparent, and faster than I imagined.'
-            icon={<Linkedin className='w-4 h-4 text-white' />}
-          />
-          <CommentCard
-            avatarSrc='/globe.svg'
-            avatarFallback='D'
-            name='David'
-            username='david'
-            content='Every startup needs this kind of system.'
-            icon={<Linkedin className='w-4 h-4 text-white' />}
-          />
+          {testimonials.slice(2, 5).map(testimonial => (
+            <CommentCard
+              key={testimonial.id}
+              avatarSrc={testimonial.avatarSrc}
+              avatarFallback={testimonial.avatarFallback}
+              name={testimonial.name}
+              username={testimonial.username}
+              content={testimonial.content}
+              icon={<Linkedin className='h-4 w-4 text-white' />}
+            />
+          ))}
         </div>
 
-        {/* Column 3 */}
         <div
           ref={column3Ref}
           className='flex flex-col gap-6'
           style={{ willChange: 'transform' }}
         >
-          <CommentCard
-            avatarSrc='/globe.svg'
-            avatarFallback='D'
-            name='David'
-            username='david'
-            content='Community voting gave us early validation before launch. It felt amazing to know backers believed in our vision from day one.'
-            icon={<Linkedin className='w-4 h-4 text-white' />}
-          />
-          <CommentCard
-            avatarSrc='/globe.svg'
-            avatarFallback='D'
-            name='David'
-            username='david'
-            content='Before Boundless, raising funds was overwhelming. Now, I can focus on building while the platform handles trust and transparency.'
-            icon={<Linkedin className='w-4 h-4 text-white' />}
-          />
+          {testimonials.slice(5, 7).map(testimonial => (
+            <CommentCard
+              key={testimonial.id}
+              avatarSrc={testimonial.avatarSrc}
+              avatarFallback={testimonial.avatarFallback}
+              name={testimonial.name}
+              username={testimonial.username}
+              content={testimonial.content}
+              icon={<Linkedin className='h-4 w-4 text-white' />}
+            />
+          ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

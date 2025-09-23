@@ -2,12 +2,17 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
+  outputFileTracingRoot: __dirname,
   images: {
     domains: ['i.pravatar.cc'],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'github.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
       },
       {
         protocol: 'https',

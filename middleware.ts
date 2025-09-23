@@ -1,17 +1,14 @@
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 
-// Define protected routes that require authentication
-const protectedRoutes = ['/dashboard', '/user', '/projects', '/admin'];
+const protectedRoutes = ['/dashboard', '/user', '/admin'];
 
-// Define auth routes (routes that should redirect to dashboard if already authenticated)
 const authRoutes = ['/auth/signin', '/auth/signup', '/auth/forgot-password'];
 
 export default auth(req => {
   const { pathname } = req.nextUrl;
   const isAuthenticated = !!req.auth;
 
-  // Check if the route is protected
   const isProtectedRoute = protectedRoutes.some(route =>
     pathname.startsWith(route)
   );

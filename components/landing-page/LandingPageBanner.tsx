@@ -2,8 +2,8 @@ import React from 'react';
 
 const LandingPageBanner = () => {
   return (
-    <section className='relative w-full max-w-sm mx-auto'>
-      <h1 className='text-white  text-4xl'>LandingPageBanner</h1>
+    <section className='relative mx-auto w-full max-w-sm'>
+      <h1 className='text-4xl text-white'>LandingPageBanner</h1>
     </section>
   );
 };
