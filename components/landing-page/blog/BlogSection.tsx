@@ -1,7 +1,6 @@
-import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
 import BlogCard from './BlogCard';
 
 // Types
@@ -15,12 +14,12 @@ interface BlogPost {
   category: string;
 }
 
-interface CardStackItem {
-  id: number;
-  name: string;
-  designation: string;
-  content: React.ReactNode;
-}
+// interface CardStackItem {
+//   id: number;
+//   name: string;
+//   designation: string;
+//   content: React.ReactNode;
+// }
 
 // Mock blog data
 const mockBlogs: BlogPost[] = [
@@ -87,213 +86,212 @@ const mockBlogs: BlogPost[] = [
 ];
 
 // Constants
-const CARD_TRANSITION_DURATION = 0.5;
-const AUTO_SLIDE_INTERVAL = 5000;
-const MOBILE_BREAKPOINT = 640;
+// const CARD_TRANSITION_DURATION = 0.5;
+// const AUTO_SLIDE_INTERVAL = 5000;
+// const MOBILE_BREAKPOINT = 640;
 
 // CardStack Component
-interface CardStackProps {
-  items: CardStackItem[];
-  offset?: number;
-  scaleFactor?: number;
-}
+// interface CardStackProps {
+//   items: CardStackItem[];
+//   offset?: number;
+//   scaleFactor?: number;
+// }
 
-const CardStack: React.FC<CardStackProps> = ({
-  items,
-  offset = 20,
-  scaleFactor = 0.1,
-}) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+// const CardStack: React.FC<CardStackProps> = ({
+//   items,
+//   offset = 20,
+//   scaleFactor = 0.1,
+// }) => {
+//   const [currentIndex, setCurrentIndex] = useState(0);
+//   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
-  const nextSlide = useCallback(() => {
-    setCurrentIndex(prev => (prev + 1) % items.length);
-  }, [items.length]);
+//   const nextSlide = useCallback(() => {
+//     setCurrentIndex(prev => (prev + 1) % items.length);
+//   }, [items.length]);
 
-  const prevSlide = useCallback(() => {
-    setCurrentIndex(prev => (prev - 1 + items.length) % items.length);
-  }, [items.length]);
+//   const prevSlide = useCallback(() => {
+//     setCurrentIndex(prev => (prev - 1 + items.length) % items.length);
+//   }, [items.length]);
 
-  const goToSlide = useCallback((index: number) => {
-    setCurrentIndex(index);
-  }, []);
+//   const goToSlide = useCallback((index: number) => {
+//     setCurrentIndex(index);
+//   }, []);
 
-  const startAutoSlide = useCallback(() => {
-    if (intervalId) {
-      clearInterval(intervalId);
-    }
-    const id = setInterval(nextSlide, AUTO_SLIDE_INTERVAL);
-    setIntervalId(id);
-  }, [nextSlide, intervalId]);
+//   const startAutoSlide = useCallback(() => {
+//     if (intervalId) {
+//       clearInterval(intervalId);
+//     }
+//     const id = setInterval(nextSlide, AUTO_SLIDE_INTERVAL);
+//     setIntervalId(id);
+//   }, [nextSlide, intervalId]);
 
-  useEffect(() => {
-    startAutoSlide();
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
-  }, [startAutoSlide, intervalId]);
+//   useEffect(() => {
+//     startAutoSlide();
+//     return () => {
+//       if (intervalId) {
+//         clearInterval(intervalId);
+//       }
+//     };
+//   }, [startAutoSlide, intervalId]);
 
-  const calculateCardPosition = useCallback(
-    (index: number) => {
-      const isActive = index === currentIndex;
-      const isLeft = index < currentIndex;
-      const isRight = index > currentIndex;
-      const distanceFromActive = Math.abs(index - currentIndex);
+//   const calculateCardPosition = useCallback(
+//     (index: number) => {
+//       const isActive = index === currentIndex;
+//       const isLeft = index < currentIndex;
+//       const isRight = index > currentIndex;
+//       const distanceFromActive = Math.abs(index - currentIndex);
 
-      if (isActive) {
-        return {
-          xPosition: 0,
-          scale: 1,
-          zIndex: items.length + 1,
-          opacity: 1,
-        };
-      }
+//       if (isActive) {
+//         return {
+//           xPosition: 0,
+//           scale: 1,
+//           zIndex: items.length + 1,
+//           opacity: 1,
+//         };
+//       }
 
-      if (isLeft) {
-        return {
-          xPosition: -offset * distanceFromActive - 20,
-          scale: 1 - scaleFactor * distanceFromActive,
-          zIndex: items.length - distanceFromActive,
-          opacity: 1,
-        };
-      }
+//       if (isLeft) {
+//         return {
+//           xPosition: -offset * distanceFromActive - 20,
+//           scale: 1 - scaleFactor * distanceFromActive,
+//           zIndex: items.length - distanceFromActive,
+//           opacity: 1,
+//         };
+//       }
 
-      if (isRight) {
-        return {
-          xPosition: offset * distanceFromActive + 20,
-          scale: 1 - scaleFactor * distanceFromActive,
-          zIndex: items.length - distanceFromActive,
-          opacity: 1,
-        };
-      }
+//       if (isRight) {
+//         return {
+//           xPosition: offset * distanceFromActive + 20,
+//           scale: 1 - scaleFactor * distanceFromActive,
+//           zIndex: items.length - distanceFromActive,
+//           opacity: 1,
+//         };
+//       }
 
-      return {
-        xPosition: 0,
-        scale: 1,
-        zIndex: items.length,
-        opacity: 1,
-      };
-    },
-    [currentIndex, items.length, offset, scaleFactor]
-  );
+//       return {
+//         xPosition: 0,
+//         scale: 1,
+//         zIndex: items.length,
+//         opacity: 1,
+//       };
+//     },
+//     [currentIndex, items.length, offset, scaleFactor]
+//   );
 
-  return (
-    <div className='relative w-full max-w-sm mx-auto'>
-      {/* Cards Container */}
-      <div className='relative h-80 w-full flex justify-center items-center'>
-        {items.map((card, index) => {
-          const { xPosition, scale, zIndex, opacity } =
-            calculateCardPosition(index);
+//   return (
+//     <div className='relative w-full max-w-sm mx-auto'>
+//       {/* Cards Container */}
+//       <div className='relative h-80 w-full flex justify-center items-center'>
+//         {items.map((card, index) => {
+//           const { xPosition, scale, zIndex, opacity } =
+//             calculateCardPosition(index);
 
-          return (
-            <motion.div
-              key={card.id}
-              className='absolute bg-[#101010] w-full max-w-sm rounded-[8px] p-0 shadow-xl border border-[#1B1B1B] overflow-hidden flex flex-col'
-              style={{
-                transformOrigin: 'center center',
-              }}
-              animate={{
-                x: xPosition,
-                scale,
-                zIndex,
-                opacity,
-              }}
-              transition={{
-                duration: CARD_TRANSITION_DURATION,
-                ease: 'easeInOut',
-              }}
-            >
-              {card.content}
-            </motion.div>
-          );
-        })}
-      </div>
+//           return (
+//             <motion.div
+//               key={card.id}
+//               className='absolute bg-[#101010] w-full max-w-sm rounded-[8px] p-0 shadow-xl border border-[#1B1B1B] overflow-hidden flex flex-col'
+//               style={{
+//                 transformOrigin: 'center center',
+//               }}
+//               animate={{
+//                 x: xPosition,
+//                 scale,
+//                 zIndex,
+//                 opacity,
+//               }}
+//               transition={{
+//                 duration: CARD_TRANSITION_DURATION,
+//                 ease: 'easeInOut',
+//               }}
+//             >
+//               {card.content}
+//             </motion.div>
+//           );
+//         })}
+//       </div>
 
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className='absolute -left-4 top-1/2 -translate-y-1/2 z-30 h-[48px] w-[48px] border border-[rgba(255,255,255,0.48)] bg-[#FFFFFF33] hover:bg-[#ffffff88] rounded-full p-3 transition-colors duration-200 shadow-lg backdrop-blur-[7px]'
-        aria-label='Previous blog'
-        type='button'
-      >
-        <ChevronLeft className='w-5 h-5 text-white' />
-      </button>
-      <button
-        onClick={nextSlide}
-        className='absolute -right-4 top-1/2 -translate-y-1/2 z-30 h-[48px] w-[48px] border border-[rgba(255,255,255,0.48)] bg-[#FFFFFF33] hover:bg-[#ffffff88] rounded-full p-3 transition-colors duration-200 shadow-lg backdrop-blur-[7px]'
-        aria-label='Next blog'
-        type='button'
-      >
-        <ChevronRight className='w-5 h-5 text-white' />
-      </button>
+//       {/* Navigation Arrows */}
+//       <button
+//         onClick={prevSlide}
+//         className='absolute -left-4 top-1/2 -translate-y-1/2 z-30 h-[48px] w-[48px] border border-[rgba(255,255,255,0.48)] bg-[#FFFFFF33] hover:bg-[#ffffff88] rounded-full p-3 transition-colors duration-200 shadow-lg backdrop-blur-[7px]'
+//         aria-label='Previous blog'
+//         type='button'
+//       >
+//         <ChevronLeft className='w-5 h-5 text-white' />
+//       </button>
+//       <button
+//         onClick={nextSlide}
+//         className='absolute -right-4 top-1/2 -translate-y-1/2 z-30 h-[48px] w-[48px] border border-[rgba(255,255,255,0.48)] bg-[#FFFFFF33] hover:bg-[#ffffff88] rounded-full p-3 transition-colors duration-200 shadow-lg backdrop-blur-[7px]'
+//         aria-label='Next blog'
+//         type='button'
+//       >
+//         <ChevronRight className='w-5 h-5 text-white' />
+//       </button>
 
-      {/* Pagination Indicators */}
-      <div className='flex justify-center items-center gap-2 mt-10'>
-        {items.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            className={`font-medium leading-[145%] transition-all duration-300 ${
-              index === currentIndex
-                ? 'text-white'
-                : 'text-[#787878] hover:text-[#9A9A9A]'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-            type='button'
-          >
-            {String(index + 1).padStart(2, '0')}
-          </button>
-        ))}
-      </div>
+//       {/* Pagination Indicators */}
+//       <div className='flex justify-center items-center gap-2 mt-10'>
+//         {items.map((_, index) => (
+//           <button
+//             key={index}
+//             onClick={() => goToSlide(index)}
+//             className={`font-medium leading-[145%] transition-all duration-300 ${index === currentIndex
+//               ? 'text-white'
+//               : 'text-[#787878] hover:text-[#9A9A9A]'
+//               }`}
+//             aria-label={`Go to slide ${index + 1}`}
+//             type='button'
+//           >
+//             {String(index + 1).padStart(2, '0')}
+//           </button>
+//         ))}
+//       </div>
 
-      {/* Read More Link */}
-      <div className='text-center'>
-        <Link
-          className='text-white font-medium flex justify-center items-center text-center gap-2 mt-8'
-          href='/blog'
-        >
-          <span className='underline'>Read More Articles</span>
-          <ArrowRight className='w-4 h-4' />
-        </Link>
-      </div>
-    </div>
-  );
-};
+//       {/* Read More Link */}
+//       <div className='text-center'>
+//         <Link
+//           className='text-white font-medium flex justify-center items-center text-center gap-2 mt-8'
+//           href='/blog'
+//         >
+//           <span className='underline'>Read More Articles</span>
+//           <ArrowRight className='w-4 h-4' />
+//         </Link>
+//       </div>
+//     </div>
+//   );
+// };
 
 const BlogSection: React.FC = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  // const [_isMobile, setIsMobile] = useState(false);
 
   // Check if mobile on mount and resize
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    };
+  // useEffect(() => {
+  //   const checkMobile = () => {
+  //     setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+  //   };
 
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  //   checkMobile();
+  //   window.addEventListener('resize', checkMobile);
+  //   return () => window.removeEventListener('resize', checkMobile);
+  // }, []);
 
   // Transform blog data to CardStack format
-  const cardStackItems: CardStackItem[] = useMemo(
-    () =>
-      mockBlogs.map(blog => ({
-        id: blog.id,
-        name: blog.title,
-        designation: blog.date,
-        content: <BlogCard blog={blog} />,
-      })),
-    []
-  );
+  // const cardStackItems: CardStackItem[] = useMemo(
+  //   () =>
+  //     mockBlogs.map(blog => ({
+  //       id: blog.id,
+  //       name: blog.title,
+  //       designation: blog.date,
+  //       content: <BlogCard blog={blog} />,
+  //     })),
+  //   []
+  // );
 
   return (
     <section className='w-full h-full md:py-16 py-5 px-6 md:px-12 lg:px-[100px] relative'>
       {/* Header */}
       <header className='flex justify-between items-end mb-16'>
         <div className='max-w-[628px]'>
-          <h3 className='gradient-text text-sm text-center md:text-left md:font-medium leading-[120%] md:leading-[160%] tracking-[-0.64px] md:tracking-[-0.48px]'>
+          <h3 className='text-sm text-center md:text-left md:font-medium leading-[120%] md:leading-[160%] tracking-[-0.64px] md:tracking-[-0.48px] bg-gradient-to-r from-green-500 via-green-500/80 to-[#a6f94c] bg-clip-text text-transparent'>
             From the Blog
           </h3>
           <h2 className='text-white text-[32px] md:text-[48px] text-center md:text-left leading-[140%] tracking-[0.48px] mt-3'>
@@ -316,17 +314,11 @@ const BlogSection: React.FC = () => {
       </header>
 
       {/* Content */}
-      {isMobile ? (
-        <div className='flex justify-center'>
-          <CardStack items={cardStackItems} offset={20} scaleFactor={0.1} />
-        </div>
-      ) : (
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 w-full max-w-none'>
-          {mockBlogs.map(blog => (
-            <BlogCard key={blog.id} blog={blog} />
-          ))}
-        </div>
-      )}
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 w-full max-w-none'>
+        {mockBlogs.map(blog => (
+          <BlogCard key={blog.id} blog={blog} />
+        ))}
+      </div>
     </section>
   );
 };

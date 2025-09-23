@@ -1,11 +1,5 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Clock } from 'lucide-react';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
@@ -24,49 +18,43 @@ const BlogCard = ({ blog }: { blog: Blog }) => {
   return (
     <Card
       key={blog.id}
-      className='rounded-[8px] border-[#1B1B1B] bg-[#101010] w-full max-w-none p-0 overflow-hidden gap-0 hover:border-[#2A2A2A] transition-colors duration-300'
+      className='rounded-xl p-0 border border-[#1B1B1B] bg-[#101010] overflow-hidden hover:border-[#2A2A2A] transition-colors duration-300 flex flex-col'
     >
-      <CardHeader className='p-0 !pb-0 relative'>
-        <CardTitle
-          className='absolute top-3.5 left-3.5 px-2.5 py-1 rounded-full border border-[rgba(255,255,255,0.48)] backdrop-blur-[12px] text-white leading-[160%] font-medium text-sm z-10'
-          style={{
-            background:
-              'conic-gradient(from 180deg at 50% 50%, rgba(3, 3, 3, 0.12) 18.88653337955475deg, rgba(3, 3, 3, 0.12) 73.51145267486572deg, rgba(3, 3, 3, 0.12) 128.6191964149475deg, rgba(16, 16, 16, 0.12) 223.4290623664856deg, rgba(3, 3, 3, 0.12) 317.18567848205566deg)',
-          }}
-        >
-          {blog.category}
-        </CardTitle>
-        <div className='h-[214px] w-full'>
-          <Image
-            src={blog.image}
-            alt={blog.title}
-            width={397}
-            height={214}
-            className='w-full h-full object-cover'
-          />
+      {/* Image Section */}
+      <div className='relative h-[200px] w-full'>
+        <Image
+          src={blog.image}
+          alt={blog.title}
+          fill
+          className='object-cover'
+        />
+      </div>
+
+      {/* Content */}
+      <CardContent className='flex flex-col flex-1'>
+        <div className='flex items-center justify-between text-xs sm:text-sm mb-3'>
+          <span className='px-2 py-0.5 rounded-md bg-[#a7f94d]/10  text-[#a7f94d] font-medium'>
+            {blog.category}
+          </span>
+          <span className='text-[#B5B5B5]'>{blog.date}</span>
         </div>
-      </CardHeader>
-      <CardContent className='p-5 pb-2'>
-        <h2 className='text-white leading-[145%] font-semibold text-sm sm:text-base line-clamp-2'>
+
+        <h2 className='text-white font-semibold text-base sm:text-lg leading-snug line-clamp-2 mb-2'>
           {blog.title}
         </h2>
-        <p className='text-[#D9D9D9] text-sm sm:text-base leading-[160%] tracking-[-0.48px] mt-3 line-clamp-2'>
+        <p className='text-[#B5B5B5] text-sm sm:text-base leading-[160%] line-clamp-2'>
           {blog.excerpt}
         </p>
       </CardContent>
-      <CardFooter className='pb-5 px-5 mt-3'>
-        <div className='flex items-center justify-between gap-2 w-full'>
-          <div className='flex items-center justify-start gap-1 text-[#b5b5b5] text-xs sm:text-sm'>
-            <Clock className='w-3 h-3 sm:w-4 sm:h-4' />
-            {blog.date}
-          </div>
-          <Link
-            href={`/blog/${blog.slug}`}
-            className='underline text-white text-xs sm:text-sm hover:text-[#D9D9D9] transition-colors duration-200'
-          >
-            Continue Reading
-          </Link>
-        </div>
+
+      {/* Footer */}
+      <CardFooter className='px-5 pb-5 border-t border-t-[#1B1B1B] justify-end'>
+        <Link
+          href={`/blog/${blog.slug}`}
+          className='text-[#a7f94d] flex items-center gap-1 text-xs font-medium hover:text-[rgb(133,249,8)] transition-colors duration-200'
+        >
+          Continue reading <ArrowRight className='w-4 h-4' />
+        </Link>
       </CardFooter>
     </Card>
   );
