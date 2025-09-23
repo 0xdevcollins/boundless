@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
-  "installCommand": "npm ci && npm install --no-save --platform=linuxmusl --arch=x64 lightningcss @tailwindcss/oxide",
+  "installCommand": "npm install --no-save --platform=linuxmusl --arch=x64 lightningcss @tailwindcss/oxide && npm ci",
   "framework": "nextjs",
   "env": {
     "npm_config_target_platform": "linuxmusl",
