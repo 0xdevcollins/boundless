@@ -8,6 +8,7 @@ import BackedBy from '@/components/landing-page/BackedBy';
 import NewsLetter from '@/components/landing-page/NewsLetter';
 import BlogSection from '@/components/landing-page/blog/BlogSection';
 import { Footer } from '@/components/landing-page/footer';
+import CleanBanner from '@/components/landing-page/Banner';
 
 export default function LandingPage() {
   return (
@@ -19,6 +20,7 @@ export default function LandingPage() {
         <BackedBy />
         <NewsLetter />
         <BlogSection />
+        <CleanBanner />
         <HowBoundlessWork />
         <Footer />
       </div>
