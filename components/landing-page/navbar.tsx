@@ -8,7 +8,7 @@ import gsap from 'gsap';
 import { BoundlessButton } from '../buttons';
 import { useRouter } from 'next/navigation';
 import { Sheet, SheetTrigger, SheetContent, SheetClose } from '../ui/sheet';
-import { useAuthStatus, useZustandAuth } from '@/hooks/use-auth';
+import { useAuthStatus, useAuthActions } from '@/hooks/use-auth';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import {
   DropdownMenu,
@@ -218,7 +218,7 @@ function AuthenticatedNav({
     profile?: { firstName?: string | null; avatar?: string | null };
   } | null;
 }) {
-  const { logout } = useZustandAuth(false);
+  const { logout } = useAuthActions();
 
   return (
     <div className='flex items-center space-x-3'>
@@ -315,7 +315,7 @@ function MobileMenu({
   const mobileLogoRef = useRef<HTMLAnchorElement>(null);
   const mobileMenuItemsRef = useRef<HTMLDivElement>(null);
   const mobileCTARef = useRef<HTMLDivElement>(null);
-  const { logout } = useZustandAuth(false);
+  const { logout } = useAuthActions();
 
   useGSAP(
     () => {

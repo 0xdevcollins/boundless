@@ -447,3 +447,12 @@ input[type='number'] {
     background-image: url('/landing/about/Abstract_03md.png');
   }
 }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px your_desired_color inset !important;
+  -webkit-text-fill-color: white !important; /* Optional: Customize text color */
+  transition: background-color 5000s ease-in-out 0s; /* Optional: Smooth transition */
+}
