@@ -99,16 +99,20 @@ export default function Hero({ className = '' }: HeroProps) {
           quality={85}
           sizes='100vw'
         /> */}
-        <Image
-          src='/elipse.svg'
-          alt=''
-          className='ellipse-image absolute top-1/2 left-1/2 z-10 h-[90%] w-[90%] -translate-x-1/2 -translate-y-1/2'
-          width={1920}
-          height={1080}
-          priority
-          quality={85}
-          sizes='90vw'
-        />
+        {[1, 2, 3].map(elipse => (
+          <Image
+            key={`elipse${elipse}`}
+            src={`/elipse${elipse}.svg`}
+            alt=''
+            className={`ellipse-image absolute top-1/2 left-1/2 z-10 h-[90%] ${elipse === 1 ? 'w-[50%]' : elipse === 2 ? 'w-[90%]' : 'w-[1200px]'} -translate-x-1/2 -translate-y-1/2`}
+            width={1920}
+            height={1080}
+            priority
+            quality={85}
+            sizes='90vw'
+          />
+        ))}
+
         <div
           className='absolute bottom-0 left-0 z-10 h-[150px] w-screen max-w-screen bg-gradient-to-t from-transparent'
           style={{

@@ -2,7 +2,6 @@
 
 import BeamBackground from '@/components/landing-page/BeamBackground';
 import { Hero } from '@/components/landing-page';
-import HowBoundlessWork from '@/components/landing-page/HowBoundlessWork';
 import WhyBoundless from '@/components/landing-page/WhyBoundless';
 import BackedBy from '@/components/landing-page/BackedBy';
 import NewsLetter from '@/components/landing-page/NewsLetter';
@@ -21,7 +20,6 @@ export default function LandingPage() {
         <NewsLetter />
         <BlogSection />
         <CleanBanner />
-        <HowBoundlessWork />
         <Footer />
       </div>
     </div>

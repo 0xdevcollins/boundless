@@ -27,9 +27,11 @@ export function Footer() {
               Web3-Native Funding.
             </p>
           </div>
-
           <div className='flex flex-col items-end space-y-6'>
-            <nav className='mb-14 flex space-x-8' aria-label='Legal links'>
+            <nav
+              className='mb-14 grid grid-cols-2 gap-x-8 gap-y-4 text-center sm:text-left'
+              aria-label='Legal links'
+            >
               <Link
                 href='/terms'
                 className='rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
@@ -42,8 +44,19 @@ export function Footer() {
               >
                 Privacy Policy
               </Link>
+              <Link
+                href='/code-of-conduct'
+                className='ml-10 rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+              >
+                Code of Conduct
+              </Link>
+              <Link
+                href='/disclaimer'
+                className='ml-5 rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+              >
+                Disclaimer
+              </Link>
             </nav>
-
             <nav
               className='flex items-center space-x-4'
               aria-label='Social media links'

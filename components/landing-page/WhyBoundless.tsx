@@ -100,18 +100,23 @@ const WhyBoundless = () => {
             />
           </div>
         </div>
-        <div className='w-full space-y-6 lg:w-1/2'>
-          <div className='flex flex-col'>
-            {communityValidation.icon}
-            <h3 className='mt-2 text-xl leading-[120%] font-medium tracking-[-0.4px] text-white'>
-              {communityValidation.title}
-            </h3>
+        <div className='relative w-full rounded-xl bg-[#101010] lg:w-1/2'>
+          <div className='pointer-events-none absolute inset-0 rounded-xl border border-white/20 [mask-image:linear-gradient(to_bottom,white,rgba(255,255,255,0.3))]'></div>
+          <div className='relative z-10 space-y-6 p-8'>
+            <div className='space-y-4'>
+              <div className='flex flex-col'>
+                {communityValidation.icon}
+                <h4 className='mt-2 leading-[145%] font-medium tracking-[-0.4px] text-white'>
+                  {communityValidation.title}
+                </h4>
+              </div>
+              {communityValidation.description.map((paragraph, index) => (
+                <p key={index} className='leading-[160%] text-[#B5B5B5]'>
+                  {paragraph}
+                </p>
+              ))}
+            </div>
           </div>
-          {communityValidation.description.map((paragraph, index) => (
-            <p key={index} className='leading-[160%] text-[#B5B5B5]'>
-              {paragraph}
-            </p>
-          ))}
         </div>
       </div>
 
