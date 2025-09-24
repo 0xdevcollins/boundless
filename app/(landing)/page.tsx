@@ -8,6 +8,7 @@ import BackedBy from '@/components/landing-page/BackedBy';
 import NewsLetter from '@/components/landing-page/NewsLetter';
 import BlogSection from '@/components/landing-page/blog/BlogSection';
 import { Footer } from '@/components/landing-page/footer';
+import Explore from '@/components/landing-page/Explore';
 
 export default function LandingPage() {
   return (
@@ -15,6 +16,7 @@ export default function LandingPage() {
       <BeamBackground />
       <div className='relative z-10 mx-auto max-w-[1300px] space-y-[60px] md:space-y-[80px]'>
         <Hero />
+        <Explore />
         <WhyBoundless />
         <BackedBy />
         <NewsLetter />

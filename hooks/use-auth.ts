@@ -1,6 +1,6 @@
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useCallback } from 'react';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import { refreshUserData } from '@/lib/api/auth';
 
@@ -29,32 +29,51 @@ export function useAuth(requireAuth = true) {
         name: session.user.name || undefined, // Convert null to undefined
         image: session.user.image || undefined, // Convert null to undefined
       };
-      syncWithSession(sessionUser).catch(() => {
-        // Silently handle sync failure
-      });
-    }
-  }, [session, status, syncWithSession]);
 
-  // Determine if we should use Zustand store or NextAuth session
-  const shouldUseStore = isAuthenticated || user;
-
-  const authData = shouldUseStore
-    ? {
-        user,
-        isAuthenticated,
-        isLoading: storeLoading,
-        error,
-        refreshUser,
-        clearAuth,
+      // Only sync if we don't already have user data in Zustand store
+      if (!user || !isAuthenticated) {
+        syncWithSession(sessionUser).catch(() => {
+          // Silently handle sync failure
+        });
       }
-    : {
-        user: session?.user,
-        isAuthenticated: status === 'authenticated',
-        isLoading: status === 'loading',
-        error: null,
-        refreshUser: () => refreshUserData(),
-        clearAuth: () => clearAuth(),
-      };
+    }
+  }, [session?.user, status, syncWithSession, user, isAuthenticated]);
+
+  // Memoize auth data to prevent unnecessary re-renders
+  const shouldUseStore = useMemo(
+    () => isAuthenticated || user,
+    [isAuthenticated, user]
+  );
+
+  const authData = useMemo(() => {
+    return shouldUseStore
+      ? {
+          user,
+          isAuthenticated,
+          isLoading: storeLoading,
+          error,
+          refreshUser,
+          clearAuth,
+        }
+      : {
+          user: session?.user,
+          isAuthenticated: status === 'authenticated',
+          isLoading: status === 'loading',
+          error: null,
+          refreshUser: () => refreshUserData(),
+          clearAuth: () => clearAuth(),
+        };
+  }, [
+    shouldUseStore,
+    user,
+    isAuthenticated,
+    storeLoading,
+    error,
+    refreshUser,
+    clearAuth,
+    session?.user,
+    status,
+  ]);
 
   useEffect(() => {
     if (requireAuth && !authData.isAuthenticated && !authData.isLoading) {
@@ -121,11 +140,31 @@ export function useZustandAuth(requireAuth = true) {
 
 // Hook for checking auth status without redirecting
 export function useAuthStatus() {
-  const { isAuthenticated, isLoading, user } = useAuthStore();
+  const { data: session, status } = useSession();
+  const { isAuthenticated, isLoading, user, syncWithSession } = useAuthStore();
 
+  // Sync NextAuth session with Zustand store if needed
+  useEffect(() => {
+    if (
+      session?.user &&
+      status === 'authenticated' &&
+      (!user || !isAuthenticated)
+    ) {
+      const sessionUser = {
+        ...session.user,
+        name: session.user.name || undefined,
+        image: session.user.image || undefined,
+      };
+      syncWithSession(sessionUser).catch(() => {
+        // Silently handle sync failure
+      });
+    }
+  }, [session?.user, status, user, isAuthenticated, syncWithSession]);
+
+  // Return Zustand store state (which should be synced with NextAuth)
   return {
     isAuthenticated,
-    isLoading,
+    isLoading: isLoading || status === 'loading',
     user,
   };
 }
@@ -134,9 +173,21 @@ export function useAuthStatus() {
 export function useAuthActions() {
   const { login, logout, refreshUser, clearAuth, setError } = useAuthStore();
 
+  const unifiedLogout = useCallback(async () => {
+    try {
+      // Clear Zustand store
+      await logout();
+      // Clear NextAuth session
+      await signOut({ redirect: false });
+    } catch {
+      // Force clear local state even if API calls fail
+      clearAuth();
+    }
+  }, [logout, clearAuth]);
+
   return {
     login,
-    logout,
+    logout: unifiedLogout,
     refreshUser,
     clearAuth,
     setError,
