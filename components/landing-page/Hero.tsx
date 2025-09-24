@@ -104,7 +104,7 @@ export default function Hero({ className = '' }: HeroProps) {
             key={`elipse${elipse}`}
             src={`/elipse${elipse}.svg`}
             alt=''
-            className={`ellipse-image absolute top-1/2 left-1/2 z-10 h-[90%] ${elipse === 1 ? 'w-[50%]' : elipse === 2 ? 'w-[90%]' : 'w-[1200px]'} -translate-x-1/2 -translate-y-1/2`}
+            className={`ellipse-image absolute top-1/2 left-1/2 z-10 h-[90%] ${elipse === 1 ? 'w-[70%]' : elipse === 2 ? 'w-[90%]' : 'w-[1500px]'} -translate-x-1/2 -translate-y-1/2`}
             width={1920}
             height={1080}
             priority
