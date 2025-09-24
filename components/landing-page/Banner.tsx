@@ -9,29 +9,26 @@ const CleanBanner = () => {
         <div className='absolute inset-0'>
           <CleanBannerBg />
         </div>
-        <div className='min[1119px]:flex-row min[1119px]:items-start relative z-10 flex h-full flex-col items-center justify-between gap-8 px-6 py-12 sm:px-10 sm:py-16 lg:py-24'>
-          <div className='min[1119px]:text-left flex flex-col gap-3 text-center'>
+        <div className='relative z-10 flex h-full flex-col items-center justify-between gap-8 px-6 py-12 min-[1119px]:flex-row min-[1119px]:items-start sm:px-10 sm:py-16 lg:py-24'>
+          <div className='flex flex-col gap-3 text-center min-[1119px]:text-left'>
             <h2 className='text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl'>
               Stay Boundless!
             </h2>
-            <p className='mx-auto max-w-md text-base text-[#B5B5B5] sm:text-lg md:mx-0'>
+            <p className='mx-auto max-w-md text-base text-[#B5B5B5] min-[1119px]:mx-0 sm:text-lg'>
               Ready to validate, fund, or build your next big idea?
             </p>
           </div>
-          <div className='flex justify-center gap-4 md:justify-end'>
+
+          <div className='flex flex-col justify-center gap-4 sm:flex-row md:justify-end'>
             <Link
               href='/projects'
-              className='rounded-lg border border-[#2B2B2B] px-6 py-3 text-center text-sm font-medium text-[#030303] shadow-sm sm:text-base'
-              style={{
-                background:
-                  'linear-gradient(314.7deg, rgba(147,229,60,0.14) 3.33%, rgba(117,199,30,0) 21.54%, rgba(107,185,20,0.14) 87.82%), #A7F950',
-              }}
+              className='rounded-lg border border-[#2B2B2B] bg-[#a5f84f] px-20 py-3 text-center text-sm font-medium text-[#030303] shadow-sm sm:px-6 sm:text-base'
             >
               Explore Projects
             </Link>
             <Link
               href='/submit'
-              className='rounded-lg border border-[#484848] bg-white/30 px-6 py-3 text-center text-sm font-medium text-white sm:text-base'
+              className='rounded-lg border border-[#484848] bg-[#4f4f4f] px-20 py-3 text-center text-sm font-medium text-white sm:px-6 sm:text-base'
             >
               Submit Your Idea
             </Link>

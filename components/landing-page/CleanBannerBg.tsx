@@ -2,12 +2,14 @@ import React from 'react';
 
 const CleanBannerBg = () => {
   return (
-    <div className='h-full w-full rounded-[3.5rem] bg-gradient-to-b from-[#a4f54d] to-[#064e3b]/40 p-[1px]'>
+    <div className='relative h-full w-full'>
+      <div className='pointer-events-none absolute inset-0 rounded-[3.2rem] border border-[#a5f84f] [mask-image:linear-gradient(to_bottom,white,white,rgba(255,255,255,0.3))] [mask-size:100%_100%] [mask-repeat:no-repeat]' />
+
       <svg
         viewBox='0 0 1240 323'
         fill='none'
         xmlns='http://www.w3.org/2000/svg'
-        className='h-full w-full rounded-[3.5rem] bg-[#030303]'
+        className='block h-full w-full rounded-[3.2rem] border-transparent bg-[#030303]'
         preserveAspectRatio='none'
       >
         <defs>
