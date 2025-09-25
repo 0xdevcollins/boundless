@@ -2,13 +2,13 @@
 
 import BeamBackground from '@/components/landing-page/BeamBackground';
 import { Hero } from '@/components/landing-page';
-import HowBoundlessWork from '@/components/landing-page/HowBoundlessWork';
 import WhyBoundless from '@/components/landing-page/WhyBoundless';
 import BackedBy from '@/components/landing-page/BackedBy';
 import NewsLetter from '@/components/landing-page/NewsLetter';
 import BlogSection from '@/components/landing-page/blog/BlogSection';
 import { Footer } from '@/components/landing-page/footer';
 import Explore from '@/components/landing-page/Explore';
+import CleanBanner from '@/components/landing-page/Banner';
 
 export default function LandingPage() {
   return (
@@ -21,7 +21,7 @@ export default function LandingPage() {
         <BackedBy />
         <NewsLetter />
         <BlogSection />
-        <HowBoundlessWork />
+        <CleanBanner />
         <Footer />
       </div>
     </div>

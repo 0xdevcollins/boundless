@@ -75,17 +75,17 @@ export default function TestimonialsSection({
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    const handleMouseEnter = () =>
-      animations.current.forEach(anim => anim.pause());
-    const handleMouseLeave = () =>
-      animations.current.forEach(anim => anim.resume());
+    // const handleMouseEnter = () =>
+    //   animations.current.forEach(anim => anim.pause());
+    // const handleMouseLeave = () =>
+    //   animations.current.forEach(anim => anim.resume());
 
-    container.addEventListener('mouseenter', handleMouseEnter);
-    container.addEventListener('mouseleave', handleMouseLeave);
+    // container.addEventListener('mouseenter', handleMouseEnter);
+    // container.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
-      container.removeEventListener('mouseenter', handleMouseEnter);
-      container.removeEventListener('mouseleave', handleMouseLeave);
+      // container.removeEventListener('mouseenter', handleMouseEnter);
+      // container.removeEventListener('mouseleave', handleMouseLeave);
       animations.current.forEach(anim => anim.kill());
     };
   }, [testimonials, numColumns]);

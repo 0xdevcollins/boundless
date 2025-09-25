@@ -97,7 +97,7 @@ export default function AboutUsHero() {
         <h1 className='mb-6 text-[30px] leading-[100%] tracking-[-1.92px] text-white lg:text-[32px] xl:text-[48px]'>
           Boundless is Where
           <br />
-          <span className='gradient-text font-medium'>
+          <span className='gradient-text font-medium text-nowrap'>
             Ideas meet Opportunity
           </span>
         </h1>
