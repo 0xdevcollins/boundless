@@ -26,9 +26,9 @@ export interface BlogPost {
 export const mockBlogPosts: BlogPost[] = [
   {
     id: 1,
-    title: 'Why Validation Before Funding Protects Everyone',
+    title: "Milestone-Based Funding: Why It's the Future of Crowdfunding",
     excerpt:
-      'Validation ensures that only strong ideas move forward. By allowing the community and admins to review projects before funding, Boundless protects backers from risky proposals and gives creators the chance to refine their concepts.',
+      "Traditional crowdfunding often leaves backers exposed. Discover how Boundless' milestone escrow protects supporters and ensures projects deliver on their promises.",
     content: `# Why Validation Before Funding Protects Everyone
 
 The crowdfunding landscape has evolved significantly over the past decade. What started as a simple way for creators to raise funds has become a complex ecosystem where trust, transparency, and validation are paramount. At Boundless, we believe that validation before funding isn't just a nice-to-have feature—it's essential for protecting everyone involved in the process.
@@ -160,10 +160,10 @@ At Boundless, we're committed to making crowdfunding better for everyone. Our va
 > "The best validation is the one that protects everyone while enabling innovation." - Boundless Team
 
 Ready to launch your validated project? [Get started today](/auth/signup) and join thousands of creators who are building the future with Boundless.`,
-    image: '/blog1.jpg',
-    date: '29, Jul, 2025',
-    slug: 'why-validation-before-funding-protects-everyone',
-    category: 'Blog',
+    image: '/funding.png',
+    date: '29 Jul, 2025',
+    slug: 'milestone-based-funding-future-crowdfunding',
+    category: 'Category',
     author: {
       name: 'Sarah Chen',
       avatar: '/team/avatar1.jpg',
@@ -345,7 +345,7 @@ At Boundless, we're committed to leading this transformation. Join us in buildin
 > "The future of funding is decentralized, transparent, and community-driven." - Boundless Team
 
 [Start your journey today](/auth/signup) and be part of the decentralized crowdfunding revolution.`,
-    image: '/blog2.jpg',
+    image: '/funding.png',
     date: '25, Jul, 2025',
     slug: 'future-decentralized-crowdfunding',
     category: 'Web3',
@@ -657,7 +657,7 @@ The key is to start with clear values, implement appropriate systems, and contin
 
 [Join the Boundless community](/auth/signup) and help us build the future of trusted Web3 collaboration.
     `,
-    image: '/blog3.jpg',
+    image: '/funding.png',
     date: '22, Jul, 2025',
     slug: 'building-trust-web3-communities',
     category: 'Community',
@@ -678,6 +678,621 @@ The key is to start with clear values, implement appropriate systems, and contin
         'decentralized trust',
         'reputation systems',
         'community governance',
+      ],
+    },
+  },
+  {
+    id: 4,
+    title: 'Smart Contract Security in Crowdfunding',
+    excerpt:
+      'Learn about the essential security measures that protect both creators and backers in decentralized crowdfunding platforms.',
+    content: `# Smart Contract Security in Crowdfunding
+
+Security is paramount in decentralized crowdfunding. This comprehensive guide covers the essential security measures that protect both creators and backers.`,
+    image: '/funding.png',
+    date: '18 Jul, 2025',
+    slug: 'smart-contract-security-crowdfunding',
+    category: 'Category',
+    author: {
+      name: 'David Kim',
+      avatar: '/team/avatar4.jpg',
+      bio: 'Blockchain security expert with 10+ years in smart contract auditing.',
+    },
+    tags: ['Security', 'Smart Contracts', 'Crowdfunding'],
+    readTime: 6,
+    publishedAt: '2025-07-18T16:45:00Z',
+    seo: {
+      metaTitle: 'Smart Contract Security in Crowdfunding | Boundless',
+      metaDescription:
+        'Learn about essential security measures for decentralized crowdfunding platforms.',
+      keywords: [
+        'smart contract security',
+        'blockchain security',
+        'crowdfunding safety',
+      ],
+    },
+  },
+  {
+    id: 5,
+    title: 'The Psychology of Backing Projects',
+    excerpt:
+      'Understanding what motivates people to back projects is crucial for creators. Dive into the psychological factors that influence backing decisions.',
+    content: `# The Psychology of Backing Projects
+
+Understanding the psychological factors that influence backing decisions can help creators design more compelling campaigns.`,
+    image: '/funding.png',
+    date: '15 Jul, 2025',
+    slug: 'psychology-backing-projects',
+    category: 'Category',
+    author: {
+      name: 'Lisa Wang',
+      avatar: '/team/avatar5.jpg',
+      bio: 'Behavioral economist specializing in crowdfunding psychology.',
+    },
+    tags: ['Psychology', 'Marketing', 'Crowdfunding'],
+    readTime: 7,
+    publishedAt: '2025-07-15T11:20:00Z',
+    seo: {
+      metaTitle: 'The Psychology of Backing Projects | Boundless',
+      metaDescription:
+        'Discover the psychological factors that influence crowdfunding backing decisions.',
+      keywords: [
+        'crowdfunding psychology',
+        'backing behavior',
+        'campaign psychology',
+      ],
+    },
+  },
+  {
+    id: 6,
+    title: 'Grant Programs That Actually Work',
+    excerpt:
+      'Not all grant programs are created equal. Discover what makes grant programs successful and how to design them for maximum impact.',
+    content: `# Grant Programs That Actually Work
+
+Learn the key principles behind successful grant programs and how to design them for maximum impact and fair distribution.`,
+    image: '/funding.png',
+    date: '12 Jul, 2025',
+    slug: 'grant-programs-actually-work',
+    category: 'Category',
+    author: {
+      name: 'Michael Torres',
+      avatar: '/team/avatar6.jpg',
+      bio: 'Grant program designer with experience in both traditional and Web3 funding.',
+    },
+    tags: ['Grants', 'Funding', 'Program Design'],
+    readTime: 9,
+    publishedAt: '2025-07-12T14:30:00Z',
+    seo: {
+      metaTitle: 'Grant Programs That Actually Work | Boundless',
+      metaDescription:
+        'Discover what makes grant programs successful and how to design them for maximum impact.',
+      keywords: ['grant programs', 'funding design', 'successful grants'],
+    },
+  },
+  {
+    id: 7,
+    title: 'Community-Driven Development',
+    excerpt:
+      'Explore how community feedback and participation can drive better product development and create more successful projects.',
+    content: `# Community-Driven Development
+
+Learn how to leverage community feedback and participation to create better products and more successful projects.`,
+    image: '/funding.png',
+    date: '10 Jul, 2025',
+    slug: 'community-driven-development',
+    category: 'Category',
+    author: {
+      name: 'Anna Patel',
+      avatar: '/team/avatar7.jpg',
+      bio: 'Community manager and product strategist focused on user-driven development.',
+    },
+    tags: ['Community', 'Development', 'Product Strategy'],
+    readTime: 8,
+    publishedAt: '2025-07-10T09:00:00Z',
+    seo: {
+      metaTitle: 'Community-Driven Development | Boundless',
+      metaDescription:
+        'Learn how community feedback drives better product development and project success.',
+      keywords: ['community development', 'user feedback', 'product strategy'],
+    },
+  },
+  {
+    id: 8,
+    title: 'Token Economics in Crowdfunding',
+    excerpt:
+      'Understand how token economics can enhance crowdfunding platforms and create better incentives for all participants.',
+    content: `# Token Economics in Crowdfunding
+
+Discover how well-designed token economics can enhance crowdfunding platforms and create better incentives for creators and backers.`,
+    image: '/funding.png',
+    date: '8 Jul, 2025',
+    slug: 'token-economics-crowdfunding',
+    category: 'Category',
+    author: {
+      name: 'James Wilson',
+      avatar: '/team/avatar8.jpg',
+      bio: 'Tokenomics expert and economist specializing in Web3 incentive design.',
+    },
+    tags: ['Tokenomics', 'Economics', 'Incentives'],
+    readTime: 11,
+    publishedAt: '2025-07-08T13:15:00Z',
+    seo: {
+      metaTitle: 'Token Economics in Crowdfunding | Boundless',
+      metaDescription:
+        'Learn how token economics can enhance crowdfunding platforms and create better incentives.',
+      keywords: [
+        'token economics',
+        'crowdfunding incentives',
+        'Web3 economics',
+      ],
+    },
+  },
+  {
+    id: 9,
+    title: 'Cross-Chain Crowdfunding Solutions',
+    excerpt:
+      'Explore how cross-chain technology enables projects to accept funding from multiple blockchain networks.',
+    content: `# Cross-Chain Crowdfunding Solutions
+
+Learn how cross-chain technology is enabling projects to accept funding from multiple blockchain networks, increasing accessibility.`,
+    image: '/funding.png',
+    date: '5 Jul, 2025',
+    slug: 'cross-chain-crowdfunding-solutions',
+    category: 'Category',
+    author: {
+      name: 'Elena Rodriguez',
+      avatar: '/team/avatar9.jpg',
+      bio: 'Blockchain engineer specializing in cross-chain interoperability solutions.',
+    },
+    tags: ['Cross-Chain', 'Interoperability', 'Blockchain'],
+    readTime: 10,
+    publishedAt: '2025-07-05T15:45:00Z',
+    seo: {
+      metaTitle: 'Cross-Chain Crowdfunding Solutions | Boundless',
+      metaDescription:
+        'Discover how cross-chain technology enables multi-network crowdfunding.',
+      keywords: [
+        'cross-chain',
+        'blockchain interoperability',
+        'multi-chain funding',
+      ],
+    },
+  },
+  {
+    id: 10,
+    title: 'Regulatory Landscape for Web3 Funding',
+    excerpt:
+      'Navigate the complex regulatory landscape surrounding Web3 funding and learn how to stay compliant while innovating.',
+    content: `# Regulatory Landscape for Web3 Funding
+
+Navigate the complex regulatory landscape surrounding Web3 funding and learn how to stay compliant while driving innovation.`,
+    image: '/funding.png',
+    date: '2 Jul, 2025',
+    slug: 'regulatory-landscape-web3-funding',
+    category: 'Category',
+    author: {
+      name: 'Robert Chen',
+      avatar: '/team/avatar10.jpg',
+      bio: 'Regulatory compliance expert specializing in Web3 and fintech regulations.',
+    },
+    tags: ['Regulation', 'Compliance', 'Web3'],
+    readTime: 12,
+    publishedAt: '2025-07-02T10:30:00Z',
+    seo: {
+      metaTitle: 'Regulatory Landscape for Web3 Funding | Boundless',
+      metaDescription:
+        'Learn how to navigate Web3 funding regulations and stay compliant.',
+      keywords: ['Web3 regulation', 'funding compliance', 'crypto regulation'],
+    },
+  },
+  {
+    id: 11,
+    title: 'AI-Powered Project Matching',
+    excerpt:
+      'Discover how artificial intelligence is revolutionizing project-backer matching and improving funding success rates.',
+    content: `# AI-Powered Project Matching
+
+Explore how artificial intelligence is revolutionizing the way projects are matched with potential backers, improving success rates.`,
+    image: '/funding.png',
+    date: '30 Jun, 2025',
+    slug: 'ai-powered-project-matching',
+    category: 'Category',
+    author: {
+      name: 'Dr. Sarah Johnson',
+      avatar: '/team/avatar11.jpg',
+      bio: 'AI researcher and machine learning engineer focused on recommendation systems.',
+    },
+    tags: ['AI', 'Machine Learning', 'Matching'],
+    readTime: 9,
+    publishedAt: '2025-06-30T12:00:00Z',
+    seo: {
+      metaTitle: 'AI-Powered Project Matching | Boundless',
+      metaDescription:
+        'Learn how AI is revolutionizing project-backer matching in crowdfunding.',
+      keywords: ['AI matching', 'machine learning', 'project recommendations'],
+    },
+  },
+  {
+    id: 12,
+    title: 'Sustainable Funding Models',
+    excerpt:
+      'Explore innovative funding models that promote long-term sustainability for both creators and the platform ecosystem.',
+    content: `# Sustainable Funding Models
+
+Discover innovative funding models that promote long-term sustainability for creators, backers, and the platform ecosystem.`,
+    image: '/funding.png',
+    date: '28 Jun, 2025',
+    slug: 'sustainable-funding-models',
+    category: 'Category',
+    author: {
+      name: 'Dr. Maria Gonzalez',
+      avatar: '/team/avatar12.jpg',
+      bio: 'Sustainability economist and funding model researcher.',
+    },
+    tags: ['Sustainability', 'Funding Models', 'Long-term'],
+    readTime: 13,
+    publishedAt: '2025-06-28T16:20:00Z',
+    seo: {
+      metaTitle: 'Sustainable Funding Models | Boundless',
+      metaDescription:
+        'Explore sustainable funding models for long-term platform and creator success.',
+      keywords: [
+        'sustainable funding',
+        'funding models',
+        'long-term sustainability',
+      ],
+    },
+  },
+  {
+    id: 13,
+    title: 'DeFi Integration in Crowdfunding Platforms',
+    excerpt:
+      'Explore how decentralized finance protocols are being integrated into crowdfunding platforms to provide better yield opportunities for backers.',
+    content: `# DeFi Integration in Crowdfunding Platforms
+
+Decentralized finance is revolutionizing how crowdfunding platforms operate, offering new opportunities for both creators and backers.`,
+    image: '/funding.png',
+    date: '25 Jun, 2025',
+    slug: 'defi-integration-crowdfunding-platforms',
+    category: 'Category',
+    author: {
+      name: 'Dr. Kevin Park',
+      avatar: '/team/avatar13.jpg',
+      bio: 'DeFi researcher and protocol architect with expertise in yield farming and liquidity provision.',
+    },
+    tags: ['DeFi', 'Yield Farming', 'Liquidity'],
+    readTime: 14,
+    publishedAt: '2025-06-25T11:30:00Z',
+    seo: {
+      metaTitle: 'DeFi Integration in Crowdfunding Platforms | Boundless',
+      metaDescription:
+        'Learn how DeFi protocols are enhancing crowdfunding platforms with yield opportunities.',
+      keywords: ['DeFi crowdfunding', 'yield farming', 'liquidity provision'],
+    },
+  },
+  {
+    id: 14,
+    title: 'NFT Rewards in Crowdfunding Campaigns',
+    excerpt:
+      'Discover how non-fungible tokens are being used as unique rewards and ownership tokens in modern crowdfunding campaigns.',
+    content: `# NFT Rewards in Crowdfunding Campaigns
+
+NFTs are transforming how creators reward their backers, offering unique digital assets and ownership experiences.`,
+    image: '/funding.png',
+    date: '22 Jun, 2025',
+    slug: 'nft-rewards-crowdfunding-campaigns',
+    category: 'Category',
+    author: {
+      name: 'Sophie Chen',
+      avatar: '/team/avatar14.jpg',
+      bio: 'NFT strategist and digital art curator specializing in utility-based token design.',
+    },
+    tags: ['NFTs', 'Digital Rewards', 'Ownership'],
+    readTime: 10,
+    publishedAt: '2025-06-22T14:15:00Z',
+    seo: {
+      metaTitle: 'NFT Rewards in Crowdfunding Campaigns | Boundless',
+      metaDescription:
+        'Explore how NFTs are revolutionizing crowdfunding rewards and backer experiences.',
+      keywords: ['NFT rewards', 'digital ownership', 'crowdfunding NFTs'],
+    },
+  },
+  {
+    id: 15,
+    title: 'Multi-Chain Crowdfunding Strategies',
+    excerpt:
+      'Learn how to leverage multiple blockchain networks to maximize funding opportunities and reach diverse communities.',
+    content: `# Multi-Chain Crowdfunding Strategies
+
+Expanding across multiple blockchain networks can significantly increase your project's reach and funding potential.`,
+    image: '/funding.png',
+    date: '20 Jun, 2025',
+    slug: 'multi-chain-crowdfunding-strategies',
+    category: 'Category',
+    author: {
+      name: 'Alex Thompson',
+      avatar: '/team/avatar15.jpg',
+      bio: 'Blockchain strategist with experience in cross-chain protocol development and community building.',
+    },
+    tags: ['Multi-Chain', 'Strategy', 'Community'],
+    readTime: 12,
+    publishedAt: '2025-06-20T09:45:00Z',
+    seo: {
+      metaTitle: 'Multi-Chain Crowdfunding Strategies | Boundless',
+      metaDescription:
+        'Discover strategies for successful multi-chain crowdfunding campaigns.',
+      keywords: [
+        'multi-chain crowdfunding',
+        'blockchain strategy',
+        'cross-chain',
+      ],
+    },
+  },
+  {
+    id: 16,
+    title: 'Governance Tokens in Crowdfunding',
+    excerpt:
+      'Understand how governance tokens can enhance community participation and create more democratic funding decisions.',
+    content: `# Governance Tokens in Crowdfunding
+
+Governance tokens are empowering communities to have a direct say in funding decisions and platform development.`,
+    image: '/funding.png',
+    date: '18 Jun, 2025',
+    slug: 'governance-tokens-crowdfunding',
+    category: 'Category',
+    author: {
+      name: 'Rachel Green',
+      avatar: '/team/avatar16.jpg',
+      bio: 'Governance expert and DAO researcher focused on token-based decision making.',
+    },
+    tags: ['Governance', 'DAO', 'Democracy'],
+    readTime: 11,
+    publishedAt: '2025-06-18T16:20:00Z',
+    seo: {
+      metaTitle: 'Governance Tokens in Crowdfunding | Boundless',
+      metaDescription:
+        'Learn how governance tokens are democratizing crowdfunding decisions.',
+      keywords: ['governance tokens', 'DAO governance', 'democratic funding'],
+    },
+  },
+  {
+    id: 17,
+    title: 'Risk Assessment in Web3 Crowdfunding',
+    excerpt:
+      'Learn how to properly assess and mitigate risks when backing or launching projects in the Web3 crowdfunding space.',
+    content: `# Risk Assessment in Web3 Crowdfunding
+
+Proper risk assessment is crucial for success in the dynamic world of Web3 crowdfunding.`,
+    image: '/funding.png',
+    date: '15 Jun, 2025',
+    slug: 'risk-assessment-web3-crowdfunding',
+    category: 'Category',
+    author: {
+      name: 'Dr. Michael Brown',
+      avatar: '/team/avatar17.jpg',
+      bio: 'Risk management specialist with expertise in blockchain and cryptocurrency investments.',
+    },
+    tags: ['Risk Management', 'Assessment', 'Web3'],
+    readTime: 13,
+    publishedAt: '2025-06-15T13:10:00Z',
+    seo: {
+      metaTitle: 'Risk Assessment in Web3 Crowdfunding | Boundless',
+      metaDescription:
+        'Master risk assessment techniques for Web3 crowdfunding investments.',
+      keywords: ['risk assessment', 'Web3 investment', 'crypto risk'],
+    },
+  },
+  {
+    id: 18,
+    title: 'Liquidity Pools for Crowdfunding',
+    excerpt:
+      'Explore how liquidity pools can provide continuous funding opportunities and better price discovery for crowdfunding projects.',
+    content: `# Liquidity Pools for Crowdfunding
+
+Liquidity pools are revolutionizing how projects maintain continuous funding and price discovery.`,
+    image: '/funding.png',
+    date: '12 Jun, 2025',
+    slug: 'liquidity-pools-crowdfunding',
+    category: 'Category',
+    author: {
+      name: 'David Lee',
+      avatar: '/team/avatar18.jpg',
+      bio: 'Liquidity expert and AMM protocol developer with deep knowledge of automated market makers.',
+    },
+    tags: ['Liquidity', 'AMM', 'Price Discovery'],
+    readTime: 9,
+    publishedAt: '2025-06-12T10:30:00Z',
+    seo: {
+      metaTitle: 'Liquidity Pools for Crowdfunding | Boundless',
+      metaDescription:
+        'Discover how liquidity pools enhance crowdfunding with continuous funding opportunities.',
+      keywords: ['liquidity pools', 'AMM crowdfunding', 'continuous funding'],
+    },
+  },
+  {
+    id: 19,
+    title: 'Social Impact Crowdfunding',
+    excerpt:
+      'Learn how crowdfunding platforms are being used to fund social impact projects and create positive change in communities.',
+    content: `# Social Impact Crowdfunding
+
+Crowdfunding is becoming a powerful tool for driving social change and funding impactful community projects.`,
+    image: '/funding.png',
+    date: '10 Jun, 2025',
+    slug: 'social-impact-crowdfunding',
+    category: 'Category',
+    author: {
+      name: 'Sarah Williams',
+      avatar: '/team/avatar19.jpg',
+      bio: 'Social impact strategist and community development expert with experience in nonprofit funding.',
+    },
+    tags: ['Social Impact', 'Community', 'Change'],
+    readTime: 8,
+    publishedAt: '2025-06-10T15:45:00Z',
+    seo: {
+      metaTitle: 'Social Impact Crowdfunding | Boundless',
+      metaDescription:
+        'Explore how crowdfunding is driving social change and community impact.',
+      keywords: [
+        'social impact crowdfunding',
+        'community funding',
+        'social change',
+      ],
+    },
+  },
+  {
+    id: 20,
+    title: 'Automated Market Making for Projects',
+    excerpt:
+      'Discover how automated market making can provide continuous liquidity and better price discovery for crowdfunding projects.',
+    content: `# Automated Market Making for Projects
+
+Automated market making is providing new ways for projects to maintain liquidity and discover fair prices.`,
+    image: '/funding.png',
+    date: '8 Jun, 2025',
+    slug: 'automated-market-making-projects',
+    category: 'Category',
+    author: {
+      name: 'Tom Anderson',
+      avatar: '/team/avatar20.jpg',
+      bio: 'Market making specialist and algorithmic trading expert with focus on DeFi protocols.',
+    },
+    tags: ['Market Making', 'Automation', 'Liquidity'],
+    readTime: 10,
+    publishedAt: '2025-06-08T12:00:00Z',
+    seo: {
+      metaTitle: 'Automated Market Making for Projects | Boundless',
+      metaDescription:
+        'Learn how automated market making enhances project liquidity and price discovery.',
+      keywords: [
+        'automated market making',
+        'project liquidity',
+        'price discovery',
+      ],
+    },
+  },
+  {
+    id: 21,
+    title: 'Staking Mechanisms in Crowdfunding',
+    excerpt:
+      'Understand how staking mechanisms can align incentives and provide additional rewards for long-term project supporters.',
+    content: `# Staking Mechanisms in Crowdfunding
+
+Staking is creating new ways to reward long-term supporters and align incentives in crowdfunding projects.`,
+    image: '/funding.png',
+    date: '5 Jun, 2025',
+    slug: 'staking-mechanisms-crowdfunding',
+    category: 'Category',
+    author: {
+      name: 'Emma Davis',
+      avatar: '/team/avatar21.jpg',
+      bio: 'Staking protocol designer and incentive mechanism researcher with expertise in token economics.',
+    },
+    tags: ['Staking', 'Incentives', 'Long-term'],
+    readTime: 11,
+    publishedAt: '2025-06-05T14:30:00Z',
+    seo: {
+      metaTitle: 'Staking Mechanisms in Crowdfunding | Boundless',
+      metaDescription:
+        'Explore how staking mechanisms enhance crowdfunding with better incentives.',
+      keywords: [
+        'staking crowdfunding',
+        'incentive mechanisms',
+        'long-term rewards',
+      ],
+    },
+  },
+  {
+    id: 22,
+    title: 'Cross-Border Crowdfunding Challenges',
+    excerpt:
+      'Navigate the complexities of international crowdfunding, including regulatory compliance and currency considerations.',
+    content: `# Cross-Border Crowdfunding Challenges
+
+International crowdfunding presents unique challenges and opportunities for global project funding.`,
+    image: '/funding.png',
+    date: '2 Jun, 2025',
+    slug: 'cross-border-crowdfunding-challenges',
+    category: 'Category',
+    author: {
+      name: 'Dr. Lisa Zhang',
+      avatar: '/team/avatar22.jpg',
+      bio: 'International finance expert and regulatory compliance specialist with global experience.',
+    },
+    tags: ['International', 'Compliance', 'Global'],
+    readTime: 12,
+    publishedAt: '2025-06-02T11:15:00Z',
+    seo: {
+      metaTitle: 'Cross-Border Crowdfunding Challenges | Boundless',
+      metaDescription:
+        'Learn how to navigate international crowdfunding regulations and challenges.',
+      keywords: [
+        'international crowdfunding',
+        'cross-border funding',
+        'global compliance',
+      ],
+    },
+  },
+  {
+    id: 23,
+    title: 'Fractional Ownership in Crowdfunding',
+    excerpt:
+      'Explore how fractional ownership models are making high-value investments accessible to smaller backers.',
+    content: `# Fractional Ownership in Crowdfunding
+
+Fractional ownership is democratizing access to high-value investments through crowdfunding platforms.`,
+    image: '/funding.png',
+    date: '30 May, 2025',
+    slug: 'fractional-ownership-crowdfunding',
+    category: 'Category',
+    author: {
+      name: 'Mark Johnson',
+      avatar: '/team/avatar23.jpg',
+      bio: 'Investment strategist and fractional ownership expert with experience in real estate and alternative investments.',
+    },
+    tags: ['Fractional Ownership', 'Accessibility', 'Investment'],
+    readTime: 9,
+    publishedAt: '2025-05-30T16:45:00Z',
+    seo: {
+      metaTitle: 'Fractional Ownership in Crowdfunding | Boundless',
+      metaDescription:
+        'Discover how fractional ownership makes high-value investments accessible.',
+      keywords: [
+        'fractional ownership',
+        'investment accessibility',
+        'crowdfunding investment',
+      ],
+    },
+  },
+  {
+    id: 24,
+    title: 'Community-Driven Due Diligence',
+    excerpt:
+      'Learn how community members can collaborate to perform thorough due diligence on crowdfunding projects.',
+    content: `# Community-Driven Due Diligence
+
+Community collaboration is revolutionizing how due diligence is performed on crowdfunding projects.`,
+    image: '/funding.png',
+    date: '28 May, 2025',
+    slug: 'community-driven-due-diligence',
+    category: 'Category',
+    author: {
+      name: 'Jennifer Martinez',
+      avatar: '/team/avatar24.jpg',
+      bio: 'Due diligence specialist and community research coordinator with expertise in project evaluation.',
+    },
+    tags: ['Due Diligence', 'Community', 'Research'],
+    readTime: 10,
+    publishedAt: '2025-05-28T13:20:00Z',
+    seo: {
+      metaTitle: 'Community-Driven Due Diligence | Boundless',
+      metaDescription:
+        'Learn how communities collaborate to perform thorough project due diligence.',
+      keywords: [
+        'community due diligence',
+        'project research',
+        'collaborative evaluation',
       ],
     },
   },
