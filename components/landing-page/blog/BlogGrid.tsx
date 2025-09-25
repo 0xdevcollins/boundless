@@ -103,17 +103,7 @@ const BlogGrid: React.FC<BlogGridProps> = ({
         <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'>
           {displayPosts.map(post => (
             <div key={post.id} className='w-full'>
-              <BlogCard
-                blog={{
-                  id: post.id,
-                  title: post.title,
-                  excerpt: post.excerpt,
-                  image: post.image,
-                  date: post.date,
-                  slug: post.slug,
-                  category: post.category,
-                }}
-              />
+              <BlogCard post={post} />
             </div>
           ))}
         </div>
