@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { BlogPost } from '@/lib/data/blog';
 import BlogCard from './BlogCard';
 import { Search, Loader2 } from 'lucide-react';
@@ -18,21 +18,12 @@ const BlogGrid: React.FC<BlogGridProps> = ({
   maxPosts,
 }) => {
   const [visiblePosts, setVisiblePosts] = useState(maxPosts || 12);
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Latest');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Filter posts based on search term
-  const filteredPosts = posts.filter(
-    post =>
-      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  // Get posts to display
-  const displayPosts = filteredPosts.slice(0, visiblePosts);
-  const hasMorePosts = visiblePosts < filteredPosts.length;
+  // Get posts to display (no filtering)
+  const displayPosts = posts.slice(0, visiblePosts);
+  const hasMorePosts = visiblePosts < posts.length;
 
   // Load more handler
   const handleLoadMore = useCallback(() => {
@@ -47,14 +38,9 @@ const BlogGrid: React.FC<BlogGridProps> = ({
     }, 500);
   }, [isLoading, hasMorePosts]);
 
-  // Reset visible posts when search term changes
-  useEffect(() => {
-    setVisiblePosts(maxPosts || 12);
-  }, [searchTerm, maxPosts]);
-
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
-    // In a real app, you would filter by category here
+    // UI only - no filtering functionality
   };
 
   return (
@@ -104,9 +90,8 @@ const BlogGrid: React.FC<BlogGridProps> = ({
               <Input
                 type='text'
                 placeholder='Search article'
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
                 className='w-full rounded-lg border border-white/10 bg-[#101010] py-2 pr-4 pl-10 text-white placeholder:text-[#B5B5B5] focus:border-white/20 focus:ring-white/20'
+                readOnly
               />
             </div>
           </div>
@@ -156,16 +141,9 @@ const BlogGrid: React.FC<BlogGridProps> = ({
         )}
 
         {/* No more posts message */}
-        {!hasMorePosts && filteredPosts.length > 0 && !isLoading && (
+        {!hasMorePosts && posts.length > 0 && !isLoading && (
           <div className='mt-12 text-center text-[#B5B5B5]'>
             <p>You've reached the end of the blog posts!</p>
-          </div>
-        )}
-
-        {/* No results message */}
-        {filteredPosts.length === 0 && searchTerm && (
-          <div className='mt-12 text-center text-[#B5B5B5]'>
-            <p>No blog posts found matching "{searchTerm}"</p>
           </div>
         )}
       </div>
