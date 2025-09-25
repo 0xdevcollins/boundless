@@ -34,25 +34,25 @@ export function Footer() {
             >
               <Link
                 href='/terms'
-                className='rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+                className='hover:text-primary rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
               >
                 Terms of Service
               </Link>
               <Link
                 href='/privacy'
-                className='rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+                className='hover:text-primary rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
               >
                 Privacy Policy
               </Link>
               <Link
                 href='/code-of-conduct'
-                className='ml-10 rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+                className='hover:text-primary ml-10 rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
               >
                 Code of Conduct
               </Link>
               <Link
                 href='/disclaimer'
-                className='ml-5 rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+                className='hover:text-primary ml-5 rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
               >
                 Disclaimer
               </Link>
@@ -116,18 +116,33 @@ export function Footer() {
             />
           </Link>
 
-          <nav className='flex space-x-8' aria-label='Legal links'>
+          <nav
+            className='mb-14 grid grid-cols-2 gap-x-8 gap-y-4 text-center sm:text-left'
+            aria-label='Legal links'
+          >
             <Link
               href='/terms'
-              className='rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+              className='hover:text-primary rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
             >
               Terms of Service
             </Link>
             <Link
               href='/privacy'
-              className='rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+              className='hover:text-primary rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
             >
               Privacy Policy
+            </Link>
+            <Link
+              href='/code-of-conduct'
+              className='hover:text-primary ml-10 rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+            >
+              Code of Conduct
+            </Link>
+            <Link
+              href='/disclaimer'
+              className='hover:text-primary ml-5 rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+            >
+              Disclaimer
             </Link>
           </nav>
 
