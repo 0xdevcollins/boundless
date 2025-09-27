@@ -43,7 +43,6 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
   const [isExpanded, setIsExpanded] = useState(true);
   const [additionalNotes, setAdditionalNotes] = useState('');
 
-  // Wallet protection hook
   const {
     requireWallet,
     showWalletModal,
@@ -106,15 +105,15 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
 
   return (
     <div className='min-h-screen bg-[#030303] text-white'>
-      <div className='max-w-4xl mx-auto px-4 py-8'>
+      <div className='mx-auto max-w-4xl px-4 py-8'>
         {/* Header */}
-        <div className='flex items-center gap-4 mb-8 justify-center'>
+        <div className='mb-8 flex items-center justify-center gap-4'>
           <BoundlessButton
             variant='ghost'
             onClick={onBack}
             className='text-white hover:text-gray-300'
           >
-            <ArrowLeft className='w-5 h-5' />
+            <ArrowLeft className='h-5 w-5' />
           </BoundlessButton>
           <div>
             <h1 className='text-2xl font-bold text-white'>
@@ -126,27 +125,27 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
           </div>
         </div>
 
-        <div className='grid grid-cols-1 lg:grid-cols-3 gap-8 justify-center'>
+        <div className='grid grid-cols-1 justify-center gap-8 lg:grid-cols-3'>
           {/* Main Content */}
-          <div className='lg:col-span-2 space-y-6 flex flex-col items-center'>
+          <div className='flex flex-col items-center space-y-6 lg:col-span-2'>
             {/* Milestone Card */}
-            <div className='bg-[#1C1C1C] border border-[#2B2B2B] rounded-xl p-6 self-start w-full max-w-2xl'>
-              <div className='flex items-start justify-between mb-4'>
+            <div className='w-full max-w-2xl self-start rounded-xl border border-[#2B2B2B] bg-[#1C1C1C] p-6'>
+              <div className='mb-4 flex items-start justify-between'>
                 <h2 className='text-xl font-semibold text-white'>
                   {milestone.title}
                 </h2>
                 <div className='flex items-center gap-2'>
-                  <span className='px-3 py-1 rounded-full text-sm font-medium bg-[#012657] text-white'>
+                  <span className='rounded-full bg-[#012657] px-3 py-1 text-sm font-medium text-white'>
                     {milestone.status.charAt(0).toUpperCase() +
                       milestone.status.slice(1)}
                   </span>
                   <button
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className='text-white hover:text-gray-300 transition-colors'
+                    className='text-white transition-colors hover:text-gray-300'
                   >
                     <ChevronUp
                       className={cn(
-                        'w-5 h-5 transition-transform',
+                        'h-5 w-5 transition-transform',
                         !isExpanded && 'rotate-180'
                       )}
                     />
@@ -156,17 +155,17 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
 
               {isExpanded && (
                 <>
-                  <p className='text-gray-300 text-base mb-6 leading-relaxed'>
+                  <p className='mb-6 text-base leading-relaxed text-gray-300'>
                     {milestone.description}
                   </p>
 
                   <div className='flex items-center gap-8 text-sm text-gray-400'>
                     <div className='flex items-center gap-2'>
-                      <Calendar className='w-5 h-5' />
+                      <Calendar className='h-5 w-5' />
                       <span>1 {formatDate(milestone.deliveryDate)}</span>
                     </div>
                     <div className='flex items-center gap-2'>
-                      <Coins className='w-5 h-5' />
+                      <Coins className='h-5 w-5' />
                       <span>{formatCurrency(milestone.fundAmount)}</span>
                     </div>
                   </div>
@@ -174,27 +173,26 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
               )}
             </div>
 
-            {/* File Upload Section */}
-            <div className='bg-[#1C1C1C] border border-[#2B2B2B] rounded-xl p-6 space-y-4 self-start w-full max-w-2xl'>
+            <div className='w-full max-w-2xl space-y-4 self-start rounded-xl border border-[#2B2B2B] bg-[#1C1C1C] p-6'>
               <div>
-                <Label className='text-white font-medium text-lg'>
+                <Label className='text-lg font-medium text-white'>
                   Upload Proof of Completion{' '}
                   <span className='text-red-500'>*</span>
                 </Label>
-                <p className='text-gray-400 text-sm mt-1'>
+                <p className='mt-1 text-sm text-gray-400'>
                   Upload files that demonstrate the completion of this milestone
                 </p>
               </div>
 
-              <div className='border-2 border-dashed border-[#2B2B2B] rounded-xl p-8 bg-[#0F0F0F]'>
+              <div className='rounded-xl border-2 border-dashed border-[#2B2B2B] bg-[#0F0F0F] p-8'>
                 <div className='flex items-center justify-between'>
                   <div className='flex items-center gap-4'>
-                    <Upload className='w-12 h-12 text-gray-400' />
+                    <Upload className='h-12 w-12 text-gray-400' />
                     <div>
-                      <p className='text-white font-medium text-lg'>
+                      <p className='text-lg font-medium text-white'>
                         Upload your files
                       </p>
-                      <p className='text-gray-400 text-sm'>
+                      <p className='text-sm text-gray-400'>
                         JPEG, PNG, PDF, Docs • Max. 20MB
                       </p>
                     </div>
@@ -220,29 +218,28 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
                 />
               </div>
 
-              {/* Uploaded Files List */}
               {files.length > 0 && (
                 <div className='space-y-3'>
-                  <h4 className='text-white font-medium'>Uploaded Files</h4>
+                  <h4 className='font-medium text-white'>Uploaded Files</h4>
                   {files.map((file, index) => (
                     <div
                       key={index}
-                      className='flex items-center justify-between bg-[#0F0F0F] border border-[#2B2B2B] rounded-lg p-4'
+                      className='flex items-center justify-between rounded-lg border border-[#2B2B2B] bg-[#0F0F0F] p-4'
                     >
                       <div className='flex items-center gap-3'>
-                        <Coins className='w-5 h-5 text-gray-400' />
+                        <Coins className='h-5 w-5 text-gray-400' />
                         <div>
-                          <span className='text-white text-sm font-medium'>
+                          <span className='text-sm font-medium text-white'>
                             {file.name}
                           </span>
-                          <p className='text-gray-400 text-xs'>
+                          <p className='text-xs text-gray-400'>
                             {(file.size / 1024 / 1024).toFixed(2)} MB
                           </p>
                         </div>
                       </div>
                       <button
                         onClick={() => handleRemoveFile(index)}
-                        className='text-red-400 hover:text-red-300 text-sm px-3 py-1 rounded border border-red-400/20 hover:bg-red-400/10'
+                        className='rounded border border-red-400/20 px-3 py-1 text-sm text-red-400 hover:bg-red-400/10 hover:text-red-300'
                       >
                         Remove
                       </button>
@@ -252,21 +249,20 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
               )}
             </div>
 
-            {/* External Links Section */}
-            <div className='bg-[#1C1C1C] border border-[#2B2B2B] rounded-xl p-6 space-y-4 self-start w-full max-w-2xl'>
+            <div className='w-full max-w-2xl space-y-4 self-start rounded-xl border border-[#2B2B2B] bg-[#1C1C1C] p-6'>
               <div>
-                <Label className='text-white font-medium text-lg'>
+                <Label className='text-lg font-medium text-white'>
                   Links to External Evidence
                 </Label>
-                <p className='text-gray-400 text-sm mt-1'>
+                <p className='mt-1 text-sm text-gray-400'>
                   Add links to external resources, demos, or documentation
                 </p>
               </div>
 
               {externalLinks.map((link, index) => (
                 <div key={index} className='flex items-center gap-3'>
-                  <div className='flex-1 relative'>
-                    <LinkIcon className='absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400' />
+                  <div className='relative flex-1'>
+                    <LinkIcon className='absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 transform text-gray-400' />
                     <Input
                       type='url'
                       placeholder='https://www.example.com'
@@ -274,13 +270,13 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
                       onChange={e =>
                         handleExternalLinkChange(index, e.target.value)
                       }
-                      className='pl-12 h-12 bg-[#0F0F0F] border-[#2B2B2B] text-white placeholder:text-gray-400 text-base'
+                      className='h-12 border-[#2B2B2B] bg-[#0F0F0F] pl-12 text-base text-white placeholder:text-gray-400'
                     />
                   </div>
                   {externalLinks.length > 1 && (
                     <button
                       onClick={() => handleRemoveExternalLink(index)}
-                      className='text-red-400 hover:text-red-300 text-sm px-3 py-2 rounded border border-red-400/20 hover:bg-red-400/10'
+                      className='rounded border border-red-400/20 px-3 py-2 text-sm text-red-400 hover:bg-red-400/10 hover:text-red-300'
                     >
                       Remove
                     </button>
@@ -297,13 +293,12 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
               </BoundlessButton>
             </div>
 
-            {/* Additional Notes Section */}
-            <div className='bg-[#1C1C1C] border border-[#2B2B2B] rounded-xl p-6 space-y-4 self-start w-full max-w-2xl'>
+            <div className='w-full max-w-2xl space-y-4 self-start rounded-xl border border-[#2B2B2B] bg-[#1C1C1C] p-6'>
               <div>
-                <Label className='text-white font-medium text-lg'>
+                <Label className='text-lg font-medium text-white'>
                   Additional Notes
                 </Label>
-                <p className='text-gray-400 text-sm mt-1'>
+                <p className='mt-1 text-sm text-gray-400'>
                   Any additional context or explanations about your submission
                 </p>
               </div>
@@ -312,74 +307,71 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
                 value={additionalNotes}
                 onChange={e => setAdditionalNotes(e.target.value)}
                 placeholder='Provide any additional context about your milestone completion...'
-                className='min-h-[120px] bg-[#0F0F0F] border-[#2B2B2B] text-white placeholder:text-gray-400 resize-none'
+                className='min-h-[120px] resize-none border-[#2B2B2B] bg-[#0F0F0F] text-white placeholder:text-gray-400'
                 maxLength={1000}
               />
 
               <div className='text-right'>
-                <span className='text-gray-400 text-sm'>
+                <span className='text-sm text-gray-400'>
                   {additionalNotes.length}/1000
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Sidebar */}
           <div className='space-y-6'>
-            {/* Submission Summary */}
-            <div className='bg-[#1C1C1C] border border-[#2B2B2B] rounded-xl p-6'>
-              <h3 className='text-white font-semibold text-lg mb-4'>
+            <div className='rounded-xl border border-[#2B2B2B] bg-[#1C1C1C] p-6'>
+              <h3 className='mb-4 text-lg font-semibold text-white'>
                 Submission Summary
               </h3>
 
               <div className='space-y-3'>
-                <div className='flex justify-between items-center'>
+                <div className='flex items-center justify-between'>
                   <span className='text-gray-400'>Files uploaded:</span>
-                  <span className='text-white font-medium'>{files.length}</span>
+                  <span className='font-medium text-white'>{files.length}</span>
                 </div>
 
-                <div className='flex justify-between items-center'>
+                <div className='flex items-center justify-between'>
                   <span className='text-gray-400'>External links:</span>
-                  <span className='text-white font-medium'>
+                  <span className='font-medium text-white'>
                     {externalLinks.filter(link => link.trim() !== '').length}
                   </span>
                 </div>
 
-                <div className='flex justify-between items-center'>
+                <div className='flex items-center justify-between'>
                   <span className='text-gray-400'>Milestone value:</span>
-                  <span className='text-white font-medium'>
+                  <span className='font-medium text-white'>
                     {formatCurrency(milestone.fundAmount)}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Guidelines */}
-            <div className='bg-[#1C1C1C] border border-[#2B2B2B] rounded-xl p-6'>
-              <h3 className='text-white font-semibold text-lg mb-4'>
+            <div className='rounded-xl border border-[#2B2B2B] bg-[#1C1C1C] p-6'>
+              <h3 className='mb-4 text-lg font-semibold text-white'>
                 Submission Guidelines
               </h3>
 
               <div className='space-y-3 text-sm text-gray-300'>
                 <div className='flex items-start gap-2'>
-                  <div className='w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0'></div>
+                  <div className='mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-blue-500'></div>
                   <p>
                     Upload clear, high-quality evidence of milestone completion
                   </p>
                 </div>
 
                 <div className='flex items-start gap-2'>
-                  <div className='w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0'></div>
+                  <div className='mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-blue-500'></div>
                   <p>Include screenshots, videos, or documentation as proof</p>
                 </div>
 
                 <div className='flex items-start gap-2'>
-                  <div className='w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0'></div>
+                  <div className='mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-blue-500'></div>
                   <p>Provide links to live demos or external resources</p>
                 </div>
 
                 <div className='flex items-start gap-2'>
-                  <div className='w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0'></div>
+                  <div className='mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-blue-500'></div>
                   <p>Ensure all files are under 20MB each</p>
                 </div>
               </div>
@@ -387,8 +379,7 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
           </div>
         </div>
 
-        {/* Submit Button */}
-        <div className='mt-8 pt-6 border-t border-[#2B2B2B] w-full max-w-2xl mx-auto'>
+        <div className='mx-auto mt-8 w-full max-w-2xl border-t border-[#2B2B2B] pt-6'>
           <div className='flex items-center justify-between'>
             <BoundlessButton variant='outline' onClick={onBack} size='lg'>
               Cancel
@@ -407,7 +398,6 @@ const MilestoneSubmissionPage: React.FC<MilestoneSubmissionPageProps> = ({
         </div>
       </div>
 
-      {/* Wallet Required Modal */}
       <WalletRequiredModal
         open={showWalletModal}
         onOpenChange={closeWalletModal}

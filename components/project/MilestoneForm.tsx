@@ -71,7 +71,7 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
 
   if (!milestone.isExpanded) {
     return (
-      <div className='w-full p-4 rounded-[12px] bg-[#1C1C1C] border border-[#2B2B2B]'>
+      <div className='w-full rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-4'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-3'>
             <span className='text-sm font-medium text-white'>
@@ -86,7 +86,7 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
               className='text-white hover:text-green-400'
             >
               <svg
-                className='w-4 h-4'
+                className='h-4 w-4'
                 fill='none'
                 stroke='currentColor'
                 viewBox='0 0 24 24'
@@ -106,28 +106,28 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
   }
 
   return (
-    <div className='w-full p-4 rounded-[12px] bg-[#1C1C1C] border border-[#2B2B2B] space-y-4'>
+    <div className='w-full space-y-4 rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-4'>
       {/* Header */}
       <div className='flex items-end justify-between gap-3'>
-        <div className='flex flex-col gap-2 flex-1'>
+        <div className='flex flex-1 flex-col gap-2'>
           <h3 className='text-xs font-medium tracking-[-0.06px] text-white'>
             Milestone {milestone.id} <span className='text-[#D42620]'>*</span>
           </h3>
           <Input
-            className='rounded-[12px] h-12 border-[#2B2B2B] bg-[#1C1C1C] w-full text-white'
+            className='h-12 w-full rounded-[12px] border-[#2B2B2B] bg-[#1C1C1C] text-white'
             value={milestone.title}
             onChange={e => handleFieldChange('title', e.target.value)}
             placeholder='Enter milestone title'
           />
         </div>
-        <div className=' !w-[102px]'>
+        <div className='!w-[102px]'>
           <Button
             variant='ghost'
             size='sm'
             onClick={handleDelete}
-            className='text-red-400 hover:text-red-300 hover:bg-red-400/10'
+            className='text-red-400 hover:bg-red-400/10 hover:text-red-300'
           >
-            <Trash2 className='w-4 h-4 text-white' />
+            <Trash2 className='h-4 w-4 text-white' />
           </Button>
           <BoundlessButton
             variant='outline'
@@ -140,7 +140,7 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
       </div>
 
       <div className='space-y-2'>
-        <Label className='text-xs font-medium text-white flex justify-between items-center'>
+        <Label className='flex items-center justify-between text-xs font-medium text-white'>
           <div>
             Description <span className='text-[#D42620]'>*</span>
           </div>
@@ -153,7 +153,7 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
             value={milestone.description}
             onChange={e => handleFieldChange('description', e.target.value)}
             placeholder='Describe this milestone...'
-            className='bg-[#1C1C1C] border-[#2B2B2B] text-white placeholder:text-gray-400 min-h-[120px] resize-none'
+            className='min-h-[120px] resize-none border-[#2B2B2B] bg-[#1C1C1C] text-white placeholder:text-gray-400'
             maxLength={400}
           />
         </div>
@@ -168,7 +168,7 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
             <PopoverTrigger asChild>
               <Button
                 variant='outline'
-                className='w-full justify-start bg-[#1C1C1C] h-12 border-[#2B2B2B] text-white font-normal flex justify-between'
+                className='flex h-12 w-full justify-between justify-start border-[#2B2B2B] bg-[#1C1C1C] font-normal text-white'
               >
                 {milestone.deliveryDate ? (
                   new Date(
@@ -188,7 +188,7 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
             </PopoverTrigger>
             <PopoverContent
               align='start'
-              className='w-auto p-0 bg-[#101010] border-[#2B2B2B] rounded-[12px] text-white'
+              className='w-auto rounded-[12px] border-[#2B2B2B] bg-[#101010] p-0 text-white'
             >
               <Calendar
                 mode='single'
@@ -223,30 +223,30 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
             value={milestone.fundPercentage}
             onChange={e => handleFieldChange('fundPercentage', e.target.value)}
             placeholder='To be calculated later'
-            className='bg-[#1C1C1C] h-12 border-[#2B2B2B] text-white placeholder:text-gray-400'
+            className='h-12 border-[#2B2B2B] bg-[#1C1C1C] text-white placeholder:text-gray-400'
             disabled
           />
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger className='absolute right-1 top-1/2 transform -translate-y-1/2'>
+              <TooltipTrigger className='absolute top-1/2 right-1 -translate-y-1/2 transform'>
                 <Button
                   variant='ghost'
                   size='sm'
                   className='text-gray-400 hover:text-white'
                 >
-                  <HelpCircle className='w-4 h-4' />
+                  <HelpCircle className='h-4 w-4' />
                 </Button>
               </TooltipTrigger>
               <TooltipContent
                 side='bottom'
-                className='w-fit max-w-[400px] bg-[#101010] shadow-[0_1px_4px_0_rgba(72,72,72,0.14),0_0_4px_1px_#484848] border-[#2B2B2B] text-white p-5 rounded-[16px]'
+                className='w-fit max-w-[400px] rounded-[16px] border-[#2B2B2B] bg-[#101010] p-5 text-white shadow-[0_1px_4px_0_rgba(72,72,72,0.14),0_0_4px_1px_#484848]'
               >
                 <div>
-                  <h4 className='text-lg font-medium text-white mb-2'>
+                  <h4 className='mb-2 text-lg font-medium text-white'>
                     How are milestone funds determined?
                   </h4>
                 </div>
-                <p className='text-base text-[#B5B5B5] w-full'>
+                <p className='w-full text-base text-[#B5B5B5]'>
                   Based on your total funding goal, Boundless will automatically
                   divide funds across your milestones using a smart, weighted
                   distribution model.

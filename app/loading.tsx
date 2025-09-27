@@ -1,7 +1,8 @@
+import AuthLoadingState from '@/components/auth/AuthLoadingState';
 import React from 'react';
 
 const Loading = () => {
-  return <div>Loading</div>;
+  return <AuthLoadingState message='Loading...' />;
 };
 
 export default Loading;

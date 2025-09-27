@@ -211,7 +211,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
   return (
     <motion.div
-      className='bg-[#101010] min-h-[450px] rounded-[16px] p-3 w-full max-w-sm mx-auto transition-all duration-200 cursor-pointer group hover:bg-[#151515]'
+      className='group mx-auto min-h-[450px] w-full max-w-sm cursor-pointer rounded-[16px] bg-[#101010] p-3 transition-all duration-200 hover:bg-[#151515]'
       whileHover='hover'
       variants={cardHover}
       initial='hidden'
@@ -219,16 +219,16 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     >
       {/* Image and Content Side by Side */}
       <motion.div
-        className='flex items-start space-x-3 sm:space-x-4 mb-4'
+        className='mb-4 flex items-start space-x-3 sm:space-x-4'
         variants={fadeInUp}
       >
         {/* Image on the left */}
-        <div className='relative h-24 w-24 sm:h-32 sm:w-32 rounded-[12px] overflow-hidden bg-gradient-to-br from-[#D4AF37] to-[#B8860B] flex-shrink-0'>
+        <div className='relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-[12px] bg-gradient-to-br from-[#D4AF37] to-[#B8860B] sm:h-32 sm:w-32'>
           <Image
             src={project.image}
             fill
             alt={`${project.name} banner`}
-            className='object-cover pointer-events-none'
+            className='pointer-events-none object-cover'
             unoptimized
           />
 
@@ -240,7 +240,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           >
             <Badge
               className={cn(
-                'absolute top-1 right-1 px-1 py-0.5 rounded-[4px] text-xs font-medium',
+                'absolute top-1 right-1 rounded-[4px] px-1 py-0.5 text-xs font-medium',
                 getStatusColor(project.status)
               )}
             >
@@ -258,7 +258,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           >
             <Badge
               className={cn(
-                'absolute top-6 right-1 px-1 py-0.5 rounded-[4px] text-xs font-medium',
+                'absolute top-6 right-1 rounded-[4px] px-1 py-0.5 text-xs font-medium',
                 getCategoryColor(project.category)
               )}
             >
@@ -274,19 +274,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Avatar className='absolute top-1 left-1 w-6 h-6 cursor-pointer'>
+                  <Avatar className='absolute top-1 left-1 h-6 w-6 cursor-pointer'>
                     <AvatarImage src='https://github.com/shadcn.png' />
                     <AvatarFallback className='bg-blue-500'>
-                      <UserIcon className='w-3 h-3 text-white' />
+                      <UserIcon className='h-3 w-3 text-white' />
                     </AvatarFallback>
                   </Avatar>
                 </motion.div>
               </TooltipTrigger>
               <TooltipContent
                 side='bottom'
-                className='bg-[#CDC4C4] border-[#2A2A2A] shadow-[0_2px_2px_0_rgba(0,0,0,0.24)] text-white'
+                className='border-[#2A2A2A] bg-[#CDC4C4] text-white shadow-[0_2px_2px_0_rgba(0,0,0,0.24)]'
               >
-                <p className='text-xs font-medium text-[#514A4A] leading-[145%] tracking-[-0.06px]'>
+                <p className='text-xs leading-[145%] font-medium tracking-[-0.06px] text-[#514A4A]'>
                   Project Creator
                 </p>
               </TooltipContent>
@@ -295,11 +295,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
 
         {/* Content on the right */}
-        <motion.div className='flex-1 min-w-0 space-y-2' variants={fadeInUp}>
+        <motion.div className='min-w-0 flex-1 space-y-2' variants={fadeInUp}>
           {/* Title and Price */}
           <div className='space-y-2'>
-            <div className='flex justify-between items-center'>
-              <h2 className='text-[#F5F5F5] text-lg sm:text-xl font-medium line-clamp-1'>
+            <div className='flex items-center justify-between'>
+              <h2 className='line-clamp-1 text-lg font-medium text-[#F5F5F5] sm:text-xl'>
                 {showCreatorName
                   ? `${project.name} by Collins Odumeje`
                   : project.name}
@@ -314,14 +314,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                       <Button
                         variant='ghost'
                         size='icon'
-                        className=' w-8 h-8 bg-background hover:bg-background/40'
+                        className='bg-background hover:bg-background/40 h-8 w-8'
                       >
-                        <MoreHorizontal className='w-4 h-4 text-white' />
+                        <MoreHorizontal className='h-4 w-4 text-white' />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       align='end'
-                      className='bg-[#1C1C1C] border-[#2A2A2A]'
+                      className='border-[#2A2A2A] bg-[#1C1C1C]'
                     >
                       <DropdownMenuItem
                         className='text-white hover:bg-[#2A2A2A]'
@@ -342,16 +342,16 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </div>
             <PriceDisplay
               price={project.amount}
-              className='text-lg sm:text-xl tracking-[-0.4px]'
+              className='text-lg tracking-[-0.4px] sm:text-xl'
             />
-            <p className='text-[#F5F5F5] text-sm line-clamp-2 leading-relaxed'>
+            <p className='line-clamp-2 text-sm leading-relaxed text-[#F5F5F5]'>
               {project.description}
             </p>
           </div>
 
           {/* Vote Progress - Conditional */}
           <div className='space-y-3'>
-            <div className='flex justify-between items-center text-[#F5F5F5] text-xs font-medium'>
+            <div className='flex items-center justify-between text-xs font-medium text-[#F5F5F5]'>
               <span>Vote count</span>
               <span className='flex items-center gap-1'>
                 {voteData.current} <span className='text-[#B5B5B5]'>of</span>{' '}
@@ -363,13 +363,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               className='h-2'
             />
           </div>
-          <div className='flex justify-between items-center'>
+          <div className='flex items-center justify-between'>
             <div className='flex items-center gap-4'>
               <BoundlessButton
                 variant='secondary'
                 size='sm'
                 className={cn(
-                  'flex-1 border-[1.4px] border-[#2B2B2B] rounded-[10px] bg-[#212121] hover:bg-[#2A2A2A] disabled:bg-[#212121] disabled:border-[#2B2B2B] disabled:text-[#484848]',
+                  'flex-1 rounded-[10px] border-[1.4px] border-[#2B2B2B] bg-[#212121] hover:bg-[#2A2A2A] disabled:border-[#2B2B2B] disabled:bg-[#212121] disabled:text-[#484848]',
                   project.status === 'validated' && 'hidden'
                 )}
                 onClick={() => requireWallet(() => onVote?.(project.id))}
@@ -380,7 +380,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   project.status === 'failed'
                 }
               >
-                <ThumbsUp className='w-4 h-4' />
+                <ThumbsUp className='h-4 w-4' />
                 <span className='ml-1 font-semibold'>{actionCounts.votes}</span>
               </BoundlessButton>
               {(project.status === 'approved' ||
@@ -390,7 +390,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   size={32}
                   strokeWidth={3}
                   segments={14}
-                  className='w-[32px] h-[32px]'
+                  className='h-[32px] w-[32px]'
                 />
               )}
               <CommentModal
@@ -402,7 +402,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 <BoundlessButton
                   variant='secondary'
                   size='sm'
-                  className='flex-1 border-[1.4px] border-[#2B2B2B] rounded-[10px] bg-[#212121] hover:bg-[#2A2A2A] disabled:bg-[#212121] disabled:border-[#2B2B2B] disabled:text-[#484848]'
+                  className='flex-1 rounded-[10px] border-[1.4px] border-[#2B2B2B] bg-[#212121] hover:bg-[#2A2A2A] disabled:border-[#2B2B2B] disabled:bg-[#212121] disabled:text-[#484848]'
                   disabled={
                     project.status === 'idea' ||
                     project.status === 'under_review' ||
@@ -410,7 +410,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     project.status === 'failed'
                   }
                 >
-                  <MessageCircleMore className='w-4 h-4' />
+                  <MessageCircleMore className='h-4 w-4' />
                   <span className='ml-1 font-semibold'>
                     {actionCounts.comments}
                   </span>
@@ -439,7 +439,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         side='bottom'
         maxHeight='90vh'
       >
-        <div className='grid grid-cols-1 md:grid-cols-2 justify-between relative'>
+        <div className='relative grid grid-cols-1 justify-between md:grid-cols-2'>
           <div className='sticky top-0'>
             <Stepper steps={stepperState} />
           </div>
@@ -460,7 +460,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         side='bottom'
         maxHeight='90vh'
       >
-        <div className='grid grid-cols-1 md:grid-cols-2 justify-between relative'>
+        <div className='relative grid grid-cols-1 justify-between md:grid-cols-2'>
           <div className='sticky top-0'>
             <Stepper steps={campaignStepperState} />
           </div>

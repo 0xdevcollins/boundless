@@ -23,7 +23,7 @@ const TimelineStepper: React.FC<TimelineStepperProps> = () => {
     {
       id: 'public-voting',
       label: 'Public Voting',
-      icon: <ThumbsUp className='w-4 h-4' />,
+      icon: <ThumbsUp className='h-4 w-4' />,
       date: 'July 23, 2025',
       completed: true,
       current: false,
@@ -31,7 +31,7 @@ const TimelineStepper: React.FC<TimelineStepperProps> = () => {
     {
       id: 'admin-approval',
       label: 'Admin Approval',
-      icon: <Check className='w-4 h-4' />,
+      icon: <Check className='h-4 w-4' />,
       date: 'July 23, 2025',
       completed: true,
       current: false,
@@ -39,7 +39,7 @@ const TimelineStepper: React.FC<TimelineStepperProps> = () => {
     {
       id: 'submitted-validation',
       label: 'Submitted for Validation',
-      icon: <Check className='w-4 h-4' />,
+      icon: <Check className='h-4 w-4' />,
       date: 'July 21, 2025',
       completed: true,
       current: false,
@@ -47,7 +47,7 @@ const TimelineStepper: React.FC<TimelineStepperProps> = () => {
     {
       id: 'project-created',
       label: 'Project Created',
-      icon: <Check className='w-4 h-4' />,
+      icon: <Check className='h-4 w-4' />,
       date: 'July 21, 2025',
       completed: true,
       current: false,
@@ -58,16 +58,16 @@ const TimelineStepper: React.FC<TimelineStepperProps> = () => {
     <div className='space-y-4'>
       {timelineItems.map((item, index) => (
         <div key={item.id} className='flex items-start space-x-4'>
-          {/* Timeline Icon */}
+          {}
           <div className='flex flex-col items-center'>
             <div
               className={cn(
-                'w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0',
+                'flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full',
                 item.completed
-                  ? 'bg-[#1C1C1C] text-[#B5B5B5] border border-[#1C1C1C]'
+                  ? 'border border-[#1C1C1C] bg-[#1C1C1C] text-[#B5B5B5]'
                   : item.current
                     ? 'bg-[#04326B] text-white'
-                    : 'bg-[#1C1C1C] text-[#B5B5B5] border border-[#1C1C1C]'
+                    : 'border border-[#1C1C1C] bg-[#1C1C1C] text-[#B5B5B5]'
               )}
               style={{
                 boxShadow: '0px 1.5px 4px -1px #10192812',
@@ -75,17 +75,17 @@ const TimelineStepper: React.FC<TimelineStepperProps> = () => {
             >
               {item.icon}
             </div>
-            {/* Connector Line */}
+            {}
             {index < timelineItems.length - 1 && (
-              <div className='w-0.5 h-8 bg-[#2A2A2A] mt-2'></div>
+              <div className='mt-2 h-8 w-0.5 bg-[#2A2A2A]'></div>
             )}
           </div>
 
-          {/* Content */}
+          {}
           <div className='flex-1 pt-1'>
             <h4
               className={cn(
-                'font-medium mb-1',
+                'mb-1 font-medium',
                 item.id === 'public-voting'
                   ? 'text-[#F5F5F5]'
                   : 'text-[#919191]'

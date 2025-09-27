@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'sonner';
 import { Providers } from './providers';
@@ -8,13 +8,8 @@ import {
   generateWebsiteStructuredData,
 } from '@/lib/structured-data';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
 });
 
@@ -45,7 +40,7 @@ export const metadata: Metadata = {
       'Validate, fund, and grow your project with milestone-based support on Stellar.',
     images: [
       {
-        url: '/BOUNDLESS.png',
+        url: '/og/og.png',
         width: 1200,
         height: 630,
         alt: 'Boundless',
@@ -88,9 +83,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${inter.variable} font-inter antialiased`}>
         <Providers>
           {children}
           <Toaster />

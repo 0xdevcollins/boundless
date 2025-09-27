@@ -77,10 +77,8 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
   const { currentNetwork, switchToNetwork } = useNetworkSwitcher();
   const walletInfo = useWalletInfo();
 
-  // Auto-reconnect on page load
   useAutoReconnect();
 
-  // Handle errors with toast and show error guide
   React.useEffect(() => {
     if (error) {
       toast.error(error, {
@@ -148,7 +146,7 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
         className={cn('min-w-[140px]', className)}
         disabled
       >
-        <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+        <Loader2 className='mr-2 h-4 w-4 animate-spin' />
         Connecting...
       </Button>
     );
@@ -165,102 +163,99 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
               className={cn('min-w-[140px] justify-between', className)}
             >
               <div className='flex items-center gap-2'>
-                <CheckCircle className='w-4 h-4 text-green-500' />
+                <CheckCircle className='h-4 w-4 text-green-500' />
                 <span className='truncate'>
                   {formatAddress(walletInfo.address)}
                 </span>
               </div>
-              <ChevronDown className='w-4 h-4 ml-2' />
+              <ChevronDown className='ml-2 h-4 w-4' />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align='end'
-            className='w-64 bg-card border border-border'
+            className='bg-card border-border w-64 border'
           >
-            <DropdownMenuLabel className='flex items-center gap-2 bg-card text-card-foreground'>
-              <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+            <DropdownMenuLabel className='bg-card text-card-foreground flex items-center gap-2'>
+              <div className='h-2 w-2 rounded-full bg-green-500'></div>
               Connected Wallet
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
 
-            {/* Wallet Info - Compact */}
             <DropdownMenuItem
-              className='flex items-center gap-2 p-3 bg-card hover:bg-accent text-card-foreground hover:text-accent-foreground cursor-pointer'
+              className='bg-card hover:bg-accent text-card-foreground hover:text-accent-foreground flex cursor-pointer items-center gap-2 p-3'
               onSelect={e => e.preventDefault()}
               onClick={handleCopyAddress}
             >
-              <Wallet className='w-4 h-4 text-muted-foreground' />
-              <div className='flex-1 min-w-0'>
+              <Wallet className='text-muted-foreground h-4 w-4' />
+              <div className='min-w-0 flex-1'>
                 <div className='flex items-center gap-2'>
-                  <span className='font-medium truncate'>
+                  <span className='truncate font-medium'>
                     {getWalletDisplayNameLocal(selectedWallet || '')}
                   </span>
                   <Badge
                     variant='outline'
-                    className='text-xs border-border text-muted-foreground'
+                    className='border-border text-muted-foreground text-xs'
                   >
                     {getNetworkDisplay(currentNetwork)}
                   </Badge>
                 </div>
-                <div className='flex items-center gap-2 mt-1'>
-                  <div className='text-xs text-muted-foreground font-mono truncate flex-1'>
+                <div className='mt-1 flex items-center gap-2'>
+                  <div className='text-muted-foreground flex-1 truncate font-mono text-xs'>
                     {validateAddress(walletInfo.address)
                       ? formatAddress(walletInfo.address, 8)
                       : walletInfo.address}
                   </div>
-                  <Copy className='w-3 h-3 text-muted-foreground flex-shrink-0' />
+                  <Copy className='text-muted-foreground h-3 w-3 flex-shrink-0' />
                 </div>
               </div>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
 
-            {/* Quick Actions */}
             <div className='grid grid-cols-1 gap-1 p-2'>
               <DropdownMenuItem
                 onClick={handleSwitchWallet}
                 className='bg-card hover:bg-accent text-card-foreground hover:text-accent-foreground text-xs'
               >
-                <Settings className='w-3 h-3 mr-2' />
+                <Settings className='mr-2 h-3 w-3' />
                 Switch Wallet
               </DropdownMenuItem>
             </div>
 
             <DropdownMenuSeparator />
 
-            {/* Network Switching - Compact */}
             <div className='p-2'>
-              <div className='text-xs font-medium mb-2 px-2 text-card-foreground'>
+              <div className='text-card-foreground mb-2 px-2 text-xs font-medium'>
                 Network
               </div>
               <div className='grid grid-cols-2 gap-1'>
                 <DropdownMenuItem
                   onClick={() => handleSwitchNetwork('testnet')}
                   className={cn(
-                    'bg-card hover:bg-accent text-card-foreground hover:text-accent-foreground text-xs justify-center',
+                    'bg-card hover:bg-accent text-card-foreground hover:text-accent-foreground justify-center text-xs',
                     currentNetwork === 'testnet' &&
                       'bg-accent text-accent-foreground'
                   )}
                 >
-                  <div className='w-2 h-2 bg-yellow-500 rounded-full mr-1'></div>
+                  <div className='mr-1 h-2 w-2 rounded-full bg-yellow-500'></div>
                   Testnet
                   {currentNetwork === 'testnet' && (
-                    <CheckCircle className='w-3 h-3 ml-1' />
+                    <CheckCircle className='ml-1 h-3 w-3' />
                   )}
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
                   onClick={() => handleSwitchNetwork('public')}
                   className={cn(
-                    'bg-card hover:bg-accent text-card-foreground hover:text-accent-foreground text-xs justify-center',
+                    'bg-card hover:bg-accent text-card-foreground hover:text-accent-foreground justify-center text-xs',
                     currentNetwork === 'public' &&
                       'bg-accent text-accent-foreground'
                   )}
                 >
-                  <div className='w-2 h-2 bg-blue-500 rounded-full mr-1'></div>
+                  <div className='mr-1 h-2 w-2 rounded-full bg-blue-500'></div>
                   Public
                   {currentNetwork === 'public' && (
-                    <CheckCircle className='w-3 h-3 ml-1' />
+                    <CheckCircle className='ml-1 h-3 w-3' />
                   )}
                 </DropdownMenuItem>
               </div>
@@ -268,7 +263,6 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
 
             <DropdownMenuSeparator />
 
-            {/* External Link */}
             <DropdownMenuItem
               asChild
               className='bg-card hover:bg-accent text-card-foreground hover:text-accent-foreground text-xs'
@@ -282,19 +276,18 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
                 rel='noopener noreferrer'
                 className='flex items-center'
               >
-                <ExternalLink className='w-3 h-3 mr-2' />
+                <ExternalLink className='mr-2 h-3 w-3' />
                 View on Stellar Expert
               </a>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
 
-            {/* Disconnect */}
             <DropdownMenuItem
               onClick={handleDisconnect}
               className='text-destructive hover:text-destructive bg-card hover:bg-accent text-xs'
             >
-              <LogOut className='w-3 h-3 mr-2' />
+              <LogOut className='mr-2 h-3 w-3' />
               Disconnect
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -320,8 +313,9 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
         size={size}
         className={cn('min-w-[140px]', className)}
         onClick={handleConnect}
+        icon={<Wallet className='mr-2 h-4 w-4' />}
+        iconPosition='right'
       >
-        <Wallet className='w-4 h-4 mr-2' />
         Connect Wallet
       </BoundlessButton>
 

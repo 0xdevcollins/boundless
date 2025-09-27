@@ -1,16 +1,36 @@
 'use client';
 import Link from 'next/link';
-import { Menu, XIcon } from 'lucide-react';
+import {
+  Menu,
+  XIcon,
+  Plus,
+  ChevronDown,
+  Building2,
+  ArrowUpRight,
+} from 'lucide-react';
 import Image from 'next/image';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { SplitText } from 'gsap/SplitText';
 import { BoundlessButton } from '../buttons';
-
+import { useRouter } from 'next/navigation';
 import { Sheet, SheetTrigger, SheetContent, SheetClose } from '../ui/sheet';
+import { useAuthStatus, useAuthActions } from '@/hooks/use-auth';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
+import { User, LogOut, Settings } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import WalletConnectButton from '../wallet/WalletConnectButton';
+import CreateProjectModal from './project/CreateProjectModal';
 
-gsap.registerPlugin(useGSAP, SplitText);
+gsap.registerPlugin(useGSAP);
 
 const menuItems = [
   { href: '/about', label: 'About' },
@@ -25,45 +45,18 @@ export function Navbar() {
   const logoRef = useRef<HTMLAnchorElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-
+  const router = useRouter();
+  const { isAuthenticated, isLoading, user } = useAuthStatus();
   useGSAP(
     () => {
-      const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
-
-      tl.fromTo(
+      gsap.fromTo(
         navbarRef.current,
-        { y: -20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6 }
-      )
-        .fromTo(
-          logoRef.current,
-          { scale: 0.8, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.4 },
-          '-=0.3'
-        )
-        .fromTo(
-          menuRef.current?.children || [],
-          { y: -15, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.4, stagger: 0.1 },
-          '-=0.2'
-        )
-        .fromTo(
-          ctaRef.current,
-          { y: -15, opacity: 0, scale: 0.95 },
-          { y: 0, opacity: 1, scale: 1, duration: 0.4 },
-          '-=0.1'
-        );
-
-      gsap.to(logoRef.current, {
-        y: -2,
-        duration: 2,
-        ease: 'power2.inOut',
-        yoyo: true,
-        repeat: -1,
-      });
+        { opacity: 0 },
+        { opacity: 1, duration: 0.4, ease: 'power2.out' }
+      );
 
       const logoHover = gsap.to(logoRef.current, {
-        scale: 1.05,
+        scale: 1,
         duration: 0.2,
         ease: 'power2.out',
         paused: true,
@@ -81,28 +74,14 @@ export function Navbar() {
         hoverTl: gsap.core.Timeline;
         enterHandler: () => void;
         leaveHandler: () => void;
-        split: SplitText;
       }> = [];
 
       menuItems?.forEach(item => {
-        const split = SplitText.create(item, {
-          type: 'chars',
-          charsClass: 'nav-char',
-        });
-
         const hoverTl = gsap.timeline({ paused: true });
-        hoverTl.to(item, { y: -2, duration: 0.2, ease: 'power2.out' });
-
-        hoverTl.to(
-          split.chars,
-          {
-            y: -3,
-            duration: 0.3,
-            stagger: 0.02,
-            ease: 'power2.out',
-          },
-          '-=0.1'
-        );
+        hoverTl.to(item, {
+          duration: 0.2,
+          ease: 'power2.out',
+        });
 
         const enterHandler = () => hoverTl.play();
         const leaveHandler = () => hoverTl.reverse();
@@ -115,12 +94,11 @@ export function Navbar() {
           hoverTl,
           enterHandler,
           leaveHandler,
-          split,
         });
       });
 
       const ctaHover = gsap.to(ctaRef.current, {
-        scale: 1.02,
+        scale: 1,
         duration: 0.2,
         ease: 'power2.out',
         paused: true,
@@ -134,9 +112,9 @@ export function Navbar() {
 
       const scrollTl = gsap.timeline({ paused: true });
       scrollTl.to(navbarRef.current, {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        backdropFilter: 'blur(10px)',
-        duration: 0.3,
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        backdropFilter: 'blur(8px)',
+        duration: 0.2,
         ease: 'power2.out',
       });
 
@@ -159,9 +137,8 @@ export function Navbar() {
         logoRef.current?.removeEventListener('mouseleave', logoLeaveHandler);
 
         menuItemAnimations.forEach(
-          ({ item, hoverTl, enterHandler, leaveHandler, split }) => {
+          ({ item, hoverTl, enterHandler, leaveHandler }) => {
             hoverTl.kill();
-            split.revert();
             item.removeEventListener('mouseenter', enterHandler);
             item.removeEventListener('mouseleave', leaveHandler);
           }
@@ -179,12 +156,22 @@ export function Navbar() {
   return (
     <nav
       ref={navbarRef}
-      className='sticky top-0 z-50 max-h-[88px]  -mt-11 bg-[#030303A3] blur-s[12px]'
+      className='blur-s[12px] sticky top-0 z-50 -mt-11 max-h-[88px] bg-[#030303A3]'
     >
-      <div className='py-5 lg:px-[100px] md:px-[50px] px-5'>
-        <div className='flex gap- justify-between items-center'>
+      <div className='px-5 py-5 md:px-[50px] lg:px-[100px]'>
+        <div
+          className={cn(
+            'grid grid-cols-2 items-center md:grid-cols-[auto_1fr_auto] md:justify-items-center',
+            isAuthenticated && 'md:justify-items-start'
+          )}
+        >
           <div className='flex-shrink-0'>
-            <Link ref={logoRef} href='/' className='flex items-center'>
+            <Link
+              ref={logoRef}
+              href='/'
+              onClick={() => router.push('/')}
+              className='flex items-center'
+            >
               <Image src='/auth/logo.svg' alt='logo' width={116} height={22} />
             </Link>
           </div>
@@ -195,7 +182,7 @@ export function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className='text-white hover:text-white/80 px-3 py-2 rounded-md md:text-xs lg:text-sm font-medium transition-colors'
+                  className='rounded-md px-3 py-2 font-medium text-white transition-colors hover:text-white/80 md:text-xs lg:text-sm'
                 >
                   {item.label}
                 </Link>
@@ -204,34 +191,205 @@ export function Navbar() {
           </div>
 
           <div ref={ctaRef} className='hidden md:block'>
-            <BoundlessButton>
-              <Link href='/auth/signin'>Get Started</Link>
-            </BoundlessButton>
+            {isLoading ? (
+              <div className='flex items-center space-x-2'>
+                <div className='h-8 w-8 animate-pulse rounded-full bg-gray-200' />
+                <div className='h-4 w-20 animate-pulse rounded bg-gray-200' />
+              </div>
+            ) : isAuthenticated ? (
+              <AuthenticatedNav user={user} />
+            ) : (
+              <BoundlessButton>
+                <Link href='/auth/signin'>Get Started</Link>
+              </BoundlessButton>
+            )}
           </div>
-          <MobileMenu />
+          <MobileMenu
+            isAuthenticated={isAuthenticated}
+            isLoading={isLoading}
+            user={user}
+          />
         </div>
       </div>
     </nav>
   );
 }
 
-function MobileMenu() {
+function AuthenticatedNav({
+  user,
+}: {
+  user: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    profile?: { firstName?: string | null; avatar?: string | null };
+  } | null;
+}) {
+  const { logout } = useAuthActions();
+  const [createProjectModalOpen, setCreateProjectModalOpen] = useState(false);
+  return (
+    <div className='flex items-center space-x-3'>
+      <WalletConnectButton />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <BoundlessButton className='hover:!text-primary tr bg-transparent text-white hover:bg-transparent'>
+            <Plus className='h-4 w-4' />
+          </BoundlessButton>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align='end'
+          className='bg-background w-[300px] rounded-[8px] border border-[#2B2B2B] pt-3 pb-6 text-white shadow-[0_4px_4px_0_rgba(26,26,26,0.25)]'
+        >
+          <DropdownMenuItem
+            onClick={() => setCreateProjectModalOpen(true)}
+            className='group hover:text-primary px-6 py-3.5 text-white hover:!bg-transparent'
+          >
+            <span className='group-hover:text-primary flex w-full items-center justify-between'>
+              Add Project
+              <Plus className='group-hover:text-primary h-4 w-4' />
+            </span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className='group hover:text-primary px-6 py-3.5 text-white hover:!bg-transparent'>
+            <span className='group-hover:text-primary flex w-full items-center justify-between'>
+              Host Hackathon
+              <ArrowUpRight className='group-hover:text-primary h-4 w-4' />
+            </span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className='group hover:text-primary px-6 py-3.5 text-white hover:!bg-transparent'>
+            <span className='group-hover:text-primary flex w-full items-center justify-between'>
+              Create Grant
+              <ArrowUpRight className='group-hover:text-primary h-4 w-4' />
+            </span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className='flex items-center space-x-2 rounded-full p-1 transition-colors hover:bg-white/10'>
+            <Avatar className='h-12 w-12'>
+              <AvatarImage
+                src={user?.image || user?.profile?.avatar || ''}
+                alt={user?.name || user?.profile?.firstName || ''}
+              />
+              <AvatarFallback>
+                {/* {user?.name?.charAt(0) ||
+                  user?.profile?.firstName?.charAt(0) ||
+                  user?.email?.charAt(0) ||
+                  'U'} */}
+                <Image
+                  src='https://i.pravatar.cc/150?img=10'
+                  alt='logo'
+                  width={116}
+                  height={22}
+                  className='h-full w-full object-cover'
+                />
+              </AvatarFallback>
+            </Avatar>
+            <ChevronDown className='h-5 w-5 text-white' />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          className='bg-background w-[350px] rounded-[8px] border border-[#2B2B2B] p-0 !text-white shadow-[0_4px_4px_0_rgba(26,26,26,0.25)]'
+          align='end'
+          forceMount
+        >
+          <DropdownMenuLabel className='p-6 !pb-3 font-normal'>
+            <div className='flex flex-col space-y-1'>
+              <p className='text-sm leading-[160%]'>
+                Signed in as{' '}
+                <span className='leading-[145%] font-semibold'>
+                  {user?.name || user?.profile?.firstName || 'User'}
+                </span>
+              </p>
+              <p className='text-sm leading-[145%] text-[#B5B5B5]'>
+                {user?.email}
+              </p>
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator className='h-[0.5px] bg-[#2B2B2B]' />
+          <DropdownMenuItem
+            className='group hover:!text-primary cursor-pointer px-6 py-3.5 pt-3 hover:!bg-transparent'
+            asChild
+          >
+            <Link
+              href='/profile'
+              className='group-hover:!text-primary flex items-center'
+            >
+              <User className='teext-white group-hover:!text-primary mr-2 h-4 w-4 text-white' />
+              Profile
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className='group hover:!text-primary cursor-pointer px-6 py-3.5 hover:!bg-transparent'
+            asChild
+          >
+            <Link
+              href='/organizations'
+              className='group-hover:text-primary flex items-center'
+            >
+              <Building2 className='group-hover:!text-primary mr-2 h-4 w-4 text-white' />
+              Organizations
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className='group hover:!text-primary cursor-pointer px-6 py-3.5 pb-6 hover:!bg-transparent'
+            asChild
+          >
+            <Link href='/settings' className='flex items-center'>
+              <Settings className='group-hover:!text-primary mr-2 h-4 w-4 text-white' />
+              Settings
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator className='h-[0.5px] bg-[#2B2B2B]' />
+          <DropdownMenuItem
+            onClick={() => logout()}
+            className='group flex cursor-pointer items-center px-6 pt-3 pb-6 text-red-600 hover:!bg-transparent hover:!text-red-700'
+          >
+            <LogOut className='mr-2 h-4 w-4 text-red-600 group-hover:!text-red-700' />
+            Sign Out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <CreateProjectModal
+        open={createProjectModalOpen}
+        setOpen={setCreateProjectModalOpen}
+      />
+    </div>
+  );
+}
+
+function MobileMenu({
+  isAuthenticated,
+  isLoading,
+  user,
+}: {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  user: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    profile?: { firstName?: string | null; avatar?: string | null };
+  } | null;
+}) {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileButtonRef = useRef<HTMLButtonElement>(null);
   const mobileLogoRef = useRef<HTMLAnchorElement>(null);
   const mobileMenuItemsRef = useRef<HTMLDivElement>(null);
   const mobileCTARef = useRef<HTMLDivElement>(null);
-
+  const { logout } = useAuthActions();
+  const [createProjectModalOpen, setCreateProjectModalOpen] = useState(false);
   useGSAP(
     () => {
       gsap.fromTo(
         mobileButtonRef.current,
-        { scale: 0.8, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.4, delay: 0.8 }
+        { opacity: 0 },
+        { opacity: 1, duration: 0.3 }
       );
 
       const buttonHover = gsap.to(mobileButtonRef.current, {
-        scale: 1.05,
+        scale: 1,
         duration: 0.2,
         ease: 'power2.out',
         paused: true,
@@ -267,50 +425,34 @@ function MobileMenu() {
   const animateMobileMenuOpen = () => {
     gsap.fromTo(
       mobileLogoRef.current,
-      { x: -20, opacity: 0 },
-      { x: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }
+      { opacity: 0 },
+      { opacity: 1, duration: 0.3, ease: 'power2.out' }
     );
 
     const menuItems = mobileMenuItemsRef.current?.querySelectorAll('a');
     if (menuItems) {
-      menuItems.forEach((item, index) => {
-        const split = SplitText.create(item, {
-          type: 'chars, words',
-          charsClass: 'char',
-          wordsClass: 'word',
-        });
-
-        gsap.fromTo(
-          split.words,
-          {
-            y: 20,
-            opacity: 0,
-            rotationX: -90,
-            transformOrigin: '50% 50% -20px',
-          },
-          {
-            y: 0,
-            opacity: 1,
-            rotationX: 0,
-            duration: 0.6,
-            stagger: 0.03,
-            delay: 0.2 + index * 0.1,
-            ease: 'back.out(1.7)',
-          }
-        );
-      });
+      gsap.fromTo(
+        menuItems,
+        { opacity: 0, y: 10 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.3,
+          stagger: 0.1,
+          ease: 'power2.out',
+        }
+      );
     }
 
     gsap.fromTo(
       mobileCTARef.current,
-      { y: 30, opacity: 0, scale: 0.9 },
+      { opacity: 0, y: 10 },
       {
-        y: 0,
         opacity: 1,
-        scale: 1,
-        duration: 0.5,
-        delay: 0.8,
-        ease: 'back.out(1.7)',
+        y: 0,
+        duration: 0.3,
+        delay: 0.2,
+        ease: 'power2.out',
       }
     );
   };
@@ -320,15 +462,14 @@ function MobileMenu() {
       [mobileLogoRef.current, mobileMenuItemsRef.current, mobileCTARef.current],
       {
         opacity: 0,
-        y: -20,
-        duration: 0.3,
+        duration: 0.2,
         ease: 'power2.in',
       }
     );
   };
 
   return (
-    <div ref={mobileMenuRef} className='md:hidden'>
+    <div ref={mobileMenuRef} className='justify-self-end md:hidden'>
       <Sheet
         onOpenChange={open => {
           if (open) {
@@ -338,7 +479,7 @@ function MobileMenu() {
           }
         }}
       >
-        <SheetTrigger>
+        <SheetTrigger asChild>
           <BoundlessButton
             ref={mobileButtonRef}
             variant='outline'
@@ -350,9 +491,9 @@ function MobileMenu() {
         <SheetContent
           showCloseButton={false}
           side='top'
-          className='pt-8 px-9 pb-16'
+          className='px-9 pt-8 pb-16'
         >
-          <div className='flex justify-between items-center'>
+          <div className='flex items-center justify-between'>
             <div className='flex-shrink-0'>
               <Link ref={mobileLogoRef} href='/' className='flex items-center'>
                 <Image
@@ -365,7 +506,7 @@ function MobileMenu() {
             </div>
             <SheetClose>
               <BoundlessButton variant='outline'>
-                <XIcon className='w-5 h-5' />
+                <XIcon className='h-5 w-5' />
               </BoundlessButton>
             </SheetClose>
           </div>
@@ -374,19 +515,110 @@ function MobileMenu() {
               <Link
                 key={item.href}
                 href={item.href}
-                className='text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium transition-colors'
+                className='rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:text-white/80'
               >
                 {item.label}
               </Link>
             ))}
           </div>
           <div ref={mobileCTARef}>
-            <BoundlessButton size='xl' className='w-full' fullWidth>
-              <Link href='/auth/signin'>Get Started</Link>
-            </BoundlessButton>
+            {isLoading ? (
+              <div className='flex items-center justify-center space-x-2 py-4'>
+                <div className='h-8 w-8 animate-pulse rounded-full bg-gray-200' />
+                <div className='h-4 w-20 animate-pulse rounded bg-gray-200' />
+              </div>
+            ) : isAuthenticated ? (
+              <div className='space-y-4'>
+                <div className='flex items-center space-x-3 rounded-lg bg-white/10 p-3'>
+                  <Avatar className='h-10 w-10'>
+                    <AvatarImage
+                      src={user?.image || user?.profile?.avatar || ''}
+                      alt={user?.name || user?.profile?.firstName || ''}
+                    />
+                    <AvatarFallback>
+                      {user?.name?.charAt(0) ||
+                        user?.profile?.firstName?.charAt(0) ||
+                        user?.email?.charAt(0) ||
+                        'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className='flex-1'>
+                    <p className='text-sm font-medium text-white'>
+                      {user?.name || user?.profile?.firstName || 'User'}
+                    </p>
+                    <p className='text-xs text-white/70'>{user?.email}</p>
+                  </div>
+                </div>
+
+                {/* Wallet Connection */}
+                <div className='space-y-2'>
+                  <p className='text-xs font-medium tracking-wide text-white/70 uppercase'>
+                    Wallet
+                  </p>
+                  <WalletConnectButton
+                    variant='outline'
+                    size='sm'
+                    className='w-full border-white/20 bg-transparent text-white hover:bg-white/10'
+                  />
+                </div>
+
+                <div className='space-y-2'>
+                  <p className='text-xs font-medium tracking-wide text-white/70 uppercase'>
+                    Navigation
+                  </p>
+                  <Link
+                    href='/profile'
+                    className='block rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10'
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    href='/organizations'
+                    className='block rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10'
+                  >
+                    Organizations
+                  </Link>
+                  <Link
+                    href='/settings'
+                    className='block rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10'
+                  >
+                    Settings
+                  </Link>
+                </div>
+                <BoundlessButton
+                  size='xl'
+                  className='w-full'
+                  fullWidth
+                  variant='outline'
+                  onClick={() => logout()}
+                >
+                  Sign Out
+                </BoundlessButton>
+              </div>
+            ) : (
+              <div className='space-y-4'>
+                <div className='space-y-2'>
+                  <p className='text-xs font-medium tracking-wide text-white/70 uppercase'>
+                    Wallet
+                  </p>
+                  <WalletConnectButton
+                    variant='outline'
+                    size='sm'
+                    className='w-full border-white/20 bg-transparent text-white hover:bg-white/10'
+                  />
+                </div>
+                <BoundlessButton size='xl' className='w-full' fullWidth>
+                  <Link href='/auth'>Get Started</Link>
+                </BoundlessButton>
+              </div>
+            )}
           </div>
         </SheetContent>
       </Sheet>
+      <CreateProjectModal
+        open={createProjectModalOpen}
+        setOpen={setCreateProjectModalOpen}
+      />
     </div>
   );
 }

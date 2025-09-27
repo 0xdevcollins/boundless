@@ -10,6 +10,7 @@ conventional_regex='^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|reve
 
 # Regex for Git merge commits
 merge_regex='^Merge branch .* of .* into .*'
+merge_regex='^Merge branch .* of .*'
 
 # Combined regex - either conventional or merge format
 commit_regex="($conventional_regex|$merge_regex)"

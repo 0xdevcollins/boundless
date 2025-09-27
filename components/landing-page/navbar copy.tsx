@@ -188,9 +188,9 @@ export function Navbar() {
   );
 
   return (
-    <nav ref={navbarRef} className='sticky top-0 left-0 w-full z-50'>
-      <div className='max-w-[92vw] md:max-w-[820px] mx-auto border-[0.5px] border-[rgba(167,249,80,0.24)] rounded-[12px] p-4 '>
-        <div className='flex gap-10 justify-between items-center'>
+    <nav ref={navbarRef} className='sticky top-0 left-0 z-50 w-full'>
+      <div className='mx-auto max-w-[92vw] rounded-[12px] border-[0.5px] border-[rgba(167,249,80,0.24)] p-4 md:max-w-[820px]'>
+        <div className='flex items-center justify-between gap-10'>
           <div className='flex-shrink-0'>
             <Link ref={logoRef} href='/' className='flex items-center'>
               <Image src='/auth/logo.svg' alt='logo' width={116} height={22} />
@@ -203,7 +203,7 @@ export function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className='text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium transition-colors'
+                  className='rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:text-white/80'
                 >
                   {item.label}
                 </Link>
@@ -212,19 +212,19 @@ export function Navbar() {
               <DropdownMenu>
                 <DropdownMenuTrigger
                   asChild
-                  className='text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1'
+                  className='flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:text-white/80'
                 >
                   <BoundlessButton variant='outline'>
                     Learn
                     <ChevronDown className='h-4 w-4' />
                   </BoundlessButton>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className='bg-background !border-[0.1px] border-primary'>
+                <DropdownMenuContent className='bg-background border-primary !border-[0.1px]'>
                   {learnMenuItems.map((item, index) => (
                     <DropdownMenuItem key={item.href} asChild>
                       <Link
                         href={item.href}
-                        className='text-white hover:text-white/80 hover:bg-gray-800 cursor-pointer'
+                        className='cursor-pointer text-white hover:bg-gray-800 hover:text-white/80'
                         style={{
                           animationDelay: `${index * 50}ms`,
                           animation:
@@ -375,7 +375,7 @@ function MobileMenu() {
           }
         }}
       >
-        <SheetTrigger>
+        <SheetTrigger asChild>
           <BoundlessButton
             ref={mobileButtonRef}
             variant='outline'
@@ -387,9 +387,9 @@ function MobileMenu() {
         <SheetContent
           showCloseButton={false}
           side='top'
-          className='pt-8 px-9 pb-16'
+          className='px-9 pt-8 pb-16'
         >
-          <div className='flex justify-between items-center'>
+          <div className='flex items-center justify-between'>
             <div className='flex-shrink-0'>
               <Link ref={mobileLogoRef} href='/' className='flex items-center'>
                 <Image
@@ -402,7 +402,7 @@ function MobileMenu() {
             </div>
             <SheetClose>
               <BoundlessButton variant='outline'>
-                <XIcon className='w-5 h-5' />
+                <XIcon className='h-5 w-5' />
               </BoundlessButton>
             </SheetClose>
           </div>
@@ -411,7 +411,7 @@ function MobileMenu() {
               <Link
                 key={item.href}
                 href={item.href}
-                className='text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium transition-colors'
+                className='rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:text-white/80'
               >
                 {item.label}
               </Link>
@@ -419,21 +419,21 @@ function MobileMenu() {
             <Link
               key='how-it-works'
               href='/how-it-works'
-              className='text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium transition-colors'
+              className='rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:text-white/80'
             >
               How it works
             </Link>
             <Link
               key='about-us'
               href='/about-us'
-              className='text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium transition-colors'
+              className='rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:text-white/80'
             >
               About us
             </Link>
             <Link
               key='blog'
               href='/blog'
-              className='text-white hover:text-white/80 px-3 py-2 rounded-md text-sm font-medium transition-colors'
+              className='rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:text-white/80'
             >
               Blog
             </Link>

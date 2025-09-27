@@ -39,7 +39,7 @@ const BackingHistoryTable: React.FC<BackingHistoryTableProps> = ({
     <div className='overflow-x-auto'>
       <div className='min-w-[600px]'>
         {/* Results Header */}
-        <div className='grid grid-cols-3 gap-5 text-sm font-medium text-muted-foreground border-b border-muted-foreground/20 pb-2 mt-10 mb-0'>
+        <div className='text-muted-foreground border-muted-foreground/20 mt-10 mb-0 grid grid-cols-3 gap-5 border-b pb-2 text-sm font-medium'>
           <div>Backer</div>
           <div className='pl-20'>Amount</div>
           <div className='pl-20'>Date</div>
@@ -50,11 +50,11 @@ const BackingHistoryTable: React.FC<BackingHistoryTableProps> = ({
           {backers.map(backer => (
             <div
               key={backer.id}
-              className='grid grid-cols-3 gap-4 items-center border-b border-muted-foreground/20 py-5 hover:bg-muted/10 px-2 transition-colors'
+              className='border-muted-foreground/20 hover:bg-muted/10 grid grid-cols-3 items-center gap-4 border-b px-2 py-5 transition-colors'
             >
               <div className='flex items-center gap-3'>
-                <div className='relative w-10 h-10'>
-                  <Avatar className='w-10 h-10'>
+                <div className='relative h-10 w-10'>
+                  <Avatar className='h-10 w-10'>
                     <AvatarImage src={backer.avatar || '/placeholder.svg'} />
                     <AvatarFallback
                       className={
@@ -62,27 +62,27 @@ const BackingHistoryTable: React.FC<BackingHistoryTableProps> = ({
                       }
                     >
                       {backer.isAnonymous ? (
-                        <User className='w-4 h-4' />
+                        <User className='h-4 w-4' />
                       ) : (
                         backer.name.charAt(0)
                       )}
                     </AvatarFallback>
                   </Avatar>
-                  <div className='absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-[#2B2B2B] border border-[#2B2B2B] rounded-full flex items-center justify-center'>
-                    <CheckIcon className='w-2.5 h-2.5 text-[#787878]' />
+                  <div className='absolute -right-0.5 -bottom-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-[#2B2B2B] bg-[#2B2B2B]'>
+                    <CheckIcon className='h-2.5 w-2.5 text-[#787878]' />
                   </div>
                 </div>
                 <div>
-                  <div className='text-white font-medium whitespace-nowrap'>
+                  <div className='font-medium whitespace-nowrap text-white'>
                     {backer.name}
                   </div>
-                  <div className='text-xs text-muted-foreground flex items-center gap-1'>
-                    <Wallet className='w-4 h-4 text-lg' />
+                  <div className='text-muted-foreground flex items-center gap-1 text-xs'>
+                    <Wallet className='h-4 w-4 text-lg' />
                     {backer.walletId}
                   </div>
                 </div>
               </div>
-              <div className=' font-medium ml-20 text-muted-foreground'>
+              <div className='text-muted-foreground ml-20 font-medium'>
                 ${backer.amount.toLocaleString()}
               </div>
               <div className='text-muted-foreground ml-20'>
@@ -93,7 +93,7 @@ const BackingHistoryTable: React.FC<BackingHistoryTableProps> = ({
         </div>
 
         {backers.length === 0 && (
-          <div className='text-center py-8 text-muted-foreground'>
+          <div className='text-muted-foreground py-8 text-center'>
             No backers found matching your criteria
           </div>
         )}

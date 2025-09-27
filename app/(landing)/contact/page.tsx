@@ -6,7 +6,7 @@ export const metadata: Metadata = generatePageMetadata('contact');
 
 const ContactPage = () => {
   return (
-    <div className='text-white text-4xl font-bold text-center mt-10'>
+    <div className='mt-10 text-center text-4xl font-bold text-white'>
       Contact Page
     </div>
   );

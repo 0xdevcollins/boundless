@@ -91,13 +91,13 @@ const CreatePasswordForm = ({ email, name }: CreatePasswordFormProps) => {
     <>
       <div className='space-y-6'>
         <div>
-          <h2 className='text-2xl lg:text-[40px] font-medium text-white mb-3'>
+          <h2 className='mb-3 text-2xl font-medium text-white lg:text-[40px]'>
             Create password
           </h2>
-          <p className='text-sm lg:text-base text-[#D9D9D9] leading-relaxed'>
+          <p className='text-sm leading-relaxed text-[#D9D9D9] lg:text-base'>
             Enter the OTP that was sent to {email}
           </p>
-          <p className='text-sm lg:text-base text-[#D9D9D9] leading-relaxed'>
+          <p className='text-sm leading-relaxed text-[#D9D9D9] lg:text-base'>
             Please keep this code private.
           </p>
         </div>
@@ -105,24 +105,24 @@ const CreatePasswordForm = ({ email, name }: CreatePasswordFormProps) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className='space-y-4 w-full'
+            className='w-full space-y-4'
           >
             <FormField
               control={form.control}
               name='password'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='text-white text-xs font-medium'>
+                  <FormLabel className='text-xs font-medium text-white'>
                     Password
                   </FormLabel>
-                  <FormControl className='rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-2.5 h-11 w-full'>
-                    <div className='flex items-center gap-2.5 w-full'>
-                      <LockIcon className='w-5 h-5 text-[#B5B5B5] flex-shrink-0' />
+                  <FormControl className='h-11 w-full rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-2.5'>
+                    <div className='flex w-full items-center gap-2.5'>
+                      <LockIcon className='h-5 w-5 flex-shrink-0 text-[#B5B5B5]' />
                       <Input
                         {...field}
                         type={showPassword ? 'text' : 'password'}
                         placeholder='Enter your password'
-                        className='bg-transparent text-white placeholder:text-[#B5B5B5] border-none focus-visible:ring-0 focus-visible:ring-offset-0 caret-white w-full'
+                        className='w-full border-none bg-transparent text-white caret-white placeholder:text-[#B5B5B5] focus-visible:ring-0 focus-visible:ring-offset-0'
                       />
                       <button
                         type='button'
@@ -130,9 +130,9 @@ const CreatePasswordForm = ({ email, name }: CreatePasswordFormProps) => {
                         className='flex-shrink-0'
                       >
                         {showPassword ? (
-                          <EyeOffIcon className='w-5 h-5 text-[#B5B5B5]' />
+                          <EyeOffIcon className='h-5 w-5 text-[#B5B5B5]' />
                         ) : (
-                          <EyeIcon className='w-5 h-5 text-[#B5B5B5]' />
+                          <EyeIcon className='h-5 w-5 text-[#B5B5B5]' />
                         )}
                       </button>
                     </div>
@@ -147,17 +147,17 @@ const CreatePasswordForm = ({ email, name }: CreatePasswordFormProps) => {
               name='confirmPassword'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='text-white text-xs font-medium'>
+                  <FormLabel className='text-xs font-medium text-white'>
                     Confirm password
                   </FormLabel>
-                  <FormControl className='rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-2.5 h-11 w-full'>
-                    <div className='flex items-center gap-2.5 w-full'>
-                      <LockIcon className='w-5 h-5 text-[#B5B5B5] flex-shrink-0' />
+                  <FormControl className='h-11 w-full rounded-[12px] border border-[#2B2B2B] bg-[#1C1C1C] p-2.5'>
+                    <div className='flex w-full items-center gap-2.5'>
+                      <LockIcon className='h-5 w-5 flex-shrink-0 text-[#B5B5B5]' />
                       <Input
                         {...field}
                         type={showConfirmPassword ? 'text' : 'password'}
                         placeholder='Confirm your password'
-                        className='bg-transparent text-white placeholder:text-[#B5B5B5] border-none focus-visible:ring-0 focus-visible:ring-offset-0 caret-white w-full'
+                        className='w-full border-none bg-transparent text-white caret-white placeholder:text-[#B5B5B5] focus-visible:ring-0 focus-visible:ring-offset-0'
                       />
                       <button
                         type='button'
@@ -167,9 +167,9 @@ const CreatePasswordForm = ({ email, name }: CreatePasswordFormProps) => {
                         className='flex-shrink-0'
                       >
                         {showConfirmPassword ? (
-                          <EyeOffIcon className='w-5 h-5 text-[#B5B5B5]' />
+                          <EyeOffIcon className='h-5 w-5 text-[#B5B5B5]' />
                         ) : (
-                          <EyeIcon className='w-5 h-5 text-[#B5B5B5]' />
+                          <EyeIcon className='h-5 w-5 text-[#B5B5B5]' />
                         )}
                       </button>
                     </div>
@@ -181,7 +181,7 @@ const CreatePasswordForm = ({ email, name }: CreatePasswordFormProps) => {
 
             <BoundlessButton
               type='submit'
-              className='w-full mt-6'
+              className='mt-6 w-full'
               disabled={form.formState.isSubmitting || !form.formState.isValid}
               fullWidth
             >

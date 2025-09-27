@@ -1,5 +1,11 @@
 'use client';
-import React from 'react';
+import { maskEmail } from '@/lib/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Cookies from 'js-cookie';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import z from 'zod';
 import { BoundlessButton } from '../buttons';
 import {
   Form,
@@ -8,13 +14,7 @@ import {
   FormItem,
   FormMessage,
 } from '../ui/form';
-import z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { InputOTP, InputOTPSlot } from '../ui/input-otp';
-import { toast } from 'sonner';
-import { maskEmail } from '@/lib/utils';
-import Cookies from 'js-cookie';
 
 const formSchema = z.object({
   otp: z.string().length(6, {
@@ -26,15 +26,26 @@ interface OtpFormProps {
   email: string;
   onOtpSuccess: () => void;
   onResendOtp: () => void;
+  onLoadingChange?: (isLoading: boolean) => void;
 }
 
-const OtpForm = ({ email, onOtpSuccess, onResendOtp }: OtpFormProps) => {
+const OtpForm = ({
+  email,
+  onOtpSuccess,
+  onResendOtp,
+  onLoadingChange,
+}: OtpFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       otp: '',
     },
   });
+
+  // Notify parent component of loading state changes
+  useEffect(() => {
+    onLoadingChange?.(form.formState.isSubmitting);
+  }, [form.formState.isSubmitting, onLoadingChange]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -90,13 +101,13 @@ const OtpForm = ({ email, onOtpSuccess, onResendOtp }: OtpFormProps) => {
     <>
       <div className='space-y-6'>
         <div>
-          <h2 className='text-2xl lg:text-[40px] font-medium text-white mb-3'>
+          <h2 className='mb-3 text-2xl font-medium text-white lg:text-[40px]'>
             Enter OTP
           </h2>
-          <p className='text-sm lg:text-base text-[#D9D9D9] leading-relaxed'>
+          <p className='text-sm leading-relaxed text-[#D9D9D9] lg:text-base'>
             Enter the OTP that was sent to {maskEmail(email)}
           </p>
-          <p className='text-sm lg:text-base text-[#D9D9D9] leading-relaxed'>
+          <p className='text-sm leading-relaxed text-[#D9D9D9] lg:text-base'>
             Please keep this code private.
           </p>
         </div>
@@ -104,7 +115,7 @@ const OtpForm = ({ email, onOtpSuccess, onResendOtp }: OtpFormProps) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className='space-y-6 w-full '
+            className='w-full space-y-6'
           >
             <FormField
               control={form.control}
@@ -120,27 +131,27 @@ const OtpForm = ({ email, onOtpSuccess, onResendOtp }: OtpFormProps) => {
                     >
                       <InputOTPSlot
                         index={0}
-                        className='w-[73px] h-[73px] text-center text-white bg-[#1C1C1C] border border-[#2B2B2B] !rounded-r-[2px] !rounded-[2px]'
+                        className='h-[73px] w-[73px] !rounded-2xl border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
                       />
                       <InputOTPSlot
                         index={1}
-                        className='w-[73px] h-[73px] text-center text-white bg-[#1C1C1C] border border-[#2B2B2B] rounded-[2px]'
+                        className='h-[73px] w-[73px] rounded-2xl border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
                       />
                       <InputOTPSlot
                         index={2}
-                        className='w-[73px] h-[73px] text-center text-white bg-[#1C1C1C] border border-[#2B2B2B] rounded-[2px]'
+                        className='h-[73px] w-[73px] rounded-2xl border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
                       />
                       <InputOTPSlot
                         index={3}
-                        className='w-[73px] h-[73px] text-center text-white bg-[#1C1C1C] border border-[#2B2B2B] rounded-[2px]'
+                        className='h-[73px] w-[73px] rounded-2xl border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
                       />
                       <InputOTPSlot
                         index={4}
-                        className='w-[73px] h-[73px] text-center text-white bg-[#1C1C1C] border border-[#2B2B2B] rounded-[2px]'
+                        className='h-[73px] w-[73px] rounded-2xl border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
                       />
                       <InputOTPSlot
                         index={5}
-                        className='w-[73px] h-[73px] text-center text-white bg-[#1C1C1C] border border-[#2B2B2B] rounded-[2px]'
+                        className='h-[73px] w-[73px] rounded-2xl border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
                       />
                     </InputOTP>
                   </FormControl>
@@ -167,7 +178,7 @@ const OtpForm = ({ email, onOtpSuccess, onResendOtp }: OtpFormProps) => {
           <button
             type='button'
             onClick={handleResendOtp}
-            className='text-white underline text-sm hover:text-primary transition-colors'
+            className='hover:text-primary text-sm text-white underline transition-colors'
           >
             Send code again
           </button>

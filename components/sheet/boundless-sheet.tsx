@@ -63,7 +63,7 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
       return {
         side: 'bottom' as const,
         className:
-          'w-[calc(100%-30px)] mx-auto   rounded-t-[20px] min-h-[300px] max-h-[85vh] px-4',
+          'w-[calc(100%-30px)] mx-auto rounded-t-[20px] min-h-[300px] max-h-[85vh] px-0',
         closeButtonPosition: 'top-4 -right-0 ',
         maxHeight: '85vh',
       };
@@ -71,7 +71,7 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
 
     if (side === 'bottom') {
       let widthClass = 'w-[calc(100vw-120px)]';
-      let maxWidth = '';
+      let maxWidth = 'max-w-[1032px]';
 
       if (size === 'large') {
         widthClass = 'w-[calc(100vw-80px)]';
@@ -83,8 +83,8 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
 
       return {
         side: 'bottom' as const,
-        className: `${widthClass} mx-auto rounded-t-[24px] min-h-[400px] !max-h-[95vh] px-4 ${maxWidth}`,
-        closeButtonPosition: 'top-0 -right-16',
+        className: `${widthClass} mx-auto rounded-t-[14px] min-h-[400px] !max-h-[95vh] px-0 ${maxWidth}`,
+        closeButtonPosition: 'top-6 right-6',
         maxHeight: '80vh',
       };
     }
@@ -92,7 +92,7 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
     return {
       side,
       className:
-        'w-[calc(100%-120px)] max-w-md mx-auto rounded-[16px] min-h-[400px] h-[100vh] px-4',
+        'w-[calc(100%-120px)] max-w-md mx-auto rounded-[16px] min-h-[400px] h-[100vh] px-0',
       closeButtonPosition: 'top-0 -right-16',
       maxHeight: '80vh',
     };
@@ -106,7 +106,7 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
         ref={sheetRef}
         side={responsiveConfig.side}
         className={cn(
-          'bg-[#030303] border-[rgba(255,255,255,0.10)] backdrop-blur-[10px]',
+          'border-[rgba(255,255,255,0.10)] bg-[#030303] backdrop-blur-[10px]',
           'transition-all duration-300 ease-in-out',
           'focus:outline-none',
           responsiveConfig.className,
@@ -118,10 +118,12 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
         }}
         showCloseButton={false}
       >
-        <SheetHeader className='relative pb-4'>
+        <SheetHeader className='relative flex items-center justify-between pb-4'>
           <SheetTitle
             className={cn(
-              title ? 'text-white text-lg font-semibold text-center' : 'sr-only'
+              title
+                ? 'text-center text-2xl font-semibold text-white'
+                : 'sr-only'
             )}
           >
             {title || 'Dialog'}
@@ -131,27 +133,27 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
             <SheetClose
               onClick={() => setOpen(false)}
               className={cn(
-                'absolute bg-white hover:bg-white/20 rounded-full p-2',
-                'w-10 h-10 flex items-center justify-center',
+                'absolute rounded-full bg-white p-2 hover:bg-white/20',
+                'flex h-10 w-10 items-center justify-center',
                 'border border-white/20 backdrop-blur-[10px]',
                 'transition-all duration-200 ease-in-out',
-                'focus:outline-none focus:ring-2 focus:ring-white/30',
+                'focus:ring-2 focus:ring-white/30 focus:outline-none',
                 'hover:scale-105 active:scale-95',
-                'shadow-lg',
+                'z-40 shadow-lg',
                 responsiveConfig.closeButtonPosition
               )}
               aria-label='Close sheet'
             >
-              <XIcon className='w-5 h-5 text-background' />
+              <XIcon className='text-background h-5 w-5' />
             </SheetClose>
           )}
         </SheetHeader>
 
         <div
           className={cn(
-            'flex-1 overflow-y-auto relative ',
-            'custom-scrollbar',
-            'px-4 pb-4'
+            'relative flex-1 overflow-y-auto',
+            'custom-scrollbar'
+            // 'md:px-[75px] lg:px-[150px] px-4 pb-4'
           )}
         >
           {children}

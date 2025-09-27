@@ -106,15 +106,9 @@ export const logout = async (token?: string): Promise<LogoutResponse> => {
       path: string;
     }>('/auth/logout', undefined, config);
 
-    // Use the auth store to handle logout
-    const authStore = useAuthStore.getState();
-    await authStore.logout();
-
     return res.data.data;
   } catch (error) {
-    // Even if the API call fails, clear the local auth state
-    const authStore = useAuthStore.getState();
-    authStore.clearAuth();
+    // Don't clear auth state here - let the calling function handle it
     throw error;
   }
 };

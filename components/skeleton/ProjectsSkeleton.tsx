@@ -5,7 +5,7 @@ import { fadeInUp, staggerContainer } from '@/lib/motion';
 export const ProjectsPageSkeleton = () => {
   return (
     <div className='min-h-screen'>
-      <div className='p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto'>
+      <div className='mx-auto max-w-7xl p-4 sm:p-6 lg:p-8'>
         <ProjectsSkeleton />
       </div>
     </div>
@@ -15,37 +15,35 @@ export const ProjectsPageSkeleton = () => {
 export const ProjectsSkeleton = () => {
   return (
     <>
-      {/* Header */}
       <motion.div
-        className='flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3 sm:gap-4 xl:gap-0'
+        className='flex flex-col items-start justify-between gap-3 sm:gap-4 xl:flex-row xl:items-center xl:gap-0'
         variants={fadeInUp}
       >
         <div className='flex items-center gap-2 sm:gap-3 xl:gap-5'>
           <Skeleton className='h-6 w-32 sm:h-7 sm:w-40' />
         </div>
-        <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 w-full xl:w-auto'>
+        <div className='flex w-full flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3 xl:w-auto'>
           <Skeleton className='h-10 w-32' />
           <Skeleton className='h-10 w-24' />
         </div>
       </motion.div>
 
-      {/* Projects Grid */}
       <motion.div
-        className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
+        className='grid grid-cols-1 gap-4 sm:grid-cols-1 sm:gap-6 md:grid-cols-2 lg:grid-cols-3'
         variants={staggerContainer}
       >
         {Array.from({ length: 6 }).map((_, index) => (
           <motion.div
             key={index}
-            className='bg-[#2B2B2B] p-4 rounded-[12px] border border-[#484848]'
+            className='rounded-[12px] border border-[#484848] bg-[#2B2B2B] p-4'
             variants={fadeInUp}
             custom={index}
           >
-            <div className='flex items-start gap-3 mb-3'>
-              <Skeleton className='w-16 h-16 rounded-lg flex-shrink-0' />
-              <div className='flex-1 min-w-0'>
-                <Skeleton className='h-5 w-3/4 mb-2' />
-                <Skeleton className='h-4 w-full mb-1' />
+            <div className='mb-3 flex items-start gap-3'>
+              <Skeleton className='h-16 w-16 flex-shrink-0 rounded-lg' />
+              <div className='min-w-0 flex-1'>
+                <Skeleton className='mb-2 h-5 w-3/4' />
+                <Skeleton className='mb-1 h-4 w-full' />
                 <Skeleton className='h-4 w-2/3' />
               </div>
             </div>

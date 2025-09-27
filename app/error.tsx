@@ -22,37 +22,37 @@ const Error: React.FC<ErrorProps> = ({ error, reset }) => {
   };
 
   return (
-    <div className='min-h-screen bg-background flex items-center justify-center p-4'>
-      <div className='max-w-lg w-full'>
+    <div className='bg-background flex min-h-screen items-center justify-center p-4'>
+      <div className='w-full max-w-lg'>
         {/* Error Card */}
-        <div className='bg-[#1C1C1C] rounded-[12px] border border-[#21413F3D] shadow-[0_1.5px_4px_-1px_rgba(16,25,40,0.07)] p-8 text-center'>
+        <div className='rounded-[12px] border border-[#21413F3D] bg-[#1C1C1C] p-8 text-center shadow-[0_1.5px_4px_-1px_rgba(16,25,40,0.07)]'>
           {/* Error Icon */}
-          <div className='mx-auto w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-6'>
-            <AlertTriangle className='w-8 h-8 text-red-500' />
+          <div className='mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10'>
+            <AlertTriangle className='h-8 w-8 text-red-500' />
           </div>
 
           {/* Error Title */}
-          <h1 className='text-white text-2xl font-bold mb-4'>
+          <h1 className='mb-4 text-2xl font-bold text-white'>
             Something went wrong
           </h1>
 
           {/* Error Message */}
-          <p className='text-gray-400 text-sm mb-6 leading-relaxed'>
+          <p className='mb-6 text-sm leading-relaxed text-gray-400'>
             We encountered an unexpected error. Don&apos;t worry, our team has
             been notified and is working to fix it.
           </p>
 
           {/* Error Details (Development only) */}
           {process.env.NODE_ENV === 'development' && (
-            <div className='bg-[#2A2A2A] rounded-lg p-4 mb-6 text-left'>
-              <h3 className='text-white text-sm font-semibold mb-2'>
+            <div className='mb-6 rounded-lg bg-[#2A2A2A] p-4 text-left'>
+              <h3 className='mb-2 text-sm font-semibold text-white'>
                 Error Details:
               </h3>
-              <p className='text-red-400 text-xs font-mono break-all'>
+              <p className='font-mono text-xs break-all text-red-400'>
                 {error.message}
               </p>
               {error.digest && (
-                <p className='text-gray-500 text-xs mt-2'>
+                <p className='mt-2 text-xs text-gray-500'>
                   Error ID: {error.digest}
                 </p>
               )}
@@ -64,7 +64,7 @@ const Error: React.FC<ErrorProps> = ({ error, reset }) => {
             <BoundlessButton
               onClick={handleReset}
               className='w-full'
-              icon={<RefreshCw className='w-4 h-4' />}
+              icon={<RefreshCw className='h-4 w-4' />}
             >
               Try Again
             </BoundlessButton>
@@ -74,7 +74,7 @@ const Error: React.FC<ErrorProps> = ({ error, reset }) => {
                 variant='secondary'
                 onClick={handleGoBack}
                 className='flex-1'
-                icon={<ArrowLeft className='w-4 h-4' />}
+                icon={<ArrowLeft className='h-4 w-4' />}
               >
                 Go Back
               </BoundlessButton>
@@ -83,7 +83,7 @@ const Error: React.FC<ErrorProps> = ({ error, reset }) => {
                 variant='secondary'
                 onClick={handleGoHome}
                 className='flex-1'
-                icon={<Home className='w-4 h-4' />}
+                icon={<Home className='h-4 w-4' />}
               >
                 Go Home
               </BoundlessButton>
@@ -91,12 +91,12 @@ const Error: React.FC<ErrorProps> = ({ error, reset }) => {
           </div>
 
           {/* Support Info */}
-          <div className='mt-6 pt-6 border-t border-[#2A2A2A]'>
-            <p className='text-gray-500 text-xs'>
+          <div className='mt-6 border-t border-[#2A2A2A] pt-6'>
+            <p className='text-xs text-gray-500'>
               Still having issues?{' '}
               <a
                 href='mailto:support@boundlessfi.xyz'
-                className='text-blue-400 hover:text-blue-300 underline'
+                className='text-blue-400 underline hover:text-blue-300'
               >
                 Contact Support
               </a>
@@ -105,8 +105,8 @@ const Error: React.FC<ErrorProps> = ({ error, reset }) => {
         </div>
 
         {/* Footer */}
-        <div className='text-center mt-6'>
-          <p className='text-gray-600 text-xs'>
+        <div className='mt-6 text-center'>
+          <p className='text-xs text-gray-600'>
             Boundless Platform • Error Page
           </p>
         </div>

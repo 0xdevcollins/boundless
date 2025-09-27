@@ -3,6 +3,9 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { getMe, logout } from '@/lib/api/auth';
 import Cookies from 'js-cookie';
 
+// Debounce utility for API calls
+let refreshTimeout: NodeJS.Timeout | null = null;
+
 // JWT payload interface
 interface JWTPayload {
   user_id?: string;
@@ -201,48 +204,60 @@ export const useAuthStore = create<AuthState>()(
       },
 
       refreshUser: async () => {
-        try {
-          const { accessToken } = get();
-
-          if (!accessToken) {
-            throw new Error('No access token available');
-          }
-
-          set({ isLoading: true, error: null });
-
-          const user = await getMe(accessToken);
-
-          const transformedUser: User = {
-            id: (user._id || user.id) as string,
-            email: user.email as string,
-            name: (user.profile?.firstName || user.name) as string | null,
-            image: (user.profile?.avatar || user.image) as string | null,
-            role: (user.roles?.[0] === 'ADMIN' ? 'ADMIN' : 'USER') as
-              | 'USER'
-              | 'ADMIN',
-            isVerified: user.isVerified as boolean | undefined,
-            profile: user.profile as User['profile'],
-          };
-
-          set({
-            user: transformedUser,
-            isAuthenticated: true,
-            isLoading: false,
-          });
-        } catch (error) {
-          set({
-            error:
-              error instanceof Error ? error.message : 'Failed to refresh user',
-            isLoading: false,
-          });
-
-          // If refresh fails, clear auth data
-          if (error instanceof Error && error.message.includes('401')) {
-            get().clearAuth();
-          }
-
-          throw error;
+        // Clear any existing timeout
+        if (refreshTimeout) {
+          clearTimeout(refreshTimeout);
         }
+
+        return new Promise<void>((resolve, reject) => {
+          refreshTimeout = setTimeout(async () => {
+            try {
+              const { accessToken } = get();
+
+              if (!accessToken) {
+                throw new Error('No access token available');
+              }
+
+              set({ isLoading: true, error: null });
+
+              const user = await getMe(accessToken);
+
+              const transformedUser: User = {
+                id: (user._id || user.id) as string,
+                email: user.email as string,
+                name: (user.profile?.firstName || user.name) as string | null,
+                image: (user.profile?.avatar || user.image) as string | null,
+                role: (user.roles?.[0] === 'ADMIN' ? 'ADMIN' : 'USER') as
+                  | 'USER'
+                  | 'ADMIN',
+                isVerified: user.isVerified as boolean | undefined,
+                profile: user.profile as User['profile'],
+              };
+
+              set({
+                user: transformedUser,
+                isAuthenticated: true,
+                isLoading: false,
+              });
+              resolve();
+            } catch (error) {
+              set({
+                error:
+                  error instanceof Error
+                    ? error.message
+                    : 'Failed to refresh user',
+                isLoading: false,
+              });
+
+              // If refresh fails, clear auth data
+              if (error instanceof Error && error.message.includes('401')) {
+                get().clearAuth();
+              }
+
+              reject(error);
+            }
+          }, 300); // 300ms debounce
+        });
       },
 
       clearAuth: () => {
@@ -344,7 +359,7 @@ export const useAuthStore = create<AuthState>()(
           !state?.user
         ) {
           // This will trigger a refresh of user data
-          setTimeout(() => {
+          const timeoutId = setTimeout(() => {
             const store = useAuthStore.getState();
             if (store.accessToken && !store.user) {
               store.refreshUser().catch(() => {
@@ -352,6 +367,13 @@ export const useAuthStore = create<AuthState>()(
               });
             }
           }, 100);
+
+          // Store timeout ID for potential cleanup
+          if (typeof window !== 'undefined') {
+            (
+              window as unknown as { __authTimeoutId?: NodeJS.Timeout }
+            ).__authTimeoutId = timeoutId;
+          }
         }
       },
     }

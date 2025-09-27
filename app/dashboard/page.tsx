@@ -30,7 +30,7 @@ export default function DashboardPage() {
 
   if (status === 'loading') {
     return (
-      <div className='min-h-screen flex items-center justify-center'>
+      <div className='flex min-h-screen items-center justify-center'>
         <div className='flex items-center space-x-2'>
           <Loader2 className='h-6 w-6 animate-spin' />
           <span>Loading...</span>
@@ -45,8 +45,8 @@ export default function DashboardPage() {
 
   return (
     <div className='min-h-screen bg-gray-50 py-8'>
-      <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='flex justify-between items-center mb-8'>
+      <div className='mx-auto max-w-4xl px-4 sm:px-6 lg:px-8'>
+        <div className='mb-8 flex items-center justify-between'>
           <h1 className='text-3xl font-bold text-gray-900'>Dashboard</h1>
           <Button onClick={handleSignOut} variant='outline'>
             <LogOut className='mr-2 h-4 w-4' />
@@ -91,7 +91,7 @@ export default function DashboardPage() {
             <CardContent className='space-y-2'>
               <div className='flex justify-between'>
                 <span className='text-sm text-gray-500'>User ID:</span>
-                <span className='text-sm font-mono'>{session.user.id}</span>
+                <span className='font-mono text-sm'>{session.user.id}</span>
               </div>
               <div className='flex justify-between'>
                 <span className='text-sm text-gray-500'>Email:</span>
