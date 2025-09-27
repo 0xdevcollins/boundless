@@ -101,7 +101,7 @@ const BackedBy = () => {
   };
 
   useGSAP(
-    (context, contextSafe) => {
+    () => {
       if (
         !containerRef.current ||
         !column1Ref.current ||
@@ -110,82 +110,82 @@ const BackedBy = () => {
       )
         return;
 
-      const container = containerRef.current;
+      // const container = containerRef.current;
 
-      const createSeamlessScrollAnimation = (
-        element: HTMLElement,
-        direction: 'up' | 'down' = 'up'
-      ) => {
-        const children = Array.from(element.children);
-        const totalHeight = children.reduce((acc, child) => {
-          const rect = child.getBoundingClientRect();
-          return acc + rect.height + 24;
-        }, 0);
+      // const createSeamlessScrollAnimation = (
+      //   element: HTMLElement,
+      //   direction: 'up' | 'down' = 'up'
+      // ) => {
+      //   const children = Array.from(element.children);
+      //   const totalHeight = children.reduce((acc, child) => {
+      //     const rect = child.getBoundingClientRect();
+      //     return acc + rect.height + 24;
+      //   }, 0);
 
-        const wrapper = document.createElement('div');
-        wrapper.style.position = 'relative';
+      //   const wrapper = document.createElement('div');
+      //   wrapper.style.position = 'relative';
 
-        children.forEach(child => {
-          wrapper.appendChild(child);
-        });
+      //   children.forEach(child => {
+      //     wrapper.appendChild(child);
+      //   });
 
-        const clone = wrapper.cloneNode(true) as HTMLElement;
-        wrapper.appendChild(clone);
+      //   const clone = wrapper.cloneNode(true) as HTMLElement;
+      //   wrapper.appendChild(clone);
 
-        element.innerHTML = '';
-        element.appendChild(wrapper);
+      //   element.innerHTML = '';
+      //   element.appendChild(wrapper);
 
-        const scrollDistance = direction === 'up' ? -totalHeight : totalHeight;
+      //   const scrollDistance = direction === 'up' ? -totalHeight : totalHeight;
 
-        gsap.set(wrapper, {
-          y: 0,
-          force3D: true,
-          willChange: 'transform',
-        });
+      //   gsap.set(wrapper, {
+      //     y: 0,
+      //     force3D: true,
+      //     willChange: 'transform',
+      //   });
 
-        const animation = gsap.to(wrapper, {
-          y: scrollDistance,
-          duration: 30,
-          ease: 'none',
-          repeat: -1,
-          force3D: true,
-          transformOrigin: 'center center',
-          immediateRender: false,
-          lazy: false,
-        });
+      //   const animation = gsap.to(wrapper, {
+      //     y: scrollDistance,
+      //     duration: 30,
+      //     ease: 'none',
+      //     repeat: -1,
+      //     force3D: true,
+      //     transformOrigin: 'center center',
+      //     immediateRender: false,
+      //     lazy: false,
+      //   });
 
-        return animation;
-      };
+      //   return animation;
+      // };
 
-      const animations = [
-        createSeamlessScrollAnimation(column1Ref.current, 'up'),
-        createSeamlessScrollAnimation(column2Ref.current, 'down'),
-        createSeamlessScrollAnimation(column3Ref.current, 'up'),
-      ];
+      // const animations = [
+      //   createSeamlessScrollAnimation(column1Ref.current, 'up'),
+      //   createSeamlessScrollAnimation(column2Ref.current, 'down'),
+      //   createSeamlessScrollAnimation(column3Ref.current, 'up'),
+      // ];
 
-      const handleMouseEnter =
-        contextSafe?.(() => {
-          animations.forEach(anim => anim.pause());
-        }) ||
-        (() => {
-          animations.forEach(anim => anim.pause());
-        });
+      // const handleMouseEnter =
+      //   contextSafe?.(() => {
+      //     animations.forEach(anim => anim.pause());
+      //   }) ||
+      //   (() => {
+      //     animations.forEach(anim => anim.pause());
+      //   });
 
-      const handleMouseLeave =
-        contextSafe?.(() => {
-          animations.forEach(anim => anim.resume());
-        }) ||
-        (() => {
-          animations.forEach(anim => anim.resume());
-        });
+      // const handleMouseLeave =
+      //   contextSafe?.(() => {
+      //     animations.forEach(anim => anim.resume());
+      //   }) ||
+      //   (() => {
+      //     animations.forEach(anim => anim.resume());
+      //   });
 
-      container.addEventListener('mouseenter', handleMouseEnter);
-      container.addEventListener('mouseleave', handleMouseLeave);
+      // container.addEventListener('mouseenter', handleMouseEnter);
+      // container.addEventListener('mouseleave', handleMouseLeave);
 
-      return () => {
-        container.removeEventListener('mouseenter', handleMouseEnter);
-        container.removeEventListener('mouseleave', handleMouseLeave);
-      };
+      // return () => {
+      //   container.removeEventListener('mouseenter', handleMouseEnter);
+      //   container.removeEventListener('mouseleave', handleMouseLeave);
+      // };
     },
     {
       scope: containerRef,

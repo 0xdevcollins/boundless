@@ -117,16 +117,31 @@ function AboutUsDifferent({ className = '' }: AboutUsDifferentProps) {
         {features.map((feature, index) => (
           <article
             key={feature.id}
-            className={`flex h-full w-full flex-col items-center gap-4 rounded-[12px] border border-white/48 p-4 backdrop-blur-[7px] md:gap-6 md:p-6 ${
-              index < 2
-                ? 'bg-[#101010A3] bg-[url("/card-bg.svg")] bg-center bg-no-repeat'
-                : 'bg-black/85 bg-[url("/card-bg.svg")] bg-center bg-no-repeat backdrop-blur-2xl'
+            className={`relative flex h-full w-full flex-col items-center gap-4 overflow-hidden rounded-[12px] border border-white/48 p-4 backdrop-blur-[7px] md:gap-6 md:p-6 ${
+              index < 2 ? 'bg-[#101010A3]' : 'bg-black/85 backdrop-blur-2xl'
             } ${feature.gridClass || ''}`}
             role='listitem'
             aria-labelledby={`${feature.id}-title`}
           >
             <div
-              className='flex h-[200px] w-full flex-shrink-0 items-center justify-center md:h-[240px]'
+              className="pointer-events-none absolute inset-0 bg-[url('/card-bg.svg')] bg-center bg-no-repeat"
+              style={{
+                opacity: 0.05,
+                WebkitMaskImage:
+                  'radial-gradient(circle, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 70%)',
+                WebkitMaskRepeat: 'no-repeat',
+                WebkitMaskPosition: 'center',
+                WebkitMaskSize: 'cover',
+                maskImage:
+                  'radial-gradient(circle, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 70%)',
+                maskRepeat: 'no-repeat',
+                maskPosition: 'center',
+                maskSize: 'cover',
+              }}
+            />
+
+            <div
+              className='relative flex h-[200px] w-full flex-shrink-0 items-center justify-center md:h-[240px]'
               style={{ maxWidth: `${feature.image.width}px` }}
             >
               <Image
@@ -139,7 +154,8 @@ function AboutUsDifferent({ className = '' }: AboutUsDifferentProps) {
                 quality={90}
               />
             </div>
-            <div className='flex flex-grow flex-col gap-2 px-4 py-4 md:gap-2.5 md:px-8 md:py-6'>
+
+            <div className='relative flex flex-grow flex-col gap-2 px-4 py-4 md:gap-2.5 md:px-8 md:py-6'>
               <h3
                 id={`${feature.id}-title`}
                 className='text-base font-semibold text-white md:text-lg'
