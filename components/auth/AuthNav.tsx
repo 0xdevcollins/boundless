@@ -46,10 +46,15 @@ export function AuthNav() {
           <Avatar className='h-8 w-8'>
             <AvatarImage
               src={session.user.image || ''}
-              alt={session.user.name || ''}
+              alt={
+                session.user.firstName && session.user.lastName
+                  ? `${session.user.firstName} ${session.user.lastName}`
+                  : session.user.firstName || session.user.lastName || ''
+              }
             />
             <AvatarFallback>
-              {session.user.name?.charAt(0) || session.user.email.charAt(0)}
+              {(session.user.firstName || session.user.lastName)?.charAt(0) ||
+                session.user.email.charAt(0)}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -58,7 +63,9 @@ export function AuthNav() {
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
             <p className='text-sm leading-none font-medium'>
-              {session.user.name || 'User'}
+              {session.user.firstName && session.user.lastName
+                ? `${session.user.firstName} ${session.user.lastName}`
+                : session.user.firstName || session.user.lastName || 'User'}
             </p>
             <p className='text-muted-foreground text-xs leading-none'>
               {session.user.email}

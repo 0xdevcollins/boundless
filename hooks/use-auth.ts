@@ -26,8 +26,12 @@ export function useAuth(requireAuth = true) {
       // Convert NextAuth session user to SessionUser format
       const sessionUser = {
         ...session.user,
-        name: session.user.name || undefined, // Convert null to undefined
+        name:
+          session.user.firstName && session.user.lastName
+            ? `${session.user.firstName} ${session.user.lastName}`
+            : session.user.firstName || session.user.lastName || undefined, // Convert null to undefined
         image: session.user.image || undefined, // Convert null to undefined
+        username: session.user.username || undefined, // Convert null to undefined
       };
 
       // Only sync if we don't already have user data in Zustand store
@@ -152,8 +156,12 @@ export function useAuthStatus() {
     ) {
       const sessionUser = {
         ...session.user,
-        name: session.user.name || undefined,
+        name:
+          session.user.firstName && session.user.lastName
+            ? `${session.user.firstName} ${session.user.lastName}`
+            : session.user.firstName || session.user.lastName || undefined,
         image: session.user.image || undefined,
+        username: session.user.username || undefined, // Convert null to undefined
       };
       syncWithSession(sessionUser).catch(() => {
         // Silently handle sync failure

@@ -10,6 +10,13 @@ export const socialLinks = {
   telegram: 'https://t.me/boundlessfi',
   gmail: 'hello@boundlessfi.xyz',
 };
+export const ProfileSocialLinks = {
+  discord: 'https://discord.gg/boundlessfi',
+  telegram: 'https://t.me/boundlessfi',
+  github: 'https://github.com/boundlessfi',
+  linkedin: 'https://www.linkedin.com/company/boundlesshq/',
+  x: 'https://x.com/boundless_fi',
+};
 
 export const backedBy = [
   {

@@ -46,8 +46,8 @@ export const login = async (data: LoginRequest): Promise<LoginResponse> => {
       path: string;
     }>('/auth/login', data);
 
+    // console.log('loginData', loginResData);
     const loginData = res.data.data;
-
     if (loginData.accessToken) {
       // Use the auth store to handle login
       const authStore = useAuthStore.getState();
@@ -193,4 +193,21 @@ export const getAuthHeaders = (): Record<string, string> => {
   const { accessToken } = authStore;
 
   return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+};
+
+export const getUserProfileByUsername = async (
+  username: string,
+  token?: string
+): Promise<GetMeResponse> => {
+  const config = token
+    ? { headers: { Authorization: `Bearer ${token}` } }
+    : undefined;
+  const res = await api.get<{
+    success: boolean;
+    data: GetMeResponse;
+    message?: string;
+    timestamp: string;
+    path?: string;
+  }>(`/users/profile/${username}`, config);
+  return res.data.data;
 };

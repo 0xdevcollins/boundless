@@ -25,6 +25,7 @@ interface SessionUser {
   image?: string;
   role?: string;
   accessToken?: string;
+  username?: string;
   [key: string]: unknown;
 }
 
@@ -53,11 +54,13 @@ export interface User {
   name: string | null;
   image: string | null;
   role: 'USER' | 'ADMIN';
+  username?: string | null;
   isVerified?: boolean;
   profile?: {
     firstName?: string;
     lastName?: string;
     avatar?: string;
+    username?: string;
   };
 }
 
@@ -151,6 +154,9 @@ export const useAuthStore = create<AuthState>()(
             email: user.email as string,
             name: (user.profile?.firstName || user.name) as string | null,
             image: (user.profile?.avatar || user.image) as string | null,
+            username: (user.profile?.username || user.username) as
+              | string
+              | null,
             role: (user.roles?.[0] === 'ADMIN' ? 'ADMIN' : 'USER') as
               | 'USER'
               | 'ADMIN',
@@ -227,6 +233,9 @@ export const useAuthStore = create<AuthState>()(
                 email: user.email as string,
                 name: (user.profile?.firstName || user.name) as string | null,
                 image: (user.profile?.avatar || user.image) as string | null,
+                username: (user.profile?.username || user.username) as
+                  | string
+                  | null,
                 role: (user.roles?.[0] === 'ADMIN' ? 'ADMIN' : 'USER') as
                   | 'USER'
                   | 'ADMIN',
@@ -295,6 +304,9 @@ export const useAuthStore = create<AuthState>()(
               email: user.email as string,
               name: (user.profile?.firstName || user.name) as string | null,
               image: (user.profile?.avatar || user.image) as string | null,
+              username: (user.profile?.username || user.username) as
+                | string
+                | null,
               role: (user.roles?.[0] === 'ADMIN' ? 'ADMIN' : 'USER') as
                 | 'USER'
                 | 'ADMIN',
@@ -321,6 +333,7 @@ export const useAuthStore = create<AuthState>()(
                 email: sessionUser.email,
                 name: sessionUser.name || null,
                 image: sessionUser.image || null,
+                username: sessionUser.username || null,
                 role: 'USER',
               };
 

@@ -200,7 +200,7 @@ export function Navbar() {
               <AuthenticatedNav user={user} />
             ) : (
               <BoundlessButton>
-                <Link href='/auth/signin'>Get Started</Link>
+                <Link href='/auth'>Get Started</Link>
               </BoundlessButton>
             )}
           </div>
@@ -223,6 +223,7 @@ function AuthenticatedNav({
     email?: string | null;
     image?: string | null;
     profile?: { firstName?: string | null; avatar?: string | null };
+    username?: string | null;
   } | null;
 }) {
   const { logout } = useAuthActions();
@@ -313,7 +314,7 @@ function AuthenticatedNav({
             asChild
           >
             <Link
-              href='/profile'
+              href={`/profile/${user?.username}`}
               className='group-hover:!text-primary flex items-center'
             >
               <User className='teext-white group-hover:!text-primary mr-2 h-4 w-4 text-white' />
@@ -371,6 +372,7 @@ function MobileMenu({
     email?: string | null;
     image?: string | null;
     profile?: { firstName?: string | null; avatar?: string | null };
+    username?: string | null;
   } | null;
 }) {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -567,7 +569,7 @@ function MobileMenu({
                     Navigation
                   </p>
                   <Link
-                    href='/profile'
+                    href={`/profile/${user?.username}`}
                     className='block rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10'
                   >
                     Profile
