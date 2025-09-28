@@ -6,7 +6,7 @@
 <circle cx="225.85" cy="103.542" r="41.6357" fill="#63B28C"/>
 </g>
 <foreignObject x="167.636" y="43.8547" width="117.583" height="120.639"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(2.07px);clip-path:url(#bgblur_0_2214_9847_clip_path);height:100%;width:100%"></div></foreignObject><g filter="url(#filter2_d_2214_9847)" data-figma-bg-blur-radius="4.14526">
-<rect x="171.781" y="48" width="109.292" height="109.294" rx="54.6462" fill="url(#paint0_linear_2214_9847)" fill-opacity="0.8" shape-rendering="crispEdges"/>
+<rect x="171.781" y="48" width="109.292" height="109.294" rx="54.6462" fill="url(#paint0_linear_2214_9847)" fillOpacity="0.8" shape-rendering="crispEdges"/>
 <rect x="172.274" y="48.4923" width="108.308" height="108.309" rx="54.1539" stroke="url(#paint1_linear_2214_9847)" stroke-opacity="0.68" stroke-width="0.984622" shape-rendering="crispEdges"/>
 <foreignObject x="169.226" y="45.2221" width="113.999" height="113.999"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(9.85px);clip-path:url(#bgblur_1_2214_9847_clip_path);height:100%;width:100%"></div></foreignObject><g data-figma-bg-blur-radius="19.6923">
 <mask id="path-5-inside-1_2214_9847" fill="white">
@@ -60,9 +60,9 @@
 <g filter="url(#filter9_f_2214_9847)">
 <path d="M329.288 103H317.578" stroke="#4EA859" stroke-width="1.30112"/>
 </g>
-<path d="M106 93H160" stroke="url(#paint8_linear_2214_9847)" stroke-width="2" stroke-linecap="round"/>
-<path d="M106 113H160" stroke="url(#paint9_linear_2214_9847)" stroke-width="2" stroke-linecap="round"/>
-<path d="M106 103H164" stroke="url(#paint10_linear_2214_9847)" stroke-width="2" stroke-linecap="round"/>
+<path d="M106 93H160" stroke="url(#paint8_linear_2214_9847)" stroke-width="2" strokeLinecap="round"/>
+<path d="M106 113H160" stroke="url(#paint9_linear_2214_9847)" stroke-width="2" strokeLinecap="round"/>
+<path d="M106 103H164" stroke="url(#paint10_linear_2214_9847)" stroke-width="2" strokeLinecap="round"/>
 <defs>
 <filter id="filter0_f_2214_9847" x="164.746" y="35.7646" width="124.722" height="88.4708" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
@@ -120,7 +120,7 @@
 </linearGradient>
 <linearGradient id="paint1_linear_2214_9847" x1="226.318" y1="6.98242" x2="226.318" y2="159.173" gradientUnits="userSpaceOnUse">
 <stop stop-color="#A7F950"/>
-<stop offset="1" stop-color="#A7F950" stop-opacity="0"/>
+<stop offset="1" stop-color="#A7F950" stopOpacity="0"/>
 </linearGradient>
 <linearGradient id="paint3_linear_2214_9847" x1="234.239" y1="87.3578" x2="212.644" y2="119.956" gradientUnits="userSpaceOnUse">
 <stop stop-color="white"/>
@@ -135,26 +135,26 @@
 <stop offset="1" stop-color="#27AC71"/>
 </linearGradient>
 <linearGradient id="paint7_linear_2214_9847" x1="365.223" y1="76.7861" x2="391.72" y2="121.815" gradientUnits="userSpaceOnUse">
-<stop offset="0.7" stop-color="#3BC085" stop-opacity="0.48"/>
-<stop offset="1" stop-color="#24D854" stop-opacity="0.14"/>
+<stop offset="0.7" stop-color="#3BC085" stopOpacity="0.48"/>
+<stop offset="1" stop-color="#24D854" stopOpacity="0.14"/>
 </linearGradient>
 <linearGradient id="paint8_linear_2214_9847" x1="106" y1="93.5" x2="160" y2="93.5" gradientUnits="userSpaceOnUse">
-<stop stop-color="#101010" stop-opacity="0.24"/>
-<stop offset="0.35" stop-color="#999999" stop-opacity="0.64"/>
+<stop stop-color="#101010" stopOpacity="0.24"/>
+<stop offset="0.35" stop-color="#999999" stopOpacity="0.64"/>
 <stop offset="0.528071" stop-color="#101010"/>
-<stop offset="0.67479" stop-color="#101010" stop-opacity="0.24"/>
-<stop offset="1" stop-color="#999999" stop-opacity="0.64"/>
+<stop offset="0.67479" stop-color="#101010" stopOpacity="0.24"/>
+<stop offset="1" stop-color="#999999" stopOpacity="0.64"/>
 </linearGradient>
 <linearGradient id="paint9_linear_2214_9847" x1="106" y1="113.5" x2="160" y2="113.5" gradientUnits="userSpaceOnUse">
-<stop stop-color="#101010" stop-opacity="0.24"/>
-<stop offset="0.35" stop-color="#999999" stop-opacity="0.64"/>
+<stop stop-color="#101010" stopOpacity="0.24"/>
+<stop offset="0.35" stop-color="#999999" stopOpacity="0.64"/>
 <stop offset="0.528071" stop-color="#101010"/>
-<stop offset="0.67479" stop-color="#101010" stop-opacity="0.24"/>
-<stop offset="1" stop-color="#999999" stop-opacity="0.64"/>
+<stop offset="0.67479" stop-color="#101010" stopOpacity="0.24"/>
+<stop offset="1" stop-color="#999999" stopOpacity="0.64"/>
 </linearGradient>
 <linearGradient id="paint10_linear_2214_9847" x1="106" y1="103.5" x2="164" y2="103.5" gradientUnits="userSpaceOnUse">
-<stop stop-color="#101010" stop-opacity="0.24"/>
-<stop offset="1" stop-color="#999999" stop-opacity="0.64"/>
+<stop stop-color="#101010" stopOpacity="0.24"/>
+<stop offset="1" stop-color="#999999" stopOpacity="0.64"/>
 </linearGradient>
 </defs>
 </svg>

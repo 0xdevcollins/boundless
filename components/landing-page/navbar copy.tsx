@@ -375,7 +375,7 @@ function MobileMenu() {
           }
         }}
       >
-        <SheetTrigger>
+        <SheetTrigger asChild>
           <BoundlessButton
             ref={mobileButtonRef}
             variant='outline'

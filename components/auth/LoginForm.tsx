@@ -44,7 +44,7 @@ const LoginForm = ({
   return (
     <>
       <div className='space-y-2'>
-        <p className='text-center text-sm leading-relaxed text-[#D9D9D9] md:text-left lg:text-base'>
+        <p className='mt-3 text-center text-sm leading-relaxed text-[#D9D9D9] md:text-left lg:text-base'>
           Sign in to manage campaigns, apply for grants, and track your funding
           progress.
         </p>

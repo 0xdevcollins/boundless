@@ -1,3 +1,5 @@
+import { Project } from '@/types/project';
+
 // Backend API Response Structure
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -43,6 +45,13 @@ export interface User {
   lastLogin?: string;
   [key: string]: unknown;
 }
+export interface Organization {
+  _id: string;
+  name: string;
+  avatar: string;
+  username: string;
+  bio: string;
+}
 
 // Auth tokens
 export interface AuthTokens {
@@ -82,7 +91,12 @@ export interface GoogleAuthRequest {
 export type GoogleAuthResponse = AuthTokens;
 
 // GetMe
-export type GetMeResponse = User;
+export type GetMeResponse = User & {
+  organizations: Organization[];
+  projects: Project[];
+  following: User[];
+  followers: User[];
+};
 
 // Logout
 export interface LogoutResponse {
@@ -304,5 +318,58 @@ export interface ShareLinkResponse {
   success: boolean;
   data: {
     shareLink: string;
+  };
+}
+
+// Crowdfunding Project Types
+export interface CrowdfundingMilestone {
+  name: string;
+  description: string;
+  startDate: string; // YYYY-MM-DD
+  endDate: string; // YYYY-MM-DD
+  amount: number;
+}
+
+export interface CrowdfundingTeamMember {
+  name: string;
+  role: string;
+  email: string;
+  linkedin?: string;
+  twitter?: string;
+}
+
+export interface CrowdfundingContact {
+  primary: string;
+  backup: string;
+}
+
+export interface CrowdfundingSocialLink {
+  platform: string;
+  url: string;
+}
+
+export interface CreateCrowdfundingProjectRequest {
+  title: string;
+  logo?: string;
+  vision: string;
+  category: string;
+  details: string;
+  fundingAmount: number;
+  githubUrl?: string;
+  gitlabUrl?: string;
+  bitbucketUrl?: string;
+  projectWebsite?: string;
+  demoVideo?: string;
+  milestones: CrowdfundingMilestone[];
+  team: CrowdfundingTeamMember[];
+  contact: CrowdfundingContact;
+  socialLinks?: CrowdfundingSocialLink[];
+}
+
+export interface CreateCrowdfundingProjectResponse {
+  success: boolean;
+  message: string;
+  data: {
+    projectId: string;
   };
 }

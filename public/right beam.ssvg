@@ -5,24 +5,24 @@
 <rect x="3.43896" y="0.5" width="68.0612" height="898.686" stroke="#0E1407"/>
 <rect x="2.93896" y="639.421" width="69.0612" height="260.579" fill="url(#paint0_linear_1892_51555)"/>
 <rect width="69.0612" height="200.445" transform="matrix(1 0 0 -1 2.93896 200.445)" fill="url(#paint1_linear_1892_51555)"/>
-<path d="M3.85449 715.89L3.85449 678.245" stroke="url(#paint2_linear_1892_51555)" stroke-linecap="round"/>
+<path d="M3.85449 715.89L3.85449 678.245" stroke="url(#paint2_linear_1892_51555)" strokeLinecap="round"/>
 <ellipse cx="4.28259" cy="676.013" rx="4.28259" ry="4.28259" fill="url(#paint3_linear_1892_51555)"/>
 <defs>
 <linearGradient id="paint0_linear_1892_51555" x1="37.4696" y1="639.421" x2="37.4697" y2="900" gradientUnits="userSpaceOnUse">
-<stop stop-color="#030303" stop-opacity="0"/>
+<stop stop-color="#030303" stopOpacity="0"/>
 <stop offset="1" stop-color="#030303"/>
 </linearGradient>
 <linearGradient id="paint1_linear_1892_51555" x1="34.5306" y1="-74.6659" x2="34.5307" y2="169.968" gradientUnits="userSpaceOnUse">
-<stop offset="0.1" stop-color="#030303" stop-opacity="0"/>
+<stop offset="0.1" stop-color="#030303" stopOpacity="0"/>
 <stop offset="1" stop-color="#030303"/>
 </linearGradient>
 <linearGradient id="paint2_linear_1892_51555" x1="3.35449" y1="715.89" x2="3.35449" y2="678.245" gradientUnits="userSpaceOnUse">
-<stop stop-color="#A7F950" stop-opacity="0"/>
+<stop stop-color="#A7F950" stopOpacity="0"/>
 <stop offset="1" stop-color="#A7F950"/>
 </linearGradient>
 <linearGradient id="paint3_linear_1892_51555" x1="-1.28477" y1="679.45" x2="-3.84399" y2="674.796" gradientUnits="userSpaceOnUse">
 <stop stop-color="#A7F950"/>
-<stop offset="1" stop-color="#3AE6B2" stop-opacity="0.8"/>
+<stop offset="1" stop-color="#3AE6B2" stopOpacity="0.8"/>
 </linearGradient>
 <clipPath id="clip0_1892_51555">
 <rect x="2.93896" width="69.0612" height="899.686" fill="white"/>

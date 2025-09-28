@@ -95,6 +95,7 @@ const WhyBoundless = () => {
               className={`h-auto w-full rounded-lg transition-opacity duration-300 ${
                 imageLoading ? 'opacity-0' : 'opacity-100'
               }`}
+              unoptimized
               onLoad={() => setImageLoading(false)}
               onError={() => setImageLoading(false)}
             />

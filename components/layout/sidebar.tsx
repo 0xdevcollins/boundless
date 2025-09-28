@@ -152,9 +152,11 @@ const SidebarLayout: React.FC = () => {
                       src={user?.image || '/api/placeholder/40/40'}
                     />
                     <AvatarFallback className='bg-blue-500 text-white'>
-                      {user?.name ? (
+                      {user?.profile?.firstName || user?.profile?.lastName ? (
                         <span className='text-xs font-semibold'>
-                          {user.name.charAt(0).toUpperCase()}
+                          {(user.profile?.firstName || user.profile?.lastName)
+                            ?.charAt(0)
+                            .toUpperCase()}
                         </span>
                       ) : (
                         <User className='h-3 w-3 text-white sm:h-4 sm:w-4' />
@@ -164,13 +166,19 @@ const SidebarLayout: React.FC = () => {
                 </motion.div>
                 <div className='min-w-0 flex-1'>
                   <p className='truncate text-xs font-semibold text-white sm:text-sm'>
-                    {user?.name || user?.email || 'User'}
+                    {user?.profile?.firstName && user?.profile?.lastName
+                      ? `${user.profile.firstName} ${user.profile.lastName}`
+                      : user?.profile?.firstName ||
+                        user?.profile?.lastName ||
+                        user?.email ||
+                        'User'}
                   </p>
-                  {user?.email && user?.name && (
-                    <p className='truncate text-xs text-gray-400'>
-                      {user.email}
-                    </p>
-                  )}
+                  {user?.email &&
+                    (user?.profile?.firstName || user?.profile?.lastName) && (
+                      <p className='truncate text-xs text-gray-400'>
+                        {user.email}
+                      </p>
+                    )}
                 </div>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}

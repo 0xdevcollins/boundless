@@ -100,7 +100,7 @@ const Header = ({ currentStep = 1, onBack }: HeaderProps) => {
                             fill='#030303'
                             stroke='#030303'
                             stroke-width='0.833333'
-                            stroke-linecap='round'
+                            strokeLinecap='round'
                             stroke-linejoin='round'
                           />
                         </svg>
