@@ -13,7 +13,7 @@ export const metadata: Metadata = generatePageMetadata('blog');
 
 async function StreamingBlogGridWrapper() {
   try {
-    const { posts, hasMore, total } = await getBlogPosts({
+    const { posts, hasMore } = await getBlogPosts({
       page: 1,
       limit: 12,
       sort: 'latest',
@@ -21,19 +21,13 @@ async function StreamingBlogGridWrapper() {
     return (
       <StreamingBlogGrid
         initialPosts={posts}
-        totalPosts={total}
         hasMore={hasMore}
         initialPage={1}
       />
     );
   } catch {
     return (
-      <StreamingBlogGrid
-        initialPosts={[]}
-        totalPosts={0}
-        hasMore={false}
-        initialPage={1}
-      />
+      <StreamingBlogGrid initialPosts={[]} hasMore={false} initialPage={1} />
     );
   }
 }

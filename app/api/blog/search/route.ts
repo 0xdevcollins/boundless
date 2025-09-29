@@ -1,26 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getBlogPostsStreaming } from '@/lib/data/blog';
+import { getAllBlogPosts } from '@/lib/data/blog';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
+    const q = searchParams.get('q') || '';
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '12');
     const category = searchParams.get('category');
-    const search = searchParams.get('search');
-    const sort = searchParams.get('sort') || 'latest';
     const tags = searchParams.get('tags')?.split(',').filter(Boolean);
 
-    const result = await getBlogPostsStreaming(page, limit);
+    const allPosts = await getAllBlogPosts();
 
-    let filteredPosts = result.posts;
+    let filteredPosts = allPosts;
 
-    if (category) {
-      filteredPosts = filteredPosts.filter(post => post.category === category);
-    }
-
-    if (search) {
-      const query = search.toLowerCase();
+    if (q.trim()) {
+      const query = q.toLowerCase();
       filteredPosts = filteredPosts.filter(
         post =>
           post.title.toLowerCase().includes(query) ||
@@ -29,41 +24,42 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    if (category) {
+      filteredPosts = filteredPosts.filter(post => post.category === category);
+    }
+
     if (tags && tags.length > 0) {
       filteredPosts = filteredPosts.filter(post =>
         tags.some(tag => post.tags.includes(tag))
       );
     }
 
-    if (sort === 'latest') {
-      filteredPosts.sort(
-        (a, b) =>
-          new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-      );
-    } else if (sort === 'oldest') {
-      filteredPosts.sort(
-        (a, b) =>
-          new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime()
-      );
-    }
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const posts = filteredPosts.slice(startIndex, endIndex);
+    const hasMore = endIndex < filteredPosts.length;
 
     return NextResponse.json({
       success: true,
       data: {
-        ...result,
-        posts: filteredPosts,
+        posts,
+        hasMore,
+        total: filteredPosts.length,
+        currentPage: page,
+        totalPages: Math.ceil(filteredPosts.length / limit),
+        query: q,
       },
-      message: 'Blog posts fetched successfully',
+      message: 'Search completed successfully',
       timestamp: new Date().toISOString(),
-      path: '/api/blog/posts',
+      path: '/api/blog/search',
     });
   } catch {
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to fetch blog posts',
+        error: 'Failed to search blog posts',
         timestamp: new Date().toISOString(),
-        path: '/api/blog/posts',
+        path: '/api/blog/search',
       },
       { status: 500 }
     );
