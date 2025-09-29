@@ -16,6 +16,22 @@ export default auth(req => {
   // Check if the route is an auth route
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
 
+  // Redirect all users to waitlist if not already on waitlist page
+  // Exclude API routes, static assets, and other necessary paths
+  const shouldRedirect =
+    pathname !== '/waitlist' &&
+    !pathname.startsWith('/api') &&
+    !pathname.startsWith('/_next') &&
+    !pathname.startsWith('/favicon.ico') &&
+    !pathname.startsWith('/public') &&
+    !pathname.match(
+      /\.(png|jpg|jpeg|gif|svg|ico|webp|avif|css|js|woff|woff2|ttf|eot)$/i
+    );
+
+  if (shouldRedirect) {
+    return NextResponse.redirect(new URL('/waitlist', req.url));
+  }
+
   // Redirect authenticated users away from auth routes
   if (isAuthRoute && isAuthenticated) {
     return NextResponse.redirect(new URL('/user', req.url));
