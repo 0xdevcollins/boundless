@@ -5,12 +5,14 @@ interface FooterProps {
   currentStep: number;
   onContinue: () => void;
   isStepValid?: boolean;
+  isSubmitting?: boolean;
 }
 
 const Footer = ({
   currentStep,
   onContinue,
   isStepValid = true,
+  isSubmitting = false,
 }: FooterProps) => {
   const isLastStep = currentStep === 5;
   const buttonText = isLastStep ? 'Submit for review' : 'Continue';
@@ -36,8 +38,12 @@ const Footer = ({
           </Link>
         </p>
       )}
-      <BoundlessButton size='xl' onClick={onContinue} disabled={!isStepValid}>
-        {buttonText}
+      <BoundlessButton
+        size='xl'
+        onClick={onContinue}
+        disabled={!isStepValid || isSubmitting}
+      >
+        {isSubmitting ? 'Submitting...' : buttonText}
       </BoundlessButton>
     </div>
   );
