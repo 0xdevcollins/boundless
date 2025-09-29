@@ -29,17 +29,17 @@ export default auth(req => {
     );
 
   if (shouldRedirect) {
-    return NextResponse.redirect(new URL('/waitlist', req.url));
+    return NextResponse.redirect(new URL('/waitlist', req.nextUrl.origin));
   }
 
   // Redirect authenticated users away from auth routes
   if (isAuthRoute && isAuthenticated) {
-    return NextResponse.redirect(new URL('/user', req.url));
+    return NextResponse.redirect(new URL('/user', req.nextUrl.origin));
   }
 
   // Redirect unauthenticated users to signin for protected routes
   if (isProtectedRoute && !isAuthenticated) {
-    const signinUrl = new URL('/auth/signin', req.url);
+    const signinUrl = new URL('/auth/signin', req.nextUrl.origin);
     signinUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(signinUrl);
   }
