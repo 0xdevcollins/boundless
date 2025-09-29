@@ -60,7 +60,7 @@ export function generateOrganizationStructuredData(): string {
     '@type': 'Organization',
     name: 'Boundless',
     url: 'https://boundlessfi.xyz',
-    logo: 'https://boundlessfi.xyz/https://res.cloudinary.com/danuy5rqb/image/upload/v1759143589/bondless-og-image_jufgnu.png',
+    logo: 'https://res.cloudinary.com/danuy5rqb/image/upload/v1759143589/bondless-og-image_jufgnu.png',
     description:
       'Validate, fund, and grow your project with milestone-based support on Stellar.',
     sameAs: [
@@ -123,7 +123,7 @@ export function generateBlogPostingStructuredData(post: {
       name: 'Boundless',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://boundlessfi.xyz/https://res.cloudinary.com/danuy5rqb/image/upload/v1759143589/bondless-og-image_jufgnu.png',
+        url: 'https://res.cloudinary.com/danuy5rqb/image/upload/v1759143589/bondless-og-image_jufgnu.png',
       },
     },
     datePublished: post.publishedTime,

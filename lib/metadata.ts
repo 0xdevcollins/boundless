@@ -40,7 +40,7 @@ export const pageMetadata: Record<string, PageMetadata> = {
       'milestones',
     ],
     ogImage:
-      '/https://res.cloudinary.com/danuy5rqb/image/upload/v1759143589/bondless-og-image_jufgnu.png',
+      'https://res.cloudinary.com/danuy5rqb/image/upload/v1759143589/bondless-og-image_jufgnu.png',
   },
   about: {
     title: 'About Us - Boundless',

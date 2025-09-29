@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     description:
       'Validate, fund, and grow your project with milestone-based support on Stellar.',
     images: [
-      '/https://res.cloudinary.com/danuy5rqb/image/upload/v1759143589/bondless-og-image_jufgnu.png',
+      'https://res.cloudinary.com/danuy5rqb/image/upload/v1759143589/bondless-og-image_jufgnu.png',
     ],
   },
   alternates: {
