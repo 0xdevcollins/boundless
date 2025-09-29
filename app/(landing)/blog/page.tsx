@@ -7,6 +7,7 @@ import TestimonialSection from '@/components/testimonials/TestimonialsSection';
 import { testimonials } from '@/components/testimonials/data/testimonial';
 import { Skeleton } from '@/components/ui/skeleton';
 import BlogCardSkeleton from '@/components/landing-page/blog/BlogCardSkeleton';
+import BlogHero from '@/components/landing-page/blog/BlogHero';
 
 export const metadata: Metadata = generatePageMetadata('blog');
 
@@ -64,6 +65,7 @@ function BlogGridLoading() {
 const BlogPage = async () => {
   return (
     <div className='min-h-screen bg-[#030303]'>
+      <BlogHero />
       <Suspense fallback={<BlogGridLoading />}>
         <StreamingBlogGridWrapper />
       </Suspense>
