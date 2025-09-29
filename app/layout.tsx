@@ -54,7 +54,9 @@ export const metadata: Metadata = {
     title: 'Boundless - Ideas Made Boundless',
     description:
       'Validate, fund, and grow your project with milestone-based support on Stellar.',
-    images: ['/BOUNDLESS.png'],
+    images: [
+      '/https://res.cloudinary.com/danuy5rqb/image/upload/v1759143589/bondless-og-image_jufgnu.png',
+    ],
   },
   alternates: {
     canonical: 'https://boundlessfi.xyz',
