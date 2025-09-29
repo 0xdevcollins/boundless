@@ -17,7 +17,6 @@ async function StreamingBlogGridWrapper() {
       limit: 12,
       sort: 'latest',
     });
-    console.log('posts', posts);
     return (
       <StreamingBlogGrid
         initialPosts={posts}
