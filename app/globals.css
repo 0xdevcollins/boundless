@@ -30,6 +30,45 @@
   background: #5a5a5a;
 }
 
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+/* Glow Effect for BoundlessSheet */
+.glow-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    var(--glow-color, rgba(255, 255, 255, 0.4)) 0%,
+    transparent var(--glow-size, 200px)
+  );
+  opacity: var(--glow-intensity, 0.8);
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+.glow-effect > * {
+  position: relative;
+  z-index: 2;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

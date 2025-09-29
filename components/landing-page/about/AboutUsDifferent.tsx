@@ -17,7 +17,7 @@ interface FeatureCard {
     width: number;
     height: number;
   };
-  className?: string;
+  gridClass?: string;
 }
 
 function AboutUsDifferent({ className = '' }: AboutUsDifferentProps) {
@@ -34,7 +34,7 @@ function AboutUsDifferent({ className = '' }: AboutUsDifferentProps) {
           width: 520,
           height: 241,
         },
-        className: 'lg:flex-[1.4]',
+        gridClass: 'lg:col-span-4',
       },
       {
         id: 'milestone-escrow',
@@ -47,6 +47,7 @@ function AboutUsDifferent({ className = '' }: AboutUsDifferentProps) {
           width: 452,
           height: 205,
         },
+        gridClass: 'lg:col-span-3',
       },
       {
         id: 'inclusive-growth',
@@ -59,7 +60,7 @@ function AboutUsDifferent({ className = '' }: AboutUsDifferentProps) {
           width: 452,
           height: 205,
         },
-        className: 'lg:flex-1',
+        gridClass: 'lg:col-span-3',
       },
       {
         id: 'blockchain-powered',
@@ -72,7 +73,7 @@ function AboutUsDifferent({ className = '' }: AboutUsDifferentProps) {
           width: 620,
           height: 258,
         },
-        className: 'lg:flex-[1.4]',
+        gridClass: 'lg:col-span-4',
       },
     ],
     []
@@ -109,83 +110,47 @@ function AboutUsDifferent({ className = '' }: AboutUsDifferentProps) {
       </header>
 
       <div
-        className='flex w-full flex-col gap-4 md:gap-6'
+        className='grid w-full grid-cols-1 gap-4 md:gap-6 lg:grid-cols-7 lg:grid-rows-2'
         role='list'
         aria-label='Key features that make Boundless different'
       >
-        <div
-          className='flex flex-col items-stretch gap-4 md:gap-6 lg:flex-row'
-          role='listitem'
-        >
-          {features.slice(0, 2).map(feature => (
-            <article
-              key={feature.id}
-              className={`flex h-full w-full flex-1 flex-col items-center gap-4 rounded-[12px] border border-white/48 bg-[#101010A3] bg-[url("/card-bg.svg")] bg-center bg-no-repeat p-4 backdrop-blur-[7px] md:gap-6 md:p-6 ${feature.className || ''}`}
-              role='listitem'
-              aria-labelledby={`${feature.id}-title`}
+        {features.map(feature => (
+          <article
+            key={feature.id}
+            className={`flex h-full w-full flex-col items-center gap-4 rounded-[12px] border border-white/48 p-4 backdrop-blur-[7px] md:gap-6 md:p-6 ${
+              'bg-[#101010A3] bg-[url("/card-bg.svg")] bg-center bg-no-repeat'
+              //  'bg-black/85 bg-[url("/card-bg.svg")] bg-center bg-no-repeat backdrop-blur-2xl'
+            } ${feature.gridClass || ''}`}
+            role='listitem'
+            aria-labelledby={`${feature.id}-title`}
+          >
+            <div
+              className='flex h-[200px] w-full flex-shrink-0 items-center justify-center md:h-[240px]'
+              style={{ maxWidth: `${feature.image.width}px` }}
             >
-              <div className='flex h-[200px] w-full max-w-[520px] items-center justify-center md:h-[240px]'>
-                <Image
-                  src={feature.image.src}
-                  width={feature.image.width}
-                  height={feature.image.height}
-                  alt={feature.image.alt}
-                  className='h-auto max-h-full w-full max-w-full object-contain'
-                  loading='lazy'
-                  quality={90}
-                />
-              </div>
-              <div className='flex flex-col gap-2 px-4 py-4 md:gap-2.5 md:px-8 md:py-6'>
-                <h3
-                  id={`${feature.id}-title`}
-                  className='text-base font-semibold text-white md:text-lg'
-                >
-                  {feature.title}
-                </h3>
-                <p className='text-stepper-text-inactive text-sm leading-relaxed font-normal md:text-base'>
-                  {feature.description}
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <div
-          className='flex flex-col items-stretch gap-4 md:gap-6 lg:flex-row'
-          role='listitem'
-        >
-          {features.slice(2, 4).map(feature => (
-            <article
-              key={feature.id}
-              className={`flex h-full w-full flex-1 flex-col items-center gap-4 rounded-[12px] border border-white/48 bg-black/85 bg-[url("/card-bg.svg")] bg-center bg-no-repeat p-4 backdrop-blur-2xl md:gap-6 md:p-6 ${feature.className || ''}`}
-              role='listitem'
-              aria-labelledby={`${feature.id}-title`}
-            >
-              <div className='flex h-[200px] w-full max-w-[620px] items-center justify-center md:h-[240px]'>
-                <Image
-                  src={feature.image.src}
-                  width={feature.image.width}
-                  height={feature.image.height}
-                  alt={feature.image.alt}
-                  className='h-auto max-h-full w-full max-w-full object-contain'
-                  loading='lazy'
-                  quality={90}
-                />
-              </div>
-              <div className='flex flex-col gap-2 px-4 py-4 md:gap-2.5 md:px-8 md:py-6'>
-                <h3
-                  id={`${feature.id}-title`}
-                  className='text-base font-semibold text-white md:text-lg'
-                >
-                  {feature.title}
-                </h3>
-                <p className='text-stepper-text-inactive text-sm leading-relaxed font-normal md:text-base'>
-                  {feature.description}
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
+              <Image
+                src={feature.image.src}
+                width={feature.image.width}
+                height={feature.image.height}
+                alt={feature.image.alt}
+                className='h-auto max-h-full w-full max-w-full object-contain'
+                loading='lazy'
+                quality={90}
+              />
+            </div>
+            <div className='flex flex-grow flex-col gap-2 px-4 py-4 md:gap-2.5 md:px-8 md:py-6'>
+              <h3
+                id={`${feature.id}-title`}
+                className='text-base font-semibold text-white md:text-lg'
+              >
+                {feature.title}
+              </h3>
+              <p className='text-stepper-text-inactive text-sm leading-relaxed font-normal md:text-base'>
+                {feature.description}
+              </p>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
   );

@@ -131,27 +131,27 @@ const OtpForm = ({
                     >
                       <InputOTPSlot
                         index={0}
-                        className='h-[73px] w-[73px] !rounded-[2px] !rounded-r-[2px] border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
+                        className='h-[73px] w-[73px] !rounded-2xl border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
                       />
                       <InputOTPSlot
                         index={1}
-                        className='h-[73px] w-[73px] rounded-[2px] border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
+                        className='h-[73px] w-[73px] rounded-2xl border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
                       />
                       <InputOTPSlot
                         index={2}
-                        className='h-[73px] w-[73px] rounded-[2px] border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
+                        className='h-[73px] w-[73px] rounded-2xl border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
                       />
                       <InputOTPSlot
                         index={3}
-                        className='h-[73px] w-[73px] rounded-[2px] border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
+                        className='h-[73px] w-[73px] rounded-2xl border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
                       />
                       <InputOTPSlot
                         index={4}
-                        className='h-[73px] w-[73px] rounded-[2px] border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
+                        className='h-[73px] w-[73px] rounded-2xl border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
                       />
                       <InputOTPSlot
                         index={5}
-                        className='h-[73px] w-[73px] rounded-[2px] border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
+                        className='h-[73px] w-[73px] rounded-2xl border border-[#2B2B2B] bg-[#1C1C1C] text-center text-white'
                       />
                     </InputOTP>
                   </FormControl>

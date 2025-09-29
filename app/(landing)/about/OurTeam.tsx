@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 const OurTeam = () => {
@@ -73,7 +74,9 @@ const OurTeam = () => {
                   height={20}
                 />
               </div>
-              <div
+              <Link
+                href='https://x.com/0xdevcollins'
+                target='_blank'
                 style={{
                   border: '1px solid',
                   background:
@@ -85,7 +88,7 @@ const OurTeam = () => {
                 className='flex cursor-pointer items-center justify-center transition duration-300 hover:scale-105'
               >
                 <Image src={'/X.svg'} alt='X' width={20} height={20} />
-              </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -112,7 +115,9 @@ const OurTeam = () => {
               experience across Web3 platforms.
             </p>
             <div className='flex items-center justify-center gap-3 sm:justify-start md:gap-4'>
-              <div
+              <Link
+                href='https://www.linkedin.com/in/nnaji-benjamin'
+                target='_blank'
                 style={{
                   border: '1px solid',
                   background:
@@ -129,8 +134,10 @@ const OurTeam = () => {
                   width={20}
                   height={20}
                 />
-              </div>
-              <div
+              </Link>
+              <Link
+                href='https://x.com/Benjtalkshows'
+                target='_blank'
                 style={{
                   border: '1px solid',
                   background:
@@ -142,7 +149,7 @@ const OurTeam = () => {
                 className='flex cursor-pointer items-center justify-center transition duration-300 hover:scale-105'
               >
                 <Image src={'/X.svg'} alt='X' width={20} height={20} />
-              </div>
+              </Link>
             </div>
           </div>
         </div>

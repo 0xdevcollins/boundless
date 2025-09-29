@@ -1,18 +1,39 @@
+/* eslint-disable no-console */
+'use client';
+
 import React from 'react';
-import { Metadata } from 'next';
-import { generatePageMetadata } from '@/lib/metadata';
 import ProjectPageHero from '@/components/Project-Page-Hero';
+import ExploreHeader from '@/components/projects/ExploreHeader';
 
-export const metadata: Metadata = generatePageMetadata('projects');
+function ProjectsPage() {
+  const handleSearch = (searchTerm: string) => {
+    console.log('Search:', searchTerm);
+  };
 
-const ProjectsPage = () => {
+  const handleSort = (sortType: string) => {
+    console.log('Sort:', sortType);
+  };
+
+  const handleStatus = (status: string) => {
+    console.log('Status:', status);
+  };
+
+  const handleCategory = (category: string) => {
+    console.log('Category:', category);
+  };
+
   return (
-    <div className=''>
+    <div>
       <ProjectPageHero />
-      <h1 className='mb-10'>Projects</h1>
-      <div className='flex flex-wrap justify-center gap-8'></div>
+      <ExploreHeader
+        onSearch={handleSearch}
+        onSortChange={handleSort}
+        onStatusChange={handleStatus}
+        onCategoryChange={handleCategory}
+      />
+      <div className='flex flex-wrap justify-center gap-8 p-8'></div>
     </div>
   );
-};
+}
 
 export default ProjectsPage;

@@ -10,7 +10,7 @@ export class Logger implements ILogger {
   setMinLevel(level: LogLevel) {
     this.minLevel = level;
   }
-
+  //logger.ts
   private shouldLog(level: LogLevel): boolean {
     const levels: LogLevel[] = ['error', 'warn', 'info'];
     return levels.indexOf(level) <= levels.indexOf(this.minLevel);

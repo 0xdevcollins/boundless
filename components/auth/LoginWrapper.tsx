@@ -9,6 +9,7 @@ import { getSession, signIn } from 'next-auth/react';
 import { toast } from 'sonner';
 import z from 'zod';
 import LoginForm from './LoginForm';
+import { useAuthStore } from '@/lib/stores/auth-store';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -72,13 +73,34 @@ const LoginWrapper = ({ setLoadingState }: LoginWrapperProps) => {
 
   const handleSessionSetup = useCallback(
     async (session: {
-      user?: { accessToken?: string; refreshToken?: string };
+      user?: {
+        accessToken?: string;
+        refreshToken?: string;
+        id?: string;
+        email?: string;
+        name?: string | null;
+        image?: string | null;
+        role?: 'USER' | 'ADMIN';
+      };
     }) => {
       if (session?.user?.accessToken) {
+        // Set cookies for NextAuth compatibility
         Cookies.set('accessToken', session.user.accessToken);
-      }
-      if (session?.user?.refreshToken) {
-        Cookies.set('refreshToken', session.user.refreshToken);
+        if (session.user.refreshToken) {
+          Cookies.set('refreshToken', session.user.refreshToken);
+        }
+
+        // Sync with Zustand store for navbar and other components
+        const authStore = useAuthStore.getState();
+        await authStore.syncWithSession({
+          id: session.user.id || '',
+          email: session.user.email || '',
+          name: session.user.name || undefined,
+          image: session.user.image || undefined,
+          role: session.user.role || 'USER',
+          accessToken: session.user.accessToken,
+          refreshToken: session.user.refreshToken,
+        });
       }
       router.push(callbackUrl);
     },

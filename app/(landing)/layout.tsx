@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { ReactNode } from 'react';
-import { Navbar } from '@/components/landing-page';
+import { Footer, Navbar } from '@/components/landing-page';
 import { generatePageMetadata } from '@/lib/metadata';
 
 // Generate metadata for the landing layout (home page)
@@ -15,6 +15,7 @@ export default function LandingLayout({ children }: LandingLayoutProps) {
     <div className='bg-background relative flex min-h-screen flex-col pt-5 md:pt-11'>
       <Navbar />
       <main className='flex-1'>{children}</main>
+      <Footer />
     </div>
   );
 }

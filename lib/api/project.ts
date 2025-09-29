@@ -2,7 +2,11 @@
 import { RecentProjectsProps } from '@/types/project';
 import { mockCampaignDetails } from '../mock';
 import api from './api';
-import { ProjectInitRequest } from './types';
+import {
+  ProjectInitRequest,
+  CreateCrowdfundingProjectRequest,
+  CreateCrowdfundingProjectResponse,
+} from './types';
 
 export const initProject = async (data: ProjectInitRequest) => {
   const res = await api.post('/projects', data);
@@ -98,4 +102,11 @@ export const generateCampaignLink = async (_projectId: string) => {
       });
     }, 500);
   });
+};
+
+export const createCrowdfundingProject = async (
+  data: CreateCrowdfundingProjectRequest
+): Promise<CreateCrowdfundingProjectResponse> => {
+  const res = await api.post('/crowdfunding/projects', data);
+  return res.data;
 };

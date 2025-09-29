@@ -1,4 +1,5 @@
 'use client';
+import { register } from '@/lib/api/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LockIcon, MailIcon, User } from 'lucide-react';
 import Image from 'next/image';
@@ -61,43 +62,49 @@ const SignupForm = ({ onLoadingChange }: SignupFormProps) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: values.email,
-          firstName: values.firstName,
-          lastName: values.lastName,
-          password: values.password,
-        }),
+      // const response = await fetch('/api/auth/register', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     email: values.email,
+      //     firstName: values.firstName,
+      //     lastName: values.lastName,
+      //     password: values.password,
+      //   }),
+      // });
+      const response = await register({
+        email: values.email,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        password: values.password,
+        username: values.email.split('@')[0],
       });
 
-      if (response.ok) {
+      if (response.message) {
         setUserData({ email: values.email });
         setStep('otp');
         toast.success('OTP sent to your email!');
       } else {
-        const error = await response.json();
-
-        if (error.field) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          form.setError(error.field as any, {
-            type: 'manual',
-            message: error.message,
-          });
-        } else if (error.message) {
-          form.setError('root', {
-            type: 'manual',
-            message: error.message,
-          });
-        } else {
-          form.setError('root', {
-            type: 'manual',
-            message: 'Failed to create account',
-          });
-        }
+        // const error = response.message;
+        // if (error.field) {
+        //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        //   form.setError(error.field as any, {
+        //     type: 'manual',
+        //     message: error.message,
+        //   });
+        // } else if (error.message) {
+        //   form.setError('root', {
+        //     type: 'manual',
+        //     message: error.message,
+        //   });
+        // } else {
+        //   form.setError('root', {
+        //     type: 'manual',
+        //     message: 'Failed to create account',
+        //   });
+        // }
       }
     } catch {
       form.setError('root', {
@@ -149,15 +156,12 @@ const SignupForm = ({ onLoadingChange }: SignupFormProps) => {
   return (
     <>
       <div className='space-y-2'>
-        <h2 className='mb-3 text-center text-2xl font-medium text-white md:text-left lg:text-[40px]'>
-          Create account
-        </h2>
-        <p className='text-center text-sm leading-relaxed text-[#D9D9D9] md:text-left lg:text-base'>
-          Create an account to manage campaigns, apply for grants, and track
-          your funding progress — all in one dashboard.
+        <p className='mt-3 text-center text-sm leading-relaxed text-[#D9D9D9] md:text-left lg:text-base'>
+          Sign up to manage campaigns, apply for grants, and track your funding
+          progress.
         </p>
       </div>
-      <div className='space-y-6'>
+      <div className='mt-6 space-y-6'>
         <BoundlessButton
           fullWidth
           className='bg-background border !border-[#484848] !text-white'

@@ -60,7 +60,6 @@ const ForgotPasswordWrapper = ({
         const response = await forgotPassword({ email: data.email });
 
         const result = response;
-        console.log(result);
 
         if (response) {
           setIsSuccess(true);
