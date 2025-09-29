@@ -29,7 +29,9 @@ export default auth(req => {
     );
 
   if (shouldRedirect) {
-    return NextResponse.redirect(new URL('/waitlist', req.nextUrl.origin));
+    return NextResponse.redirect(
+      new URL('https://www.boundlessfi.xyz/waitlist')
+    );
   }
 
   // Redirect authenticated users away from auth routes
