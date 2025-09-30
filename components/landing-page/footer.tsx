@@ -69,11 +69,11 @@ export function Footer() {
                     className='rounded transition-opacity hover:opacity-80 focus:ring-2 focus:ring-white/50 focus:outline-none'
                     target='_blank'
                     rel='noopener noreferrer'
-                    aria-label={`Follow us on ${name}`}
+                    aria-label={Follow us on ${name}}
                   >
                     <Image
-                      src={`/footer/${name}.svg`}
-                      alt={`${name} icon`}
+                      src={/footer/${name}.svg}
+                      alt={${name} icon}
                       width={24}
                       height={24}
                       className='h-6 w-6'
@@ -89,7 +89,7 @@ export function Footer() {
               ))}
               <div className='ml-4 h-6 w-0.5 bg-[#2B2B2B]' aria-hidden='true' />
               <Link
-                href={`mailto:${socialLinks.gmail}`}
+                href={mailto:${socialLinks.gmail}}
                 className='rounded transition-opacity hover:opacity-80 focus:ring-2 focus:ring-white/50 focus:outline-none'
                 aria-label='Contact us via email'
               >
@@ -98,7 +98,7 @@ export function Footer() {
                   alt='Email contact'
                   width={24}
                   height={24}
-                  className='h-6 w-6'
+                  className='h-21 w-20'
                 />
               </Link>
             </nav>
@@ -158,11 +158,11 @@ export function Footer() {
                   className='rounded transition-opacity hover:opacity-80 focus:ring-2 focus:ring-white/50 focus:outline-none'
                   target='_blank'
                   rel='noopener noreferrer'
-                  aria-label={`Follow us on ${name}`}
+                  aria-label={Follow us on ${name}}
                 >
                   <Image
-                    src={`/footer/${name}.svg`}
-                    alt={`${name} icon`}
+                    src={/footer/${name}.svg}
+                    alt={${name} icon}
                     width={24}
                     height={24}
                     className='h-6 w-6'
