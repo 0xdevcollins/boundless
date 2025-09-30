@@ -23,7 +23,7 @@ export function Footer() {
                 priority
               />
             </Link>
-            <p className='text-sm text-gray-400'>
+            <p className='text-sm text-[#B5B5B5]'>
               © {currentYear} Boundless — Transparent, Community-Driven,
               Web3-Native Funding.
             </p>
@@ -35,25 +35,25 @@ export function Footer() {
             >
               <Link
                 href='/terms'
-                className='hover:text-primary rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+                className='hover:text-primary rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
               >
                 Terms of Service
               </Link>
               <Link
                 href='/privacy'
-                className='hover:text-primary rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+                className='hover:text-primary rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
               >
                 Privacy Policy
               </Link>
               <Link
                 href='/code-of-conduct'
-                className='hover:text-primary ml-10 rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+                className='hover:text-primary ml-10 rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
               >
                 Code of Conduct
               </Link>
               <Link
                 href='/disclaimer'
-                className='hover:text-primary ml-5 rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+                className='hover:text-primary ml-5 rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
               >
                 Disclaimer
               </Link>
@@ -123,25 +123,25 @@ export function Footer() {
           >
             <Link
               href='/terms'
-              className='hover:text-primary rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+              className='hover:text-primary rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
             >
               Terms of Service
             </Link>
             <Link
               href='/privacy'
-              className='hover:text-primary rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+              className='hover:text-primary rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
             >
               Privacy Policy
             </Link>
             <Link
               href='/code-of-conduct'
-              className='hover:text-primary ml-10 rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+              className='hover:text-primary ml-10 rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
             >
               Code of Conduct
             </Link>
             <Link
               href='/disclaimer'
-              className='hover:text-primary ml-5 rounded text-sm text-gray-400 transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+              className='hover:text-primary ml-5 rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
             >
               Disclaimer
             </Link>
@@ -178,7 +178,7 @@ export function Footer() {
             ))}
           </nav>
 
-          <p className='text-center text-sm text-gray-400'>
+          <p className='text-center text-sm text-[#B5B5B5]'>
             © {currentYear} Boundless — Transparent,
             <br />
             Community-Driven, Web3-Native Funding.
