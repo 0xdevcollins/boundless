@@ -288,6 +288,7 @@ export function useFileUpload({
 
       .map(({ fileId, result }) => ({
         fileId,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         result: (result as PromiseFulfilledResult<any>).value,
       }));
 

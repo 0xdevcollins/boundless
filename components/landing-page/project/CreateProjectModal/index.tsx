@@ -7,6 +7,8 @@ import Details from './Details';
 import Milestones from './Milestones';
 import Team from './Team';
 import Contact from './Contact';
+import LoadingScreen from './LoadingScreen';
+import SuccessScreen from './SuccessScreen';
 
 const CreateProjectModal = ({
   open,
@@ -16,6 +18,8 @@ const CreateProjectModal = ({
   setOpen: (open: boolean) => void;
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleBack = () => {
     if (currentStep > 1) {
@@ -24,19 +28,37 @@ const CreateProjectModal = ({
   };
 
   const handleContinue = () => {
+    if (showSuccess) return; // prevent clicks when success is showing
+
     if (currentStep < 5) {
-      setCurrentStep(currentStep + 1);
+      setIsLoading(true);
+      setTimeout(() => {
+        setCurrentStep(prev => prev + 1);
+        setIsLoading(false);
+      }, 1000);
     } else {
-      // Handle final submission
-      // TODO: Implement project submission logic
-      // This could include API calls, form validation, etc.
+      // ✅ After final step, show success screen
+      setShowSuccess(true);
     }
   };
 
-  // Placeholder for step validation - you can implement actual validation logic here
+  const handleReset = () => {
+    // reset all states to start fresh
+    setShowSuccess(false);
+    setCurrentStep(1);
+    setIsLoading(false);
+  };
+
   const isStepValid = true;
 
   const renderStepContent = () => {
+    if (isLoading) {
+      return <LoadingScreen />;
+    }
+    if (showSuccess) {
+      return <SuccessScreen onContinue={handleReset} />;
+    }
+
     switch (currentStep) {
       case 1:
         return <Basic />;
@@ -59,15 +81,19 @@ const CreateProjectModal = ({
       open={open}
       setOpen={setOpen}
     >
-      <Header currentStep={currentStep} onBack={handleBack} />
+      {!showSuccess && <Header currentStep={currentStep} onBack={handleBack} />}
+
       <div className='min-h-[calc(55vh)] px-4 md:px-[50px] lg:px-[75px] xl:px-[150px]'>
         {renderStepContent()}
       </div>
-      <Footer
-        currentStep={currentStep}
-        onContinue={handleContinue}
-        isStepValid={isStepValid}
-      />
+
+      {!showSuccess && (
+        <Footer
+          currentStep={currentStep}
+          onContinue={handleContinue}
+          isStepValid={isStepValid}
+        />
+      )}
     </BoundlessSheet>
   );
 };
