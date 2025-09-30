@@ -7,7 +7,7 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
-import { BlogPost } from '@/lib/data/blog';
+import { BlogPost } from '@/types/blog';
 
 interface BlogCardProps {
   post: BlogPost;

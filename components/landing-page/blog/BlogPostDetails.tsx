@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Tag, BookOpen, Check } from 'lucide-react';
-import { BlogPost, getRelatedPosts } from '@/lib/data/blog';
+import { BlogPost } from '@/types/blog';
+import { getRelatedPosts } from '@/lib/api/blog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useMarkdown } from '@/hooks/use-markdown';
@@ -26,15 +27,20 @@ const BlogPostDetails: React.FC<BlogPostDetailsProps> = ({ post }) => {
   const [copiedStates, setCopiedStates] = useState<Record<string, boolean>>({});
   const [isLoadingRelated, setIsLoadingRelated] = useState(true);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [relatedPostsError, setRelatedPostsError] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchRelatedPosts = async () => {
       try {
         setIsLoadingRelated(true);
-        const related = await getRelatedPosts(post.slug, 3);
-        setRelatedPosts(related);
+        setRelatedPostsError(null);
+        const related = await getRelatedPosts(post.slug, { limit: 3 });
+        setRelatedPosts(related || []);
       } catch {
-        // Handle error silently in production
+        setRelatedPostsError('Failed to load related posts');
+        setRelatedPosts([]);
       } finally {
         setIsLoadingRelated(false);
       }
@@ -112,7 +118,7 @@ const BlogPostDetails: React.FC<BlogPostDetailsProps> = ({ post }) => {
     <>
       {isNavigating && <AuthLoadingState message='Loading article...' />}
       <div className='relative z-10 mx-auto min-h-screen max-w-[1440px] justify-start space-y-[23px] bg-[#030303] px-6 py-5 text-white md:space-y-[80px] md:px-12 md:py-16 lg:px-[100px]'>
-        <div className='relative flex'>
+        <div className='relative flex flex-col lg:flex-row'>
           <div className='flex-1'>
             <div className='mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8'>
               <div className='flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between'>
@@ -199,101 +205,103 @@ const BlogPostDetails: React.FC<BlogPostDetailsProps> = ({ post }) => {
               </div>
             </div>
           </div>
-          <div className='sticky top-[100px] flex w-fit flex-col items-start lg:ml-8 lg:items-end'>
-            <h3 className='mb-3 text-sm font-medium text-white sm:mb-4'>
-              SHARE
-            </h3>
-            <div className='flex gap-3 lg:flex-col'>
-              <button
-                onClick={() => handleShare('twitter')}
-                className='flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(167,249,80,0.08)] text-black transition-colors hover:bg-[#A7F950]/80 focus:ring-2 focus:ring-[#A7F950]/50 focus:outline-none'
-                aria-label='Share on Twitter'
-              >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='18'
-                  height='18'
-                  viewBox='0 0 18 18'
-                  fill='none'
+          <div className='lg:w-[300px]'>
+            <div className='sticky top-[100px] flex w-fit flex-col items-start lg:ml-8 lg:items-end'>
+              <h3 className='mb-3 text-sm font-medium text-white sm:mb-4'>
+                SHARE
+              </h3>
+              <div className='flex gap-3 lg:flex-col'>
+                <button
+                  onClick={() => handleShare('twitter')}
+                  className='flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(167,249,80,0.08)] text-black transition-colors hover:bg-[#A7F950]/80 focus:ring-2 focus:ring-[#A7F950]/50 focus:outline-none'
+                  aria-label='Share on Twitter'
                 >
-                  <path
-                    d='M1.5 16.5L7.79032 10.2097M16.5 1.5L10.2097 7.79032M10.2097 7.79032L5.66667 1.5H1.5L7.79032 10.2097M10.2097 7.79032L16.5 16.5H12.3333L7.79032 10.2097'
-                    stroke='#99FF2D'
-                    stroke-width='1.5'
-                    strokeLinecap='round'
-                    stroke-linejoin='round'
-                  />
-                </svg>
-              </button>
-              <button
-                onClick={() => handleShare('discord')}
-                className='flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(167,249,80,0.08)] text-black transition-colors hover:bg-[#A7F950]/80 focus:ring-2 focus:ring-[#A7F950]/50 focus:outline-none'
-                aria-label='Copy for Discord'
-              >
-                {copiedStates.discord ? (
-                  <Check className='h-5 w-5' />
-                ) : (
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
-                    width='20'
-                    height='16'
-                    viewBox='0 0 20 16'
+                    width='18'
+                    height='18'
+                    viewBox='0 0 18 18'
                     fill='none'
                   >
                     <path
-                      d='M6.68359 6.56555C6.3753 6.56555 6.08615 6.65168 5.83398 6.80286C5.86071 6.73663 5.8898 6.67102 5.91797 6.60461L6.68359 6.48743M6.68359 6.56555V6.48743M6.68359 6.56555L6.83008 6.57336C6.84126 6.53557 6.85246 6.49776 6.86426 6.46008L6.68359 6.48743M6.68359 6.56555V6.48743M13.3291 6.56555L13.5156 6.57629C13.75 6.60287 13.9698 6.68028 14.168 6.79602C14.1413 6.72999 14.1158 6.66346 14.0879 6.59778L13.3291 6.48352M13.3291 6.56555V6.48352M13.3291 6.56555V6.48352M13.3291 6.56555C13.2818 6.56555 13.2348 6.56939 13.1885 6.57336C13.1772 6.53503 13.1672 6.49633 13.1553 6.45813L13.3291 6.48352'
+                      d='M1.5 16.5L7.79032 10.2097M16.5 1.5L10.2097 7.79032M10.2097 7.79032L5.66667 1.5H1.5L7.79032 10.2097M10.2097 7.79032L16.5 16.5H12.3333L7.79032 10.2097'
                       stroke='#99FF2D'
-                      stroke-width='10'
-                    />
-                  </svg>
-                )}
-              </button>
-              <button
-                onClick={() => handleShare('send')}
-                className='flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(167,249,80,0.08)] text-black transition-colors hover:bg-[#A7F950]/80 focus:ring-2 focus:ring-[#A7F950]/50 focus:outline-none'
-                aria-label='Share via native share'
-              >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='20'
-                  height='18'
-                  viewBox='0 0 20 18'
-                  fill='none'
-                >
-                  <path
-                    d='M9.98721 11.8403L12.6883 14.9113C13.6891 16.0491 14.1895 16.618 14.7133 16.4795C15.2371 16.341 15.4167 15.5923 15.7759 14.0949L17.7684 5.78825C18.3217 3.48194 18.5983 2.32878 17.9834 1.76C17.3685 1.19122 16.3027 1.61437 14.1711 2.46068L4.28165 6.38707C2.57679 7.06395 1.72436 7.40239 1.67024 7.98403C1.6647 8.04353 1.66461 8.10344 1.66996 8.16295C1.7223 8.74477 2.57369 9.08605 4.27647 9.7686C5.048 10.0779 5.43377 10.2325 5.71035 10.5286C5.74145 10.5619 5.77135 10.5964 5.8 10.632C6.05484 10.9486 6.16359 11.3642 6.38109 12.1954L6.78812 13.7508C6.99977 14.5596 7.10559 14.964 7.38275 15.0191C7.65991 15.0743 7.90122 14.7389 8.38384 14.0683L9.98721 11.8403ZM9.98721 11.8403L9.72237 11.5642C9.42097 11.2501 9.27026 11.0931 9.27026 10.8979C9.27026 10.7027 9.42097 10.5457 9.72237 10.2315L12.6998 7.12841'
-                    stroke='#99FF2D'
-                    stroke-width='1.5'
-                    strokeLinecap='round'
-                    stroke-linejoin='round'
-                  />
-                </svg>
-              </button>
-              <button
-                onClick={() => handleShare('link')}
-                className='flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(167,249,80,0.08)] text-black transition-colors hover:bg-[#A7F950]/80 focus:ring-2 focus:ring-[#A7F950]/50 focus:outline-none'
-                aria-label='Copy link'
-              >
-                {copiedStates.link ? (
-                  <Check className='h-5 w-5' />
-                ) : (
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='20'
-                    height='20'
-                    viewBox='0 0 20 20'
-                    fill='none'
-                  >
-                    <path
-                      d='M7.49935 14.1666H5.83268C3.5315 14.1666 1.66602 12.3012 1.66602 9.99998C1.66602 7.69879 3.5315 5.83331 5.83268 5.83331H7.49935M12.4993 14.1666H14.166C16.4672 14.1666 18.3327 12.3012 18.3327 9.99998C18.3327 7.69879 16.4672 5.83331 14.166 5.83331H12.4993M5.83268 9.99998L14.166 9.99998'
-                      stroke='#99FF2D'
-                      stroke-width='1.4'
+                      strokeWidth='1.5'
                       strokeLinecap='round'
-                      stroke-linejoin='round'
+                      strokeLinejoin='round'
                     />
                   </svg>
-                )}
-              </button>
+                </button>
+                <button
+                  onClick={() => handleShare('discord')}
+                  className='flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(167,249,80,0.08)] text-black transition-colors hover:bg-[#A7F950]/80 focus:ring-2 focus:ring-[#A7F950]/50 focus:outline-none'
+                  aria-label='Copy for Discord'
+                >
+                  {copiedStates.discord ? (
+                    <Check className='h-5 w-5' />
+                  ) : (
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='20'
+                      height='16'
+                      viewBox='0 0 20 16'
+                      fill='none'
+                    >
+                      <path
+                        d='M6.68359 6.56555C6.3753 6.56555 6.08615 6.65168 5.83398 6.80286C5.86071 6.73663 5.8898 6.67102 5.91797 6.60461L6.68359 6.48743M6.68359 6.56555V6.48743M6.68359 6.56555L6.83008 6.57336C6.84126 6.53557 6.85246 6.49776 6.86426 6.46008L6.68359 6.48743M6.68359 6.56555V6.48743M13.3291 6.56555L13.5156 6.57629C13.75 6.60287 13.9698 6.68028 14.168 6.79602C14.1413 6.72999 14.1158 6.66346 14.0879 6.59778L13.3291 6.48352M13.3291 6.56555V6.48352M13.3291 6.56555V6.48352M13.3291 6.56555C13.2818 6.56555 13.2348 6.56939 13.1885 6.57336C13.1772 6.53503 13.1672 6.49633 13.1553 6.45813L13.3291 6.48352'
+                        stroke='#99FF2D'
+                        strokeWidth='10'
+                      />
+                    </svg>
+                  )}
+                </button>
+                <button
+                  onClick={() => handleShare('send')}
+                  className='flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(167,249,80,0.08)] text-black transition-colors hover:bg-[#A7F950]/80 focus:ring-2 focus:ring-[#A7F950]/50 focus:outline-none'
+                  aria-label='Share via native share'
+                >
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='20'
+                    height='18'
+                    viewBox='0 0 20 18'
+                    fill='none'
+                  >
+                    <path
+                      d='M9.98721 11.8403L12.6883 14.9113C13.6891 16.0491 14.1895 16.618 14.7133 16.4795C15.2371 16.341 15.4167 15.5923 15.7759 14.0949L17.7684 5.78825C18.3217 3.48194 18.5983 2.32878 17.9834 1.76C17.3685 1.19122 16.3027 1.61437 14.1711 2.46068L4.28165 6.38707C2.57679 7.06395 1.72436 7.40239 1.67024 7.98403C1.6647 8.04353 1.66461 8.10344 1.66996 8.16295C1.7223 8.74477 2.57369 9.08605 4.27647 9.7686C5.048 10.0779 5.43377 10.2325 5.71035 10.5286C5.74145 10.5619 5.77135 10.5964 5.8 10.632C6.05484 10.9486 6.16359 11.3642 6.38109 12.1954L6.78812 13.7508C6.99977 14.5596 7.10559 14.964 7.38275 15.0191C7.65991 15.0743 7.90122 14.7389 8.38384 14.0683L9.98721 11.8403ZM9.98721 11.8403L9.72237 11.5642C9.42097 11.2501 9.27026 11.0931 9.27026 10.8979C9.27026 10.7027 9.42097 10.5457 9.72237 10.2315L12.6998 7.12841'
+                      stroke='#99FF2D'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => handleShare('link')}
+                  className='flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(167,249,80,0.08)] text-black transition-colors hover:bg-[#A7F950]/80 focus:ring-2 focus:ring-[#A7F950]/50 focus:outline-none'
+                  aria-label='Copy link'
+                >
+                  {copiedStates.link ? (
+                    <Check className='h-5 w-5' />
+                  ) : (
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='20'
+                      height='20'
+                      viewBox='0 0 20 20'
+                      fill='none'
+                    >
+                      <path
+                        d='M7.49935 14.1666H5.83268C3.5315 14.1666 1.66602 12.3012 1.66602 9.99998C1.66602 7.69879 3.5315 5.83331 5.83268 5.83331H7.49935M12.4993 14.1666H14.166C16.4672 14.1666 18.3327 12.3012 18.3327 9.99998C18.3327 7.69879 16.4672 5.83331 14.166 5.83331H12.4993M5.83268 9.99998L14.166 9.99998'
+                        stroke='#99FF2D'
+                        strokeWidth='1.4'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                      />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -313,7 +321,12 @@ const BlogPostDetails: React.FC<BlogPostDetailsProps> = ({ post }) => {
                   </div>
                 ))}
               </div>
-            ) : relatedPosts.length > 0 ? (
+            ) : relatedPostsError ? (
+              <div className='py-12 text-center text-[#B5B5B5]'>
+                <BookOpen className='mx-auto mb-4 h-12 w-12' />
+                <p className='text-base'>{relatedPostsError}</p>
+              </div>
+            ) : relatedPosts && relatedPosts.length > 0 ? (
               <div className='grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3'>
                 {relatedPosts.map(relatedPost => (
                   <BlogCard

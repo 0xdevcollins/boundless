@@ -49,14 +49,20 @@ export function extractUserInfo(user: User) {
     user.profile && typeof user.profile === 'object' ? user.profile : {};
 
   const firstName = safeStringOrNull(
-    (profile as any).firstName || user.firstName
+    (profile as Record<string, unknown>).firstName || user.firstName
   );
 
-  const lastName = safeStringOrNull((profile as any).lastName || user.lastName);
+  const lastName = safeStringOrNull(
+    (profile as Record<string, unknown>).lastName || user.lastName
+  );
 
-  const image = safeStringOrNull((profile as any).avatar || user.image);
+  const image = safeStringOrNull(
+    (profile as Record<string, unknown>).avatar || user.image
+  );
 
-  const username = safeStringOrNull((profile as any).username);
+  const username = safeStringOrNull(
+    (profile as Record<string, unknown>).username
+  );
 
   return {
     id: getId(user._id, user.id),

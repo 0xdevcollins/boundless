@@ -2,15 +2,21 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import BlogPostDetails from '../../../../components/landing-page/blog/BlogPostDetails';
-import { getBlogPost, getAllBlogPosts } from '@/lib/data/blog';
+import { getBlogPost, getBlogPosts } from '@/lib/api/blog';
 import { generateBlogPostMetadata } from '@/lib/metadata';
 
 export async function generateStaticParams() {
-  const posts = await getAllBlogPosts();
+  try {
+    // For static generation, we'll need to fetch all posts
+    // This might need to be adjusted based on your backend implementation
+    const { posts } = await getBlogPosts({ page: 1, limit: 50 });
 
-  return posts.map(post => ({
-    slug: post.slug,
-  }));
+    return posts.map(post => ({
+      slug: post.slug,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({
@@ -19,16 +25,24 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getBlogPost(slug);
 
-  if (!post) {
+  try {
+    const post = await getBlogPost(slug);
+
+    if (!post) {
+      return {
+        title: 'Blog Post Not Found',
+        description: 'The requested blog post could not be found.',
+      };
+    }
+
+    return generateBlogPostMetadata(post);
+  } catch {
     return {
       title: 'Blog Post Not Found',
       description: 'The requested blog post could not be found.',
     };
   }
-
-  return generateBlogPostMetadata(post);
 }
 
 const BlogPostPage = async ({
@@ -37,13 +51,18 @@ const BlogPostPage = async ({
   params: Promise<{ slug: string }>;
 }) => {
   const { slug } = await params;
-  const post = await getBlogPost(slug);
 
-  if (!post) {
+  try {
+    const post = await getBlogPost(slug);
+
+    if (!post) {
+      notFound();
+    }
+
+    return <BlogPostDetails post={post} />;
+  } catch {
     notFound();
   }
-
-  return <BlogPostDetails post={post} />;
 };
 
 export default BlogPostPage;

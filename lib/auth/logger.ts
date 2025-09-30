@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Authentication logger utility
  */

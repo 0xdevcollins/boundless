@@ -114,11 +114,12 @@ function AboutUsDifferent({ className = '' }: AboutUsDifferentProps) {
         role='list'
         aria-label='Key features that make Boundless different'
       >
-        {features.map((feature, index) => (
+        {features.map(feature => (
           <article
             key={feature.id}
-            className={`relative flex h-full w-full flex-col items-center gap-4 overflow-hidden rounded-[12px] border border-white/48 p-4 backdrop-blur-[7px] md:gap-6 md:p-6 ${
-              index < 2 ? 'bg-[#101010A3]' : 'bg-black/85 backdrop-blur-2xl'
+            className={`flex h-full w-full flex-col items-center gap-4 rounded-[12px] border border-white/48 p-4 backdrop-blur-[7px] md:gap-6 md:p-6 ${
+              'bg-[#101010A3] bg-[url("/card-bg.svg")] bg-center bg-no-repeat'
+              //  'bg-black/85 bg-[url("/card-bg.svg")] bg-center bg-no-repeat backdrop-blur-2xl'
             } ${feature.gridClass || ''}`}
             role='listitem'
             aria-labelledby={`${feature.id}-title`}
