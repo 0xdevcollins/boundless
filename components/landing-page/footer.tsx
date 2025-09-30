@@ -28,6 +28,7 @@ export function Footer() {
               Web3-Native Funding.
             </p>
           </div>
+
           <div className='flex flex-col items-end space-y-6'>
             <nav
               className='mb-14 grid grid-cols-2 gap-x-8 gap-y-4 text-center sm:text-left'
@@ -58,6 +59,7 @@ export function Footer() {
                 Disclaimer
               </Link>
             </nav>
+
             <nav
               className='flex items-center space-x-4'
               aria-label='Social media links'
@@ -69,14 +71,14 @@ export function Footer() {
                     className='rounded transition-opacity hover:opacity-80 focus:ring-2 focus:ring-white/50 focus:outline-none'
                     target='_blank'
                     rel='noopener noreferrer'
-                    aria-label={Follow us on ${name}}
+                    aria-label={`Follow us on ${name}`}
                   >
                     <Image
-                      src={/footer/${name}.svg}
-                      alt={${name} icon}
+                      src={`/footer/${name}.svg`}
+                      alt={`${name} icon`}
                       width={24}
                       height={24}
-                      className='h-6 w-6'
+                      className={`${name === 'gmail' ? 'h-18 w-18' : 'h-6 w-6'}`}
                     />
                   </Link>
                   {index < Object.keys(socialLinks).length - 1 && (
@@ -87,24 +89,11 @@ export function Footer() {
                   )}
                 </div>
               ))}
-              <div className='ml-4 h-6 w-0.5 bg-[#2B2B2B]' aria-hidden='true' />
-              <Link
-                href={mailto:${socialLinks.gmail}}
-                className='rounded transition-opacity hover:opacity-80 focus:ring-2 focus:ring-white/50 focus:outline-none'
-                aria-label='Contact us via email'
-              >
-                <Image
-                  src='/footer/gmail.svg'
-                  alt='Email contact'
-                  width={24}
-                  height={24}
-                  className='h-21 w-20'
-                />
-              </Link>
             </nav>
           </div>
         </div>
 
+        {/* Mobile version */}
         <div className='flex flex-col items-center space-y-6 md:hidden'>
           <Link href='/' aria-label='Boundless homepage'>
             <Image
@@ -158,11 +147,11 @@ export function Footer() {
                   className='rounded transition-opacity hover:opacity-80 focus:ring-2 focus:ring-white/50 focus:outline-none'
                   target='_blank'
                   rel='noopener noreferrer'
-                  aria-label={Follow us on ${name}}
+                  aria-label={`Follow us on ${name}`}
                 >
                   <Image
-                    src={/footer/${name}.svg}
-                    alt={${name} icon}
+                    src={`/footer/${name}.svg`}
+                    alt={`${name} icon`}
                     width={24}
                     height={24}
                     className='h-6 w-6'
