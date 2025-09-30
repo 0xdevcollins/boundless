@@ -210,7 +210,9 @@ export default function Explore() {
 
       {/* Footer */}
       <div className='mt-20 flex cursor-pointer items-center gap-1'>
-        <Link href="/projects"><p className='font-medium underline'>View More Opportunities</p></Link>
+        <Link href='/projects'>
+          <p className='font-medium underline'>View More Opportunities</p>
+        </Link>
         <ArrowRight className='h-3 w-3' />
       </div>
 
