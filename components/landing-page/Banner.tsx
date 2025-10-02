@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const CleanBanner = () => {
   return (
-    <div className='px-10 md:px-30'>
+    <div className='mb-20 px-10 md:px-30'>
       <section className='relative mx-auto min-h-[18rem] max-w-6xl overflow-hidden rounded-[3.2rem]'>
         <div className='absolute inset-0'>
           <CleanBannerBg />
