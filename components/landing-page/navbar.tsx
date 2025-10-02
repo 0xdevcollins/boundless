@@ -199,9 +199,7 @@ export function Navbar() {
             ) : isAuthenticated ? (
               <AuthenticatedNav user={user} />
             ) : (
-              <BoundlessButton>
-                <Link href='/auth'>Get Started</Link>
-              </BoundlessButton>
+              <UnauthenticatedNav />
             )}
           </div>
           <MobileMenu
@@ -352,6 +350,44 @@ function AuthenticatedNav({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <CreateProjectModal
+        open={createProjectModalOpen}
+        setOpen={setCreateProjectModalOpen}
+      />
+    </div>
+  );
+}
+
+// In development, show a lightweight CTA that opens CreateProjectModal
+// even for unauthenticated users, so designers/QA can test the flow.
+function UnauthenticatedNav() {
+  const [createProjectModalOpen, setCreateProjectModalOpen] = useState(false);
+
+  const showDevAddProject =
+    process.env.NODE_ENV !== 'production' &&
+    (process.env.NEXT_PUBLIC_SHOW_ADD_PROJECT_FOR_GUESTS === 'true' || true);
+
+  if (!showDevAddProject) {
+    return (
+      <BoundlessButton>
+        <Link href='/auth'>Get Started</Link>
+      </BoundlessButton>
+    );
+  }
+
+  return (
+    <div className='flex items-center space-x-3'>
+      <BoundlessButton
+        variant='outline'
+        onClick={() => setCreateProjectModalOpen(true)}
+        className='border-white/20 text-white hover:bg-white/10'
+      >
+        <Plus className='mr-2 h-4 w-4' />
+        Add Project
+      </BoundlessButton>
+      <BoundlessButton>
+        <Link href='/auth'>Sign in</Link>
+      </BoundlessButton>
       <CreateProjectModal
         open={createProjectModalOpen}
         setOpen={setCreateProjectModalOpen}

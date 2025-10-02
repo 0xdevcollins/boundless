@@ -1,80 +1,41 @@
 'use client';
-
 import { useState } from 'react';
-import LaunchCampaignFlow from '@/components/project/LaunchCampaignFlow';
-import BoundlessSheet from '@/components/sheet/boundless-sheet';
-import { Button } from '@/components/ui/button';
-import { Rocket } from 'lucide-react';
-import { useWalletProtection } from '@/hooks/use-wallet-protection';
-import WalletRequiredModal from '@/components/wallet/WalletRequiredModal';
+import AuthLoadingState from '@/components/auth/AuthLoadingState';
+import { BoundlessButton } from '@/components/buttons';
 
-export default function TestPage() {
-  const [showLaunchFlow, setShowLaunchFlow] = useState(false);
+export default function TestLoadingPage() {
+  const [showLoading, setShowLoading] = useState(false);
 
-  // Wallet protection hook
-  const {
-    requireWallet,
-    showWalletModal,
-    handleWalletConnected,
-    closeWalletModal,
-  } = useWalletProtection({
-    actionName: 'test launch campaign',
-  });
-
-  const handleOpenModal = () => {
-    requireWallet(() => setShowLaunchFlow(true));
-  };
-
-  const handleCloseModal = () => {
-    setShowLaunchFlow(false);
+  const handleShowLoading = () => {
+    setShowLoading(true);
+    // Simulate loading for 3 seconds
+    setTimeout(() => {
+      setShowLoading(false);
+    }, 3000);
   };
 
   return (
-    <div className='flex min-h-screen items-center justify-center bg-gray-900'>
-      <div className='space-y-6 text-center'>
-        <h1 className='mb-8 text-4xl font-bold text-white'>
-          Launch Campaign Test
-        </h1>
-
-        <p className='mb-8 text-gray-300'>
-          Click the button below to test the Launch Campaign feature
+    <div className='flex min-h-screen items-center justify-center bg-gray-900 p-4'>
+      <div className='space-y-4 text-center'>
+        <h1 className='text-2xl font-bold text-white'>Loading State Test</h1>
+        <p className='text-gray-300'>
+          Test the animated loading state across different screen sizes
         </p>
 
-        <Button
-          onClick={handleOpenModal}
-          size='lg'
-          className='bg-green-600 px-8 py-4 text-lg text-white hover:bg-green-700'
-        >
-          <Rocket className='mr-2 h-6 w-6' />
-          Test Launch Campaign
-        </Button>
+        <BoundlessButton onClick={handleShowLoading} className='mt-4'>
+          Test Loading State
+        </BoundlessButton>
 
-        {/* Debug info */}
-        <div className='text-sm text-white'>
-          Modal state: {showLaunchFlow ? 'Open' : 'Closed'}
+        {showLoading && <AuthLoadingState message='Testing loading...' />}
+
+        <div className='mt-8 text-sm text-gray-400'>
+          <p>Test on different screen sizes:</p>
+          <ul className='mt-2 list-inside list-disc space-y-1'>
+            <li>Mobile (320px - 768px)</li>
+            <li>Tablet (768px - 1024px)</li>
+            <li>Desktop (1024px+)</li>
+          </ul>
         </div>
-
-        {/* Launch Campaign Flow Modal */}
-        <BoundlessSheet
-          open={showLaunchFlow}
-          setOpen={handleCloseModal}
-          contentClassName='h-full'
-          title='Review Campaign'
-        >
-          <LaunchCampaignFlow
-            projectId='test-project-123'
-            onBack={handleCloseModal}
-            onComplete={handleCloseModal}
-          />
-        </BoundlessSheet>
-
-        {/* Wallet Required Modal */}
-        <WalletRequiredModal
-          open={showWalletModal}
-          onOpenChange={closeWalletModal}
-          actionName='test launch campaign'
-          onWalletConnected={handleWalletConnected}
-        />
       </div>
     </div>
   );
