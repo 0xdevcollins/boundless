@@ -1,6 +1,5 @@
 import BoundlessSheet from '@/components/sheet/boundless-sheet';
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import Link from 'next/link';
 import Header from './Header';
 import Footer from './Footer';
 import Basic, { BasicFormData } from './Basic';
@@ -8,6 +7,8 @@ import Details, { DetailsFormData } from './Details';
 import Milestones, { MilestonesFormData } from './Milestones';
 import Team, { TeamFormData } from './Team';
 import Contact, { ContactFormData } from './Contact';
+import LoadingScreen from './LoadingScreen';
+import SuccessScreen from './SuccessScreen';
 import { z } from 'zod';
 
 type StepHandle = { validate: () => boolean; markSubmitted?: () => void };
@@ -30,6 +31,7 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitErrors, setSubmitErrors] = useState<string[]>([]);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Form data state
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -140,6 +142,7 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setIsLoading(true);
 
     try {
       // Validate full payload with master schema before submitting
@@ -235,12 +238,14 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Show success modal
+      setIsLoading(false);
       setShowSuccess(true);
       setIsSubmitting(false);
     } catch {
       // console.error('Error submitting project:', error);
       // TODO: Show error notification
       alert('Error submitting project. Please try again.');
+      setIsLoading(false);
     } finally {
       setIsSubmitting(false);
     }
@@ -280,7 +285,7 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
     return true;
   })();
 
-  const handleSuccessContinue = () => {
+  const handleReset = () => {
     // Reset form and close modal
     setFormData({
       basic: {},
@@ -291,62 +296,16 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
     });
     setCurrentStep(1);
     setShowSuccess(false);
+    setIsLoading(false);
     setOpen(false);
   };
 
   const renderStepContent = () => {
+    if (isLoading) {
+      return <LoadingScreen />;
+    }
     if (showSuccess) {
-      return (
-        <div className='flex min-h-full flex-col items-center justify-between space-y-12 text-center'>
-          {/* Success Icon */}
-          <div className='relative my-10 lg:my-16'>
-            <svg
-              width='55'
-              height='55'
-              className='absolute -inset-2 top-[20%] z-10 mx-auto'
-              viewBox='0 0 55 55'
-              fill='none'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <path
-                d='M46.2034 10.109C47.808 8.50435 50.4097 8.50435 52.0144 10.109C52.8759 10.9706 52.8759 12.3674 52.0144 13.2289L20.1202 45.1232C18.8871 46.3563 16.8878 46.3563 15.6547 45.1232C14.4216 43.8901 14.4216 41.8908 15.6547 40.6577L46.2034 10.109Z'
-                fill='#0F973D'
-              />
-              <path
-                d='M3.67335 33.3904C2.0627 31.7917 2.05299 29.19 3.65168 27.5794C4.50999 26.7146 5.9068 26.7094 6.77154 27.5677L19.9508 40.649C21.1885 41.8775 21.1959 43.8768 19.9674 45.1145C18.7389 46.3522 16.7397 46.3596 15.502 45.1311L3.67335 33.3904Z'
-                fill='#0F973D'
-              />
-            </svg>
-            <div className='pointer-events-none relative -inset-2 h-[150px] w-[150px] rounded-full bg-[#0F973D] opacity-20 blur-[45px]'></div>
-          </div>
-
-          {/* Success Message */}
-          <div className='space-y-2'>
-            <h2 className='text-[20px] font-medium text-white'>
-              Submission Successful!
-            </h2>
-            <p className='max-w-md leading-[160%] text-[#B5B5B5]'>
-              Your project has been sent for admin review and will be processed
-              within 72 hours. You can track its status anytime on the{' '}
-              <Link
-                href='/projects'
-                className='font-medium text-[#A7F950] underline'
-              >
-                Projects Page
-              </Link>
-              .
-            </p>
-          </div>
-
-          {/* Continue Button */}
-          <button
-            onClick={handleSuccessContinue}
-            className='rounded-[10px] border border-[#2B2B2B] bg-[#A7F950] px-8 py-3 font-medium text-[#030303] transition-colors'
-          >
-            Continue
-          </button>
-        </div>
-      );
+      return <SuccessScreen onContinue={handleReset} />;
     }
 
     switch (currentStep) {
@@ -407,12 +366,14 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
       open={open}
       setOpen={setOpen}
     >
-      {!showSuccess && <Header currentStep={currentStep} onBack={handleBack} />}
+      {!(showSuccess || isLoading) && (
+        <Header currentStep={currentStep} onBack={handleBack} />
+      )}
       <div
         ref={contentRef}
         className={`min-h-[calc(55vh)] px-4 transition-opacity duration-100 md:px-[50px] lg:px-[75px] xl:px-[150px]`}
       >
-        {showSuccess ? (
+        {showSuccess || isLoading ? (
           <div className='flex h-full items-center justify-center'>
             {renderStepContent()}
           </div>
@@ -436,7 +397,7 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
           </>
         )}
       </div>
-      {!showSuccess && (
+      {!(showSuccess || isLoading) && (
         <Footer
           currentStep={currentStep}
           onContinue={handleContinue}

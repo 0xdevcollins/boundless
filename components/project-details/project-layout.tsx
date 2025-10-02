@@ -60,37 +60,37 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                 <div className='scrollbar-hide flex w-full overflow-x-auto px-4'>
                   <TabsTrigger
                     value='about'
-                    className='rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-green-500 data-[state=active]:text-white'
+                    className='data-[state=active]:border-primary rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:text-white'
                   >
                     About
                   </TabsTrigger>
                   <TabsTrigger
                     value='details'
-                    className='rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-green-500 data-[state=active]:text-white'
+                    className='data-[state=active]:border-primary rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:text-white'
                   >
                     Details
                   </TabsTrigger>
                   <TabsTrigger
                     value='team'
-                    className='rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-green-500 data-[state=active]:text-white'
+                    className='data-[state=active]:border-primary rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:text-white'
                   >
                     Team
                   </TabsTrigger>
                   <TabsTrigger
                     value='milestones'
-                    className='rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-green-500 data-[state=active]:text-white'
+                    className='data-[state=active]:border-primary rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:text-white'
                   >
                     Milestones
                   </TabsTrigger>
                   <TabsTrigger
                     value='voters'
-                    className='rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-green-500 data-[state=active]:text-white'
+                    className='data-[state=active]:border-primary rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:text-white'
                   >
                     Voters
                   </TabsTrigger>
                   <TabsTrigger
                     value='comments'
-                    className='rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-green-500 data-[state=active]:text-white'
+                    className='data-[state=active]:border-primary rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:text-white'
                   >
                     Comments
                   </TabsTrigger>
@@ -155,31 +155,31 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
               <TabsList className='mb-8 h-auto w-full justify-start rounded-none border-b border-gray-800 bg-transparent p-0'>
                 <TabsTrigger
                   value='details'
-                  className='rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-green-500 data-[state=active]:text-white'
+                  className='data-[state=active]:border-primary rounded-none border-x-0 border-t-0 bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 focus-visible:border-0 focus-visible:ring-0 focus-visible:outline-none data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:text-white'
                 >
                   Details
                 </TabsTrigger>
                 <TabsTrigger
                   value='team'
-                  className='rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-green-500 data-[state=active]:text-white'
+                  className='data-[state=active]:border-primary rounded-none border-x-0 border-t-0 bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 focus-visible:border-0 focus-visible:ring-0 focus-visible:outline-none data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:text-white'
                 >
                   Team
                 </TabsTrigger>
                 <TabsTrigger
                   value='milestones'
-                  className='rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-green-500 data-[state=active]:text-white'
+                  className='data-[state=active]:border-primary rounded-none border-x-0 border-t-0 bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 focus-visible:border-0 focus-visible:ring-0 focus-visible:outline-none data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:text-white'
                 >
                   Milestones
                 </TabsTrigger>
                 <TabsTrigger
                   value='voters'
-                  className='rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-green-500 data-[state=active]:text-white'
+                  className='data-[state=active]:border-primary rounded-none border-x-0 border-t-0 bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 focus-visible:border-0 focus-visible:ring-0 focus-visible:outline-none data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:text-white'
                 >
                   Voters
                 </TabsTrigger>
                 <TabsTrigger
                   value='comments'
-                  className='rounded-none bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:border-green-500 data-[state=active]:text-white'
+                  className='data-[state=active]:border-primary rounded-none border-x-0 border-t-0 bg-transparent px-6 py-4 text-sm font-medium text-gray-400 transition-colors hover:text-gray-300 focus-visible:border-0 focus-visible:ring-0 focus-visible:outline-none data-[state=active]:border-x-0 data-[state=active]:border-t-0 data-[state=active]:border-b-2 data-[state=active]:text-white'
                 >
                   Comments
                 </TabsTrigger>

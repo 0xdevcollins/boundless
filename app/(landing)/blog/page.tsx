@@ -7,33 +7,27 @@ import TestimonialSection from '@/components/testimonials/TestimonialsSection';
 import { testimonials } from '@/components/testimonials/data/testimonial';
 import { Skeleton } from '@/components/ui/skeleton';
 import BlogCardSkeleton from '@/components/landing-page/blog/BlogCardSkeleton';
+import BlogHero from '@/components/landing-page/blog/BlogHero';
 
 export const metadata: Metadata = generatePageMetadata('blog');
 
 async function StreamingBlogGridWrapper() {
   try {
-    const { posts, hasMore, total } = await getBlogPosts({
+    const { posts, hasMore } = await getBlogPosts({
       page: 1,
       limit: 12,
       sort: 'latest',
     });
-
     return (
       <StreamingBlogGrid
         initialPosts={posts}
-        totalPosts={total}
         hasMore={hasMore}
         initialPage={1}
       />
     );
   } catch {
     return (
-      <StreamingBlogGrid
-        initialPosts={[]}
-        totalPosts={0}
-        hasMore={false}
-        initialPage={1}
-      />
+      <StreamingBlogGrid initialPosts={[]} hasMore={false} initialPage={1} />
     );
   }
 }
@@ -65,6 +59,7 @@ function BlogGridLoading() {
 const BlogPage = async () => {
   return (
     <div className='min-h-screen bg-[#030303]'>
+      <BlogHero />
       <Suspense fallback={<BlogGridLoading />}>
         <StreamingBlogGridWrapper />
       </Suspense>

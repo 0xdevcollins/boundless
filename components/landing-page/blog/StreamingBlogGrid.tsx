@@ -1,8 +1,12 @@
 'use client';
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { BlogPost } from '@/types/blog';
-import { getBlogPosts, searchBlogPosts } from '@/lib/api/blog';
+import {
+  getBlogPosts,
+  searchBlogPosts,
+  getBlogCategories,
+} from '@/lib/api/blog';
 import BlogCard from './BlogCard';
 import { Search, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -18,15 +22,12 @@ import { cn } from '@/lib/utils';
 
 interface StreamingBlogGridProps {
   initialPosts: BlogPost[];
-  totalPosts: number;
   hasMore: boolean;
   initialPage: number;
 }
 
 const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
   initialPosts,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  totalPosts,
   hasMore: initialHasMore,
   initialPage,
 }) => {
@@ -39,19 +40,36 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Filter and sort posts
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setIsLoadingCategories(true);
+      try {
+        const categories = await getBlogCategories();
+        const categoryNames = categories.map(cat => cat.name);
+        setAvailableCategories(categoryNames);
+      } catch {
+        setAvailableCategories(['Web3', 'Community', 'Category']);
+      } finally {
+        setIsLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const filteredPosts = useMemo(() => {
     let filtered = allPosts;
 
-    // Filter by categories
     if (selectedCategories.length > 0) {
       filtered = filtered.filter(post =>
         selectedCategories.includes(post.category)
       );
     }
 
-    // Filter by search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -62,7 +80,6 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
       );
     }
 
-    // Sort posts
     if (sortOrder) {
       filtered = [...filtered].sort((a, b) => {
         const dateA = new Date(a.publishedAt).getTime();
@@ -74,32 +91,20 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
     return filtered;
   }, [allPosts, selectedCategories, searchQuery, sortOrder]);
 
-  // Get posts to display
   const displayPosts = filteredPosts.slice(0, visiblePosts);
-  const hasMorePostsToShow = visiblePosts < filteredPosts.length || hasMore;
+  const hasMorePostsToShow = hasMore;
 
-  // Blog categories
-  const categories: string[] = [
-    'Category 1',
-    'Category 2',
-    'Category 3',
-    'Category 4',
-    'Category 5',
-  ];
-
-  // Sort options for dropdown
   const sortOptions: Array<'Latest' | 'Oldest'> = ['Latest', 'Oldest'];
 
-  // Load more handler with streaming support
   const handleLoadMore = useCallback(async () => {
     if (isLoading || !hasMore) return;
 
     setIsLoading(true);
+    setError(null);
 
     try {
       const nextPage = currentPage + 1;
 
-      // Use search API if there's a search query, otherwise use regular posts API
       let data;
       if (searchQuery.trim()) {
         data = await searchBlogPosts({
@@ -126,16 +131,16 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
         });
       }
 
-      setAllPosts(prev => [...prev, ...data.posts]);
-      setCurrentPage(nextPage);
-      setHasMore(data.hasMore);
-      setVisiblePosts(prev => prev + 12);
+      if (data.posts && data.posts.length > 0) {
+        setAllPosts(prev => [...prev, ...data.posts]);
+        setCurrentPage(nextPage);
+        setHasMore(data.hasMore);
+        setVisiblePosts(prev => prev + data.posts.length);
+      } else {
+        setHasMore(false);
+      }
     } catch {
-      // Fallback to local loading if API fails
-      setTimeout(() => {
-        setVisiblePosts(prev => prev + 12);
-        setIsLoading(false);
-      }, 500);
+      setError('Failed to load more posts. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -154,36 +159,33 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
         ? prev.filter(c => c !== category)
         : [...prev, category]
     );
-    setVisiblePosts(12); // Reset visible posts when filtering
+    setVisiblePosts(12);
+    setCurrentPage(1);
+    setHasMore(true);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    setVisiblePosts(12); // Reset visible posts when searching
+    setVisiblePosts(12);
+    setCurrentPage(1);
+    setHasMore(true);
   };
 
-  const handleCardClick = useCallback((slug: string) => {
+  const handleCardClick = useCallback(() => {
     setIsNavigating(true);
-    // The navigation will be handled by Next.js Link, but we show loading state
-    // The loading state will be cleared when the page actually navigates
-    // eslint-disable-next-line no-console
-    console.log(`Navigating to blog post: ${slug}`);
     setTimeout(() => {
       setIsNavigating(false);
-    }, 2000); // Fallback timeout
+    }, 2000);
   }, []);
 
   return (
     <>
       {isNavigating && <AuthLoadingState message='Loading article...' />}
       <div className='min-h-screen bg-[#030303]'>
-        {/* Header Navigation */}
         <div>
           <div className='mx-auto max-w-6xl px-6 py-8'>
             <div className='flex gap-3 md:flex-row md:items-center md:justify-between lg:gap-16'>
-              {/* Category Buttons */}
               <div className='flex items-center gap-3'>
-                {/* SORT */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
@@ -250,7 +252,6 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* CATEGORY */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
@@ -259,6 +260,7 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
                         selectedCategories.length > 0 &&
                           'border-[#A7F950]/30 bg-[#0F1A0B] text-[#A7F950]'
                       )}
+                      disabled={isLoadingCategories}
                     >
                       <svg
                         width='20'
@@ -284,33 +286,41 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
                     className='bg-background mt-2.5 w-[220px] rounded-[16px] border border-white/24 p-3 sm:w-[250px] lg:w-[320px]'
                   >
                     <div className='space-y-1'>
-                      {categories.map((cat: string) => (
-                        <button
-                          key={cat}
-                          onClick={() => handleCategoryChange(cat)}
-                          className='flex w-full cursor-pointer items-center rounded-md px-3 py-2 text-base font-medium text-white transition-colors duration-200 hover:bg-transparent hover:text-white'
-                        >
-                          <span
-                            className={cn(
-                              'mr-3 inline-flex h-5 w-5 items-center justify-center rounded-full border-2',
-                              selectedCategories.includes(cat)
-                                ? 'border-[#A7F950]'
-                                : 'border-[#B5B5B5]'
-                            )}
-                          >
-                            {selectedCategories.includes(cat) && (
-                              <span className='h-2.5 w-2.5 rounded-full bg-[#A7F950]' />
-                            )}
+                      {isLoadingCategories ? (
+                        <div className='flex items-center justify-center py-4'>
+                          <Loader2 className='h-4 w-4 animate-spin text-[#B5B5B5]' />
+                          <span className='ml-2 text-sm text-[#B5B5B5]'>
+                            Loading categories...
                           </span>
-                          <span className=''>{cat}</span>
-                        </button>
-                      ))}
+                        </div>
+                      ) : (
+                        availableCategories.map((cat: string) => (
+                          <button
+                            key={cat}
+                            onClick={() => handleCategoryChange(cat)}
+                            className='flex w-full cursor-pointer items-center rounded-md px-3 py-2 text-base font-medium text-white transition-colors duration-200 hover:bg-transparent hover:text-white'
+                          >
+                            <span
+                              className={cn(
+                                'mr-3 inline-flex h-5 w-5 items-center justify-center rounded-full border-2',
+                                selectedCategories.includes(cat)
+                                  ? 'border-[#A7F950]'
+                                  : 'border-[#B5B5B5]'
+                              )}
+                            >
+                              {selectedCategories.includes(cat) && (
+                                <span className='h-2.5 w-2.5 rounded-full bg-[#A7F950]' />
+                              )}
+                            </span>
+                            <span className=''>{cat}</span>
+                          </button>
+                        ))
+                      )}
                     </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
 
-              {/* Search Bar */}
               <div className='relative w-full md:min-w-[300px]'>
                 <Search className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#787878]' />
                 <Input
@@ -326,6 +336,12 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
         </div>
 
         <div className='mx-auto max-w-6xl px-6 py-12'>
+          {error && (
+            <div className='mb-6 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-red-400'>
+              {error}
+            </div>
+          )}
+
           {displayPosts.length > 0 ? (
             <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'>
               {displayPosts.map(post => (
@@ -345,12 +361,13 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
               <p className='text-[#B5B5B5]'>
                 {searchQuery
                   ? `No articles match "${searchQuery}"`
-                  : 'No articles in this category'}
+                  : selectedCategories.length > 0
+                    ? 'No articles in this category'
+                    : 'No articles available'}
               </p>
             </div>
           )}
 
-          {/* View More Button */}
           {hasMorePostsToShow && !isLoading && (
             <div className='mt-12 flex justify-center'>
               <button
@@ -362,7 +379,6 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
             </div>
           )}
 
-          {/* Loading indicator */}
           {isLoading && (
             <div className='mt-12 flex justify-center'>
               <div className='flex items-center gap-2 text-[#B5B5B5]'>
@@ -372,8 +388,7 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
             </div>
           )}
 
-          {/* No more posts message */}
-          {!hasMorePostsToShow && filteredPosts.length > 0 && !isLoading && (
+          {!hasMore && filteredPosts.length > 0 && !isLoading && (
             <div className='mt-12 text-center text-[#B5B5B5]'>
               <p>You've reached the end of the blog posts!</p>
             </div>

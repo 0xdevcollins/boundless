@@ -174,7 +174,7 @@ const ValidationFlow: React.FC<ValidationFlowProps> = ({ project, onVote }) => {
 
         <div className='flex justify-center'>
           <Image
-            src='/BOUNDLESS.png'
+            src='https://res.cloudinary.com/danuy5rqb/image/upload/v1759143589/bondless-og-image_jufgnu.png'
             alt='Boundless Logo'
             width={500}
             height={280}
