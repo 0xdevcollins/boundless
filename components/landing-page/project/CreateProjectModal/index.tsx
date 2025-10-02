@@ -362,7 +362,7 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
 
   return (
     <BoundlessSheet
-      contentClassName='h-[80vh] overflow-y-auto !overflow-x-hidden'
+      contentClassName='h-[90vh] overflow-y-auto !overflow-x-hidden'
       open={open}
       setOpen={setOpen}
     >

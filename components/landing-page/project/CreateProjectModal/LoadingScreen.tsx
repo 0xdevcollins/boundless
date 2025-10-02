@@ -1,9 +1,22 @@
 'use client';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
-const LoadingScreen = () => {
+const LoadingScreen = ({
+  className,
+  isSizeFull = true,
+}: {
+  className?: string;
+  isSizeFull?: boolean;
+}) => {
   return (
-    <div className='flex h-screen w-screen items-center justify-center bg-[#030303]'>
+    <div
+      className={cn(
+        'flex items-center justify-center bg-[#030303]',
+        className,
+        isSizeFull && 'h-screen w-screen'
+      )}
+    >
       <div className='flex items-center gap-2'>
         {[...Array(3)].map((_, index) => (
           <motion.div

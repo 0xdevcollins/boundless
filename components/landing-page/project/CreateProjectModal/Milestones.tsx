@@ -9,6 +9,12 @@ import { cn } from '@/lib/utils';
 import { Plus, X, Calendar } from 'lucide-react';
 import { z } from 'zod';
 import FormHint from '@/components/form/FormHint';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from 'react-beautiful-dnd';
 
 interface MilestonesProps {
   onDataChange?: (data: MilestonesFormData) => void;
@@ -66,7 +72,7 @@ const Milestones = React.forwardRef<
     fundingAmount: initialData?.fundingAmount || '0',
     milestones: initialData?.milestones || [
       {
-        id: '1',
+        id: `milestone-${Date.now()}-initial`,
         title: '',
         description: '',
         startDate: '',
@@ -108,7 +114,7 @@ const Milestones = React.forwardRef<
 
   const addMilestone = () => {
     const newMilestone: Milestone = {
-      id: Date.now().toString(),
+      id: `milestone-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       title: '',
       description: '',
       startDate: '',
@@ -124,6 +130,22 @@ const Milestones = React.forwardRef<
       );
       handleInputChange('milestones', updatedMilestones);
     }
+  };
+
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) {
+      return;
+    }
+
+    if (result.source.index === result.destination.index) {
+      return;
+    }
+
+    const items = Array.from(formData.milestones);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    handleInputChange('milestones', items);
   };
 
   const validateForm = (): boolean => {
@@ -193,130 +215,167 @@ const Milestones = React.forwardRef<
           </p>
         </div>
 
-        <div className='space-y-5'>
-          {formData.milestones.map((milestone, index) => (
-            <React.Fragment key={milestone.id}>
-              {index > 0 && (
-                <div className='absolute left-0 h-px w-[100%] bg-[#2B2B2B]' />
-              )}
-              <div className='p-4'>
-                <div className='flex items-start space-x-3'>
-                  {/* Drag Handle */}
-                  <div className='flex h-8 w-8 cursor-move items-center justify-center text-[#B5B5B5] hover:text-white'>
-                    <svg
-                      width='20'
-                      height='20'
-                      viewBox='0 0 20 20'
-                      fill='none'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        d='M2.5 7.08325H17.5M2.5 12.9166H17.5'
-                        stroke='#99FF2D'
-                        strokeWidth='1.4'
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                      />
-                    </svg>
-                  </div>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId='milestones' isDropDisabled={false}>
+            {(provided, snapshot) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className={cn(
+                  'space-y-5',
+                  snapshot.isDraggingOver && 'rounded-lg bg-[#1A1A1A]/50'
+                )}
+              >
+                {formData.milestones.map((milestone, index) => (
+                  <Draggable
+                    key={milestone.id}
+                    draggableId={milestone.id}
+                    index={index}
+                  >
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        className={cn(
+                          'milestone-item relative transition-all duration-200',
+                          snapshot.isDragging &&
+                            'milestone-dragging z-50 shadow-lg'
+                        )}
+                      >
+                        {index > 0 && (
+                          // <div className='absolute left-0 h-px w-screen bg-[#2B2B2B]' />
+                          <div className='absolute top-0 left-1/2 h-px w-screen -translate-x-1/2 bg-[#2B2B2B]' />
+                        )}
+                        <div className='p-4'>
+                          <div className='flex items-start space-x-3'>
+                            {/* Drag Handle */}
+                            <div
+                              {...provided.dragHandleProps}
+                              className={cn(
+                                'milestone-drag-handle flex h-8 w-8 cursor-move items-center justify-center rounded text-[#B5B5B5] transition-colors hover:border-[#99FF2D] hover:text-white',
+                                snapshot.isDragging && 'milestone-dragging'
+                              )}
+                            >
+                              <svg
+                                width='20'
+                                height='20'
+                                viewBox='0 0 20 20'
+                                fill='none'
+                                xmlns='http://www.w3.org/2000/svg'
+                              >
+                                <path
+                                  d='M2.5 7.08325H17.5M2.5 12.9166H17.5'
+                                  stroke='#99FF2D'
+                                  strokeWidth='1.4'
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                />
+                              </svg>
+                            </div>
 
-                  {/* Milestone Content */}
-                  <div className='flex-1 space-y-4'>
-                    {/* Title */}
-                    <div className='space-y-2'>
-                      <Input
-                        placeholder='Enter milestone name/title'
-                        value={milestone.title}
-                        onChange={e =>
-                          handleMilestoneChange(
-                            milestone.id,
-                            'title',
-                            e.target.value
-                          )
-                        }
-                        className='focus-visible:border-primary border-[#2B2B2B] bg-[#101010] p-4 text-white placeholder:text-[#919191]'
-                      />
-                    </div>
+                            {/* Milestone Content */}
+                            <div className='flex-1 space-y-4'>
+                              {/* Title */}
+                              <div className='space-y-2'>
+                                <Input
+                                  placeholder='Enter milestone name/title'
+                                  value={milestone.title}
+                                  onChange={e =>
+                                    handleMilestoneChange(
+                                      milestone.id,
+                                      'title',
+                                      e.target.value
+                                    )
+                                  }
+                                  className='focus-visible:border-primary border-[#2B2B2B] bg-[#101010] p-4 text-white placeholder:text-[#919191]'
+                                />
+                              </div>
 
-                    {/* Description */}
-                    <div className='space-y-2'>
-                      <Textarea
-                        placeholder='Describe what will be achieved in this milestone, the key activities involved, and the expected outcome or deliverable.'
-                        value={milestone.description}
-                        onChange={e =>
-                          handleMilestoneChange(
-                            milestone.id,
-                            'description',
-                            e.target.value
-                          )
-                        }
-                        className='focus-visible:border-primary min-h-20 resize-none border-[#2B2B2B] bg-[#101010] p-4 text-white placeholder:text-[#919191]'
-                      />
-                    </div>
+                              {/* Description */}
+                              <div className='space-y-2'>
+                                <Textarea
+                                  placeholder='Describe what will be achieved in this milestone, the key activities involved, and the expected outcome or deliverable.'
+                                  value={milestone.description}
+                                  onChange={e =>
+                                    handleMilestoneChange(
+                                      milestone.id,
+                                      'description',
+                                      e.target.value
+                                    )
+                                  }
+                                  className='focus-visible:border-primary min-h-20 resize-none border-[#2B2B2B] bg-[#101010] p-4 text-white placeholder:text-[#919191]'
+                                />
+                              </div>
 
-                    {/* Date Inputs */}
-                    <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-                      <div className='space-y-2'>
-                        <Label className='text-sm text-[#B5B5B5]'>
-                          Start Date
-                        </Label>
-                        <div className='relative'>
-                          <Input
-                            type='date'
-                            value={milestone.startDate}
-                            onChange={e =>
-                              handleMilestoneChange(
-                                milestone.id,
-                                'startDate',
-                                e.target.value
-                              )
-                            }
-                            className='focus-visible:border-primary border-[#2B2B2B] bg-[#101010] p-4 pr-10 text-white'
-                          />
-                          <Calendar className='pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-[#919191]' />
+                              {/* Date Inputs */}
+                              <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+                                <div className='space-y-2'>
+                                  <Label className='text-sm text-[#B5B5B5]'>
+                                    Start Date
+                                  </Label>
+                                  <div className='relative'>
+                                    <Input
+                                      type='date'
+                                      value={milestone.startDate}
+                                      onChange={e =>
+                                        handleMilestoneChange(
+                                          milestone.id,
+                                          'startDate',
+                                          e.target.value
+                                        )
+                                      }
+                                      className='focus-visible:border-primary border-[#2B2B2B] bg-[#101010] p-4 pr-10 text-white'
+                                    />
+                                    <Calendar className='pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-[#919191]' />
+                                  </div>
+                                </div>
+
+                                <div className='space-y-2'>
+                                  <Label className='text-sm text-[#B5B5B5]'>
+                                    End Date
+                                  </Label>
+                                  <div className='relative'>
+                                    <Input
+                                      type='date'
+                                      value={milestone.endDate}
+                                      onChange={e =>
+                                        handleMilestoneChange(
+                                          milestone.id,
+                                          'endDate',
+                                          e.target.value
+                                        )
+                                      }
+                                      className='focus-visible:border-primary border-[#2B2B2B] bg-[#101010] p-4 pr-10 text-white'
+                                    />
+                                    <Calendar className='pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-[#919191]' />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Remove Button */}
+                            {formData.milestones.length > 1 && (
+                              <Button
+                                type='button'
+                                variant='ghost'
+                                size='sm'
+                                onClick={() => removeMilestone(milestone.id)}
+                                className='text-primary/32 bg-primary/8 hover:bg-primary/8 hover:text-primary h-6 w-6 rounded-full p-0'
+                              >
+                                <X className='h-4 w-4' />
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       </div>
-
-                      <div className='space-y-2'>
-                        <Label className='text-sm text-[#B5B5B5]'>
-                          End Date
-                        </Label>
-                        <div className='relative'>
-                          <Input
-                            type='date'
-                            value={milestone.endDate}
-                            onChange={e =>
-                              handleMilestoneChange(
-                                milestone.id,
-                                'endDate',
-                                e.target.value
-                              )
-                            }
-                            className='focus-visible:border-primary border-[#2B2B2B] bg-[#101010] p-4 pr-10 text-white'
-                          />
-                          <Calendar className='pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-[#919191]' />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Remove Button */}
-                  {formData.milestones.length > 1 && (
-                    <Button
-                      type='button'
-                      variant='ghost'
-                      size='sm'
-                      onClick={() => removeMilestone(milestone.id)}
-                      className='text-primary/32 bg-primary/8 hover:bg-primary/8 hover:text-primary h-6 w-6 rounded-full p-0'
-                    >
-                      <X className='h-4 w-4' />
-                    </Button>
-                  )}
-                </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
               </div>
-            </React.Fragment>
-          ))}
-        </div>
+            )}
+          </Droppable>
+        </DragDropContext>
 
         {/* Add Milestone Button */}
         <div className='flex justify-end'>
@@ -324,7 +383,7 @@ const Milestones = React.forwardRef<
             type='button'
             variant='outline'
             onClick={addMilestone}
-            className='border-primary hover:text-primary hover:bg-primary/5 bg-transparent font-normal text-[#99FF2D] hover:bg-[#101010]'
+            className='border-primary hover:text-primary hover:bg-primary/5 bg-transparent font-normal text-[#99FF2D]'
           >
             Add Milestone
             <Plus className='h-4 w-4 text-[#99FF2D]' />
