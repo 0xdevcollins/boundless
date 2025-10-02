@@ -67,6 +67,7 @@ const SuccessScreen = ({ onClose }: SuccessScreenProps) => {
           review your project and get back to you via email within 72 hours with
           next steps.
         </p>
+
       </div>
     </div>
   );

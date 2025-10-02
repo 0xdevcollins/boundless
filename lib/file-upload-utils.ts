@@ -337,7 +337,11 @@ export async function validateFiles(
     };
   }
 ): Promise<
-  Array<{ file: File; validation: FileValidationResult; dimensions?: any }>
+  Array<{
+    file: File;
+    validation: FileValidationResult;
+    dimensions?: { width: number; height: number; aspectRatio: number };
+  }>
 > {
   const results = [];
 

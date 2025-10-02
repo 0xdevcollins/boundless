@@ -1,5 +1,5 @@
 export interface BlogPost {
-  id: number;
+  id: string;
   title: string;
   excerpt: string;
   content: string;
@@ -25,7 +25,7 @@ export interface BlogPost {
 
 export const mockBlogPosts: BlogPost[] = [
   {
-    id: 1,
+    id: '1',
     title: "Milestone-Based Funding: Why It's the Future of Crowdfunding",
     excerpt:
       "Traditional crowdfunding often leaves backers exposed. Discover how Boundless' milestone escrow protects supporters and ensures projects deliver on their promises.",
@@ -185,7 +185,7 @@ Ready to launch your validated project? [Get started today](/auth/signup) and jo
     },
   },
   {
-    id: 2,
+    id: '2',
     title: 'The Future of Decentralized Crowdfunding',
     excerpt:
       'Explore how blockchain technology is revolutionizing the way projects get funded. From smart contracts to community governance, discover the innovations that are making crowdfunding more transparent and efficient than ever before.',
@@ -370,7 +370,7 @@ At Boundless, we're committed to leading this transformation. Join us in buildin
     },
   },
   {
-    id: 3,
+    id: '3',
     title: 'Building Trust in Web3 Communities',
     excerpt:
       'Trust is the foundation of any successful community. Learn about the mechanisms and best practices that help build and maintain trust in decentralized communities, from reputation systems to transparent governance.',
@@ -682,7 +682,7 @@ The key is to start with clear values, implement appropriate systems, and contin
     },
   },
   {
-    id: 4,
+    id: '4',
     title: 'Smart Contract Security in Crowdfunding',
     excerpt:
       'Learn about the essential security measures that protect both creators and backers in decentralized crowdfunding platforms.',
@@ -713,7 +713,7 @@ Security is paramount in decentralized crowdfunding. This comprehensive guide co
     },
   },
   {
-    id: 5,
+    id: '5',
     title: 'The Psychology of Backing Projects',
     excerpt:
       'Understanding what motivates people to back projects is crucial for creators. Dive into the psychological factors that influence backing decisions.',
@@ -744,7 +744,7 @@ Understanding the psychological factors that influence backing decisions can hel
     },
   },
   {
-    id: 6,
+    id: '6',
     title: 'Grant Programs That Actually Work',
     excerpt:
       'Not all grant programs are created equal. Discover what makes grant programs successful and how to design them for maximum impact.',
@@ -771,7 +771,7 @@ Learn the key principles behind successful grant programs and how to design them
     },
   },
   {
-    id: 7,
+    id: '7',
     title: 'Community-Driven Development',
     excerpt:
       'Explore how community feedback and participation can drive better product development and create more successful projects.',
@@ -798,7 +798,7 @@ Learn how to leverage community feedback and participation to create better prod
     },
   },
   {
-    id: 8,
+    id: '8',
     title: 'Token Economics in Crowdfunding',
     excerpt:
       'Understand how token economics can enhance crowdfunding platforms and create better incentives for all participants.',
@@ -829,7 +829,7 @@ Discover how well-designed token economics can enhance crowdfunding platforms an
     },
   },
   {
-    id: 9,
+    id: '9',
     title: 'Cross-Chain Crowdfunding Solutions',
     excerpt:
       'Explore how cross-chain technology enables projects to accept funding from multiple blockchain networks.',
@@ -860,7 +860,7 @@ Learn how cross-chain technology is enabling projects to accept funding from mul
     },
   },
   {
-    id: 10,
+    id: '10',
     title: 'Regulatory Landscape for Web3 Funding',
     excerpt:
       'Navigate the complex regulatory landscape surrounding Web3 funding and learn how to stay compliant while innovating.',
@@ -887,7 +887,7 @@ Navigate the complex regulatory landscape surrounding Web3 funding and learn how
     },
   },
   {
-    id: 11,
+    id: '11',
     title: 'AI-Powered Project Matching',
     excerpt:
       'Discover how artificial intelligence is revolutionizing project-backer matching and improving funding success rates.',
@@ -914,7 +914,7 @@ Explore how artificial intelligence is revolutionizing the way projects are matc
     },
   },
   {
-    id: 12,
+    id: '12',
     title: 'Sustainable Funding Models',
     excerpt:
       'Explore innovative funding models that promote long-term sustainability for both creators and the platform ecosystem.',
@@ -945,7 +945,7 @@ Discover innovative funding models that promote long-term sustainability for cre
     },
   },
   {
-    id: 13,
+    id: '13',
     title: 'DeFi Integration in Crowdfunding Platforms',
     excerpt:
       'Explore how decentralized finance protocols are being integrated into crowdfunding platforms to provide better yield opportunities for backers.',
@@ -972,7 +972,7 @@ Decentralized finance is revolutionizing how crowdfunding platforms operate, off
     },
   },
   {
-    id: 14,
+    id: '14',
     title: 'NFT Rewards in Crowdfunding Campaigns',
     excerpt:
       'Discover how non-fungible tokens are being used as unique rewards and ownership tokens in modern crowdfunding campaigns.',
@@ -999,7 +999,7 @@ NFTs are transforming how creators reward their backers, offering unique digital
     },
   },
   {
-    id: 15,
+    id: '15',
     title: 'Multi-Chain Crowdfunding Strategies',
     excerpt:
       'Learn how to leverage multiple blockchain networks to maximize funding opportunities and reach diverse communities.',
@@ -1030,7 +1030,7 @@ Expanding across multiple blockchain networks can significantly increase your pr
     },
   },
   {
-    id: 16,
+    id: '16',
     title: 'Governance Tokens in Crowdfunding',
     excerpt:
       'Understand how governance tokens can enhance community participation and create more democratic funding decisions.',
@@ -1057,7 +1057,7 @@ Governance tokens are empowering communities to have a direct say in funding dec
     },
   },
   {
-    id: 17,
+    id: '17',
     title: 'Risk Assessment in Web3 Crowdfunding',
     excerpt:
       'Learn how to properly assess and mitigate risks when backing or launching projects in the Web3 crowdfunding space.',
@@ -1084,7 +1084,7 @@ Proper risk assessment is crucial for success in the dynamic world of Web3 crowd
     },
   },
   {
-    id: 18,
+    id: '18',
     title: 'Liquidity Pools for Crowdfunding',
     excerpt:
       'Explore how liquidity pools can provide continuous funding opportunities and better price discovery for crowdfunding projects.',
@@ -1111,7 +1111,7 @@ Liquidity pools are revolutionizing how projects maintain continuous funding and
     },
   },
   {
-    id: 19,
+    id: '19',
     title: 'Social Impact Crowdfunding',
     excerpt:
       'Learn how crowdfunding platforms are being used to fund social impact projects and create positive change in communities.',
@@ -1142,7 +1142,7 @@ Crowdfunding is becoming a powerful tool for driving social change and funding i
     },
   },
   {
-    id: 20,
+    id: '20',
     title: 'Automated Market Making for Projects',
     excerpt:
       'Discover how automated market making can provide continuous liquidity and better price discovery for crowdfunding projects.',
@@ -1173,7 +1173,7 @@ Automated market making is providing new ways for projects to maintain liquidity
     },
   },
   {
-    id: 21,
+    id: '21',
     title: 'Staking Mechanisms in Crowdfunding',
     excerpt:
       'Understand how staking mechanisms can align incentives and provide additional rewards for long-term project supporters.',
@@ -1204,7 +1204,7 @@ Staking is creating new ways to reward long-term supporters and align incentives
     },
   },
   {
-    id: 22,
+    id: '22',
     title: 'Cross-Border Crowdfunding Challenges',
     excerpt:
       'Navigate the complexities of international crowdfunding, including regulatory compliance and currency considerations.',
@@ -1235,7 +1235,7 @@ International crowdfunding presents unique challenges and opportunities for glob
     },
   },
   {
-    id: 23,
+    id: '23',
     title: 'Fractional Ownership in Crowdfunding',
     excerpt:
       'Explore how fractional ownership models are making high-value investments accessible to smaller backers.',
@@ -1266,7 +1266,7 @@ Fractional ownership is democratizing access to high-value investments through c
     },
   },
   {
-    id: 24,
+    id: '24',
     title: 'Community-Driven Due Diligence',
     excerpt:
       'Learn how community members can collaborate to perform thorough due diligence on crowdfunding projects.',
@@ -1301,6 +1301,43 @@ Community collaboration is revolutionizing how due diligence is performed on cro
 export async function getAllBlogPosts(): Promise<BlogPost[]> {
   // In a real application, this would fetch from a database or CMS
   return mockBlogPosts;
+}
+
+export async function* getBlogPostsStream(): AsyncGenerator<
+  BlogPost[],
+  void,
+  unknown
+> {
+  // Simulate streaming by yielding posts in batches
+  const batchSize = 6;
+  const totalPosts = mockBlogPosts.length;
+
+  for (let i = 0; i < totalPosts; i += batchSize) {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    const batch = mockBlogPosts.slice(i, i + batchSize);
+    yield batch;
+  }
+}
+
+export async function getBlogPostsStreaming(
+  page: number = 1,
+  limit: number = 12
+): Promise<{ posts: BlogPost[]; hasMore: boolean; total: number }> {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 200));
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const posts = mockBlogPosts.slice(startIndex, endIndex);
+  const hasMore = endIndex < mockBlogPosts.length;
+
+  return {
+    posts,
+    hasMore,
+    total: mockBlogPosts.length,
+  };
 }
 
 export async function getBlogPost(slug: string): Promise<BlogPost | null> {

@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
 import ProjectCard from './project/ProjectCard';
+import Link from 'next/link';
 
 interface ExploreProject {
   id: string;
@@ -209,7 +210,9 @@ export default function Explore() {
 
       {/* Footer */}
       <div className='mt-20 flex cursor-pointer items-center gap-1'>
-        <p className='font-medium underline'>View More Opportunities</p>
+        <Link href='/projects'>
+          <p className='font-medium underline'>View More Opportunities</p>
+        </Link>
         <ArrowRight className='h-3 w-3' />
       </div>
 

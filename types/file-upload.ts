@@ -97,7 +97,7 @@ export interface FileUploadCallbacks {
   /** Called when all uploads complete */
 
   onAllUploadsComplete?: (
-    results: Array<{ fileId: string; result: any }>
+    results: Array<{ fileId: string; result: unknown }>
   ) => void;
 }
 

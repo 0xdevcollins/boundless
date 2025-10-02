@@ -17,6 +17,7 @@ import Milestones from './Milestones';
 import Team from './Team';
 import Contact from './Contact';
 import SuccessScreen from './SuccessScreen';
+import LoadingScreen from './LoadingScreen';
 import { toast } from 'sonner';
 import { ValidationSummary } from '@/components/ui/error-display';
 import {
@@ -153,6 +154,7 @@ const CreateProjectModal = ({
     return keys[step - 1];
   };
 
+
   const handleBack = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
@@ -194,8 +196,13 @@ const CreateProjectModal = ({
     setValidationErrors([]);
     setShowValidationSummary(false);
 
+
     if (currentStep < 5) {
-      setCurrentStep(currentStep + 1);
+      setIsLoading(true);
+      setTimeout(() => {
+        setCurrentStep(prev => prev + 1);
+        setIsLoading(false);
+      }, 1000);
     } else {
       await handleSubmit();
     }
@@ -267,6 +274,28 @@ const CreateProjectModal = ({
       registerStepRef: registerStepRef,
     };
 
+      // ✅ After final step, show success screen
+      setShowSuccess(true);
+    }
+  };
+
+  const handleReset = () => {
+    // reset all states to start fresh
+    setShowSuccess(false);
+    setCurrentStep(1);
+    setIsLoading(false);
+  };
+
+  const isStepValid = true;
+
+  const renderStepContent = () => {
+    if (isLoading) {
+      return <LoadingScreen />;
+    }
+    if (showSuccess) {
+      return <SuccessScreen onContinue={handleReset} />;
+    }
+
     switch (currentStep) {
       case 1:
         return <Basic {...commonProps} />;
@@ -326,6 +355,7 @@ const CreateProjectModal = ({
           />
         )}
       </FormProvider>
+
     </BoundlessSheet>
   );
 };
