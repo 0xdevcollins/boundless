@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { z } from 'zod';
 import {
   Undo2,
   Redo2,
@@ -25,10 +26,15 @@ export interface DetailsFormData {
   vision: string;
 }
 
+const detailsSchema = z.object({
+  vision: z.string().trim().min(1, 'Vision is required'),
+});
+
 const Details = React.forwardRef<{ validate: () => boolean }, DetailsProps>(
   ({ onDataChange, initialData }, ref) => {
     const [vision, setVision] = useState(initialData?.vision || '');
     const [errors, setErrors] = useState<{ vision?: string }>({});
+    const [submitted, setSubmitted] = useState(false);
     const editorRef = useRef<HTMLDivElement>(null);
 
     const handleVisionChange = (value: string) => {
@@ -42,14 +48,16 @@ const Details = React.forwardRef<{ validate: () => boolean }, DetailsProps>(
     };
 
     const validateForm = (): boolean => {
-      const newErrors: { vision?: string } = {};
-
-      if (!vision.trim()) {
-        newErrors.vision = 'Vision is required';
+      setSubmitted(true);
+      const parsed = detailsSchema.safeParse({ vision });
+      if (parsed.success) {
+        setErrors({});
+        return true;
       }
-
-      setErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
+      setErrors({
+        vision: parsed.error.issues[0]?.message || 'Vision is required',
+      });
+      return false;
     };
 
     // Expose validation function to parent
@@ -235,7 +243,7 @@ const Details = React.forwardRef<{ validate: () => boolean }, DetailsProps>(
               onPaste={handlePaste}
               className={cn(
                 'focus:border-primary min-h-48 w-full rounded-lg border border-[#484848] bg-[#1A1A1A] p-4 text-white placeholder:text-[#919191] focus:outline-none',
-                errors.vision && 'border-red-500'
+                submitted && errors.vision && 'border-red-500'
               )}
               style={{ minHeight: '192px' }}
               data-placeholder="Tell your project's full story...\n\nUse text, images, links, or videos to bring your vision to life. Format freely with headings, lists, and more."
@@ -254,7 +262,7 @@ const Details = React.forwardRef<{ validate: () => boolean }, DetailsProps>(
             )}
           </div>
 
-          {errors.vision && (
+          {submitted && errors.vision && (
             <p className='text-sm text-red-500'>{errors.vision}</p>
           )}
         </div>

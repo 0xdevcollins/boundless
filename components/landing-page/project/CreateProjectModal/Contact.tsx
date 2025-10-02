@@ -2,11 +2,10 @@
 
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
-import { Mail, Phone, MapPin, Info } from 'lucide-react';
+import { z } from 'zod';
 
 interface ContactProps {
   onDataChange?: (data: ContactFormData) => void;
@@ -14,31 +13,46 @@ interface ContactProps {
 }
 
 export interface ContactFormData {
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  country: string;
-  postalCode: string;
-  additionalInfo: string;
+  telegram: string;
+  backupType: 'discord' | 'whatsapp';
+  backupContact: string;
   agreeToTerms: boolean;
   agreeToPrivacy: boolean;
-  agreeToMarketing: boolean;
 }
+
+const contactSchema = z
+  .object({
+    telegram: z
+      .string()
+      .trim()
+      .min(1, 'Telegram username is required')
+      .regex(/^@?[a-zA-Z0-9_]+$/, 'Please enter a valid Telegram username'),
+    backupType: z.union([z.literal('discord'), z.literal('whatsapp')]),
+    backupContact: z.string().trim().min(1, 'Backup contact is required'),
+    // Terms/Privacy are validated at final submission in the parent schema
+    agreeToTerms: z.boolean().optional(),
+    agreeToPrivacy: z.boolean().optional(),
+  })
+  .refine(
+    data => {
+      // Ensure backup type is selected and backup contact is provided
+      return data.backupType && data.backupContact.trim().length > 0;
+    },
+    {
+      message:
+        'Please select a backup contact method and provide contact information',
+      path: ['backupType'],
+    }
+  );
 
 const Contact = React.forwardRef<{ validate: () => boolean }, ContactProps>(
   ({ onDataChange, initialData }, ref) => {
     const [formData, setFormData] = useState<ContactFormData>({
-      email: initialData?.email || '',
-      phone: initialData?.phone || '',
-      address: initialData?.address || '',
-      city: initialData?.city || '',
-      country: initialData?.country || '',
-      postalCode: initialData?.postalCode || '',
-      additionalInfo: initialData?.additionalInfo || '',
+      telegram: initialData?.telegram || '',
+      backupType: initialData?.backupType || 'whatsapp',
+      backupContact: initialData?.backupContact || '',
       agreeToTerms: initialData?.agreeToTerms || false,
       agreeToPrivacy: initialData?.agreeToPrivacy || false,
-      agreeToMarketing: initialData?.agreeToMarketing || false,
     });
 
     const [errors, setErrors] = useState<
@@ -61,44 +75,18 @@ const Contact = React.forwardRef<{ validate: () => boolean }, ContactProps>(
     };
 
     const validateForm = (): boolean => {
-      const newErrors: Partial<Record<keyof ContactFormData, string>> = {};
-
-      if (!formData.email.trim()) {
-        newErrors.email = 'Email is required';
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        newErrors.email = 'Please enter a valid email address';
+      const parsed = contactSchema.safeParse(formData);
+      if (parsed.success) {
+        setErrors({});
+        return true;
       }
-
-      if (!formData.phone.trim()) {
-        newErrors.phone = 'Phone number is required';
+      const fieldErrors: Partial<Record<keyof ContactFormData, string>> = {};
+      for (const issue of parsed.error.issues) {
+        const field = issue.path[0] as keyof ContactFormData | undefined;
+        if (field) fieldErrors[field] = issue.message;
       }
-
-      if (!formData.address.trim()) {
-        newErrors.address = 'Address is required';
-      }
-
-      if (!formData.city.trim()) {
-        newErrors.city = 'City is required';
-      }
-
-      if (!formData.country.trim()) {
-        newErrors.country = 'Country is required';
-      }
-
-      if (!formData.postalCode.trim()) {
-        newErrors.postalCode = 'Postal code is required';
-      }
-
-      if (!formData.agreeToTerms) {
-        newErrors.agreeToTerms = 'You must agree to the Terms of Service';
-      }
-
-      if (!formData.agreeToPrivacy) {
-        newErrors.agreeToPrivacy = 'You must agree to the Privacy Policy';
-      }
-
-      setErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
+      setErrors(fieldErrors);
+      return false;
     };
 
     // Expose validation function to parent
@@ -108,280 +96,187 @@ const Contact = React.forwardRef<{ validate: () => boolean }, ContactProps>(
 
     return (
       <div className='min-h-full space-y-8 text-white'>
-        {/* Contact Information */}
-        <div className='space-y-6'>
-          <div className='space-y-2'>
-            <h3 className='text-lg font-medium text-white'>
-              Contact Information
-            </h3>
-            <p className='text-sm text-[#B5B5B5]'>
-              Please provide your contact details for project communication and
-              verification.
-            </p>
-          </div>
-
-          {/* Email */}
-          <div className='space-y-2'>
-            <Label className='text-white'>
-              Email Address <span className='text-red-500'>*</span>
-            </Label>
-            <div className='relative'>
-              <Mail className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#919191]' />
-              <Input
-                type='email'
-                placeholder='your.email@example.com'
-                value={formData.email}
-                onChange={e => handleInputChange('email', e.target.value)}
-                className={cn(
-                  'focus:border-primary border-[#484848] bg-[#1A1A1A] pl-10 text-white placeholder:text-[#919191]',
-                  errors.email && 'border-red-500'
-                )}
-              />
-            </div>
-            {errors.email && (
-              <p className='text-sm text-red-500'>{errors.email}</p>
-            )}
-          </div>
-
-          {/* Phone */}
-          <div className='space-y-2'>
-            <Label className='text-white'>
-              Phone Number <span className='text-red-500'>*</span>
-            </Label>
-            <div className='relative'>
-              <Phone className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#919191]' />
-              <Input
-                type='tel'
-                placeholder='+1 (555) 123-4567'
-                value={formData.phone}
-                onChange={e => handleInputChange('phone', e.target.value)}
-                className={cn(
-                  'focus:border-primary border-[#484848] bg-[#1A1A1A] pl-10 text-white placeholder:text-[#919191]',
-                  errors.phone && 'border-red-500'
-                )}
-              />
-            </div>
-            {errors.phone && (
-              <p className='text-sm text-red-500'>{errors.phone}</p>
-            )}
-          </div>
-        </div>
-
-        {/* Address Information */}
-        <div className='space-y-6'>
-          <div className='space-y-2'>
-            <h3 className='text-lg font-medium text-white'>
-              Address Information
-            </h3>
-            <p className='text-sm text-[#B5B5B5]'>
-              This information is required for legal and verification purposes.
-            </p>
-          </div>
-
-          {/* Address */}
-          <div className='space-y-2'>
-            <Label className='text-white'>
-              Street Address <span className='text-red-500'>*</span>
-            </Label>
-            <div className='relative'>
-              <MapPin className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#919191]' />
-              <Input
-                placeholder='123 Main Street, Apt 4B'
-                value={formData.address}
-                onChange={e => handleInputChange('address', e.target.value)}
-                className={cn(
-                  'focus:border-primary border-[#484848] bg-[#1A1A1A] pl-10 text-white placeholder:text-[#919191]',
-                  errors.address && 'border-red-500'
-                )}
-              />
-            </div>
-            {errors.address && (
-              <p className='text-sm text-red-500'>{errors.address}</p>
-            )}
-          </div>
-
-          {/* City, Country, Postal Code */}
-          <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
-            <div className='space-y-2'>
-              <Label className='text-white'>
-                City <span className='text-red-500'>*</span>
-              </Label>
-              <Input
-                placeholder='New York'
-                value={formData.city}
-                onChange={e => handleInputChange('city', e.target.value)}
-                className={cn(
-                  'focus:border-primary border-[#484848] bg-[#1A1A1A] text-white placeholder:text-[#919191]',
-                  errors.city && 'border-red-500'
-                )}
-              />
-              {errors.city && (
-                <p className='text-sm text-red-500'>{errors.city}</p>
-              )}
-            </div>
-
-            <div className='space-y-2'>
-              <Label className='text-white'>
-                Country <span className='text-red-500'>*</span>
-              </Label>
-              <Input
-                placeholder='United States'
-                value={formData.country}
-                onChange={e => handleInputChange('country', e.target.value)}
-                className={cn(
-                  'focus:border-primary border-[#484848] bg-[#1A1A1A] text-white placeholder:text-[#919191]',
-                  errors.country && 'border-red-500'
-                )}
-              />
-              {errors.country && (
-                <p className='text-sm text-red-500'>{errors.country}</p>
-              )}
-            </div>
-
-            <div className='space-y-2'>
-              <Label className='text-white'>
-                Postal Code <span className='text-red-500'>*</span>
-              </Label>
-              <Input
-                placeholder='10001'
-                value={formData.postalCode}
-                onChange={e => handleInputChange('postalCode', e.target.value)}
-                className={cn(
-                  'focus:border-primary border-[#484848] bg-[#1A1A1A] text-white placeholder:text-[#919191]',
-                  errors.postalCode && 'border-red-500'
-                )}
-              />
-              {errors.postalCode && (
-                <p className='text-sm text-red-500'>{errors.postalCode}</p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Additional Information */}
-        <div className='space-y-2'>
-          <Label className='text-white'>
-            Additional Information (Optional)
-          </Label>
-          <Textarea
-            placeholder='Any additional information you would like to share about your project or team...'
-            value={formData.additionalInfo}
-            onChange={e => handleInputChange('additionalInfo', e.target.value)}
-            className='focus:border-primary min-h-24 resize-none border-[#484848] bg-[#1A1A1A] text-white placeholder:text-[#919191]'
-          />
-        </div>
-
-        {/* Terms and Agreements */}
-        <div className='space-y-4'>
-          <div className='space-y-2'>
-            <h3 className='text-lg font-medium text-white'>
-              Terms and Agreements
-            </h3>
-            <p className='text-sm text-[#B5B5B5]'>
-              Please review and accept the following terms to continue.
-            </p>
-          </div>
-
-          <div className='space-y-4'>
-            <div className='flex items-start space-x-3'>
-              <Checkbox
-                id='terms'
-                checked={formData.agreeToTerms}
-                onCheckedChange={checked =>
-                  handleInputChange('agreeToTerms', checked as boolean)
-                }
-                className='mt-1'
-              />
-              <div className='space-y-1'>
-                <Label
-                  htmlFor='terms'
-                  className='cursor-pointer text-sm text-white'
-                >
-                  I agree to the{' '}
-                  <a
-                    href='/terms'
-                    className='text-primary hover:underline'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    Terms of Service
-                  </a>{' '}
-                  <span className='text-red-500'>*</span>
-                </Label>
-                {errors.agreeToTerms && (
-                  <p className='text-sm text-red-500'>{errors.agreeToTerms}</p>
-                )}
-              </div>
-            </div>
-
-            <div className='flex items-start space-x-3'>
-              <Checkbox
-                id='privacy'
-                checked={formData.agreeToPrivacy}
-                onCheckedChange={checked =>
-                  handleInputChange('agreeToPrivacy', checked as boolean)
-                }
-                className='mt-1'
-              />
-              <div className='space-y-1'>
-                <Label
-                  htmlFor='privacy'
-                  className='cursor-pointer text-sm text-white'
-                >
-                  I agree to the{' '}
-                  <a
-                    href='/privacy'
-                    className='text-primary hover:underline'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    Privacy Policy
-                  </a>{' '}
-                  <span className='text-red-500'>*</span>
-                </Label>
-                {errors.agreeToPrivacy && (
-                  <p className='text-sm text-red-500'>
-                    {errors.agreeToPrivacy}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className='flex items-start space-x-3'>
-              <Checkbox
-                id='marketing'
-                checked={formData.agreeToMarketing}
-                onCheckedChange={checked =>
-                  handleInputChange('agreeToMarketing', checked as boolean)
-                }
-                className='mt-1'
-              />
-              <Label
-                htmlFor='marketing'
-                className='cursor-pointer text-sm text-white'
-              >
-                I would like to receive updates about new features and
-                opportunities (optional)
-              </Label>
-            </div>
-          </div>
-        </div>
-
         {/* Information Box */}
-        <div className='rounded-lg border border-[#484848] bg-[#1A1A1A] p-4'>
-          <div className='flex items-start space-x-3'>
-            <Info className='mt-0.5 h-5 w-5 flex-shrink-0 text-[#B5B5B5]' />
+        <div className='rounded-lg bg-[#DBF936]/12 p-4'>
+          <div className='flex items-start space-x-4'>
+            <svg
+              width='36'
+              height='36'
+              className='min-h-10 min-w-10'
+              viewBox='0 0 36 36'
+              fill='none'
+              xmlns='http://www.w3.org/2000/svg'
+            >
+              <path
+                d='M17.9987 24.6668V18.0002M17.9987 11.3335H18.0154M34.6654 18.0002C34.6654 27.2049 27.2034 34.6668 17.9987 34.6668C8.79395 34.6668 1.33203 27.2049 1.33203 18.0002C1.33203 8.79542 8.79395 1.3335 17.9987 1.3335C27.2034 1.3335 34.6654 8.79542 34.6654 18.0002Z'
+                stroke='#DBF936'
+                strokeWidth='2'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+            </svg>
+
             <div className='space-y-2'>
-              <h4 className='text-sm font-medium text-white'>
-                What happens next?
-              </h4>
-              <p className='text-sm text-[#B5B5B5]'>
-                After submitting your project, our team will review your
-                application within 3-5 business days. You'll receive an email
-                notification once the review is complete. If approved, your
-                project will be published and available for funding.
+              <p className='text-base text-white'>
+                Your Project contact information will be used for Project
+                verification and for Boundless staff to contact you. The contact
+                information can only be accessed by Boundless staff.
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Contact Information */}
+        <div className='space-y-6'>
+          {/* Telegram */}
+          <div className='space-y-2'>
+            <Label className='text-white'>
+              Telegram (primary contact) <span className='text-red-500'>*</span>
+            </Label>
+            <div className='relative h-fit'>
+              <span className='absolute top-[5px] left-4 text-white'>@</span>
+              <Input
+                placeholder='Telegram username'
+                value={formData.telegram}
+                onChange={e => handleInputChange('telegram', e.target.value)}
+                className={cn(
+                  'focus:border-primary border-[#484848] bg-[#1A1A1A] pl-8 text-white placeholder:text-[#919191]',
+                  errors.telegram && 'border-red-500'
+                )}
+              />
+            </div>
+            {errors.telegram && (
+              <p className='text-sm text-red-500'>{errors.telegram}</p>
+            )}
+          </div>
+
+          {/* Backup Contact */}
+          <div className='space-y-4'>
+            <Label className='text-white'>
+              Backup <span className='text-red-500'>*</span>
+            </Label>
+
+            <RadioGroup
+              value={formData.backupType}
+              onValueChange={value =>
+                handleInputChange('backupType', value as 'discord' | 'whatsapp')
+              }
+              className='space-y-1'
+            >
+              {/* Discord Option */}
+              <div
+                className={cn(
+                  'relative flex items-center overflow-hidden rounded-[12px] border bg-[#101010] transition-all duration-200',
+                  formData.backupType === 'discord'
+                    ? 'border-[#A7F950]'
+                    : 'border-[#2B2B2B]'
+                )}
+              >
+                <div
+                  className={cn(
+                    'flex items-center space-x-2 border-r border-[#2B2B2B] bg-[#2B2B2B] px-4 py-3',
+                    formData.backupType === 'discord' && 'bg-[#A7F95014]'
+                  )}
+                >
+                  <RadioGroupItem
+                    value='discord'
+                    id='discord'
+                    className={cn(
+                      'border-2',
+                      formData.backupType === 'discord'
+                        ? 'border-[#A7F950]'
+                        : 'border-[#484848]'
+                    )}
+                  />
+                  <Label
+                    htmlFor='discord'
+                    className={cn(
+                      'cursor-pointer text-sm',
+                      formData.backupType === 'discord'
+                        ? 'text-[#A7F950]'
+                        : 'text-[#B5B5B5]'
+                    )}
+                  >
+                    Discord
+                  </Label>
+                </div>
+                <Input
+                  placeholder='Discord username'
+                  value={
+                    formData.backupType === 'discord'
+                      ? formData.backupContact
+                      : ''
+                  }
+                  onChange={e =>
+                    handleInputChange('backupContact', e.target.value)
+                  }
+                  className={cn(
+                    'rounded-none border-0 bg-transparent py-0 pr-4 pl-4 text-white placeholder:text-[#919191] focus-visible:border-0 focus-visible:ring-0 focus-visible:ring-offset-0',
+                    errors.backupContact && 'text-red-500'
+                  )}
+                />
+              </div>
+
+              {/* WhatsApp Option */}
+              <div
+                className={cn(
+                  'relative flex items-center overflow-hidden rounded-[12px] border bg-[#101010] transition-all duration-200',
+                  formData.backupType === 'whatsapp'
+                    ? 'border-[#A7F950]'
+                    : 'border-[#2B2B2B]'
+                )}
+              >
+                <div
+                  className={cn(
+                    'flex items-center space-x-2 border-r border-[#2B2B2B] bg-[#2B2B2B] px-4 py-3',
+                    formData.backupType === 'whatsapp' && 'bg-[#A7F95014]'
+                  )}
+                >
+                  <RadioGroupItem
+                    value='whatsapp'
+                    id='whatsapp'
+                    className={cn(
+                      'border',
+                      formData.backupType === 'whatsapp'
+                        ? 'border-[#A7F950]'
+                        : 'border-[#484848]'
+                    )}
+                  />
+                  <Label
+                    htmlFor='whatsapp'
+                    className={cn(
+                      'cursor-pointer text-sm',
+                      formData.backupType === 'whatsapp'
+                        ? 'text-[#A7F950]'
+                        : 'text-[#B5B5B5]'
+                    )}
+                  >
+                    WhatsApp
+                  </Label>
+                </div>
+                <Input
+                  placeholder='WhatsApp phone number (e.g., +123456789)'
+                  value={
+                    formData.backupType === 'whatsapp'
+                      ? formData.backupContact
+                      : ''
+                  }
+                  onChange={e =>
+                    handleInputChange('backupContact', e.target.value)
+                  }
+                  className={cn(
+                    'rounded-none border-0 bg-transparent py-0 pr-4 pl-4 text-white placeholder:text-[#919191] focus-visible:border-0 focus-visible:ring-0 focus-visible:ring-offset-0',
+                    errors.backupContact && 'text-red-500'
+                  )}
+                />
+              </div>
+            </RadioGroup>
+
+            {(errors.backupContact || errors.backupType) && (
+              <p className='text-sm text-red-500'>
+                {errors.backupContact || errors.backupType}
+              </p>
+            )}
           </div>
         </div>
       </div>

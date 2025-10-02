@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { User, X, Search } from 'lucide-react';
+import Image from 'next/image';
 
 interface TeamProps {
   onDataChange?: (data: TeamFormData) => void;
@@ -46,13 +45,23 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
     };
 
     const addMember = (username: string) => {
+      // Enforce max of 4 members
+      if (formData.members.length >= 4) {
+        setErrors(prev => ({
+          ...prev,
+          members: 'You can add up to 4 members max.',
+        }));
+        return;
+      }
+
+      const trimmed = username.trim();
       if (
-        username.trim() &&
-        !formData.members.some(member => member.username === username.trim())
+        trimmed &&
+        !formData.members.some(member => member.username === trimmed)
       ) {
         const newMember: TeamMember = {
           id: Date.now().toString(),
-          username: username.trim(),
+          username: trimmed,
           role: 'MEMBER',
         };
         handleInputChange('members', [...formData.members, newMember]);
@@ -78,7 +87,6 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
       const newErrors: { members?: string } = {};
 
       // Team step is optional, so no validation required
-      // But we can add validation if needed in the future
 
       setErrors(newErrors);
       return Object.keys(newErrors).length === 0;
@@ -94,8 +102,14 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
         {/* Creator Information */}
         <div className='space-y-4'>
           <div className='flex items-center space-x-4'>
-            <div className='flex h-12 w-12 items-center justify-center rounded-full border border-[#484848] bg-[#1A1A1A]'>
-              <User className='h-6 w-6 text-[#B5B5B5]' />
+            <div className='flex h-12 w-12 items-center justify-center rounded-full border-none p-0'>
+              <Image
+                src='/avatar.png'
+                className='h-full w-full object-cover'
+                alt='User'
+                width={43}
+                height={43}
+              />
             </div>
             <div>
               <h3 className='text-lg font-medium text-white'>Creator Name</h3>
@@ -111,50 +125,64 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
           </Label>
 
           <div className='space-y-4'>
-            {/* Search Input */}
+            {/* Search Input with Tags Inside */}
             <div className='relative'>
-              <Search className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-[#919191]' />
-              <Input
-                placeholder='Search by name, handle, or email'
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
-                className='focus:border-primary border-[#484848] bg-[#1A1A1A] pl-10 text-white placeholder:text-[#919191]'
-              />
-            </div>
-
-            {/* Member Tags */}
-            {formData.members.length > 0 && (
-              <div className='flex flex-wrap gap-2'>
+              <div className='focus-within:border-primary flex h-[48px] max-w-full items-center gap-2 overflow-x-hidden rounded-[12px] border border-[#2B2B2B] bg-[#101010] px-4 focus-within:ring-0'>
+                {/* Member Tags Inside Input */}
                 {formData.members.map(member => (
                   <div
                     key={member.id}
-                    className='flex items-center space-x-2 rounded-full border border-[#484848] bg-[#2A2A2A] px-3 py-1'
+                    className='flex items-center space-x-1 rounded-full bg-[#A7F95014] py-1.5 pr-1.5 pl-2'
                   >
-                    <span className='text-sm text-white'>
+                    <span className='text-primary text-sm'>
                       {member.username}
                     </span>
                     <Button
                       type='button'
                       variant='ghost'
-                      size='sm'
+                      size='icon'
                       onClick={() => removeMember(member.id)}
-                      className='h-5 w-5 rounded-full p-0 text-[#B5B5B5] hover:bg-[#3A3A3A] hover:text-white'
+                      className='ml-1 h-[14px] w-[14px]'
                     >
-                      <X className='h-3 w-3' />
+                      <svg
+                        width='14'
+                        height='14'
+                        viewBox='0 0 14 14'
+                        fill='none'
+                        xmlns='http://www.w3.org/2000/svg'
+                      >
+                        <rect width='14' height='14' rx='7' fill='#99FF2D' />
+                        <path
+                          d='M10 4L4 10M4 4L10 10'
+                          stroke='#030303'
+                          stroke-width='1.4'
+                          stroke-linecap='round'
+                          stroke-linejoin='round'
+                        />
+                      </svg>
                     </Button>
                   </div>
                 ))}
+
+                {/* Search Input */}
+                <input
+                  type='text'
+                  placeholder={'Search by name, handle, or email'}
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  className='min-w-[200px] flex-1 bg-transparent text-sm text-white placeholder:text-[#919191] focus:outline-none'
+                />
               </div>
-            )}
+            </div>
 
             {/* Add Member Button */}
-            {searchQuery.trim() && (
+            {searchQuery.trim() && formData.members.length < 4 && (
               <Button
                 type='button'
                 variant='outline'
                 onClick={() => addMember(searchQuery)}
-                className='hover:border-primary border-[#484848] bg-[#1A1A1A] text-white hover:bg-[#2A2A2A]'
+                className='hover:border-primary border-primary/10 text-primary hover:text-primary hover:bg-primary/10 bg-transparent text-sm'
               >
                 Add "{searchQuery}"
               </Button>
@@ -164,18 +192,6 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
           {errors.members && (
             <p className='text-sm text-red-500'>{errors.members}</p>
           )}
-        </div>
-
-        {/* Team Information */}
-        <div className='rounded-lg border border-[#484848] bg-[#1A1A1A] p-4'>
-          <h4 className='mb-2 text-sm font-medium text-white'>
-            Team Information
-          </h4>
-          <p className='text-sm text-[#B5B5B5]'>
-            You can invite team members to collaborate on your project. They
-            will have access to project details and can help manage milestones
-            and updates.
-          </p>
         </div>
       </div>
     );
