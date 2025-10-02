@@ -19,11 +19,10 @@ interface BoundlessSheetProps {
   contentClassName?: string;
   showCloseButton?: boolean;
   closeOnOverlayClick?: boolean;
-  side?: 'top' | 'right' | 'bottom' | 'left' | 'center';
+  side?: 'top' | 'right' | 'bottom' | 'left';
   maxHeight?: string;
   minHeight?: string;
   size?: 'default' | 'large' | 'xl';
-  centered?: boolean;
 }
 
 const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
@@ -37,7 +36,6 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
   maxHeight,
   minHeight = '400px',
   size = 'default',
-  centered = false,
 }) => {
   const isMobile = useIsMobile();
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -61,38 +59,6 @@ const BoundlessSheet: React.FC<BoundlessSheetProps> = ({
   }, [open, setOpen]);
 
   const getResponsiveConfig = () => {
-    // Handle centered modal
-    if (centered || side === 'center') {
-      if (isMobile) {
-        return {
-          side: 'bottom' as const, // Use bottom for mobile but style as centered
-          className:
-            'w-[calc(100vw-32px)] mx-auto rounded-[20px] min-h-[400px] max-h-[90vh] px-0 !top-1/2 !bottom-auto !-translate-y-1/2',
-          closeButtonPosition: 'top-4 right-4',
-          maxHeight: '90vh',
-        };
-      }
-
-      let widthClass = 'w-[calc(100vw-120px)]';
-      let maxWidth = 'max-w-[1032px]';
-
-      if (size === 'large') {
-        widthClass = 'w-[calc(100vw-80px)]';
-        maxWidth = 'max-w-4xl';
-      } else if (size === 'xl') {
-        widthClass = 'w-[calc(100vw-40px)]';
-        maxWidth = 'max-w-6xl';
-      }
-
-      return {
-        side: 'bottom' as const, // Use bottom but style as centered
-        className: `${widthClass} mx-auto rounded-[20px] min-h-[500px] !max-h-[90vh] px-0 !top-1/2 !bottom-auto !-translate-y-1/2 ${maxWidth}`,
-        closeButtonPosition: 'top-6 right-6',
-        maxHeight: '90vh',
-      };
-    }
-
-    // Original bottom sheet behavior
     if (isMobile) {
       return {
         side: 'bottom' as const,
