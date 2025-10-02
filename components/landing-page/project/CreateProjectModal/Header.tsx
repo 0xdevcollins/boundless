@@ -1,12 +1,21 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
+import { CheckCircle } from 'lucide-react';
 
 interface HeaderProps {
   currentStep?: number;
   onBack?: () => void;
+  stepCompletion?: Record<
+    number,
+    {
+      isCompleted: boolean;
+      isPartiallyCompleted: boolean;
+      completionPercentage: number;
+    }
+  >;
 }
 
-const Header = ({ currentStep = 1, onBack }: HeaderProps) => {
+const Header = ({ currentStep = 1, onBack, stepCompletion }: HeaderProps) => {
   const steps = [
     { id: 1, name: 'Basics' },
     { id: 2, name: 'Details' },
@@ -52,6 +61,10 @@ const Header = ({ currentStep = 1, onBack }: HeaderProps) => {
           {steps.map(step => {
             const isActive = step.id === currentStep;
             const isCompleted = step.id < currentStep;
+            const stepStatus = stepCompletion?.[step.id];
+            const isPartiallyCompleted =
+              stepStatus?.isPartiallyCompleted || false;
+            const completionPercentage = stepStatus?.completionPercentage || 0;
 
             return (
               <div
@@ -73,46 +86,48 @@ const Header = ({ currentStep = 1, onBack }: HeaderProps) => {
                     >
                       {step.name}
                     </span>
-                    <div
-                      className={`flex h-[13.3px] w-[13.3px] flex-shrink-0 items-center justify-center rounded-full border-[1.25px] ${
-                        isActive
-                          ? 'border-white'
-                          : isCompleted
-                            ? 'border-white bg-white'
-                            : 'border-[#919191]'
-                      }`}
-                    >
-                      {isActive && (
-                        <span className='h-[6.67px] w-[6.67px] rounded-full bg-white' />
-                      )}
-                      {isCompleted && (
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          width='10'
-                          height='7'
-                          viewBox='0 0 10 7'
-                          fill='none'
-                        >
-                          <path
-                            fill-rule='evenodd'
-                            clip-rule='evenodd'
-                            d='M8.54434 0.769641C8.67156 0.886264 8.68015 1.08394 8.56353 1.21117L3.9802 6.21117C3.9226 6.274 3.84184 6.31058 3.75663 6.31243C3.67141 6.31428 3.58914 6.28124 3.52887 6.22097L1.44553 4.13764C1.32349 4.0156 1.32349 3.81774 1.44553 3.6957C1.56757 3.57366 1.76544 3.57366 1.88747 3.6957L3.74002 5.54824L8.10281 0.788838C8.21943 0.661613 8.41711 0.653019 8.54434 0.769641Z'
-                            fill='#030303'
-                            stroke='#030303'
-                            strokeWidth='0.833333'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </svg>
+                    <div className='relative'>
+                      <div
+                        className={`flex h-[13.3px] w-[13.3px] flex-shrink-0 items-center justify-center rounded-full border-[1.25px] ${
+                          isActive
+                            ? 'border-white'
+                            : isCompleted
+                              ? 'border-white bg-white'
+                              : 'border-[#919191]'
+                        }`}
+                      >
+                        {isActive && (
+                          <span className='h-[6.67px] w-[6.67px] rounded-full bg-white' />
+                        )}
+                        {isCompleted && (
+                          <CheckCircle className='h-3 w-3 text-black' />
+                        )}
+                      </div>
+                      {/* Progress ring for partially completed steps */}
+                      {isPartiallyCompleted && !isCompleted && (
+                        <div className='absolute inset-0 rounded-full'>
+                          <svg className='h-[13.3px] w-[13.3px] -rotate-90 transform'>
+                            <circle
+                              cx='6.65'
+                              cy='6.65'
+                              r='5.65'
+                              fill='none'
+                              stroke='#10b981'
+                              strokeWidth='1.5'
+                              strokeDasharray={`${(completionPercentage / 100) * 35.5} 35.5`}
+                              className='transition-all duration-300'
+                            />
+                          </svg>
+                        </div>
                       )}
                     </div>
                   </div>
-                  {/* {isActive && (
-                    <div
-                      className='mt-2 h-0.5 w-full bg-green-500'
-                      style={{ width: 'calc(100% + 1rem)' }}
-                    />
-                  )} */}
+                  {/* Progress indicator for current step */}
+                  {isActive && isPartiallyCompleted && (
+                    <div className='mt-1 text-xs text-green-400'>
+                      {completionPercentage}% complete
+                    </div>
+                  )}
                 </div>
               </div>
             );
