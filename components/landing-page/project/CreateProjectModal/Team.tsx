@@ -1,7 +1,203 @@
-import React from 'react';
+'use client';
 
-const Team = () => {
-  return <div>Team</div>;
-};
+import React, { useState } from 'react';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+
+interface TeamProps {
+  onDataChange?: (data: TeamFormData) => void;
+  initialData?: Partial<TeamFormData>;
+}
+
+export interface TeamMember {
+  id: string;
+  username: string;
+  role?: string;
+}
+
+export interface TeamFormData {
+  members: TeamMember[];
+}
+
+const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
+  ({ onDataChange, initialData }, ref) => {
+    const [formData, setFormData] = useState<TeamFormData>({
+      members: initialData?.members || [],
+    });
+
+    const [searchQuery, setSearchQuery] = useState('');
+    const [errors, setErrors] = useState<{ members?: string }>({});
+
+    const handleInputChange = (
+      field: keyof TeamFormData,
+      value: TeamMember[]
+    ) => {
+      const newData = { ...formData, [field]: value };
+      setFormData(newData);
+
+      // Clear error when user makes changes
+      if (errors[field]) {
+        setErrors(prev => ({ ...prev, [field]: undefined }));
+      }
+
+      onDataChange?.(newData);
+    };
+
+    const addMember = (username: string) => {
+      // Enforce max of 4 members
+      if (formData.members.length >= 4) {
+        setErrors(prev => ({
+          ...prev,
+          members: 'You can add up to 4 members max.',
+        }));
+        return;
+      }
+
+      const trimmed = username.trim();
+      if (
+        trimmed &&
+        !formData.members.some(member => member.username === trimmed)
+      ) {
+        const newMember: TeamMember = {
+          id: Date.now().toString(),
+          username: trimmed,
+          role: 'MEMBER',
+        };
+        handleInputChange('members', [...formData.members, newMember]);
+        setSearchQuery('');
+      }
+    };
+
+    const removeMember = (id: string) => {
+      const updatedMembers = formData.members.filter(
+        member => member.id !== id
+      );
+      handleInputChange('members', updatedMembers);
+    };
+
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addMember(searchQuery);
+      }
+    };
+
+    const validateForm = (): boolean => {
+      const newErrors: { members?: string } = {};
+
+      // Team step is optional, so no validation required
+
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
+
+    // Expose validation function to parent
+    React.useImperativeHandle(ref, () => ({
+      validate: validateForm,
+    }));
+
+    return (
+      <div className='min-h-full space-y-8 text-white'>
+        {/* Creator Information */}
+        <div className='space-y-4'>
+          <div className='flex items-center space-x-4'>
+            <div className='flex h-12 w-12 items-center justify-center rounded-full border-none p-0'>
+              <Image
+                src='/avatar.png'
+                className='h-full w-full object-cover'
+                alt='User'
+                width={43}
+                height={43}
+              />
+            </div>
+            <div>
+              <h3 className='text-lg font-medium text-white'>Creator Name</h3>
+              <span className='text-sm font-medium text-[#FFA500]'>OWNER</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Invite Members */}
+        <div className='space-y-4'>
+          <Label className='text-white'>
+            Invite members to your team (optional)
+          </Label>
+
+          <div className='space-y-4'>
+            {/* Search Input with Tags Inside */}
+            <div className='relative'>
+              <div className='focus-within:border-primary flex h-[48px] max-w-full items-center gap-2 overflow-x-hidden rounded-[12px] border border-[#2B2B2B] bg-[#101010] px-4 focus-within:ring-0'>
+                {/* Member Tags Inside Input */}
+                {formData.members.map(member => (
+                  <div
+                    key={member.id}
+                    className='flex items-center space-x-1 rounded-full bg-[#A7F95014] py-1.5 pr-1.5 pl-2'
+                  >
+                    <span className='text-primary text-sm'>
+                      {member.username}
+                    </span>
+                    <Button
+                      type='button'
+                      variant='ghost'
+                      size='icon'
+                      onClick={() => removeMember(member.id)}
+                      className='ml-1 h-[14px] w-[14px]'
+                    >
+                      <svg
+                        width='14'
+                        height='14'
+                        viewBox='0 0 14 14'
+                        fill='none'
+                        xmlns='http://www.w3.org/2000/svg'
+                      >
+                        <rect width='14' height='14' rx='7' fill='#99FF2D' />
+                        <path
+                          d='M10 4L4 10M4 4L10 10'
+                          stroke='#030303'
+                          stroke-width='1.4'
+                          stroke-linecap='round'
+                          stroke-linejoin='round'
+                        />
+                      </svg>
+                    </Button>
+                  </div>
+                ))}
+
+                {/* Search Input */}
+                <input
+                  type='text'
+                  placeholder={'Search by name, handle, or email'}
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  className='min-w-[200px] flex-1 bg-transparent text-sm text-white placeholder:text-[#919191] focus:outline-none'
+                />
+              </div>
+            </div>
+
+            {/* Add Member Button */}
+            {searchQuery.trim() && formData.members.length < 4 && (
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => addMember(searchQuery)}
+                className='hover:border-primary border-primary/10 text-primary hover:text-primary hover:bg-primary/10 bg-transparent text-sm'
+              >
+                Add "{searchQuery}"
+              </Button>
+            )}
+          </div>
+
+          {errors.members && (
+            <p className='text-sm text-red-500'>{errors.members}</p>
+          )}
+        </div>
+      </div>
+    );
+  }
+);
+
+Team.displayName = 'Team';
 
 export default Team;
