@@ -1,12 +1,15 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
+import { Button } from '@/components/ui/button';
+// import { ProjectFormData } from './index';
 
 interface HeaderProps {
   currentStep?: number;
   onBack?: () => void;
+  onTestData?: () => void;
 }
 
-const Header = ({ currentStep = 1, onBack }: HeaderProps) => {
+const Header = ({ currentStep = 1, onBack, onTestData }: HeaderProps) => {
   const steps = [
     { id: 1, name: 'Basics' },
     { id: 2, name: 'Details' },
@@ -17,34 +20,48 @@ const Header = ({ currentStep = 1, onBack }: HeaderProps) => {
 
   return (
     <div className='bg-background sticky top-0 z-10 mb-[20px] space-y-[50px] overflow-x-hidden px-4 md:px-[50px] lg:mb-[40px] lg:px-[75px] xl:px-[150px]'>
-      <div className='flex items-center gap-4'>
-        {currentStep > 1 && onBack && (
-          <button
-            onClick={onBack}
-            className='absoluste top-0 -left-[50px] z-[9999] flex h-8 w-8 items-center justify-center rounded-full border border-[#484848] transition-colors duration-200 hover:border-white'
-            aria-label='Go back to previous step'
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              width='16'
-              height='16'
-              viewBox='0 0 16 16'
-              fill='none'
-              className='text-white'
+      <div className='flex items-center justify-between gap-4'>
+        <div className='flex items-center gap-4'>
+          {currentStep > 1 && onBack && (
+            <button
+              onClick={onBack}
+              className='absoluste top-0 -left-[50px] z-[9999] flex h-8 w-8 items-center justify-center rounded-full border border-[#484848] transition-colors duration-200 hover:border-white'
+              aria-label='Go back to previous step'
             >
-              <path
-                d='M10 12L6 8L10 4'
-                stroke='currentColor'
-                strokeWidth='1.5'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-              />
-            </svg>
-          </button>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='16'
+                height='16'
+                viewBox='0 0 16 16'
+                fill='none'
+                className='text-white'
+              >
+                <path
+                  d='M10 12L6 8L10 4'
+                  stroke='currentColor'
+                  strokeWidth='1.5'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                />
+              </svg>
+            </button>
+          )}
+          <h1 className='text-2xl leading-[120%] font-medium tracking-[-0.48px] text-white'>
+            Create a new Project
+          </h1>
+        </div>
+
+        {/* Test Data Button - Only show in development */}
+        {process.env.NODE_ENV === 'development' && onTestData && (
+          <Button
+            onClick={onTestData}
+            variant='outline'
+            size='sm'
+            className='border-primary/20 text-primary hover:bg-primary/10 bg-transparent'
+          >
+            Fill Test Data
+          </Button>
         )}
-        <h1 className='text-2xl leading-[120%] font-medium tracking-[-0.48px] text-white'>
-          Create a new Project
-        </h1>
       </div>
 
       <div className='scrollbar-hide mb-0 overflow-x-auto'>

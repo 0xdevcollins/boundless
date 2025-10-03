@@ -14,7 +14,7 @@ const LoadingScreen = ({
       className={cn(
         'flex items-center justify-center bg-[#030303]',
         className,
-        isSizeFull && 'h-screen w-screen'
+        isSizeFull && 'h-[70vh] w-screen'
       )}
     >
       <div className='flex items-center gap-2'>

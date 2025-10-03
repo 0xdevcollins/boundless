@@ -139,7 +139,7 @@ export function useMarkdown(
           
           /* Paragraphs */
           .markdown-content p {
-            color: #B5B5B5;
+            color: #FFFFFF;
             margin-bottom: 1rem;
             line-height: 1.7;
           }

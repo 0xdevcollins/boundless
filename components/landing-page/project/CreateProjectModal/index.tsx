@@ -10,6 +10,8 @@ import Contact, { ContactFormData } from './Contact';
 import LoadingScreen from './LoadingScreen';
 import SuccessScreen from './SuccessScreen';
 import { z } from 'zod';
+import { createCrowdfundingProject } from '@/lib/api/project';
+import { CreateCrowdfundingProjectRequest } from '@/lib/api/types';
 
 type StepHandle = { validate: () => boolean; markSubmitted?: () => void };
 
@@ -140,6 +142,76 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
     await handleSubmit();
   };
 
+  // Function to map form data to API request format
+  const mapFormDataToApiRequest = (
+    data: ProjectFormData
+  ): CreateCrowdfundingProjectRequest => {
+    const basic = data.basic || {};
+    const details = data.details || {};
+    const milestones = data.milestones || {
+      fundingAmount: '0',
+      milestones: [],
+    };
+    const team = data.team || { members: [] };
+    const contact = data.contact || {
+      telegram: '',
+      backupType: 'whatsapp',
+      backupContact: '',
+    };
+
+    // Convert milestones to API format
+    const apiMilestones = (milestones.milestones || []).map(milestone => ({
+      name: milestone.title,
+      description: milestone.description,
+      startDate: milestone.startDate,
+      endDate: milestone.endDate,
+      amount:
+        parseFloat(milestones.fundingAmount || '0') /
+        (milestones.milestones?.length || 1), // Distribute funding equally
+    }));
+
+    // Convert team members to API format
+    const apiTeam = (team.members || []).map(member => ({
+      name: member.username,
+      role: member.role || 'MEMBER',
+      email: `${member.username}@example.com`, // Placeholder email
+    }));
+
+    // Convert social links to API format
+    const socialLinks = basic.socialLinks?.filter(link => link.trim()) || [];
+    const apiSocialLinks = socialLinks.map(link => ({
+      platform: link.startsWith('https://twitter.com/')
+        ? 'twitter'
+        : link.startsWith('https://discord.gg/')
+          ? 'discord'
+          : link.startsWith('https://t.me/')
+            ? 'telegram'
+            : 'other', // Default platform
+      url: link,
+    }));
+
+    return {
+      title: basic.projectName || '',
+      logo: basic.logoUrl || undefined, // Use uploaded logo URL
+      vision: basic.vision || '',
+      category: basic.category || '',
+      details: details.vision || '',
+      fundingAmount: parseFloat(milestones.fundingAmount || '0') || 0,
+      githubUrl: basic.githubUrl || undefined,
+      gitlabUrl: undefined,
+      bitbucketUrl: undefined,
+      projectWebsite: basic.websiteUrl || undefined,
+      demoVideo: basic.demoVideoUrl || undefined,
+      milestones: apiMilestones,
+      team: apiTeam,
+      contact: {
+        primary: `@${contact.telegram || ''}`,
+        backup: contact.backupContact || '',
+      },
+      socialLinks: apiSocialLinks,
+    };
+  };
+
   const handleSubmit = async () => {
     setIsSubmitting(true);
     setIsLoading(true);
@@ -234,19 +306,27 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
 
       setSubmitErrors([]);
 
-      // Simulate API call with loading
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Map form data to API request format
+      const apiRequest = mapFormDataToApiRequest(payload);
 
-      // Show success modal
+      // Call the API
+      const response = await createCrowdfundingProject(apiRequest);
+
+      if (response.success) {
+        // Show success modal
+        setIsLoading(false);
+        setShowSuccess(true);
+        setIsSubmitting(false);
+      } else {
+        throw new Error(response.message || 'Failed to create project');
+      }
+    } catch (error) {
+      setSubmitErrors([
+        error instanceof Error
+          ? error.message
+          : 'Error submitting project. Please try again.',
+      ]);
       setIsLoading(false);
-      setShowSuccess(true);
-      setIsSubmitting(false);
-    } catch {
-      // console.error('Error submitting project:', error);
-      // TODO: Show error notification
-      alert('Error submitting project. Please try again.');
-      setIsLoading(false);
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -298,6 +378,107 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
     setShowSuccess(false);
     setIsLoading(false);
     setOpen(false);
+  };
+
+  // Function to populate test data for easy testing
+  const handleTestData = () => {
+    const testData: ProjectFormData = {
+      basic: {
+        projectName: 'DeFi Protocol',
+        logo: 'https://res.cloudinary.com/danuy5rqb/image/upload/v1759431246/boundless/projects/logos/jfc5v0l6xec0bdhmliet.png', // Will be handled by file upload
+        logoUrl:
+          'https://res.cloudinary.com/danuy5rqb/image/upload/v1759431246/boundless/projects/logos/jfc5v0l6xec0bdhmliet.png', // Sample uploaded logo URL
+        vision:
+          'Building the future of decentralized finance with innovative yield farming strategies and automated market making.',
+        category: 'DeFi & Finance',
+        githubUrl: 'https://github.com/example/defi-protocol',
+        websiteUrl: 'https://defi-protocol.example.com',
+        demoVideoUrl: 'https://youtube.com/watch?v=example',
+        socialLinks: [
+          'https://twitter.com/defi_protocol',
+          'https://discord.gg/defi-protocol',
+          'https://t.me/defi_protocol',
+        ],
+      },
+      details: {
+        vision: `# DeFi Protocol Vision
+
+## Overview
+We are building a revolutionary DeFi protocol that combines yield farming, automated market making, and cross-chain interoperability to create the most efficient and user-friendly decentralized finance platform.
+
+## Key Features
+- **Automated Yield Farming**: AI-powered strategies that automatically optimize yield across multiple protocols
+- **Cross-Chain Support**: Seamless asset transfers between Ethereum, Polygon, and BSC
+- **Liquidity Mining**: Innovative token distribution mechanism that rewards long-term holders
+- **Risk Management**: Advanced risk assessment tools and insurance integration
+
+## Technology Stack
+- Solidity smart contracts
+- React frontend with Web3 integration
+- Node.js backend services
+- IPFS for decentralized storage
+
+## Roadmap
+Our development is structured in clear phases with measurable milestones and community-driven governance.`,
+      },
+      milestones: {
+        fundingAmount: '50000',
+        milestones: [
+          {
+            id: 'milestone-1',
+            title: 'Smart Contract Development',
+            description:
+              'Develop and audit core smart contracts for yield farming and automated market making. This includes the main protocol contracts, token contracts, and governance mechanisms.',
+            startDate: '2024-02-01',
+            endDate: '2024-04-30',
+          },
+          {
+            id: 'milestone-2',
+            title: 'Frontend Development',
+            description:
+              'Build a user-friendly web interface for interacting with the protocol. This includes dashboard, yield farming interface, and portfolio management tools.',
+            startDate: '2024-03-01',
+            endDate: '2024-05-31',
+          },
+          {
+            id: 'milestone-3',
+            title: 'Security Audit & Testing',
+            description:
+              'Conduct comprehensive security audits, penetration testing, and bug bounty programs to ensure the protocol is secure and ready for mainnet launch.',
+            startDate: '2024-05-01',
+            endDate: '2024-07-31',
+          },
+        ],
+      },
+      team: {
+        members: [
+          {
+            id: 'member-1',
+            username: 'alice_dev',
+            role: 'Lead Developer',
+          },
+          {
+            id: 'member-2',
+            username: 'bob_crypto',
+            role: 'Smart Contract Engineer',
+          },
+          {
+            id: 'member-3',
+            username: 'charlie_ux',
+            role: 'Frontend Developer',
+          },
+        ],
+      },
+      contact: {
+        telegram: 'alice_dev',
+        backupType: 'discord',
+        backupContact: 'alice_dev#1234',
+        agreeToTerms: true,
+        agreeToPrivacy: true,
+      },
+    };
+
+    setFormData(testData);
   };
 
   const renderStepContent = () => {
@@ -367,7 +548,11 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
       setOpen={setOpen}
     >
       {!(showSuccess || isLoading) && (
-        <Header currentStep={currentStep} onBack={handleBack} />
+        <Header
+          currentStep={currentStep}
+          onBack={handleBack}
+          onTestData={handleTestData}
+        />
       )}
       <div
         ref={contentRef}

@@ -81,6 +81,24 @@ const Milestones = React.forwardRef<
     ],
   });
 
+  // Update form data when initialData changes
+  React.useEffect(() => {
+    if (initialData) {
+      setFormData({
+        fundingAmount: initialData.fundingAmount || '0',
+        milestones: initialData.milestones || [
+          {
+            id: `milestone-${Date.now()}-initial`,
+            title: '',
+            description: '',
+            startDate: '',
+            endDate: '',
+          },
+        ],
+      });
+    }
+  }, [initialData]);
+
   const [errors, setErrors] = useState<{
     fundingAmount?: string;
     milestones?: string;
@@ -164,14 +182,12 @@ const Milestones = React.forwardRef<
     return false;
   };
 
-  // Expose validation function to parent
   React.useImperativeHandle(ref, () => ({
     validate: validateForm,
   }));
 
   return (
     <div className='min-h-full space-y-8 text-white'>
-      {/* Funding Amount */}
       <div className='space-y-2'>
         <Label className='text-white'>
           How much funding does your project need?{' '}

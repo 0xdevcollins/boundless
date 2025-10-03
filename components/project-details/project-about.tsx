@@ -1,14 +1,15 @@
 import { Github, Globe, Youtube, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { CrowdfundingProject } from '@/lib/api/types';
 
 interface ProjectAboutProps {
-  project: {
-    creator: {
+  project: CrowdfundingProject & {
+    additionalCreator?: {
       name: string;
       role: string;
       avatar: string;
     };
-    links: Array<{
+    links?: Array<{
       type: string;
       url: string;
       icon: string;
@@ -44,11 +45,21 @@ export function ProjectAbout({ project }: ProjectAboutProps) {
         <div className='flex items-center gap-3'>
           <Avatar className='h-12 w-12'>
             <AvatarImage
-              src={project.creator.avatar || '/placeholder.svg'}
-              alt={project.creator.name}
+              src={project.additionalCreator?.avatar || '/placeholder.svg'}
+              alt={
+                project.additionalCreator?.name ||
+                project.creator.profile.firstName +
+                  ' ' +
+                  project.creator.profile.lastName
+              }
             />
             <AvatarFallback className='bg-blue-600 text-sm font-medium text-white'>
-              {project.creator.name
+              {(
+                project.additionalCreator?.name ||
+                project.creator.profile.firstName +
+                  ' ' +
+                  project.creator.profile.lastName
+              )
                 .split(' ')
                 .map(n => n[0])
                 .join('')
@@ -57,20 +68,22 @@ export function ProjectAbout({ project }: ProjectAboutProps) {
           </Avatar>
           <div className='min-w-0 flex-1'>
             <p className='text-base leading-tight font-medium text-white'>
-              {project.creator.name}
+              {project.additionalCreator?.name ||
+                project.creator.profile.firstName +
+                  ' ' +
+                  project.creator.profile.lastName}
             </p>
             <p className='mt-1 text-xs font-medium tracking-wide text-[#DBF936] uppercase'>
-              {project.creator.role}
+              {project.additionalCreator?.role || 'CREATOR'}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Project Links */}
       <div className='space-y-4'>
         <h2 className='text-lg font-semibold text-gray-300'>Project Links</h2>
         <div className='space-y-3'>
-          {project.links.map((link, index) => (
+          {project.links?.map((link, index) => (
             <a
               key={index}
               href={`https://${link.url}`}
