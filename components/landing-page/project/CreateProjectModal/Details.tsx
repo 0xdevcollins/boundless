@@ -36,6 +36,13 @@ const Details = React.forwardRef<{ validate: () => boolean }, DetailsProps>(
     const [errors, setErrors] = useState<{ vision?: string }>({});
     const [submitted, setSubmitted] = useState(false);
 
+    // Update form data when initialData changes
+    React.useEffect(() => {
+      if (initialData?.vision) {
+        setVision(initialData.vision);
+      }
+    }, [initialData]);
+
     const handleVisionChange = (value?: string) => {
       const newValue = value || '';
       setVision(newValue);

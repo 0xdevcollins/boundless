@@ -84,21 +84,26 @@ const ExploreHeader = ({
   ];
 
   return (
-    <div className={cn('w-full bg-black px-4 py-12 text-white', className)}>
+    <div
+      className={cn(
+        'sticky top-0 z-50 w-full bg-black px-4 py-12 text-white',
+        className
+      )}
+    >
       <div className='mx-auto max-w-7xl'>
         <div className='mb-12'>
-          <h1 className='font-inter text-center text-4xl font-bold text-white md:text-left md:text-5xl lg:text-6xl'>
+          <h1 className='font-inter text-center text-3xl text-white md:text-left md:text-4xl lg:text-5xl'>
             Explore Boundless Projects
           </h1>
         </div>
 
-        <div className='flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:gap-8'>
-          <div className='flex flex-wrap items-center gap-3 lg:gap-4'>
+        <div className='bg-rsed-500 flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:gap-8'>
+          <div className='flex-wrsap flex w-full items-center gap-3 lg:max-w-1/4 lg:gap-4'>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant='outline'
-                  className='min-w-[100px] justify-between rounded-lg border-gray-600 bg-transparent px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 hover:text-white'
+                  className='msin-w-[100px] justify-between rounded-lg border-white/24 bg-transparent px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 hover:text-white'
                 >
                   <div className='flex items-center gap-2'>
                     <Image
@@ -113,7 +118,10 @@ const ExploreHeader = ({
                   <ChevronDown className='ml-2 h-4 w-4' />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className='border-gray-700 bg-gray-900 text-white'>
+              <DropdownMenuContent
+                align='start'
+                className='border-white/24 bg-black text-white'
+              >
                 {sortOptions.map(option => (
                   <DropdownMenuItem
                     key={option}
@@ -130,13 +138,16 @@ const ExploreHeader = ({
               <DropdownMenuTrigger asChild>
                 <Button
                   variant='outline'
-                  className='min-w-[100px] justify-between rounded-lg border-gray-600 bg-transparent px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 hover:text-white'
+                  className='min-sw-[100px] justify-between rounded-lg border-white/24 bg-transparent px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 hover:text-white'
                 >
                   {selectedStatus}
                   <ChevronDown className='ml-2 h-4 w-4' />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className='border-gray-700 bg-gray-900 text-white'>
+              <DropdownMenuContent
+                align='start'
+                className='border-white/24 bg-black text-white'
+              >
                 {statusOptions.map(option => (
                   <DropdownMenuItem
                     key={option}
@@ -153,13 +164,16 @@ const ExploreHeader = ({
               <DropdownMenuTrigger asChild>
                 <Button
                   variant='outline'
-                  className='min-w-[100px] justify-between rounded-lg border-gray-600 bg-transparent px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 hover:text-white'
+                  className='min-sw-[100px] justify-between rounded-lg border-white/24 bg-transparent px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 hover:text-white'
                 >
                   {selectedCategory}
                   <ChevronDown className='ml-2 h-4 w-4' />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className='border-gray-700 bg-gray-900 text-white'>
+              <DropdownMenuContent
+                align='start'
+                className='border-white/24 bg-black text-white'
+              >
                 {categoryOptions.map(option => (
                   <DropdownMenuItem
                     key={option}
@@ -173,15 +187,15 @@ const ExploreHeader = ({
             </DropdownMenu>
           </div>
 
-          <div className='relative ml-auto w-full lg:max-w-md'>
+          <div className='relative ml-auto w-full lg:max-w-3/5'>
             <div className='relative'>
-              <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-gray-400' />
+              <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-white/40' />
               <Input
                 type='text'
                 placeholder='Search project or creator...'
                 value={searchTerm}
                 onChange={e => handleSearch(e.target.value)}
-                className='w-full rounded-lg border-gray-600 bg-transparent py-3 pr-4 pl-10 text-base text-white placeholder-gray-400 focus:border-gray-400 focus:ring-1 focus:ring-gray-400'
+                className='bg-background w-full rounded-lg border-gray-900 py-3 pr-4 pl-10 text-base text-white placeholder-gray-400 focus:border-gray-400 focus:ring-1 focus:ring-gray-400'
               />
             </div>
           </div>

@@ -373,3 +373,130 @@ export interface CreateCrowdfundingProjectResponse {
     projectId: string;
   };
 }
+
+// Crowdfunding Project Response Types
+export interface CrowdfundingProject {
+  _id: string;
+  title: string;
+  logo?: string;
+  media: {
+    logo?: string;
+  };
+  vision: string;
+  funding: {
+    goal: number;
+    raised: number;
+    currency: string;
+    contributors: number[];
+    endDate: string;
+  };
+  category: string;
+  details: string;
+  description: string;
+  fundingAmount: number;
+  githubUrl?: string;
+  gitlabUrl?: string;
+  bitbucketUrl?: string;
+  projectWebsite?: string;
+  demoVideo?: string;
+  status: string;
+  type: 'crowdfund';
+  votes: number;
+  voting: {
+    endDate: string;
+    negativeVotes: number;
+    positiveVotes: number;
+    startDate: string;
+    totalVotes: number;
+    voters: number[];
+  };
+  creator: {
+    _id: string;
+    profile: {
+      firstName: string;
+      lastName: string;
+      username: string;
+    };
+  };
+  team: Array<{
+    userId: {
+      _id: string;
+      profile: {
+        firstName: string;
+        lastName: string;
+        username: string;
+      };
+    };
+    role: string;
+  }>;
+  milestones: CrowdfundingMilestone[];
+  contact: CrowdfundingContact;
+  socialLinks?: CrowdfundingSocialLink[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CrowdfundData {
+  _id: string;
+  projectId: string;
+  raisedAmount: number;
+  backersCount: number;
+  status: string;
+  startDate?: string;
+  endDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GetCrowdfundingProjectsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    projects: CrowdfundingProject[];
+    pagination: {
+      current: number;
+      pages: number;
+      total: number;
+    };
+  };
+}
+
+export interface GetCrowdfundingProjectResponse {
+  success: boolean;
+  message: string;
+  data: {
+    project: CrowdfundingProject;
+    crowdfund: CrowdfundData;
+  };
+}
+
+export interface UpdateCrowdfundingProjectRequest {
+  title?: string;
+  logo?: string;
+  vision?: string;
+  category?: string;
+  details?: string;
+  fundingAmount?: number;
+  githubUrl?: string;
+  gitlabUrl?: string;
+  bitbucketUrl?: string;
+  projectWebsite?: string;
+  demoVideo?: string;
+  milestones?: CrowdfundingMilestone[];
+  team?: CrowdfundingTeamMember[];
+  contact?: CrowdfundingContact;
+  socialLinks?: CrowdfundingSocialLink[];
+}
+
+export interface UpdateCrowdfundingProjectResponse {
+  success: boolean;
+  message: string;
+  data: {
+    project: CrowdfundingProject;
+  };
+}
+
+export interface DeleteCrowdfundingProjectResponse {
+  success: boolean;
+  message: string;
+}

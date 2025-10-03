@@ -9,32 +9,33 @@ import {
   ArrowUp,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import Image from 'next/image';
+import { CrowdfundingProject } from '@/lib/api/types';
 
 interface ProjectSidebarProps {
-  project: {
-    name: string;
-    description: string;
-    logo: string;
-    category: string;
-    validation: string;
-    date: string;
-    votes: number;
-    totalVotes: number;
-    daysToDeadline: number;
-    creator: {
+  project: CrowdfundingProject & {
+    // Additional fields that might be added during transformation
+    daysToDeadline?: number;
+    additionalCreator?: {
       name: string;
       role: string;
       avatar: string;
     };
-    links: Array<{
+    links?: Array<{
       type: string;
       url: string;
       icon: string;
     }>;
+    // Legacy fields for backward compatibility
+    name?: string;
+    description?: string;
+    logo?: string;
+    validation?: string;
+    date?: string;
+    votes?: number;
+    totalVotes?: number;
   };
   isMobile?: boolean;
 }
@@ -43,7 +44,9 @@ export function ProjectSidebar({
   project,
   isMobile = false,
 }: ProjectSidebarProps) {
-  const votePercentage = (project.votes / project.totalVotes) * 100;
+  const votePercentage = project.voting
+    ? (project.votes / project.voting.totalVotes) * 100
+    : 0;
 
   const getIcon = (iconType: string) => {
     switch (iconType) {
@@ -59,6 +62,21 @@ export function ProjectSidebar({
         return <Globe className='h-4 w-4' />;
     }
   };
+  const getStatusStyles = () => {
+    switch (project.status) {
+      case 'Funding':
+        return 'bg-blue-ish border-blue-ish-darker text-blue-ish-darker';
+      case 'Funded':
+        return 'bg-transparent border-primary text-primary';
+      case 'Completed':
+        return 'bg-success-green border-success-green-darker text-success-green-darker';
+      case 'Validation':
+      case 'idea':
+        return 'bg-warning-orange border-warning-orange-darker text-warning-orange-darker';
+      default:
+        return '';
+    }
+  };
 
   return (
     <div className='w-full space-y-6'>
@@ -66,57 +84,57 @@ export function ProjectSidebar({
       <div className='flex gap-5 space-y-4'>
         <div className='relative'>
           <Image
-            src={project.logo}
-            alt={project.name}
+            src={project.logo || project.media?.logo || '/icon.png'}
+            alt={project.title}
             width={64}
             height={64}
-            className='h-24 w-24'
+            className='h-24 w-24 rounded-[8px] object-cover'
           />
         </div>
 
         <div className='space-y-3'>
-          <h1 className='text-2xl leading-tight font-bold text-white'>
-            {project.name}
+          <h1 className='text-2xl leading-tight font-medium text-white'>
+            {project.title}
           </h1>
 
           {/* Category and Validation badges - side by side */}
-          <div className='flex flex-wrap items-center gap-2'>
-            <Badge
-              variant='secondary'
-              className='border- rounded-md bg-[#E4DBDB] px-3 py-1.5 text-xs font-medium text-[#645D5D]'
-            >
+          <div className='flex flex-wrap items-center gap-3'>
+            <div className='bg-office-brown border-office-brown-darker text-office-brown-darker flex w-auto items-center justify-center rounded-[4px] border px-1 py-0.5 text-xs font-semibold'>
               {project.category}
-            </Badge>
-            <Badge
-              variant='secondary'
-              className='rounded-md border-[#AD6F07] bg-[#FBE2B7] px-3 py-1.5 text-xs font-medium text-[#AD6F07]'
+            </div>
+            <div
+              className={`rounded-[4px] px-1 py-0.5 ${getStatusStyles()} flex items-center justify-center border text-xs font-semibold`}
             >
-              {project.validation}
-            </Badge>
+              {project.status}
+            </div>
           </div>
 
           {/* Date */}
           <div className='flex items-center gap-2 text-sm text-white'>
             <Calendar className='h-4 w-4' />
-            <span>{project.date}</span>
+            <span>
+              {new Date(project.createdAt).toLocaleDateString('en-US', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+              })}
+            </span>
           </div>
         </div>
       </div>
 
       {/* Description */}
-      <p className='text-sm leading-relaxed text-white'>
-        {project.description}
-      </p>
+      <p className='text-sm leading-relaxed text-white'>{project.vision}</p>
 
       {/* Voting Progress */}
       <div className='space-y-3'>
         <div className='flex items-center justify-between text-sm'>
           <span className='font-medium text-white'>
-            {project.votes}/{project.totalVotes}{' '}
+            {project.votes}/{project.voting?.totalVotes || 0}{' '}
             <span className='font-normal text-gray-400'>votes</span>
           </span>
           <span className='text-xs font-medium text-[#5FC381]'>
-            {project.daysToDeadline} days to deadline
+            {project.daysToDeadline || 0} days to deadline
           </span>
         </div>
         <Progress value={votePercentage} className='h-2 bg-[#A7F95014]' />
@@ -152,23 +170,36 @@ export function ProjectSidebar({
             <div className='flex items-center gap-3'>
               <Avatar className='h-10 w-10'>
                 <AvatarImage
-                  src={project.creator.avatar}
-                  alt={project.creator.name}
+                  src={project.additionalCreator?.avatar || '/placeholder.svg'}
+                  alt={
+                    project.additionalCreator?.name ||
+                    project.creator.profile.firstName +
+                      ' ' +
+                      project.creator.profile.lastName
+                  }
                 />
                 <AvatarFallback className='bg-blue-600 text-sm font-medium text-white'>
-                  {project.creator.name
+                  {(
+                    project.additionalCreator?.name ||
+                    project.creator.profile.firstName +
+                      ' ' +
+                      project.creator.profile.lastName
+                  )
                     .split(' ')
-                    .map(n => n[0])
+                    .map((n: string) => n[0])
                     .join('')
                     .toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className='min-w-0 flex-1'>
                 <p className='text-sm leading-tight font-medium text-white'>
-                  {project.creator.name}
+                  {project.additionalCreator?.name ||
+                    project.creator.profile.firstName +
+                      ' ' +
+                      project.creator.profile.lastName}
                 </p>
                 <p className='text-xs font-medium tracking-wide text-[#DBF936] uppercase'>
-                  {project.creator.role}
+                  {project.additionalCreator?.role || 'CREATOR'}
                 </p>
               </div>
             </div>
@@ -180,7 +211,7 @@ export function ProjectSidebar({
               PROJECT LINKS
             </h3>
             <div className='space-y-3'>
-              {project.links.map((link, index) => (
+              {project.links?.map((link, index) => (
                 <a
                   key={index}
                   href={`https://${link.url}`}

@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { z } from 'zod';
 import FormHint from '@/components/form/FormHint';
 import Image from 'next/image';
+import { uploadService } from '@/lib/api/upload';
 
 interface BasicProps {
   onDataChange?: (data: BasicFormData) => void;
@@ -18,7 +19,8 @@ interface BasicProps {
 
 export interface BasicFormData {
   projectName: string;
-  logo: File | null;
+  logo: File | string | null;
+  logoUrl?: string; // URL of uploaded logo
   vision: string;
   category: string;
   githubUrl: string;
@@ -27,37 +29,33 @@ export interface BasicFormData {
   socialLinks: string[];
 }
 
-// Zod schema for validation
-const imageFileSchema = z
-  .custom<File>(
-    (val): val is File => typeof File !== 'undefined' && val instanceof File
-  )
-  .refine(file => ['image/jpeg', 'image/png'].includes(file.type), {
-    message: 'Only JPEG and PNG files are allowed',
-  })
-  .refine(file => file.size <= 2 * 1024 * 1024, {
-    message: 'File size must be less than 2MB',
-  });
+// File validation is handled in the upload handlers
 
-const basicSchema = z.object({
-  projectName: z.string().trim().min(1, 'Project name is required'),
-  logo: imageFileSchema,
-  vision: z
-    .string()
-    .trim()
-    .min(1, 'Vision is required')
-    .max(300, 'Vision must be 300 characters or less'),
-  category: z.string().trim().min(1, 'Category is required'),
-  githubUrl: z.string().url().optional().or(z.literal('')),
-  websiteUrl: z.string().url().optional().or(z.literal('')),
-  demoVideoUrl: z.string().url().optional().or(z.literal('')),
-  socialLinks: z
-    .array(z.string().trim())
-    .refine(
-      arr => arr.some(link => link.length > 0),
-      'At least one social link is required'
-    ),
-});
+const basicSchema = z
+  .object({
+    projectName: z.string().trim().min(1, 'Project name is required'),
+    logo: z.any().optional(), // Allow any type for logo (File or null)
+    logoUrl: z.string().optional(),
+    vision: z
+      .string()
+      .trim()
+      .min(1, 'Vision is required')
+      .max(300, 'Vision must be 300 characters or less'),
+    category: z.string().trim().min(1, 'Category is required'),
+    githubUrl: z.string().url().optional().or(z.literal('')),
+    websiteUrl: z.string().url().optional().or(z.literal('')),
+    demoVideoUrl: z.string().url().optional().or(z.literal('')),
+    socialLinks: z
+      .array(z.string().trim())
+      .refine(
+        arr => arr.some(link => link.length > 0),
+        'At least one social link is required'
+      ),
+  })
+  .refine(data => data.logo || data.logoUrl, {
+    message: 'Logo is required',
+    path: ['logo'],
+  });
 
 const categories = [
   'DeFi & Finance',
@@ -74,6 +72,7 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
     const [formData, setFormData] = useState<BasicFormData>({
       projectName: initialData?.projectName || '',
       logo: initialData?.logo || null,
+      logoUrl: initialData?.logoUrl || '',
       vision: initialData?.vision || '',
       category: initialData?.category || '',
       githubUrl: initialData?.githubUrl || '',
@@ -81,6 +80,28 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
       demoVideoUrl: initialData?.demoVideoUrl || '',
       socialLinks: initialData?.socialLinks || ['', '', ''],
     });
+
+    // Update form data when initialData changes
+    React.useEffect(() => {
+      if (initialData) {
+        setFormData({
+          projectName: initialData.projectName || '',
+          logo: initialData.logo || null,
+          logoUrl: initialData.logoUrl || '',
+          vision: initialData.vision || '',
+          category: initialData.category || '',
+          githubUrl: initialData.githubUrl || '',
+          websiteUrl: initialData.websiteUrl || '',
+          demoVideoUrl: initialData.demoVideoUrl || '',
+          socialLinks: initialData.socialLinks || ['', '', ''],
+        });
+      }
+    }, [initialData]);
+
+    // Debug form data changes (removed for production)
+    // React.useEffect(() => {
+    //   console.log('Form data updated:', formData);
+    // }, [formData]);
 
     const [errors, setErrors] = useState<
       Partial<Record<keyof BasicFormData, string>>
@@ -90,6 +111,8 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
     >({});
     const [submitted, setSubmitted] = useState(false);
     const [isDragOver, setIsDragOver] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadError, setUploadError] = useState<string | null>(null);
 
     const handleInputChange = (
       field: keyof BasicFormData,
@@ -112,10 +135,14 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
       handleInputChange('socialLinks', newSocialLinks);
     };
 
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = async (
+      event: React.ChangeEvent<HTMLInputElement>
+    ) => {
       const file = event.target.files?.[0];
       if (file) {
         setTouched(prev => ({ ...prev, logo: true }));
+        setUploadError(null);
+
         // Validate file type
         if (!file.type.match(/^image\/(jpeg|png)$/)) {
           setErrors(prev => ({
@@ -134,7 +161,50 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
           return;
         }
 
+        // Set the file immediately for preview
         handleInputChange('logo', file);
+
+        // Upload the file
+        setIsUploading(true);
+        try {
+          const uploadResult = await uploadService.uploadSingle(file, {
+            folder: 'boundless/projects/logos',
+            tags: ['project', 'logo'],
+            transformation: {
+              width: 400,
+              height: 400,
+              crop: 'fit',
+              quality: 'auto',
+              format: 'auto',
+            },
+          });
+
+          if (uploadResult.success) {
+            // Upload successful - set logoUrl and clear logo file
+            handleInputChange('logoUrl', uploadResult.data.secure_url);
+            // Clear the file object since we have URL now
+            setFormData(prev => {
+              const newData = { ...prev, logo: null };
+              onDataChange?.(newData);
+              return newData;
+            });
+            setErrors(prev => ({ ...prev, logo: undefined }));
+          } else {
+            // Upload failed
+            throw new Error(uploadResult.message || 'Upload failed');
+          }
+        } catch (error) {
+          // Upload error
+          setUploadError(
+            error instanceof Error ? error.message : 'Upload failed'
+          );
+          setErrors(prev => ({
+            ...prev,
+            logo: 'Failed to upload logo. Please try again.',
+          }));
+        } finally {
+          setIsUploading(false);
+        }
       }
     };
 
@@ -150,7 +220,7 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
       setIsDragOver(false);
     };
 
-    const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
+    const handleDrop = async (event: React.DragEvent<HTMLLabelElement>) => {
       event.preventDefault();
       event.stopPropagation();
       setIsDragOver(false);
@@ -159,6 +229,7 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
       if (files && files.length > 0) {
         const file = files[0];
         setTouched(prev => ({ ...prev, logo: true }));
+        setUploadError(null);
 
         // Validate file type
         if (!file.type.match(/^image\/(jpeg|png)$/)) {
@@ -178,11 +249,59 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
           return;
         }
 
+        // Set the file immediately for preview
         handleInputChange('logo', file);
+
+        // Upload the file
+        setIsUploading(true);
+        try {
+          const uploadResult = await uploadService.uploadSingle(file, {
+            folder: 'boundless/projects/logos',
+            tags: ['project', 'logo'],
+            transformation: {
+              width: 400,
+              height: 400,
+              crop: 'fit',
+              quality: 'auto',
+              format: 'auto',
+            },
+          });
+
+          if (uploadResult.success) {
+            // Upload successful - set logoUrl and clear logo file
+            handleInputChange('logoUrl', uploadResult.data.secure_url);
+            // Clear the file object since we have URL now
+            setFormData(prev => {
+              const newData = { ...prev, logo: null };
+              onDataChange?.(newData);
+              return newData;
+            });
+            setErrors(prev => ({ ...prev, logo: undefined }));
+          } else {
+            // Upload failed
+            throw new Error(uploadResult.message || 'Upload failed');
+          }
+        } catch (error) {
+          // Upload error
+          setUploadError(
+            error instanceof Error ? error.message : 'Upload failed'
+          );
+          setErrors(prev => ({
+            ...prev,
+            logo: 'Failed to upload logo. Please try again.',
+          }));
+        } finally {
+          setIsUploading(false);
+        }
       }
     };
 
     const validateForm = (): boolean => {
+      // Don't validate logo if we're currently uploading
+      if (isUploading) {
+        return false;
+      }
+
       // Normalize social links (trim empties but keep array length for UI)
       const parsed = basicSchema.safeParse({
         ...formData,
@@ -201,9 +320,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
           fieldErrors[path] = issue.message;
         }
       }
-      // If logo is null, zod will also error; add friendly message
-      if (!formData.logo && !fieldErrors.logo)
-        fieldErrors.logo = 'Logo is required';
 
       setErrors(fieldErrors);
       return false;
@@ -254,7 +370,19 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
             setErrors(prev => ({ ...prev, demoVideoUrl: undefined }));
             break;
           case 'logo':
-            // handled on change
+            // Don't validate logo if we're currently uploading
+            if (isUploading) {
+              break;
+            }
+            // Validate logo field - either file or URL should exist
+            if (!formData.logo && !formData.logoUrl) {
+              setErrors(prev => ({
+                ...prev,
+                logo: 'Logo is required',
+              }));
+            } else {
+              setErrors(prev => ({ ...prev, logo: undefined }));
+            }
             break;
           case 'socialLinks':
             {
@@ -337,17 +465,38 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
                 isDragOver && 'border-primary bg-primary/10 scale-105'
               )}
             >
-              {formData.logo ? (
+              {formData.logo || formData.logoUrl ? (
                 <div className='flex flex-col items-center space-y-2'>
-                  {}
-                  <Image
-                    src={URL.createObjectURL(formData.logo)}
-                    alt='Project logo'
-                    className='h-32 w-32 rounded object-cover'
-                    width={128}
-                    height={128}
-                  />
-                  <span className='text-xs text-white'>Change</span>
+                  {isUploading ? (
+                    <div className='flex flex-col items-center space-y-2'>
+                      <div className='border-primary h-32 w-32 animate-spin rounded-full border-4 border-t-transparent'></div>
+                      <span className='text-primary text-xs'>Uploading...</span>
+                    </div>
+                  ) : (
+                    <>
+                      <Image
+                        src={
+                          formData.logoUrl ||
+                          (formData.logo
+                            ? URL.createObjectURL(formData.logo as File)
+                            : '')
+                        }
+                        alt='Project logo'
+                        className='h-32 w-32 rounded object-cover'
+                        width={128}
+                        height={128}
+                        onError={e => {
+                          // Fallback to local file if URL fails
+                          if (formData.logo && !formData.logoUrl) {
+                            e.currentTarget.src = URL.createObjectURL(
+                              formData.logo as File
+                            );
+                          }
+                        }}
+                      />
+                      <span className='text-xs text-white'>Change</span>
+                    </>
+                  )}
                 </div>
               ) : isDragOver ? (
                 <div className='flex flex-col items-center space-y-2'>
@@ -418,6 +567,9 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
             </div>
             {(submitted || touched.logo) && errors.logo && (
               <p className='text-sm text-red-500'>{errors.logo}</p>
+            )}
+            {uploadError && (
+              <p className='text-sm text-red-500'>{uploadError}</p>
             )}
           </div>
         </div>

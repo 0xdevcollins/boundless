@@ -26,6 +26,14 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
       members: initialData?.members || [],
     });
 
+    React.useEffect(() => {
+      if (initialData) {
+        setFormData({
+          members: initialData.members || [],
+        });
+      }
+    }, [initialData]);
+
     const [searchQuery, setSearchQuery] = useState('');
     const [errors, setErrors] = useState<{ members?: string }>({});
 
@@ -36,7 +44,6 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
       const newData = { ...formData, [field]: value };
       setFormData(newData);
 
-      // Clear error when user makes changes
       if (errors[field]) {
         setErrors(prev => ({ ...prev, [field]: undefined }));
       }
@@ -45,7 +52,6 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
     };
 
     const addMember = (username: string) => {
-      // Enforce max of 4 members
       if (formData.members.length >= 4) {
         setErrors(prev => ({
           ...prev,
@@ -86,20 +92,16 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
     const validateForm = (): boolean => {
       const newErrors: { members?: string } = {};
 
-      // Team step is optional, so no validation required
-
       setErrors(newErrors);
       return Object.keys(newErrors).length === 0;
     };
 
-    // Expose validation function to parent
     React.useImperativeHandle(ref, () => ({
       validate: validateForm,
     }));
 
     return (
       <div className='min-h-full space-y-8 text-white'>
-        {/* Creator Information */}
         <div className='space-y-4'>
           <div className='flex items-center space-x-4'>
             <div className='flex h-12 w-12 items-center justify-center rounded-full border-none p-0'>
@@ -118,17 +120,14 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
           </div>
         </div>
 
-        {/* Invite Members */}
         <div className='space-y-4'>
           <Label className='text-white'>
             Invite members to your team (optional)
           </Label>
 
           <div className='space-y-4'>
-            {/* Search Input with Tags Inside */}
             <div className='relative'>
               <div className='focus-within:border-primary flex h-[48px] max-w-full items-center gap-2 overflow-x-hidden rounded-[12px] border border-[#2B2B2B] bg-[#101010] px-4 focus-within:ring-0'>
-                {/* Member Tags Inside Input */}
                 {formData.members.map(member => (
                   <div
                     key={member.id}
@@ -164,7 +163,6 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
                   </div>
                 ))}
 
-                {/* Search Input */}
                 <input
                   type='text'
                   placeholder={'Search by name, handle, or email'}
@@ -176,7 +174,6 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
               </div>
             </div>
 
-            {/* Add Member Button */}
             {searchQuery.trim() && formData.members.length < 4 && (
               <Button
                 type='button'

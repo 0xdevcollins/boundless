@@ -6,6 +6,11 @@ import {
   ProjectInitRequest,
   CreateCrowdfundingProjectRequest,
   CreateCrowdfundingProjectResponse,
+  GetCrowdfundingProjectsResponse,
+  GetCrowdfundingProjectResponse,
+  UpdateCrowdfundingProjectRequest,
+  UpdateCrowdfundingProjectResponse,
+  DeleteCrowdfundingProjectResponse,
 } from './types';
 
 export const initProject = async (data: ProjectInitRequest) => {
@@ -108,5 +113,66 @@ export const createCrowdfundingProject = async (
   data: CreateCrowdfundingProjectRequest
 ): Promise<CreateCrowdfundingProjectResponse> => {
   const res = await api.post('/crowdfunding/projects', data);
+  return res.data;
+};
+
+// Crowdfunding Project API Functions
+
+/**
+ * Get all crowdfunding projects with pagination and filtering
+ */
+export const getCrowdfundingProjects = async (
+  page = 1,
+  limit = 10,
+  filters?: {
+    category?: string;
+    status?: string;
+  }
+): Promise<GetCrowdfundingProjectsResponse> => {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+
+  if (filters?.category) {
+    params.append('category', filters.category);
+  }
+
+  if (filters?.status) {
+    params.append('status', filters.status);
+  }
+
+  const res = await api.get(`/crowdfunding/projects?${params.toString()}`);
+  return res.data;
+};
+
+/**
+ * Get a single crowdfunding project by ID
+ */
+export const getCrowdfundingProject = async (
+  projectId: string
+): Promise<GetCrowdfundingProjectResponse> => {
+  const res = await api.get(`/crowdfunding/projects/${projectId}`);
+  return res.data;
+};
+
+/**
+ * Update a crowdfunding project
+ */
+export const updateCrowdfundingProject = async (
+  projectId: string,
+  data: UpdateCrowdfundingProjectRequest
+): Promise<UpdateCrowdfundingProjectResponse> => {
+  const res = await api.put(`/crowdfunding/projects/${projectId}`, data);
+  return res.data;
+};
+
+/**
+ * Delete a crowdfunding project
+ */
+export const deleteCrowdfundingProject = async (
+  projectId: string
+): Promise<DeleteCrowdfundingProjectResponse> => {
+  const res = await api.delete(`/crowdfunding/projects/${projectId}`);
   return res.data;
 };

@@ -55,6 +55,19 @@ const Contact = React.forwardRef<{ validate: () => boolean }, ContactProps>(
       agreeToPrivacy: initialData?.agreeToPrivacy || false,
     });
 
+    // Update form data when initialData changes
+    React.useEffect(() => {
+      if (initialData) {
+        setFormData({
+          telegram: initialData.telegram || '',
+          backupType: initialData.backupType || 'whatsapp',
+          backupContact: initialData.backupContact || '',
+          agreeToTerms: initialData.agreeToTerms || false,
+          agreeToPrivacy: initialData.agreeToPrivacy || false,
+        });
+      }
+    }, [initialData]);
+
     const [errors, setErrors] = useState<
       Partial<Record<keyof ContactFormData, string>>
     >({});
