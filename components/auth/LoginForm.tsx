@@ -44,33 +44,34 @@ const LoginForm = ({
   return (
     <>
       <div className='space-y-2'>
-        <h2 className='mb-3 text-center text-2xl font-medium text-white md:text-left lg:text-[40px]'>
-          Sign in
-        </h2>
-        <p className='text-center text-sm leading-relaxed text-[#D9D9D9] md:text-left lg:text-base'>
+        <p className='mt-3 text-center text-sm leading-relaxed text-[#D9D9D9] md:text-left lg:text-base'>
           Sign in to manage campaigns, apply for grants, and track your funding
-          progress — all in one dashboard.
+          progress.
         </p>
       </div>
-      <div className='space-y-6'>
+      <div className='mt-6 space-y-6'>
         <BoundlessButton
           fullWidth
-          className='bg-background border !border-[#484848] !text-white'
+          size='xl'
+          icon={
+            <Image
+              src='/auth/google.svg'
+              alt='google'
+              width={24}
+              height={24}
+              className='object-cover'
+            />
+          }
+          className='bg-background hover:!text-background border !border-[#484848] text-base !text-white'
         >
-          <Image
-            src='/auth/google.svg'
-            alt='google'
-            width={24}
-            height={24}
-            className='object-cover'
-            unoptimized
-          />
           Continue with Google
         </BoundlessButton>
 
         <div className='flex items-center justify-center gap-2.5'>
           <div className='h-[1px] w-full bg-[#2B2B2B]'></div>
-          <p className='text-center text-sm text-[#B5B5B5]'>Or</p>
+          <p className='text-center text-sm leading-[145%] text-[#B5B5B5]'>
+            Or
+          </p>
           <div className='h-[1px] w-full bg-[#2B2B2B]'></div>
         </div>
 
@@ -160,19 +161,13 @@ const LoginForm = ({
               className='w-full'
               disabled={isLoading || !form.formState.isValid}
               fullWidth
+              size='xl'
               loading={isLoading}
             >
               Sign in
             </BoundlessButton>
           </form>
         </Form>
-
-        <p className='text-center text-xs text-[#D9D9D9] lg:text-sm'>
-          Don&apos;t have an account?{' '}
-          <Link href='/auth/signup' className='text-primary underline'>
-            Sign up
-          </Link>
-        </p>
       </div>
     </>
   );

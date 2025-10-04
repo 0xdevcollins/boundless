@@ -305,7 +305,10 @@ const Projects = () => {
                 project =>
                   project.owner !== user?.id &&
                   project.ownerUsername !== user?.email &&
-                  project.ownerName !== user?.name
+                  project.ownerName !==
+                    (user?.profile?.firstName && user?.profile?.lastName
+                      ? `${user.profile.firstName} ${user.profile.lastName}`
+                      : user?.profile?.firstName || user?.profile?.lastName)
               );
             }
 
@@ -332,7 +335,11 @@ const Projects = () => {
                     showEllipsisMenu={true}
                     currentUserId={user?.id}
                     currentUserEmail={user?.email}
-                    currentUserName={user?.name}
+                    currentUserName={
+                      user?.profile?.firstName && user?.profile?.lastName
+                        ? `${user.profile.firstName} ${user.profile.lastName}`
+                        : user?.profile?.firstName || user?.profile?.lastName
+                    }
                   />
                 </motion.div>
               ));

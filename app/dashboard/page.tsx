@@ -67,13 +67,18 @@ export default function DashboardPage() {
                 <Avatar className='h-12 w-12'>
                   <AvatarImage src={session.user.image || ''} />
                   <AvatarFallback>
-                    {session.user.name?.charAt(0) ||
-                      session.user.email.charAt(0)}
+                    {(session.user.firstName || session.user.lastName)?.charAt(
+                      0
+                    ) || session.user.email.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <p className='font-medium'>
-                    {session.user.name || 'No name'}
+                    {session.user.firstName && session.user.lastName
+                      ? `${session.user.firstName} ${session.user.lastName}`
+                      : session.user.firstName ||
+                        session.user.lastName ||
+                        'No name'}
                   </p>
                   <p className='text-sm text-gray-500'>{session.user.email}</p>
                 </div>

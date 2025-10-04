@@ -1,0 +1,216 @@
+import { ProjectLayout } from '@/components/project-details/project-layout';
+import { ProjectLoading } from '@/components/project-details/project-loading';
+import { notFound } from 'next/navigation';
+import { getCrowdfundingProject, getProjectDetails } from '@/lib/api/project';
+import { CrowdfundingProject, CrowdfundData } from '@/lib/api/types';
+import { Suspense } from 'react';
+interface ProjectPageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+// Transform crowdfunding project data to match ProjectLayout interface
+function transformCrowdfundingProject(
+  project: CrowdfundingProject,
+  crowdfund: CrowdfundData
+) {
+  const creatorName = project.creator?.profile
+    ? `${project.creator.profile.firstName} ${project.creator.profile.lastName}`
+    : 'Unknown Creator';
+
+  const daysToDeadline = project.funding?.endDate
+    ? Math.max(
+        0,
+        Math.ceil(
+          (new Date(project.funding.endDate).getTime() - new Date().getTime()) /
+            (1000 * 60 * 60 * 24)
+        )
+      )
+    : 0;
+
+  return {
+    project: {
+      ...project,
+      daysToDeadline: Math.max(0, daysToDeadline),
+      // Add additional fields without overriding the original creator
+      additionalCreator: {
+        name: creatorName,
+        role: 'OWNER',
+        avatar: '/user.png', // Default avatar, could be enhanced with actual user avatar
+      },
+      links: [
+        ...(project.githubUrl
+          ? [{ type: 'github', url: project.githubUrl, icon: 'github' }]
+          : []),
+        ...(project.projectWebsite
+          ? [{ type: 'website', url: project.projectWebsite, icon: 'globe' }]
+          : []),
+        ...(project.demoVideo
+          ? [{ type: 'youtube', url: project.demoVideo, icon: 'youtube' }]
+          : []),
+        ...(project.socialLinks?.map(link => ({
+          type: link.platform,
+          url: link.url,
+          icon: link.platform.toLowerCase(),
+        })) || []),
+      ],
+    },
+    crowdfund,
+  };
+}
+
+async function ProjectContent({ id }: { id: string }) {
+  let projectData;
+  let error: string | null = null;
+
+  try {
+    // Try to fetch as crowdfunding project first
+    try {
+      const response = await getCrowdfundingProject(id);
+      if (response.success && response.data) {
+        projectData = transformCrowdfundingProject(
+          response.data.project,
+          response.data.crowdfund
+        );
+      } else {
+        throw new Error('Failed to fetch crowdfunding project');
+      }
+    } catch {
+      // If crowdfunding project fails, try regular project
+      try {
+        const regularProject = await getProjectDetails(id);
+        // Transform regular project data if needed
+        // For regular projects, we need to create a mock CrowdfundingProject structure
+        const mockProject: CrowdfundingProject = {
+          _id: regularProject.id || regularProject._id,
+          description: regularProject.description || '',
+          title: regularProject.name || regularProject.title,
+          vision: regularProject.description || '',
+          logo: regularProject.image || regularProject.logo,
+          media: { logo: regularProject.image || regularProject.logo },
+          funding: {
+            goal: regularProject.amount || 0,
+            raised: 0,
+            currency: 'USD',
+            contributors: [],
+            endDate: new Date(
+              Date.now() + 30 * 24 * 60 * 60 * 1000
+            ).toISOString(), // 30 days from now
+          },
+          category: regularProject.category,
+          details: regularProject.description || '',
+          fundingAmount: regularProject.amount || 0,
+          status: regularProject.status,
+          type: 'crowdfund',
+          votes: regularProject.votes || 0,
+          voting: {
+            endDate: new Date(
+              Date.now() + 30 * 24 * 60 * 60 * 1000
+            ).toISOString(),
+            negativeVotes: 0,
+            positiveVotes: regularProject.votes || 0,
+            startDate: new Date().toISOString(),
+            totalVotes: 100,
+            voters: [],
+          },
+          creator: {
+            _id: 'unknown',
+            profile: {
+              firstName: regularProject.ownerName?.split(' ')[0] || 'Unknown',
+              lastName: regularProject.ownerName?.split(' ')[1] || 'Unknown',
+              username: regularProject.ownerUsername || 'unknown',
+            },
+          },
+          team: [],
+          milestones: [],
+          contact: {
+            primary: '',
+            backup: '',
+          },
+          createdAt: regularProject.createdAt,
+          updatedAt: regularProject.updatedAt || regularProject.createdAt,
+        };
+
+        const mockCrowdfund: CrowdfundData = {
+          _id: 'mock-crowdfund',
+          projectId: regularProject.id || regularProject._id,
+          raisedAmount: 0,
+          backersCount: 0,
+          status: regularProject.status,
+          createdAt: regularProject.createdAt,
+          updatedAt: regularProject.updatedAt || regularProject.createdAt,
+        };
+
+        projectData = {
+          project: {
+            ...mockProject,
+            daysToDeadline: 30,
+            additionalCreator: {
+              name: regularProject.ownerName || 'Unknown Creator',
+              role: 'OWNER',
+              avatar: regularProject.ownerAvatar || '/user.png',
+            },
+            links: [],
+          },
+          crowdfund: mockCrowdfund,
+        };
+      } catch {
+        error = 'Project not found';
+      }
+    }
+  } catch {
+    error = 'Failed to fetch project data';
+  }
+
+  if (error || !projectData) {
+    notFound();
+  }
+
+  return (
+    <div className='mx-auto flex min-h-screen max-w-[1300px] flex-col space-y-[60px] overflow-x-hidden bg-[#030303] md:space-y-[80px]'>
+      {/* <header className='sticky top-0 z-50 border-b border-gray-800 bg-[#030303]'>
+        <div className='w-full px-4 sm:px-6'>
+          <div className='mx-auto flex max-w-[1400px] items-center justify-between py-3'>
+            <Link href='/projects' passHref>
+              <Button
+                variant='outline'
+                className='h-9 gap-2 border border-gray-700 bg-transparent px-3 text-white transition-colors hover:border-gray-600'
+              >
+                <ArrowLeft className='h-4 w-4' />
+                <span className='hidden sm:inline'>Back</span>
+              </Button>
+            </Link>
+
+            <Link href={projectUrl} passHref target='_blank'>
+              <Button
+                variant='outline'
+                className='h-9 gap-2 border border-gray-700 bg-transparent px-3 text-white transition-colors hover:border-gray-600'
+              >
+                <span className='hidden sm:inline'>Open</span>
+                <ExternalLink className='h-4 w-4' />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </header> */}
+
+      <div className='flex-1'>
+        <ProjectLayout
+          project={projectData.project}
+          crowdfund={projectData.crowdfund}
+        />
+      </div>
+    </div>
+  );
+}
+
+export default async function ProjectPage({ params }: ProjectPageProps) {
+  const { id } = await params;
+
+  return (
+    <Suspense fallback={<ProjectLoading />}>
+      <ProjectContent id={id} />
+    </Suspense>
+  );
+}

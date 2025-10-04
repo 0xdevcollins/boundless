@@ -3,7 +3,7 @@
 <defs>
 <linearGradient id="paint0_linear_2182_13848" x1="682" y1="0" x2="682" y2="856" gradientUnits="userSpaceOnUse">
 <stop stop-color="white"/>
-<stop offset="1" stop-color="white" stop-opacity="0"/>
+<stop offset="1" stop-color="white" stopOpacity="0"/>
 </linearGradient>
 </defs>
 </svg>

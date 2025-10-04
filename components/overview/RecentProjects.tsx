@@ -269,7 +269,10 @@ const RecentProjects = () => {
                   project =>
                     project.owner === user?.id ||
                     project.ownerUsername === user?.email ||
-                    project.ownerName === user?.name
+                    project.ownerName ===
+                      (user?.profile?.firstName && user?.profile?.lastName
+                        ? `${user.profile.firstName} ${user.profile.lastName}`
+                        : user?.profile?.firstName || user?.profile?.lastName)
                 );
               } else {
                 // If not authenticated, show empty for "mine" tab
@@ -282,7 +285,10 @@ const RecentProjects = () => {
                   project =>
                     project.owner !== user?.id &&
                     project.ownerUsername !== user?.email &&
-                    project.ownerName !== user?.name
+                    project.ownerName !==
+                      (user?.profile?.firstName && user?.profile?.lastName
+                        ? `${user.profile.firstName} ${user.profile.lastName}`
+                        : user?.profile?.firstName || user?.profile?.lastName)
                 );
               } else {
                 // If not authenticated, show all projects in explore tab
@@ -314,7 +320,12 @@ const RecentProjects = () => {
                         showEllipsisMenu={true}
                         currentUserId={user?.id}
                         currentUserEmail={user?.email}
-                        currentUserName={user?.name}
+                        currentUserName={
+                          user?.profile?.firstName && user?.profile?.lastName
+                            ? `${user.profile.firstName} ${user.profile.lastName}`
+                            : user?.profile?.firstName ||
+                              user?.profile?.lastName
+                        }
                       />
                     </motion.div>
                   ))}

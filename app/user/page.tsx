@@ -29,7 +29,8 @@ export default function UserPage() {
           {/* Header Section */}
           <div className='mb-8'>
             <h1 className='text-2xl leading-[120%] font-medium tracking-[-0.64px] text-white sm:text-3xl lg:text-[32px]'>
-              Hello, {user?.name?.split(' ')[0] || 'User'}
+              Hello,{' '}
+              {user?.profile?.firstName || user?.profile?.lastName || 'User'}
             </h1>
           </div>
           {/* Stats Cards Grid */}

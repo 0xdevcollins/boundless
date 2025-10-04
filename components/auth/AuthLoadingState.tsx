@@ -15,7 +15,7 @@ const AuthLoadingState = ({
     <div
       className={cn(
         'fixed inset-0 z-[999999] flex items-center justify-center',
-        'bg-black/90 backdrop-blur-sm',
+        'bg-[rgba(28,28,28,0.52)] backdrop-blur-[50px]',
         className
       )}
     >

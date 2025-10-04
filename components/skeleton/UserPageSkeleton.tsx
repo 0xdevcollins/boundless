@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion } from 'framer-motion';
 import { fadeInUp, staggerContainer } from '@/lib/motion';
-
+//sample comment
 export const UserPageSkeleton = () => {
   return (
     <div className='min-h-screen'>

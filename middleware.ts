@@ -1,34 +1,50 @@
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 
-const protectedRoutes = ['/dashboard', '/user', '/admin'];
+const protectedRoutes = ['/dashboard', '/user', '/admin', '/me'];
 
-const authRoutes = ['/auth/signin', '/auth/signup', '/auth/forgot-password'];
+const authRoutes = ['/auth', '/auth/signup', '/auth/forgot-password'];
 
 export default auth(req => {
   const { pathname } = req.nextUrl;
   const isAuthenticated = !!req.auth;
 
+  const hasValidToken =
+    req.auth?.user?.accessToken &&
+    typeof req.auth.user.accessToken === 'string' &&
+    req.auth.user.accessToken.length > 0;
+
+  const isReallyAuthenticated = isAuthenticated && hasValidToken;
+
   const isProtectedRoute = protectedRoutes.some(route =>
     pathname.startsWith(route)
   );
 
-  // Check if the route is an auth route
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
 
-  // Redirect authenticated users away from auth routes
-  if (isAuthRoute && isAuthenticated) {
-    return NextResponse.redirect(new URL('/user', req.url));
+  const isOtherUserProfile = pathname.startsWith('/profile/');
+
+  // if (process.env.NODE_ENV === 'development') {
+  //   // eslint-disable-next-line no-console
+  //   console.log(`Middleware: ${pathname} - Auth: ${isAuthenticated}, Token: ${hasValidToken}, Really Auth: ${isReallyAuthenticated}, Protected: ${isProtectedRoute}, Profile: ${isOtherUserProfile}`);
+  // }
+
+  if (isAuthRoute && isReallyAuthenticated) {
+    return NextResponse.redirect(new URL('/', req.url));
   }
 
-  // Redirect unauthenticated users to signin for protected routes
-  if (isProtectedRoute && !isAuthenticated) {
-    const signinUrl = new URL('/auth/signin', req.url);
+  if (isProtectedRoute && !isReallyAuthenticated) {
+    const signinUrl = new URL('/auth', req.url);
     signinUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(signinUrl);
   }
 
-  // Allow all other requests to proceed
+  if (isOtherUserProfile && !isReallyAuthenticated) {
+    const signinUrl = new URL('/auth', req.url);
+    signinUrl.searchParams.set('callbackUrl', pathname);
+    return NextResponse.redirect(signinUrl);
+  }
+
   return NextResponse.next();
 });
 

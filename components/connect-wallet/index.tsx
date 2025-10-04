@@ -6,15 +6,12 @@ import {
   DialogTitle,
 } from '../ui/dialog';
 import WalletCard from './wallet-card';
-import { CircleQuestionMark, X, Loader2, AlertCircle } from 'lucide-react';
-import Link from 'next/link';
-import { Checkbox } from '../ui/checkbox';
+
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
 import { useWalletStore } from '@/hooks/use-wallet';
 import { toast } from 'sonner';
-import { TooltipContent, TooltipProvider } from '@radix-ui/react-tooltip';
-import { Tooltip, TooltipTrigger } from '../ui/tooltip';
+import { AlertCircle, Loader2, X } from 'lucide-react';
 
 const ConnectWallet = ({
   open,
@@ -26,7 +23,6 @@ const ConnectWallet = ({
   onConnect?: () => void;
 }) => {
   const [selectedNetwork, setSelectedNetwork] = useState('testnet');
-  const [acceptedTerms, setAcceptedTerms] = useState(true);
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectingWallet, setConnectingWallet] = useState<string | null>(null);
 
@@ -56,27 +52,7 @@ const ConnectWallet = ({
     setSelectedNetwork(network);
   }, [network]);
 
-  const networks = [
-    {
-      id: 'testnet',
-      name: 'Testnet',
-      icon: '/globe.svg',
-      active: true,
-    },
-    {
-      id: 'public',
-      name: 'Public',
-      icon: '/globe.svg',
-      active: true,
-    },
-  ];
-
   const handleWalletSelect = async (walletId: string) => {
-    if (!acceptedTerms) {
-      toast.error('Please accept the terms and conditions first');
-      return;
-    }
-
     setIsConnecting(true);
     setConnectingWallet(walletId);
     clearError();
@@ -131,23 +107,6 @@ const ConnectWallet = ({
     } finally {
       setIsConnecting(false);
       setConnectingWallet(null);
-    }
-  };
-
-  const handleNetworkChange = async (networkId: string) => {
-    if (networkId === selectedNetwork) return;
-
-    setSelectedNetwork(networkId);
-
-    // Reinitialize wallet kit with new network
-    try {
-      await initializeWalletKit(networkId as 'testnet' | 'public');
-      toast.success(
-        `Switched to ${networkId === 'testnet' ? 'Testnet' : 'Public'} network`
-      );
-    } catch {
-      toast.error('Failed to switch network');
-      // Log error for debugging but don't expose to user
     }
   };
 
@@ -218,30 +177,6 @@ const ConnectWallet = ({
             <DialogTitle className='text-xl font-medium text-white sm:text-2xl'>
               Connect Wallet
             </DialogTitle>
-            <CircleQuestionMark className='h-4 w-4 text-[#484848]' />
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <CircleQuestionMark className='h-4 w-4 text-[#484848]' />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <h4 className='text-lg font-medium text-white'>
-                    What is a Wallet?
-                  </h4>
-                  <p className='text-sm text-[#B5B5B5]'>
-                    Wallets are used to send, receive, and store the keys you
-                    use to sign blockchain transactions.
-                  </p>
-                  <h4 className='text-lg font-medium text-white'>
-                    What is a Stellar Blockchain?
-                  </h4>
-                  <p className='text-sm text-[#B5B5B5]'>
-                    Stellar is a decentralized network that allows you to send
-                    and receive digital assets.
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
           </div>
           <Button
             variant='ghost'
@@ -255,79 +190,11 @@ const ConnectWallet = ({
           </Button>
         </div>
 
-        {/* Description and Terms */}
-        <DialogDescription className='!mt-0 !p-0'>
-          <p className='mb-4 text-sm font-normal text-[#B5B5B5]'>
-            Select what network and wallet below
-          </p>
+        <DialogDescription className='!mt-0 !p-0'></DialogDescription>
 
-          <div className='mb-6 space-y-3'>
-            <p className='text-sm leading-relaxed font-normal text-[#B5B5B5]'>
-              Accept{' '}
-              <Link
-                href='/terms-of-service'
-                className='text-[#A7F950] underline underline-offset-2 transition-colors hover:text-[#86C939]'
-              >
-                Terms of Service
-              </Link>{' '}
-              and{' '}
-              <Link
-                href='/privacy-policy'
-                className='text-[#A7F950] underline underline-offset-2 transition-colors hover:text-[#86C939]'
-              >
-                Privacy Policy
-              </Link>
-            </p>
-            <div className='flex items-center gap-2'>
-              <Checkbox
-                checked={acceptedTerms}
-                onCheckedChange={checked =>
-                  setAcceptedTerms(checked as boolean)
-                }
-                className='data-[state=checked]:border-[#A7F950] data-[state=checked]:bg-[#A7F950]'
-                id='terms-checkbox'
-              />
-              <label
-                htmlFor='terms-checkbox'
-                className='cursor-pointer text-sm text-white'
-              >
-                I read and accept
-              </label>
-            </div>
-          </div>
-        </DialogDescription>
-
-        {/* Network Selection */}
-        <div className='space-y-3'>
-          <h3 className='text-base font-medium text-white'>Choose Network</h3>
-          <div className='grid grid-cols-2 gap-3'>
-            {networks.map(network => (
-              <Button
-                key={network.id}
-                variant='outline'
-                className={`flex h-auto flex-col items-center gap-2 rounded-lg border p-4 transition-all ${
-                  selectedNetwork === network.id
-                    ? 'border-[#A7F950] bg-[#0a0a0a]'
-                    : 'border-[#2B2B2B] bg-[#101010] hover:border-[#404040]'
-                }`}
-                onClick={() => handleNetworkChange(network.id)}
-                disabled={isConnecting}
-              >
-                <div className='flex h-8 w-8 items-center justify-center rounded-full bg-blue-500'>
-                  <div className='h-0.5 w-3 bg-white'></div>
-                </div>
-                <span className='text-sm font-medium text-white'>
-                  {network.name}
-                </span>
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        {/* Wallet Selection */}
         <div className='min-h-0 flex-1 space-y-3'>
           <div className='flex items-center justify-between'>
-            <h3 className='text-base font-medium text-white'>Choose Wallet</h3>
+            <h3 className='text-base font-medium text-white'>Select Wallet</h3>
             {isLoading && (
               <div className='flex items-center gap-2 text-sm text-[#B5B5B5]'>
                 <Loader2 className='h-4 w-4 animate-spin' />
@@ -347,7 +214,7 @@ const ConnectWallet = ({
           )}
 
           <ScrollArea className='h-[280px] pr-2 sm:h-[225px]'>
-            <div className='grid grid-cols-2 gap-3 p-1 sm:grid-cols-3'>
+            <div className='space-y-3'>
               {wallets.map(wallet => (
                 <WalletCard
                   key={wallet.id}

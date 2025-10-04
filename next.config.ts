@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   outputFileTracingRoot: __dirname,
   images: {
+    domains: ['i.pravatar.cc'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -20,6 +21,14 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'storage.herewallet.app',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
       },
     ],
   },

@@ -313,8 +313,9 @@ const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
         size={size}
         className={cn('min-w-[140px]', className)}
         onClick={handleConnect}
+        icon={<Wallet className='mr-2 h-4 w-4' />}
+        iconPosition='right'
       >
-        <Wallet className='mr-2 h-4 w-4' />
         Connect Wallet
       </BoundlessButton>
 

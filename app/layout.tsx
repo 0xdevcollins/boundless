@@ -7,6 +7,7 @@ import {
   generateOrganizationStructuredData,
   generateWebsiteStructuredData,
 } from '@/lib/structured-data';
+import NextTopLoader from 'nextjs-toploader';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
       'Validate, fund, and grow your project with milestone-based support on Stellar.',
     images: [
       {
-        url: '/BOUNDLESS.png',
+        url: 'https://res.cloudinary.com/danuy5rqb/image/upload/v1759143589/bondless-og-image_jufgnu.png',
         width: 1200,
         height: 630,
         alt: 'Boundless',
@@ -54,7 +55,9 @@ export const metadata: Metadata = {
     title: 'Boundless - Ideas Made Boundless',
     description:
       'Validate, fund, and grow your project with milestone-based support on Stellar.',
-    images: ['/BOUNDLESS.png'],
+    images: [
+      'https://res.cloudinary.com/danuy5rqb/image/upload/v1759143589/bondless-og-image_jufgnu.png',
+    ],
   },
   alternates: {
     canonical: 'https://boundlessfi.xyz',
@@ -84,6 +87,8 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} font-inter antialiased`}>
+        <NextTopLoader />
+
         <Providers>
           {children}
           <Toaster />

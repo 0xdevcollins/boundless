@@ -38,9 +38,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const initializeAuth = async () => {
       try {
-        if (accessToken && isAuthenticated) {
-          await refreshUser();
-        } else if (accessToken) {
+        // Only refresh if we have a token but no user data
+        if (accessToken && !isAuthenticated) {
           try {
             await refreshUser();
           } catch {

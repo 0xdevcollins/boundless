@@ -39,7 +39,8 @@ export const pageMetadata: Record<string, PageMetadata> = {
       'funding',
       'milestones',
     ],
-    ogImage: '/BOUNDLESS.png',
+    ogImage:
+      'https://res.cloudinary.com/danuy5rqb/image/upload/v1759143589/bondless-og-image_jufgnu.png',
   },
   about: {
     title: 'About Us - Boundless',
@@ -234,6 +235,62 @@ export function generateBlogMetadata(
     alternates: {
       canonical:
         finalMetadata.canonical || `${baseMetadata.siteUrl}/blog/${slug}`,
+    },
+  };
+}
+
+// Generate metadata for individual blog posts
+export function generateBlogPostMetadata(post: {
+  title: string;
+  excerpt: string;
+  image: string;
+  author: { name: string };
+  publishedAt: string;
+  updatedAt?: string;
+  tags: string[];
+  category: string;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    keywords?: string[];
+  };
+}): Metadata {
+  const title = post.seo?.metaTitle || `${post.title} | Boundless Blog`;
+  const description = post.seo?.metaDescription || post.excerpt;
+  const keywords = post.seo?.keywords || post.tags;
+
+  return {
+    title,
+    description,
+    keywords: keywords.join(', '),
+    authors: [{ name: post.author.name }],
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      url: `${baseMetadata.siteUrl}/blog/${post.title.toLowerCase().replace(/\s+/g, '-')}`,
+      siteName: baseMetadata.siteName,
+      images: [
+        {
+          url: post.image,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+      publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt,
+      tags: post.tags,
+      section: post.category,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [post.image],
+    },
+    alternates: {
+      canonical: `${baseMetadata.siteUrl}/blog/${post.title.toLowerCase().replace(/\s+/g, '-')}`,
     },
   };
 }

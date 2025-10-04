@@ -1,7 +1,9 @@
 import { Progress } from '@/components/ui/progress';
 import { formatNumber } from '@/lib/utils';
+import { useRouter } from 'nextjs-toploader/app';
 
 type ProjectCardProps = {
+  projectId?: string;
   creatorName: string;
   creatorLogo: string;
   projectImage: string;
@@ -25,6 +27,7 @@ type ProjectCardProps = {
   };
 };
 function ProjectCard({
+  projectId,
   creatorName,
   creatorLogo,
   projectImage,
@@ -37,6 +40,10 @@ function ProjectCard({
   funding,
   milestones,
 }: ProjectCardProps) {
+  const router = useRouter();
+  const handleClick = () => {
+    router.push(`/projects/${projectId}`);
+  };
   const getStatusStyles = () => {
     switch (status) {
       case 'Funding':
@@ -83,16 +90,19 @@ function ProjectCard({
   const deadlineInfo = getDeadlineInfo();
 
   return (
-    <main className='font-inter hover:bg-primary/5 hover:border-primary/25 flex w-[397px] cursor-pointer flex-col gap-4 rounded-[8px] border border-gray-900 bg-[#030303] p-5'>
+    <article
+      onClick={handleClick}
+      className='font-inter hover:bg-primary/5 hover:border-primary/25 flex w-[397px] cursor-pointer flex-col gap-4 rounded-[8px] border border-gray-900 bg-[#030303] p-5'
+    >
       <header className='flex items-center justify-between'>
-        <main className='flex items-center gap-2'>
+        <div className='flex items-center gap-2'>
           <div
             style={{ backgroundImage: `url(${creatorLogo})` }}
             className='size-6 rounded-full bg-white bg-cover bg-center'
           ></div>
           <h4 className='text-sm font-normal text-gray-500'>{creatorName}</h4>
-        </main>
-        <main className='flex items-center gap-3'>
+        </div>
+        <div className='flex items-center gap-3'>
           <div className='bg-office-brown border-office-brown-darker text-office-brown-darker flex w-[63px] items-center justify-center rounded-[4px] border px-1 py-0.5 text-xs font-semibold'>
             Category
           </div>
@@ -101,26 +111,26 @@ function ProjectCard({
           >
             {status}
           </div>
-        </main>
+        </div>
       </header>
-      <article className='flex items-center gap-5'>
-        <main
+      <section className='flex items-center gap-5'>
+        <div
           style={{ backgroundImage: `url(${projectImage})` }}
           className='h-[90px] w-[79.41px] rounded-[8px] bg-white bg-cover bg-center'
-        ></main>
-        <main className='flex w-[257px] flex-col gap-2'>
+        ></div>
+        <div className='flex w-[257px] flex-col gap-2'>
           <h2 className='text-left text-base font-semibold text-white'>
             {projectTitle}
           </h2>
           <div className='group relative h-[60px]'>
-            <p className='line-clamp-3 cursor-pointer text-left text-sm font-normal text-white group-hover:absolute group-hover:z-10 group-hover:line-clamp-none group-hover:w-full group-hover:rounded-md group-hover:bg-[#030303]'>
+            <p className='line-clamp-3 cursor-pointer text-left text-sm font-normal text-white'>
               {projectDescription}
             </p>
           </div>
-        </main>
-      </article>
+        </div>
+      </section>
       <footer className='flex flex-col gap-2'>
-        <main className='flex items-center justify-between'>
+        <div className='flex items-center justify-between'>
           {status === 'Validation' && votes && (
             <h3 className='text-sm font-medium text-[#f5f5f5]'>
               {formatNumber(votes.current)}/{formatNumber(votes.goal)}{' '}
@@ -143,7 +153,7 @@ function ProjectCard({
           <h3 className={`text-sm font-medium ${deadlineInfo.className}`}>
             {deadlineInfo.text}
           </h3>
-        </main>
+        </div>
         <div>
           <Progress
             value={
@@ -163,7 +173,7 @@ function ProjectCard({
           />
         </div>
       </footer>
-    </main>
+    </article>
   );
 }
 

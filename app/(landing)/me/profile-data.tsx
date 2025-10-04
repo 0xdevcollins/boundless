@@ -1,0 +1,48 @@
+import { getMe } from '@/lib/api/auth';
+import { auth } from '@/auth';
+import ProfileOverview from '@/components/profile/ProfileOverview';
+
+export async function ProfileData() {
+  const session = await auth();
+
+  // Check if user is authenticated
+  if (!session?.user?.accessToken) {
+    return (
+      <section className='flex min-h-screen items-center justify-center'>
+        <div className='text-red-500'>Please sign in to view your profile</div>
+      </section>
+    );
+  }
+
+  try {
+    const userData = await getMe(session.user.accessToken);
+    return (
+      <ProfileOverview
+        username={session.user.username || 'me'}
+        user={userData}
+      />
+    );
+  } catch (error) {
+    // Check if it's an authentication error
+    if (
+      error &&
+      typeof error === 'object' &&
+      'status' in error &&
+      error.status === 401
+    ) {
+      return (
+        <section className='flex min-h-screen items-center justify-center'>
+          <div className='text-red-500'>
+            Session expired. Please sign in again.
+          </div>
+        </section>
+      );
+    }
+
+    return (
+      <section className='flex min-h-screen items-center justify-center'>
+        <div className='text-red-500'>Failed to load your profile</div>
+      </section>
+    );
+  }
+}

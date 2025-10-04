@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { socialLinks } from '@/lib/config';
@@ -8,7 +6,10 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className='border-t border-[#2B2B2B] bg-black' role='contentinfo'>
+    <footer
+      className='z-30 border-t border-[#2B2B2B] bg-black'
+      role='contentinfo'
+    >
       <div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
         <div className='hidden items-start justify-between md:flex'>
           <div className='flex flex-col space-y-4'>
@@ -22,25 +23,40 @@ export function Footer() {
                 priority
               />
             </Link>
-            <p className='text-sm text-gray-400'>
+            <p className='text-sm text-[#B5B5B5]'>
               © {currentYear} Boundless — Transparent, Community-Driven,
               Web3-Native Funding.
             </p>
           </div>
 
           <div className='flex flex-col items-end space-y-6'>
-            <nav className='mb-14 flex space-x-8' aria-label='Legal links'>
+            <nav
+              className='mb-14 grid grid-cols-2 gap-x-8 gap-y-4 text-center sm:text-left'
+              aria-label='Legal links'
+            >
               <Link
                 href='/terms'
-                className='rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+                className='hover:text-primary rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
               >
                 Terms of Service
               </Link>
               <Link
                 href='/privacy'
-                className='rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+                className='hover:text-primary rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
               >
                 Privacy Policy
+              </Link>
+              <Link
+                href='/code-of-conduct'
+                className='hover:text-primary ml-10 rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+              >
+                Code of Conduct
+              </Link>
+              <Link
+                href='/disclaimer'
+                className='hover:text-primary ml-5 rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+              >
+                Disclaimer
               </Link>
             </nav>
 
@@ -62,7 +78,7 @@ export function Footer() {
                       alt={`${name} icon`}
                       width={24}
                       height={24}
-                      className='h-6 w-6'
+                      className={`${name === 'gmail' ? 'h-18 w-18' : 'h-6 w-6'}`}
                     />
                   </Link>
                   {index < Object.keys(socialLinks).length - 1 && (
@@ -73,24 +89,11 @@ export function Footer() {
                   )}
                 </div>
               ))}
-              <div className='ml-4 h-6 w-0.5 bg-[#2B2B2B]' aria-hidden='true' />
-              <Link
-                href={`mailto:${socialLinks.gmail}`}
-                className='rounded transition-opacity hover:opacity-80 focus:ring-2 focus:ring-white/50 focus:outline-none'
-                aria-label='Contact us via email'
-              >
-                <Image
-                  src='/footer/gmail.svg'
-                  alt='Email contact'
-                  width={24}
-                  height={24}
-                  className='h-6 w-6'
-                />
-              </Link>
             </nav>
           </div>
         </div>
 
+        {/* Mobile version */}
         <div className='flex flex-col items-center space-y-6 md:hidden'>
           <Link href='/' aria-label='Boundless homepage'>
             <Image
@@ -103,18 +106,33 @@ export function Footer() {
             />
           </Link>
 
-          <nav className='flex space-x-8' aria-label='Legal links'>
+          <nav
+            className='mb-14 grid grid-cols-2 gap-x-8 gap-y-4 text-center sm:text-left'
+            aria-label='Legal links'
+          >
             <Link
               href='/terms'
-              className='rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+              className='hover:text-primary rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
             >
               Terms of Service
             </Link>
             <Link
               href='/privacy'
-              className='rounded text-sm text-gray-400 transition-colors hover:text-white focus:ring-2 focus:ring-white/50 focus:outline-none'
+              className='hover:text-primary rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
             >
               Privacy Policy
+            </Link>
+            <Link
+              href='/code-of-conduct'
+              className='hover:text-primary ml-10 rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+            >
+              Code of Conduct
+            </Link>
+            <Link
+              href='/disclaimer'
+              className='hover:text-primary ml-5 rounded text-sm text-[#B5B5B5] transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none'
+            >
+              Disclaimer
             </Link>
           </nav>
 
@@ -149,7 +167,7 @@ export function Footer() {
             ))}
           </nav>
 
-          <p className='text-center text-sm text-gray-400'>
+          <p className='text-center text-sm text-[#B5B5B5]'>
             © {currentYear} Boundless — Transparent,
             <br />
             Community-Driven, Web3-Native Funding.

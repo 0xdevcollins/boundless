@@ -46,8 +46,8 @@ export const login = async (data: LoginRequest): Promise<LoginResponse> => {
       path: string;
     }>('/auth/login', data);
 
+    // console.log('loginData', loginResData);
     const loginData = res.data.data;
-
     if (loginData.accessToken) {
       // Use the auth store to handle login
       const authStore = useAuthStore.getState();
@@ -106,15 +106,9 @@ export const logout = async (token?: string): Promise<LogoutResponse> => {
       path: string;
     }>('/auth/logout', undefined, config);
 
-    // Use the auth store to handle logout
-    const authStore = useAuthStore.getState();
-    await authStore.logout();
-
     return res.data.data;
   } catch (error) {
-    // Even if the API call fails, clear the local auth state
-    const authStore = useAuthStore.getState();
-    authStore.clearAuth();
+    // Don't clear auth state here - let the calling function handle it
     throw error;
   }
 };
@@ -199,4 +193,21 @@ export const getAuthHeaders = (): Record<string, string> => {
   const { accessToken } = authStore;
 
   return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+};
+
+export const getUserProfileByUsername = async (
+  username: string,
+  token?: string
+): Promise<GetMeResponse> => {
+  const config = token
+    ? { headers: { Authorization: `Bearer ${token}` } }
+    : undefined;
+  const res = await api.get<{
+    success: boolean;
+    data: GetMeResponse;
+    message?: string;
+    timestamp: string;
+    path?: string;
+  }>(`/users/profile/${username}`, config);
+  return res.data.data;
 };
