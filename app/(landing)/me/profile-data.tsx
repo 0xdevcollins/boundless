@@ -1,38 +1,27 @@
-import { getUserProfileByUsername, getMe } from '@/lib/api/auth';
-import { GetMeResponse } from '@/lib/api/types';
+import { getMe } from '@/lib/api/auth';
 import { auth } from '@/auth';
 import ProfileOverview from '@/components/profile/ProfileOverview';
 
-interface ProfileDataProps {
-  username: string;
-}
-
-export async function ProfileData({ username }: ProfileDataProps) {
+export async function ProfileData() {
   const session = await auth();
 
   // Check if user is authenticated
   if (!session?.user?.accessToken) {
     return (
       <section className='flex min-h-screen items-center justify-center'>
-        <div className='text-red-500'>Please sign in to view profiles</div>
+        <div className='text-red-500'>Please sign in to view your profile</div>
       </section>
     );
   }
 
   try {
-    const isOwnProfile = session?.user?.username === username;
-    let userData: GetMeResponse;
-
-    if (isOwnProfile) {
-      userData = await getMe(session.user.accessToken);
-    } else {
-      userData = await getUserProfileByUsername(
-        username,
-        session.user.accessToken
-      );
-    }
-
-    return <ProfileOverview username={username} user={userData} />;
+    const userData = await getMe(session.user.accessToken);
+    return (
+      <ProfileOverview
+        username={session.user.username || 'me'}
+        user={userData}
+      />
+    );
   } catch (error) {
     // Check if it's an authentication error
     if (
@@ -52,7 +41,7 @@ export async function ProfileData({ username }: ProfileDataProps) {
 
     return (
       <section className='flex min-h-screen items-center justify-center'>
-        <div className='text-red-500'>Failed to load user profile</div>
+        <div className='text-red-500'>Failed to load your profile</div>
       </section>
     );
   }

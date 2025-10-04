@@ -13,7 +13,7 @@ export default function LooperSVG() {
       ellipses.forEach(ellipse => {
         ellipse.addEventListener('mouseenter', () => {
           gsap.to(ellipse, {
-            scale: 1.2,
+            scale: 1.1,
             duration: 0.3,
             ease: 'power2.out',
             transformOrigin: 'center center',
@@ -40,7 +40,7 @@ export default function LooperSVG() {
       viewBox='0 0 403 452'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
-      className='sphere-image absolute top-1/2 left-1/2 z-20 h-[75%] w-[75%] -translate-x-1/2 -translate-y-1/2 opacity-70'
+      className='sphere-image absolute top-1/2 left-1/2 z-20 h-[50%] w-[50%] -translate-x-1/2 -translate-y-1/2 opacity-70'
     >
       <ellipse
         opacity='0.0169492'

@@ -228,6 +228,63 @@ export const authConfig = {
         token.username = extendedUser.username;
         token.profile = extendedUser.profile;
       }
+
+      // Check if access token is expired and try to refresh
+      if (token.accessToken && typeof token.accessToken === 'string') {
+        try {
+          const base64Url = token.accessToken.split('.')[1];
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          const jsonPayload = decodeURIComponent(
+            atob(base64)
+              .split('')
+              .map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+              })
+              .join('')
+          );
+          const payload = JSON.parse(jsonPayload);
+          const currentTime = Math.floor(Date.now() / 1000);
+
+          // If token is expired and we have a refresh token, try to refresh
+          if (payload.exp < currentTime && token.refreshToken) {
+            try {
+              const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ refreshToken: token.refreshToken }),
+                }
+              );
+
+              if (response.ok) {
+                const data = await response.json();
+                token.accessToken = data.data.accessToken;
+                token.refreshToken = data.data.refreshToken;
+                AuthLogger.log('Token refreshed successfully');
+              } else {
+                // Refresh failed, clear tokens
+                token.accessToken = null;
+                token.refreshToken = null;
+                AuthLogger.warn('Token refresh failed');
+              }
+            } catch (error) {
+              // Refresh failed, clear tokens
+              token.accessToken = null;
+              token.refreshToken = null;
+              AuthLogger.error('Token refresh error', error as Error);
+            }
+          }
+        } catch (error) {
+          // Token parsing failed, clear tokens
+          token.accessToken = null;
+          token.refreshToken = null;
+          AuthLogger.error('Token parsing error', error as Error);
+        }
+      }
+
       return token;
     },
 
@@ -252,6 +309,11 @@ export const authConfig = {
           username: string | null;
         };
       };
+
+      // If no valid tokens, return empty session
+      if (!extendedToken.accessToken) {
+        return session;
+      }
 
       // Populate session with extended user data
       session.user = {
