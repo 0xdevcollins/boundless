@@ -68,6 +68,7 @@ async function ProjectContent({ id }: { id: string }) {
     // Try to fetch as crowdfunding project first
     try {
       const response = await getCrowdfundingProject(id);
+
       if (response.success && response.data) {
         projectData = transformCrowdfundingProject(
           response.data.project,
@@ -80,6 +81,7 @@ async function ProjectContent({ id }: { id: string }) {
       // If crowdfunding project fails, try regular project
       try {
         const regularProject = await getProjectDetails(id);
+
         // Transform regular project data if needed
         // For regular projects, we need to create a mock CrowdfundingProject structure
         const mockProject: CrowdfundingProject = {
