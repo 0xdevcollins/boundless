@@ -8,6 +8,7 @@ import { ProjectAbout } from './project-about';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { CrowdfundingProject, CrowdfundData } from '@/lib/api/types';
 import { ChevronLeftCircle, ChevronRightCircle } from 'lucide-react';
+import { ProjectComments } from './comment-section/project-comments';
 
 interface ProjectLayoutProps {
   project: CrowdfundingProject & {
@@ -278,12 +279,12 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                 </div>
               </TabsContent>
               <TabsContent value='voters' className='mt-0'>
-                <div className='text-white'>Voters content coming soon...</div>
+                <div className='text-white'>
+                  Voters content coming soon.rgngogogo5gmomo..
+                </div>
               </TabsContent>
               <TabsContent value='comments' className='mt-0'>
-                <div className='text-white'>
-                  Comments content coming soon...
-                </div>
+                <ProjectComments />
               </TabsContent>
             </Tabs>
           </div>
@@ -436,9 +437,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                   </div>
                 </TabsContent>
                 <TabsContent value='comments' className='mt-0'>
-                  <div className='text-white'>
-                    Comments content coming soon...
-                  </div>
+                  <ProjectComments />
                 </TabsContent>
               </div>
             </Tabs>
