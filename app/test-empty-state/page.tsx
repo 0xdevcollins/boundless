@@ -3,14 +3,14 @@
 import React, { useState } from 'react';
 import EmptyState from '@/components/EmptyState';
 import { Menu, ChevronDown, Search } from 'lucide-react';
-import {
-  FaDiscord,
-  FaTelegramPlane,
-  FaGithub,
-  FaLinkedin,
-  FaTwitter,
-} from 'react-icons/fa';
-import { SiGmail } from 'react-icons/si';
+// import {
+//   FaDiscord,
+//   FaTelegramPlane,
+//   FaGithub,
+//   FaLinkedin,
+//   FaTwitter,
+// } from 'react-icons/fa';
+// import { SiGmail } from 'react-icons/si';
 import Image from 'next/image';
 
 export default function TestEmptyStatePage() {
@@ -18,14 +18,14 @@ export default function TestEmptyStatePage() {
 
   const handleAddProject = () => alert('Add Project clicked!');
 
-  const socialIcons = [
-    { Icon: FaDiscord, href: 'https://discord.com' },
-    { Icon: FaTelegramPlane, href: 'https://t.me' },
-    { Icon: FaGithub, href: 'https://github.com' },
-    { Icon: FaLinkedin, href: 'https://linkedin.com' },
-    { Icon: FaTwitter, href: 'https://x.com' },
-    { Icon: SiGmail, href: 'mailto:example@gmail.com' },
-  ];
+  // const socialIcons = [
+  //   { Icon: FaDiscord, href: 'https://discord.com' },
+  //   { Icon: FaTelegramPlane, href: 'https://t.me' },
+  //   { Icon: FaGithub, href: 'https://github.com' },
+  //   { Icon: FaLinkedin, href: 'https://linkedin.com' },
+  //   { Icon: FaTwitter, href: 'https://x.com' },
+  //   { Icon: SiGmail, href: 'mailto:example@gmail.com' },
+  // ];
 
   return (
     <div className='min-h-screen bg-black'>
@@ -139,7 +139,7 @@ export default function TestEmptyStatePage() {
             Funding
           </span>
           <div className='flex items-center gap-3 text-gray-600'>
-            {socialIcons.map(({ Icon, href }, idx) => (
+            {/* {socialIcons.map(({ Icon, href }, idx) => (
               <a
                 key={idx}
                 href={href}
@@ -149,7 +149,7 @@ export default function TestEmptyStatePage() {
               >
                 <Icon className='h-5 w-5' />
               </a>
-            ))}
+            ))} */}
           </div>
         </div>
       </div>

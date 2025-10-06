@@ -84,36 +84,18 @@ async function ProjectContent({ id }: { id: string }) {
         // For regular projects, we need to create a mock CrowdfundingProject structure
         const mockProject: CrowdfundingProject = {
           _id: regularProject.id || regularProject._id,
-          description: regularProject.description || '',
-          title: regularProject.name || regularProject.title,
-          vision: regularProject.description || '',
-          logo: regularProject.image || regularProject.logo,
-          media: { logo: regularProject.image || regularProject.logo },
-          funding: {
-            goal: regularProject.amount || 0,
-            raised: 0,
-            currency: 'USD',
-            contributors: [],
-            endDate: new Date(
-              Date.now() + 30 * 24 * 60 * 60 * 1000
-            ).toISOString(), // 30 days from now
-          },
+          title: regularProject.title,
+          description: regularProject.description,
           category: regularProject.category,
-          details: regularProject.description || '',
-          fundingAmount: regularProject.amount || 0,
-          status: regularProject.status,
-          type: 'crowdfund',
-          votes: regularProject.votes || 0,
-          voting: {
-            endDate: new Date(
-              Date.now() + 30 * 24 * 60 * 60 * 1000
-            ).toISOString(),
-            negativeVotes: 0,
-            positiveVotes: regularProject.votes || 0,
-            startDate: new Date().toISOString(),
-            totalVotes: 100,
-            voters: [],
+          owner: {
+            type: 'individual',
           },
+          vision: regularProject.description,
+          githubUrl: regularProject.githubUrl,
+          projectWebsite: regularProject.projectWebsite,
+          demoVideo: regularProject.demoVideo,
+          socialLinks: regularProject.socialLinks,
+          status: regularProject.status,
           creator: {
             _id: 'unknown',
             profile: {
@@ -122,24 +104,83 @@ async function ProjectContent({ id }: { id: string }) {
               username: regularProject.ownerUsername || 'unknown',
             },
           },
-          team: [],
-          milestones: [],
           contact: {
             primary: '',
             backup: '',
           },
           createdAt: regularProject.createdAt,
           updatedAt: regularProject.updatedAt || regularProject.createdAt,
+          funding: {
+            goal: 0,
+            raised: 0,
+            currency: 'USD',
+            endDate: new Date(
+              Date.now() + 30 * 24 * 60 * 60 * 1000
+            ).toISOString(),
+            contributors: [],
+          },
+          voting: {
+            startDate: new Date().toISOString(),
+            endDate: new Date(
+              Date.now() + 30 * 24 * 60 * 60 * 1000
+            ).toISOString(),
+            totalVotes: 0,
+            positiveVotes: 0,
+            negativeVotes: 0,
+            voters: [],
+          },
+          milestones: [],
+          team: [],
+          media: {
+            banner: regularProject.image,
+            logo: regularProject.image,
+            thumbnail: regularProject.image,
+          },
+          documents: {
+            whitepaper: '',
+            pitchDeck: '',
+          },
+          tags: [],
+          grant: {
+            isGrant: false,
+            totalBudget: 0,
+            totalDisbursed: 0,
+            proposalsReceived: 0,
+            proposalsApproved: 0,
+            status: 'pending',
+            applications: [],
+          },
+          summary: regularProject.description,
+          type: 'crowdfund',
+          votes: 0,
+          stakeholders: {
+            serviceProvider: '',
+            approver: '',
+            releaseSigner: '',
+            disputeResolver: '',
+            receiver: '',
+            platformAddress: '',
+          },
+          trustlessWorkStatus: 'pending',
+          escrowType: 'pending',
+          __v: 0,
         };
 
         const mockCrowdfund: CrowdfundData = {
           _id: 'mock-crowdfund',
           projectId: regularProject.id || regularProject._id,
-          raisedAmount: 0,
-          backersCount: 0,
+          thresholdVotes: 0,
+          voteDeadline: new Date(
+            Date.now() + 30 * 24 * 60 * 60 * 1000
+          ).toISOString(),
+          totalVotes: 0,
+          voteProgress: 0,
           status: regularProject.status,
           createdAt: regularProject.createdAt,
           updatedAt: regularProject.updatedAt || regularProject.createdAt,
+          __v: 0,
+          isVotingActive: false,
+          id: 'mock-crowdfund',
         };
 
         projectData = {
