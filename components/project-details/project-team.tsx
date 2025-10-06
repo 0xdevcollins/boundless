@@ -52,7 +52,7 @@ export function ProjectTeam({ project }: ProjectTeamProps) {
             : 'Unknown Member',
           role:
             member.role === 'OWNER' ? ('OWNER' as const) : ('MEMBER' as const),
-          avatar: (member.userId?.profile as any)?.avatar,
+          avatar: (member.userId?.profile as { avatar?: string })?.avatar,
         }))
       : mockTeamMembers;
 
@@ -60,8 +60,8 @@ export function ProjectTeam({ project }: ProjectTeamProps) {
     return role === 'OWNER' ? 'text-[#DBF936]' : 'text-[#B5B5B5]';
   };
 
-  const handleMemberClick = (memberId: string) => {
-    console.log('Navigate to member:', memberId);
+  const handleMemberClick = () => {
+    // TODO: Implement navigation to member profile
   };
 
   return (
@@ -71,7 +71,7 @@ export function ProjectTeam({ project }: ProjectTeamProps) {
           <div
             key={member.id}
             className='flex cursor-pointer items-center justify-between rounded px-3 py-2 transition-colors hover:bg-gray-900/30'
-            onClick={() => handleMemberClick(member.id)}
+            onClick={() => handleMemberClick()}
           >
             <div className='flex items-center space-x-4'>
               {/* Avatar */}
