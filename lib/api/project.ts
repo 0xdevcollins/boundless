@@ -6,11 +6,18 @@ import {
   ProjectInitRequest,
   CreateCrowdfundingProjectRequest,
   CreateCrowdfundingProjectResponse,
+  PrepareCrowdfundingProjectResponse,
+  ConfirmCrowdfundingProjectRequest,
+  ConfirmCrowdfundingProjectResponse,
   GetCrowdfundingProjectsResponse,
   GetCrowdfundingProjectResponse,
   UpdateCrowdfundingProjectRequest,
   UpdateCrowdfundingProjectResponse,
   DeleteCrowdfundingProjectResponse,
+  PrepareFundingRequest,
+  PrepareFundingResponse,
+  ConfirmFundingRequest,
+  ConfirmFundingResponse,
 } from './types';
 
 export const initProject = async (data: ProjectInitRequest) => {
@@ -109,10 +116,27 @@ export const generateCampaignLink = async (_projectId: string) => {
   });
 };
 
+// Legacy function for backward compatibility
 export const createCrowdfundingProject = async (
   data: CreateCrowdfundingProjectRequest
 ): Promise<CreateCrowdfundingProjectResponse> => {
   const res = await api.post('/crowdfunding/projects', data);
+  return res.data;
+};
+
+// Step 1: Prepare project and get unsigned transaction
+export const prepareCrowdfundingProject = async (
+  data: CreateCrowdfundingProjectRequest
+): Promise<PrepareCrowdfundingProjectResponse> => {
+  const res = await api.post('/crowdfunding/projects/prepare', data);
+  return res.data;
+};
+
+// Step 2: Submit signed transaction and create project
+export const confirmCrowdfundingProject = async (
+  data: ConfirmCrowdfundingProjectRequest
+): Promise<ConfirmCrowdfundingProjectResponse> => {
+  const res = await api.post('/crowdfunding/projects/confirm', data);
   return res.data;
 };
 
@@ -174,5 +198,32 @@ export const deleteCrowdfundingProject = async (
   projectId: string
 ): Promise<DeleteCrowdfundingProjectResponse> => {
   const res = await api.delete(`/crowdfunding/projects/${projectId}`);
+  return res.data;
+};
+
+/**
+ * Prepare funding for a crowdfunding project
+ * Step 1: Get unsigned transaction for funding
+ */
+export const prepareProjectFunding = async (
+  projectId: string,
+  data: PrepareFundingRequest
+): Promise<PrepareFundingResponse> => {
+  const res = await api.post(`/crowdfunding/projects/${projectId}/fund`, data);
+  return res.data;
+};
+
+/**
+ * Confirm funding for a crowdfunding project
+ * Step 2: Submit signed transaction and update project
+ */
+export const confirmProjectFunding = async (
+  projectId: string,
+  data: ConfirmFundingRequest
+): Promise<ConfirmFundingResponse> => {
+  const res = await api.post(
+    `/crowdfunding/projects/${projectId}/fund/confirm`,
+    data
+  );
   return res.data;
 };

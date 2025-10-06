@@ -46,13 +46,13 @@ export function ProjectTeam({ project }: ProjectTeamProps) {
   const teamMembers =
     project.team && project.team.length > 0
       ? project.team.map(member => ({
-          id: member.userId?._id || '',
-          name: member.userId?.profile
-            ? `${member.userId.profile.firstName} ${member.userId.profile.lastName}`
+          id: member?._id || '',
+          name: member?.profile
+            ? `${member.profile.firstName} ${member.profile.lastName}`
             : 'Unknown Member',
           role:
             member.role === 'OWNER' ? ('OWNER' as const) : ('MEMBER' as const),
-          avatar: (member.userId?.profile as { avatar?: string })?.avatar,
+          avatar: (member?.profile as { avatar?: string })?.avatar,
         }))
       : mockTeamMembers;
 
