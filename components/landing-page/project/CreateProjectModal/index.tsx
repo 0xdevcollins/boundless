@@ -9,9 +9,18 @@ import Team, { TeamFormData } from './Team';
 import Contact, { ContactFormData } from './Contact';
 import LoadingScreen from './LoadingScreen';
 import SuccessScreen from './SuccessScreen';
+import TransactionSigningScreen from './TransactionSigningScreen';
 import { z } from 'zod';
-import { createCrowdfundingProject } from '@/lib/api/project';
-import { CreateCrowdfundingProjectRequest } from '@/lib/api/types';
+import {
+  prepareCrowdfundingProject,
+  confirmCrowdfundingProject,
+} from '@/lib/api/project';
+import {
+  CreateCrowdfundingProjectRequest,
+  PrepareCrowdfundingProjectResponse,
+} from '@/lib/api/types';
+import { useWalletSigning } from '@/hooks/use-wallet';
+import { useWalletProtection } from '@/hooks/use-wallet-protection';
 
 type StepHandle = { validate: () => boolean; markSubmitted?: () => void };
 
@@ -34,6 +43,18 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
   const [submitErrors, setSubmitErrors] = useState<string[]>([]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [unsignedTransaction, setUnsignedTransaction] = useState<string | null>(
+    null
+  );
+  const [isSigningTransaction, setIsSigningTransaction] = useState(false);
+
+  // New state for two-step flow
+  const [preparedData, setPreparedData] = useState<
+    PrepareCrowdfundingProjectResponse['data'] | null
+  >(null);
+  const [flowStep, setFlowStep] = useState<
+    'form' | 'preparing' | 'signing' | 'confirming' | 'success'
+  >('form');
 
   // Form data state
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -55,6 +76,12 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
 
   // Ref for the scrollable content container
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // Wallet signing hooks
+  const { signTransaction } = useWalletSigning();
+  const { requireWallet } = useWalletProtection({
+    actionName: 'sign project creation transaction',
+  });
 
   // Reset scroll position when step changes with smooth transition
   useEffect(() => {
@@ -209,15 +236,83 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
         backup: contact.backupContact || '',
       },
       socialLinks: apiSocialLinks,
+      signer: 'GD4NCQMLAU5Z7HIMNGMKLSFLCA46AILVIB6FJZ7QEJXANFNGBHFR24H6',
     };
+  };
+
+  const handleRetry = () => {
+    setSubmitErrors([]);
+    setFlowStep('signing');
+  };
+
+  const handleSignTransaction = async () => {
+    if (!unsignedTransaction || !preparedData) {
+      setSubmitErrors(['No transaction to sign or prepared data missing']);
+      return;
+    }
+
+    requireWallet(async () => {
+      setIsSigningTransaction(true);
+      setFlowStep('confirming');
+
+      try {
+        // Sign the transaction using the wallet
+        const signedXdr = await signTransaction(unsignedTransaction);
+
+        // Submit the signed transaction to the backend (Step 2)
+        const confirmResponse = await confirmCrowdfundingProject({
+          signedXdr,
+          escrowAddress: preparedData.escrowAddress,
+          projectData: preparedData.projectData,
+          mappedMilestones: preparedData.mappedMilestones,
+          mappedTeam: preparedData.mappedTeam,
+        });
+
+        if (confirmResponse.success) {
+          // Project created successfully
+          setFlowStep('success');
+          setShowSuccess(true);
+          setIsSigningTransaction(false);
+          setIsSubmitting(false);
+        } else {
+          throw new Error(
+            confirmResponse.message || 'Failed to create project'
+          );
+        }
+      } catch (error) {
+        let errorMessage = 'Failed to sign transaction. Please try again.';
+
+        if (error instanceof Error) {
+          if (error.message.includes('User rejected')) {
+            errorMessage =
+              'Transaction signing was cancelled. Please try again.';
+          } else if (error.message.includes('Invalid transaction')) {
+            errorMessage =
+              'Invalid transaction format. Please contact support.';
+          } else if (error.message.includes('Network')) {
+            errorMessage =
+              'Network error. Please check your connection and try again.';
+          } else if (error.message.includes('Wallet not connected')) {
+            errorMessage =
+              'Wallet is not connected. Please reconnect your wallet.';
+          } else {
+            errorMessage = error.message;
+          }
+        }
+
+        setSubmitErrors([errorMessage]);
+        setIsSigningTransaction(false);
+        setFlowStep('signing');
+      }
+    });
   };
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
     setIsLoading(true);
+    setFlowStep('preparing');
 
     try {
-      // Validate full payload with master schema before submitting
       const milestoneSchema = z
         .object({
           id: z.string().optional(),
@@ -301,6 +396,7 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
           parsed.error.issues.map(i => `${i.path.join('.')} - ${i.message}`)
         );
         setIsSubmitting(false);
+        setFlowStep('form');
         return;
       }
 
@@ -309,25 +405,42 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
       // Map form data to API request format
       const apiRequest = mapFormDataToApiRequest(payload);
 
-      // Call the API
-      const response = await createCrowdfundingProject(apiRequest);
+      // Step 1: Prepare project and get unsigned transaction
+      const prepareResponse = await prepareCrowdfundingProject(apiRequest);
 
-      if (response.success) {
-        // Show success modal
+      if (prepareResponse.success) {
+        // Store prepared data for step 2
+        setPreparedData(prepareResponse.data);
+        setUnsignedTransaction(prepareResponse.data.unsignedXdr);
+        setFlowStep('signing');
         setIsLoading(false);
-        setShowSuccess(true);
-        setIsSubmitting(false);
       } else {
-        throw new Error(response.message || 'Failed to create project');
+        throw new Error(prepareResponse.message || 'Failed to prepare project');
       }
     } catch (error) {
-      setSubmitErrors([
-        error instanceof Error
-          ? error.message
-          : 'Error submitting project. Please try again.',
-      ]);
+      let errorMessage = 'Error preparing project. Please try again.';
+
+      if (error instanceof Error) {
+        if (error.message.includes('Network')) {
+          errorMessage =
+            'Network error. Please check your connection and try again.';
+        } else if (error.message.includes('Validation')) {
+          errorMessage =
+            'Project validation failed. Please check your project details.';
+        } else if (error.message.includes('Unauthorized')) {
+          errorMessage =
+            'Authentication required. Please log in and try again.';
+        } else if (error.message.includes('Server')) {
+          errorMessage = 'Server error. Please try again in a few moments.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
+      setSubmitErrors([errorMessage]);
       setIsLoading(false);
       setIsSubmitting(false);
+      setFlowStep('form');
     }
   };
 
@@ -377,6 +490,11 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
     setCurrentStep(1);
     setShowSuccess(false);
     setIsLoading(false);
+    setUnsignedTransaction(null);
+    setIsSigningTransaction(false);
+    setSubmitErrors([]);
+    setPreparedData(null);
+    setFlowStep('form');
     setOpen(false);
   };
 
@@ -429,24 +547,24 @@ Our development is structured in clear phases with measurable milestones and com
             title: 'Smart Contract Development',
             description:
               'Develop and audit core smart contracts for yield farming and automated market making. This includes the main protocol contracts, token contracts, and governance mechanisms.',
-            startDate: '2024-02-01',
-            endDate: '2024-04-30',
+            startDate: '2026-02-01',
+            endDate: '2026-04-30',
           },
           {
             id: 'milestone-2',
             title: 'Frontend Development',
             description:
               'Build a user-friendly web interface for interacting with the protocol. This includes dashboard, yield farming interface, and portfolio management tools.',
-            startDate: '2024-03-01',
-            endDate: '2024-05-31',
+            startDate: '2026-05-01',
+            endDate: '2026-06-30',
           },
           {
             id: 'milestone-3',
             title: 'Security Audit & Testing',
             description:
               'Conduct comprehensive security audits, penetration testing, and bug bounty programs to ensure the protocol is secure and ready for mainnet launch.',
-            startDate: '2024-05-01',
-            endDate: '2024-07-31',
+            startDate: '2026-07-01',
+            endDate: '2026-08-31',
           },
         ],
       },
@@ -482,11 +600,36 @@ Our development is structured in clear phases with measurable milestones and com
   };
 
   const renderStepContent = () => {
-    if (isLoading) {
+    // Handle the new two-step flow states
+    if (flowStep === 'preparing' || isLoading) {
       return <LoadingScreen />;
     }
-    if (showSuccess) {
+    if (flowStep === 'success' || showSuccess) {
       return <SuccessScreen onContinue={handleReset} />;
+    }
+    if (
+      flowStep === 'signing' &&
+      unsignedTransaction &&
+      !isSigningTransaction
+    ) {
+      return (
+        <TransactionSigningScreen
+          onSign={handleSignTransaction}
+          flowStep='signing'
+          onRetry={handleRetry}
+          hasError={submitErrors.length > 0}
+          errorMessage={submitErrors[0]}
+        />
+      );
+    }
+    if (flowStep === 'confirming' || isSigningTransaction) {
+      return (
+        <TransactionSigningScreen
+          onSign={handleSignTransaction}
+          isSigning={true}
+          flowStep='confirming'
+        />
+      );
     }
 
     switch (currentStep) {
@@ -547,7 +690,7 @@ Our development is structured in clear phases with measurable milestones and com
       open={open}
       setOpen={setOpen}
     >
-      {!(showSuccess || isLoading) && (
+      {flowStep === 'form' && (
         <Header
           currentStep={currentStep}
           onBack={handleBack}
@@ -558,7 +701,7 @@ Our development is structured in clear phases with measurable milestones and com
         ref={contentRef}
         className={`min-h-[calc(55vh)] px-4 transition-opacity duration-100 md:px-[50px] lg:px-[75px] xl:px-[150px]`}
       >
-        {showSuccess || isLoading ? (
+        {flowStep !== 'form' ? (
           <div className='flex h-full items-center justify-center'>
             {renderStepContent()}
           </div>
@@ -582,7 +725,7 @@ Our development is structured in clear phases with measurable milestones and com
           </>
         )}
       </div>
-      {!(showSuccess || isLoading) && (
+      {flowStep === 'form' && (
         <Footer
           currentStep={currentStep}
           onContinue={handleContinue}
