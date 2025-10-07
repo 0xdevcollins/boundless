@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { z } from 'zod';
 import MDEditor from '@uiw/react-md-editor';
-// import './md-editor-custom.css';
+import './md-editor-custom.css';
 
 interface DetailsProps {
   onDataChange?: (data: DetailsFormData) => void;
