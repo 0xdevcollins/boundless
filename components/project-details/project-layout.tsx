@@ -5,9 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProjectSidebar } from './project-sidebar';
 import { ProjectDetails } from './project-details';
 import { ProjectAbout } from './project-about';
+import { ProjectTeam } from './project-team';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { CrowdfundingProject, CrowdfundData } from '@/lib/api/types';
 import { ChevronLeftCircle, ChevronRightCircle } from 'lucide-react';
+import { ProjectComments } from './comment-section/project-comments';
 
 interface ProjectLayoutProps {
   project: CrowdfundingProject & {
@@ -195,42 +197,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                 <ProjectDetails project={project} />
               </TabsContent>
               <TabsContent value='team' className='mt-0'>
-                <div className='space-y-6 text-white'>
-                  <h2 className='text-2xl font-bold text-white'>Team</h2>
-                  {project.team && project.team.length > 0 ? (
-                    <div className='grid gap-4 md:grid-cols-2'>
-                      {project.team.map((member, index) => (
-                        <div
-                          key={index}
-                          className='rounded-lg border border-gray-800 bg-[#1A1A1A] p-4'
-                        >
-                          <div className='flex items-center gap-3'>
-                            <div className='flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 font-semibold text-white'>
-                              {member.userId?.profile?.firstName[0]}
-                              {member.userId?.profile?.lastName[0]}
-                            </div>
-                            <div>
-                              <h3 className='font-semibold text-white'>
-                                {member.userId?.profile?.firstName}{' '}
-                                {member.userId?.profile?.lastName}
-                              </h3>
-                              <p className='text-sm text-gray-400'>
-                                @{member.userId?.profile?.username}
-                              </p>
-                              <p className='text-sm text-[#DBF936]'>
-                                {member.role}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className='text-gray-400'>
-                      No team information available.
-                    </p>
-                  )}
-                </div>
+                <ProjectTeam project={project} />
               </TabsContent>
               <TabsContent value='milestones' className='mt-0'>
                 <div className='space-y-6 text-white'>
@@ -278,12 +245,12 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                 </div>
               </TabsContent>
               <TabsContent value='voters' className='mt-0'>
-                <div className='text-white'>Voters content coming soon...</div>
+                <div className='text-white'>
+                  Voters content coming soon.rgngogogo5gmomo..
+                </div>
               </TabsContent>
               <TabsContent value='comments' className='mt-0'>
-                <div className='text-white'>
-                  Comments content coming soon...
-                </div>
+                <ProjectComments />
               </TabsContent>
             </Tabs>
           </div>
@@ -346,42 +313,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                   <ProjectDetails project={project} />
                 </TabsContent>
                 <TabsContent value='team' className='mt-0'>
-                  <div className='space-y-6 text-white'>
-                    <h2 className='text-2xl font-bold text-white'>Team</h2>
-                    {project.team && project.team.length > 0 ? (
-                      <div className='grid gap-4 md:grid-cols-2'>
-                        {project.team.map((member, index) => (
-                          <div
-                            key={index}
-                            className='rounded-lg border border-gray-800 bg-[#1A1A1A] p-4'
-                          >
-                            <div className='flex items-center gap-3'>
-                              <div className='flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 font-semibold text-white'>
-                                {member.userId?.profile?.firstName[0]}
-                                {member.userId?.profile?.lastName[0]}
-                              </div>
-                              <div>
-                                <h3 className='font-semibold text-white'>
-                                  {member.userId?.profile?.firstName}{' '}
-                                  {member.userId?.profile?.lastName}
-                                </h3>
-                                <p className='text-sm text-gray-400'>
-                                  @{member.userId?.profile?.username}
-                                </p>
-                                <p className='text-sm text-[#DBF936]'>
-                                  {member.role}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className='text-gray-400'>
-                        No team information available.
-                      </p>
-                    )}
-                  </div>
+                  <ProjectTeam project={project} />
                 </TabsContent>
                 <TabsContent value='milestones' className='mt-0'>
                   <div className='space-y-6 text-white'>
@@ -436,9 +368,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                   </div>
                 </TabsContent>
                 <TabsContent value='comments' className='mt-0'>
-                  <div className='text-white'>
-                    Comments content coming soon...
-                  </div>
+                  <ProjectComments />
                 </TabsContent>
               </div>
             </Tabs>

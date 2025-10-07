@@ -56,7 +56,7 @@ export default function Hero({ className = '' }: HeroProps) {
         });
 
         // Rotation animation per ellipse
-        const direction = i === 0 || i === 1 ? 2 : -1;
+        const direction = i === 1 || i === 1 ? 2 : -1;
         gsap.to(img, {
           rotation: direction * 360,
           ease: 'none',
@@ -93,21 +93,21 @@ export default function Hero({ className = '' }: HeroProps) {
   const ellipses = [
     {
       src: '/elipse1.svg',
-      width: 'w-[50%]',
+      width: 'w-[35%]',
       z: 'z-10',
       opacity: '',
       sizes: '50vw',
     },
     {
       src: '/elipse2.svg',
-      width: 'w-[65%]',
+      width: 'w-[45%]',
       z: 'z-10',
       opacity: '',
       sizes: '90vw',
     },
     {
       src: '/elipse3.svg',
-      width: 'w-[80%]',
+      width: 'w-[55%]',
       z: 'z-10',
       opacity: '',
       sizes: '100vw',
