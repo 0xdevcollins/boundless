@@ -250,7 +250,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                 </div>
               </TabsContent>
               <TabsContent value='comments' className='mt-0'>
-                <ProjectComments />
+                <ProjectComments projectId={project._id} />
               </TabsContent>
             </Tabs>
           </div>
@@ -368,7 +368,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                   </div>
                 </TabsContent>
                 <TabsContent value='comments' className='mt-0'>
-                  <ProjectComments />
+                  <ProjectComments projectId={project._id} />
                 </TabsContent>
               </div>
             </Tabs>
