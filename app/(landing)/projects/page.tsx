@@ -125,7 +125,7 @@ function ProjectsPage() {
             project =>
               project.title.toLowerCase().includes(searchLower) ||
               project.vision.toLowerCase().includes(searchLower) ||
-              project.details.toLowerCase().includes(searchLower) ||
+              project.description.toLowerCase().includes(searchLower) ||
               project.category.toLowerCase().includes(searchLower) ||
               `${project.creator.profile.firstName} ${project.creator.profile.lastName}`
                 .toLowerCase()
@@ -242,15 +242,15 @@ function ProjectsPage() {
         creatorLogo: '/avatar.png', // Default avatar, should be from project.creator.avatar
         projectImage:
           project.media?.logo ||
-          project.logo ||
+          project.media?.logo ||
           '/landing/explore/project-placeholder-1.png',
         projectTitle: project.title,
-        projectDescription: project.vision || project.details,
+        projectDescription: project.vision || project.description,
         status: cardStatus,
         deadlineInDays: deadlineInDays || 0,
         funding: {
           current: project.funding?.raised || 0,
-          goal: project.funding?.goal || project.fundingAmount || 0,
+          goal: project.funding?.goal || 0,
           currency: project.funding?.currency || 'USDC',
         },
         votes:
@@ -332,7 +332,7 @@ function ProjectsPage() {
         onCategoryChange={handleCategory}
       />
 
-      <main className='container mx-auto px-4 py-8'>
+      <main className='mx-auto max-w-[1300px] space-y-[60px] md:space-y-[80px]'>
         {/* Results Summary */}
         {!loading && !error && (
           <div className='mb-6 flex items-center justify-between'>

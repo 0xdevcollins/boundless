@@ -212,7 +212,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                           <div className='flex items-start justify-between'>
                             <div className='flex-1'>
                               <h3 className='text-lg font-semibold text-white'>
-                                {milestone.name}
+                                {milestone.title}
                               </h3>
                               <p className='mt-2 text-gray-300'>
                                 {milestone.description}
@@ -221,13 +221,13 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                                 <span>
                                   Start:{' '}
                                   {new Date(
-                                    milestone.startDate
+                                    milestone.dueDate
                                   ).toLocaleDateString()}
                                 </span>
                                 <span>
                                   End:{' '}
                                   {new Date(
-                                    milestone.endDate
+                                    milestone.dueDate
                                   ).toLocaleDateString()}
                                 </span>
                                 <span className='text-[#DBF936]'>
@@ -250,7 +250,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                 </div>
               </TabsContent>
               <TabsContent value='comments' className='mt-0'>
-                <ProjectComments />
+                <ProjectComments projectId={project._id} />
               </TabsContent>
             </Tabs>
           </div>
@@ -330,7 +330,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                             <div className='flex items-start justify-between'>
                               <div className='flex-1'>
                                 <h3 className='text-lg font-semibold text-white'>
-                                  {milestone.name}
+                                  {milestone.title}
                                 </h3>
                                 <p className='mt-2 text-gray-300'>
                                   {milestone.description}
@@ -339,13 +339,13 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                                   <span>
                                     Start:{' '}
                                     {new Date(
-                                      milestone.startDate
+                                      milestone.dueDate
                                     ).toLocaleDateString()}
                                   </span>
                                   <span>
                                     End:{' '}
                                     {new Date(
-                                      milestone.endDate
+                                      milestone.dueDate
                                     ).toLocaleDateString()}
                                   </span>
                                   <span className='text-[#DBF936]'>
@@ -368,7 +368,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                   </div>
                 </TabsContent>
                 <TabsContent value='comments' className='mt-0'>
-                  <ProjectComments />
+                  <ProjectComments projectId={project._id} />
                 </TabsContent>
               </div>
             </Tabs>

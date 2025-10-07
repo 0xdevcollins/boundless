@@ -400,10 +400,8 @@ class UploadService {
 // Export singleton instance
 export const uploadService = new UploadService();
 
-// Export the class for custom instances
 export { UploadService };
 
-// Convenience functions for common use cases
 export const uploadProjectLogo = async (file: File, projectId: string) => {
   return uploadService.uploadSingle(file, {
     folder: `boundless/projects/${projectId}`,
