@@ -8,22 +8,48 @@ interface ProfileDataProps {
 }
 
 export async function ProfileData({ username }: ProfileDataProps) {
+  const session = await auth();
+
+  // Check if user is authenticated
+  if (!session?.user?.accessToken) {
+    return (
+      <section className='flex min-h-screen items-center justify-center'>
+        <div className='text-red-500'>Please sign in to view profiles</div>
+      </section>
+    );
+  }
+
   try {
-    const session = await auth();
     const isOwnProfile = session?.user?.username === username;
     let userData: GetMeResponse;
 
-    if (isOwnProfile && session?.user?.accessToken) {
+    if (isOwnProfile) {
       userData = await getMe(session.user.accessToken);
     } else {
       userData = await getUserProfileByUsername(
         username,
-        session?.user?.accessToken
+        session.user.accessToken
       );
     }
 
     return <ProfileOverview username={username} user={userData} />;
-  } catch {
+  } catch (error) {
+    // Check if it's an authentication error
+    if (
+      error &&
+      typeof error === 'object' &&
+      'status' in error &&
+      error.status === 401
+    ) {
+      return (
+        <section className='flex min-h-screen items-center justify-center'>
+          <div className='text-red-500'>
+            Session expired. Please sign in again.
+          </div>
+        </section>
+      );
+    }
+
     return (
       <section className='flex min-h-screen items-center justify-center'>
         <div className='text-red-500'>Failed to load user profile</div>

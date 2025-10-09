@@ -364,12 +364,398 @@ export interface CreateCrowdfundingProjectRequest {
   team: CrowdfundingTeamMember[];
   contact: CrowdfundingContact;
   socialLinks?: CrowdfundingSocialLink[];
+  signer: string;
 }
 
+// Step 1: Prepare Project Response
+export interface PrepareCrowdfundingProjectResponse {
+  success: boolean;
+  message: string;
+  data: {
+    unsignedXdr: string; // Transaction to sign
+    escrowAddress: string; // Generated escrow address
+    network: string; // Network identifier
+    projectData: object; // Prepared project data
+    milestoneAmount: number; // Calculated milestone amount
+    mappedMilestones: Array<object>; // Processed milestones
+    mappedTeam: Array<object>; // Processed team data
+  };
+}
+
+// Step 2: Confirm Project Response
+export interface ConfirmCrowdfundingProjectRequest {
+  signedXdr: string; // Signed transaction from user's wallet
+  escrowAddress: string; // From step 1 response
+  projectData: object; // From step 1 response
+  mappedMilestones: Array<object>; // From step 1 response
+  mappedTeam: Array<object>; // From step 1 response
+}
+
+export interface ConfirmCrowdfundingProjectResponse {
+  success: boolean;
+  message: string;
+  data: {
+    project: object; // Created project
+    crowdfund: object; // Associated crowdfund record
+  };
+}
+
+// Legacy response type for backward compatibility
 export interface CreateCrowdfundingProjectResponse {
   success: boolean;
   message: string;
   data: {
+    project: {
+      _id: string;
+      title: string;
+      description: string;
+      category: string;
+      status: string;
+      creator: {
+        profile: {
+          firstName: string;
+          lastName: string;
+          username: string;
+        };
+        _id: string;
+      };
+      owner: {
+        type: string;
+      };
+      vision: string;
+      githubUrl?: string;
+      projectWebsite?: string;
+      demoVideo?: string;
+      socialLinks: Array<{
+        platform: string;
+        url: string;
+        _id: string;
+      }>;
+      contact: {
+        primary: string;
+        backup: string;
+      };
+      funding: {
+        goal: number;
+        raised: number;
+        currency: string;
+        endDate: string;
+        contributors: Array<object>;
+      };
+      voting: {
+        startDate: string;
+        endDate: string;
+        totalVotes: number;
+        positiveVotes: number;
+        negativeVotes: number;
+        voters: Array<object>;
+      };
+      milestones: Array<{
+        title: string;
+        description: string;
+        amount: number;
+        dueDate: string;
+        status: string;
+        _id: string;
+      }>;
+      team: Array<{
+        userId: string;
+        role: string;
+        joinedAt: string;
+        _id: string;
+      }>;
+      media: {
+        banner: string;
+        logo: string;
+        thumbnail: string;
+      };
+      documents: {
+        whitepaper: string;
+        pitchDeck: string;
+      };
+      tags: Array<object>;
+      grant: {
+        isGrant: boolean;
+        totalBudget: number;
+        totalDisbursed: number;
+        proposalsReceived: number;
+        proposalsApproved: number;
+        status: string;
+        applications: Array<object>;
+      };
+      summary: string;
+      type: string;
+      votes: number;
+      stakeholders: {
+        serviceProvider: string;
+        approver: string;
+        releaseSigner: string;
+        disputeResolver: string;
+        receiver: string;
+        platformAddress: string;
+      };
+      trustlessWorkStatus: string;
+      escrowType: string;
+      createdAt: string;
+      updatedAt: string;
+      __v: number;
+    };
+    crowdfund: {
+      projectId: string;
+      thresholdVotes: number;
+      voteDeadline: string;
+      totalVotes: number;
+      status: string;
+      _id: string;
+      createdAt: string;
+      updatedAt: string;
+      __v: number;
+      isVotingActive: boolean;
+      voteProgress: number;
+      id: string;
+    };
+    escrowResponse: {
+      status: string;
+      unsignedTransaction: string;
+    };
+  };
+}
+
+// Crowdfunding Project Response Types
+export interface CrowdfundingProject {
+  _id: string;
+  title: string;
+  description: string;
+  category: string;
+  status: string;
+  creator: {
+    profile: {
+      firstName: string;
+      lastName: string;
+      username: string;
+    };
+    _id: string;
+  };
+  owner: {
+    type: string;
+  };
+  vision: string;
+  githubUrl?: string;
+  projectWebsite?: string;
+  demoVideo?: string;
+  socialLinks: Array<{
+    platform: string;
+    url: string;
+    _id: string;
+  }>;
+  contact: {
+    primary: string;
+    backup: string;
+  };
+  funding: {
+    goal: number;
+    raised: number;
+    currency: string;
+    endDate: string;
+    contributors: Array<object>;
+  };
+  voting: {
+    startDate: string;
+    endDate: string;
+    totalVotes: number;
+    positiveVotes: number;
+    negativeVotes: number;
+    voters: Array<object>;
+  };
+  milestones: Array<{
+    title: string;
+    description: string;
+    amount: number;
+    dueDate: string;
+    status: string;
+    _id: string;
+  }>;
+  team: Array<{
+    profile: {
+      firstName: string;
+      lastName: string;
+      username: string;
+    };
+    role: string;
+    joinedAt: string;
+    _id: string;
+  }>;
+  media: {
+    banner: string;
+    logo: string;
+    thumbnail: string;
+  };
+  documents: {
+    whitepaper: string;
+    pitchDeck: string;
+  };
+  tags: Array<object>;
+  grant: {
+    isGrant: boolean;
+    totalBudget: number;
+    totalDisbursed: number;
+    proposalsReceived: number;
+    proposalsApproved: number;
+    status: string;
+    applications: Array<object>;
+  };
+  summary: string;
+  type: string;
+  votes: number;
+  stakeholders: {
+    serviceProvider: string;
+    approver: string;
+    releaseSigner: string;
+    disputeResolver: string;
+    receiver: string;
+    platformAddress: string;
+  };
+  trustlessWorkStatus: string;
+  escrowType: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface CrowdfundData {
+  _id: string;
+  projectId: string;
+  thresholdVotes: number;
+  voteDeadline: string;
+  totalVotes: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  isVotingActive: boolean;
+  voteProgress: number;
+  id: string;
+}
+
+// Escrow Response Types
+export interface EscrowResponse {
+  status: string;
+  unsignedTransaction: string;
+}
+
+// Stakeholders for trustless system
+export interface Stakeholders {
+  serviceProvider: string;
+  approver: string;
+  releaseSigner: string;
+  disputeResolver: string;
+  receiver: string;
+  platformAddress: string;
+}
+
+// Grant system types
+export interface GrantData {
+  isGrant: boolean;
+  totalBudget: number;
+  totalDisbursed: number;
+  proposalsReceived: number;
+  proposalsApproved: number;
+  status: string;
+  applications: Array<object>;
+}
+
+export interface GetCrowdfundingProjectsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    projects: CrowdfundingProject[];
+    pagination: {
+      current: number;
+      pages: number;
+      total: number;
+    };
+  };
+}
+
+export interface GetCrowdfundingProjectResponse {
+  success: boolean;
+  message: string;
+  data: {
+    project: CrowdfundingProject;
+    crowdfund: CrowdfundData;
+  };
+}
+
+export interface UpdateCrowdfundingProjectRequest {
+  title?: string;
+  logo?: string;
+  vision?: string;
+  category?: string;
+  details?: string;
+  fundingAmount?: number;
+  githubUrl?: string;
+  gitlabUrl?: string;
+  bitbucketUrl?: string;
+  projectWebsite?: string;
+  demoVideo?: string;
+  milestones?: CrowdfundingMilestone[];
+  team?: CrowdfundingTeamMember[];
+  contact?: CrowdfundingContact;
+  socialLinks?: CrowdfundingSocialLink[];
+}
+
+export interface UpdateCrowdfundingProjectResponse {
+  success: boolean;
+  message: string;
+  data: {
+    project: CrowdfundingProject;
+  };
+}
+
+export interface DeleteCrowdfundingProjectResponse {
+  success: boolean;
+  message: string;
+}
+
+// Funding Types
+export interface PrepareFundingRequest {
+  amount: number;
+  signer: string;
+}
+
+export interface PrepareFundingResponse {
+  success: boolean;
+  message: string;
+  data: {
+    unsignedXdr: string;
+    contractId: string;
+    amount: number;
     projectId: string;
+    projectTitle: string;
+    currentRaised: number;
+    fundingGoal: number;
+    remainingGoal: number;
+  };
+}
+
+export interface ConfirmFundingRequest {
+  signedXdr: string;
+  transactionHash: string;
+  amount: number;
+}
+
+export interface ConfirmFundingResponse {
+  success: boolean;
+  message: string;
+  data: {
+    tx: object;
+    project: CrowdfundingProject;
+    funding: {
+      amount: number;
+      transactionHash: string;
+      newTotalRaised: number;
+      isFullyFunded: boolean;
+      remainingGoal: number;
+    };
   };
 }

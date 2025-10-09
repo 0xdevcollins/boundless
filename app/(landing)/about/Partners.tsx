@@ -16,7 +16,7 @@ const Partners = () => {
         }}
       >
         Want to collaborate?{' '}
-        <Link href={''} className='text-primary underline'>
+        <Link href={'/contact'} className='text-primary underline'>
           Contact Us
         </Link>
       </p>

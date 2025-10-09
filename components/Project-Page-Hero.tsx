@@ -7,16 +7,16 @@ export default function ProjectPageHero() {
   return (
     <div className='relative min-h-screen overflow-hidden bg-black text-white'>
       <div className='pointer-events-none absolute inset-0'>
-        <div className='absolute bottom-1/3 left-[220px] h-[393px] w-[476px] rounded-[476px] border-[20px] border-[#DBFFB7] opacity-[0.30px] mix-blend-overlay blur-[25px] md:block' />
+        <div className='absolute bottom-1/3 left-[220px] h-[393px] w-[476px] rounded-[476px] border-[20px] border-[#DBFFB7] opacity-[0.30px] mix-blend-overlay blur-[25px] md:block lg:!hidden' />
         <div
-          className='absolute bottom-1/3 left-[200px] h-[397px] w-[493px] rounded-[493px] border-[100px] border-[#6DC01A] opacity-[0.15px] mix-blend-hard-light blur-[100px] md:block'
+          className='absolute bottom-1/3 left-[200px] h-[397px] w-[493px] rounded-[493px] border-[100px] border-[#6DC01A] opacity-[0.15px] mix-blend-hard-light blur-[100px] md:block lg:!hidden'
           style={{
             background:
               'linear-gradient(270deg, rgba(3, 3, 3, 0.00) 0%, rgba(109, 192, 26, 0.64) 100%)',
           }}
         />
         <div
-          className='absolute top-1/4 left-[100px] h-[560px] w-[696px] rounded-[696px] bg-[#A7F950] opacity-10 blur-[140px] md:block'
+          className='absolute top-1/4 left-[100px] h-[560px] w-[696px] rounded-[696px] bg-[#A7F950] opacity-10 blur-[140px] md:block lg:!hidden'
           style={{
             background:
               'linear-gradient(270deg, rgba(3, 3, 3, 0.00) 0%, rgba(167, 249, 80, 0.64) 100%)',
@@ -24,8 +24,8 @@ export default function ProjectPageHero() {
         />
       </div>
 
-      <div className='relative z-10 container mx-auto px-4 py-8 sm:px-6 md:px-8 lg:px-8 lg:py-16'>
-        <div className='grid min-h-[85vh] items-center gap-6 md:grid-cols-2 md:gap-8 lg:gap-12'>
+      <div className='relative z-10'>
+        <div className='mx-auto grid min-h-[85vh] max-w-[1300px] items-center gap-6 space-y-[60px] md:grid-cols-2 md:gap-8 md:space-y-[80px] lg:gap-12'>
           <div className='z-10 space-y-6 text-left md:space-y-6 lg:space-y-8'>
             <h1 className='text-3xl leading-[1.1] tracking-tight sm:text-4xl md:text-4xl lg:text-5xl'>
               <span className='bg-gradient-to-r from-[#3AE6B2] to-[#A7F95080] bg-clip-text text-transparent'>
@@ -69,14 +69,14 @@ export default function ProjectPageHero() {
             </div>
           </div>
           <div
-            className='bg-gradient-radial pointer-events-none absolute inset-0 rounded-lg from-transparent via-transparent to-black md:block'
+            className='bg-gradient-radial pointer-events-none absolute inset-0 hidden rounded-lg from-transparent via-transparent to-black md:block'
             style={{
               background:
                 'linear-gradient(0deg, #030303 0%, rgba(3, 3, 3, 0.80) 20%, rgba(3, 3, 3, 0.44) 41.63%, rgba(3, 3, 3, 0.02) 55.9%, rgba(3, 3, 3, 0.90) 80%, #030303 100%)',
             }}
           />
           <div
-            className='bg-gradient-radial pointer-events-none absolute inset-0 rounded-lg from-transparent via-transparent to-black md:block'
+            className='bg-gradient-radial pointer-events-none absolute inset-0 hidden rounded-lg from-transparent via-transparent to-black md:block'
             style={{
               background:
                 'linear-gradient(270deg, #030303 0%, rgba(3, 3, 3, 0.24) 18%, rgba(3, 3, 3, 0.24) 40%, #030303 53.9%, rgba(3, 3, 3, 0.00) 100%)',

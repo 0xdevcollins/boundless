@@ -6,6 +6,18 @@ import {
   ProjectInitRequest,
   CreateCrowdfundingProjectRequest,
   CreateCrowdfundingProjectResponse,
+  PrepareCrowdfundingProjectResponse,
+  ConfirmCrowdfundingProjectRequest,
+  ConfirmCrowdfundingProjectResponse,
+  GetCrowdfundingProjectsResponse,
+  GetCrowdfundingProjectResponse,
+  UpdateCrowdfundingProjectRequest,
+  UpdateCrowdfundingProjectResponse,
+  DeleteCrowdfundingProjectResponse,
+  PrepareFundingRequest,
+  PrepareFundingResponse,
+  ConfirmFundingRequest,
+  ConfirmFundingResponse,
 } from './types';
 
 export const initProject = async (data: ProjectInitRequest) => {
@@ -104,9 +116,114 @@ export const generateCampaignLink = async (_projectId: string) => {
   });
 };
 
+// Legacy function for backward compatibility
 export const createCrowdfundingProject = async (
   data: CreateCrowdfundingProjectRequest
 ): Promise<CreateCrowdfundingProjectResponse> => {
   const res = await api.post('/crowdfunding/projects', data);
+  return res.data;
+};
+
+// Step 1: Prepare project and get unsigned transaction
+export const prepareCrowdfundingProject = async (
+  data: CreateCrowdfundingProjectRequest
+): Promise<PrepareCrowdfundingProjectResponse> => {
+  const res = await api.post('/crowdfunding/projects/prepare', data);
+  return res.data;
+};
+
+// Step 2: Submit signed transaction and create project
+export const confirmCrowdfundingProject = async (
+  data: ConfirmCrowdfundingProjectRequest
+): Promise<ConfirmCrowdfundingProjectResponse> => {
+  const res = await api.post('/crowdfunding/projects/confirm', data);
+  return res.data;
+};
+
+// Crowdfunding Project API Functions
+
+/**
+ * Get all crowdfunding projects with pagination and filtering
+ */
+export const getCrowdfundingProjects = async (
+  page = 1,
+  limit = 10,
+  filters?: {
+    category?: string;
+    status?: string;
+  }
+): Promise<GetCrowdfundingProjectsResponse> => {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+
+  if (filters?.category) {
+    params.append('category', filters.category);
+  }
+
+  if (filters?.status) {
+    params.append('status', filters.status);
+  }
+
+  const res = await api.get(`/crowdfunding/projects?${params.toString()}`);
+  return res.data;
+};
+
+/**
+ * Get a single crowdfunding project by ID
+ */
+export const getCrowdfundingProject = async (
+  projectId: string
+): Promise<GetCrowdfundingProjectResponse> => {
+  const res = await api.get(`/crowdfunding/projects/${projectId}`);
+  return res.data;
+};
+
+/**
+ * Update a crowdfunding project
+ */
+export const updateCrowdfundingProject = async (
+  projectId: string,
+  data: UpdateCrowdfundingProjectRequest
+): Promise<UpdateCrowdfundingProjectResponse> => {
+  const res = await api.put(`/crowdfunding/projects/${projectId}`, data);
+  return res.data;
+};
+
+/**
+ * Delete a crowdfunding project
+ */
+export const deleteCrowdfundingProject = async (
+  projectId: string
+): Promise<DeleteCrowdfundingProjectResponse> => {
+  const res = await api.delete(`/crowdfunding/projects/${projectId}`);
+  return res.data;
+};
+
+/**
+ * Prepare funding for a crowdfunding project
+ * Step 1: Get unsigned transaction for funding
+ */
+export const prepareProjectFunding = async (
+  projectId: string,
+  data: PrepareFundingRequest
+): Promise<PrepareFundingResponse> => {
+  const res = await api.post(`/crowdfunding/projects/${projectId}/fund`, data);
+  return res.data;
+};
+
+/**
+ * Confirm funding for a crowdfunding project
+ * Step 2: Submit signed transaction and update project
+ */
+export const confirmProjectFunding = async (
+  projectId: string,
+  data: ConfirmFundingRequest
+): Promise<ConfirmFundingResponse> => {
+  const res = await api.post(
+    `/crowdfunding/projects/${projectId}/fund/confirm`,
+    data
+  );
   return res.data;
 };

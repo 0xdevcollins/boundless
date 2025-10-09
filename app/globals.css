@@ -1,10 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @custom-variant dark (&:is(.dark *));
 
 @theme {
   --font-inter: 'Inter', sans-serif;
+  --color-gray-50: #f7f7f7;
+  --color-gray-75: #f2f2f2;
+  --color-gray-100: #ececec;
+  --color-gray-200: #e6e6e6;
+  --color-gray-300: #dfdfdf;
+  --color-gray-400: #d9d9d9;
+  --color-gray-500: #b5b5b5;
+  --color-gray-600: #919191;
+  --color-gray-700: #787878;
+  --color-gray-800: #484848;
+  --color-gray-900: #2b2b2b;
 }
 /* Custom scrollbar styles for comment modal */
 .custom-scrollbar {

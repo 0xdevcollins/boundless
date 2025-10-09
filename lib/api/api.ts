@@ -25,6 +25,27 @@ export interface RequestConfig {
   skipAuthRefresh?: boolean;
 }
 
+// Check if token is expired
+const isTokenExpired = (token: string): boolean => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join('')
+    );
+    const payload = JSON.parse(jsonPayload);
+    const currentTime = Math.floor(Date.now() / 1000);
+    return payload.exp < currentTime;
+  } catch {
+    return true;
+  }
+};
+
 // Token refresh function
 const refreshAccessToken = async (): Promise<string | null> => {
   try {
@@ -34,7 +55,10 @@ const refreshAccessToken = async (): Promise<string | null> => {
     }
 
     const refreshToken = Cookies.get('refreshToken');
-    if (!refreshToken) {
+    if (!refreshToken || isTokenExpired(refreshToken)) {
+      // Clear auth data if refresh token is expired
+      const authStore = useAuthStore.getState();
+      authStore.clearAuth();
       return null;
     }
 
@@ -66,7 +90,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
 const createClientApi = (): AxiosInstance => {
   const instance = axios.create({
     baseURL: API_BASE_URL,
-    timeout: 10000,
+    timeout: 30000,
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
@@ -98,6 +122,17 @@ const createClientApi = (): AxiosInstance => {
       if (typeof window !== 'undefined') {
         const accessToken = Cookies.get('accessToken');
         if (accessToken && !config.headers?.Authorization) {
+          // Check if token is expired before making the request
+          if (isTokenExpired(accessToken)) {
+            // Clear auth data if token is expired
+            const authStore = useAuthStore.getState();
+            authStore.clearAuth();
+            return Promise.reject({
+              message: 'Token expired',
+              status: 401,
+              code: 'TOKEN_EXPIRED',
+            });
+          }
           config.headers = config.headers || {};
           config.headers.Authorization = `Bearer ${accessToken}`;
         }
@@ -147,7 +182,7 @@ const createClientApi = (): AxiosInstance => {
 
             // Only redirect if we're on the client side
             if (typeof window !== 'undefined') {
-              window.location.href = '/auth/signin';
+              window.location.href = '/auth';
             }
 
             return Promise.reject({

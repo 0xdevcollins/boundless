@@ -1,0 +1,194 @@
+.w-md-editor {
+  background-color: #1a1a1a !important;
+  border: none !important;
+}
+
+.w-md-editor-toolbar {
+  background-color: #1a1a1a !important;
+  border-bottom: 1px solid #484848 !important;
+  padding: 15px 12px !important;
+}
+
+.w-md-editor-toolbar button {
+  color: #b5b5b5 !important;
+  background-color: transparent !important;
+  border: none !important;
+  padding: 10px !important;
+  margin: 2px !important;
+  border-radius: 4px !important;
+  transition: all 0.2s ease !important;
+  font-size: 15px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+}
+
+.w-md-editor-toolbar button svg {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+.w-md-editor-toolbar button:hover {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+.w-md-editor-toolbar button.active {
+  background-color: #a7f950 !important;
+  color: #000000 !important;
+}
+
+/* Removed vertical demarcators/dividers */
+.w-md-editor-toolbar .w-md-editor-divider {
+  display: none !important;
+}
+
+.w-md-editor-text-pre,
+.w-md-editor-text-input {
+  color: #ffffff !important;
+  background: #101010 !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+/* Removed conflicting color override for text-pre */
+.w-md-editor-text-pre > * {
+  color: #ffffff !important;
+}
+
+.w-md-editor-text-input::placeholder {
+  color: #919191 !important;
+}
+
+.w-md-editor-preview {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+.w-md-editor-preview h1,
+.w-md-editor-preview h2,
+.w-md-editor-preview h3,
+.w-md-editor-preview h4,
+.w-md-editor-preview h5,
+.w-md-editor-preview h6 {
+  color: #ffffff !important;
+}
+
+.w-md-editor-preview p {
+  color: #ffffff !important;
+}
+
+.w-md-editor-preview a {
+  color: #a7f950 !important;
+}
+
+.w-md-editor-preview code {
+  background-color: #2a2a2a !important;
+  color: #a7f950 !important;
+  padding: 2px 4px !important;
+  border-radius: 3px !important;
+}
+
+.w-md-editor-preview pre {
+  background-color: #2a2a2a !important;
+  color: #ffffff !important;
+  border: 1px solid #484848 !important;
+}
+
+.w-md-editor-preview blockquote {
+  border-left: 4px solid #a7f950 !important;
+  background-color: #2a2a2a !important;
+  color: #b5b5b5 !important;
+}
+
+.w-md-editor-preview ul,
+.w-md-editor-preview ol {
+  color: #ffffff !important;
+}
+
+.w-md-editor-preview li {
+  color: #ffffff !important;
+}
+
+.w-md-editor-preview table {
+  border: 1px solid #484848 !important;
+}
+
+.w-md-editor-preview th,
+.w-md-editor-preview td {
+  border: 1px solid #484848 !important;
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+.w-md-editor-preview th {
+  background-color: #2a2a2a !important;
+}
+
+/* Custom toolbar styling */
+.w-md-editor-toolbar .w-md-editor-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Custom button styling for specific commands */
+.w-md-editor-toolbar button[data-name='bold'] {
+  font-weight: bold !important;
+}
+
+.w-md-editor-toolbar button[data-name='italic'] {
+  font-style: italic !important;
+}
+
+.w-md-editor-toolbar button[data-name='strikethrough'] {
+  text-decoration: line-through !important;
+}
+
+.w-md-editor-text {
+  height: 100vh !important;
+  background-color: #101010 !important;
+}
+
+.wmde-markdown-color {
+  color: #ffffff !important;
+}
+
+.w-md-editor-text-input,
+.w-md-editor-text-input textarea {
+  color: #ffffff !important;
+  caret-color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+.w-md-editor-area textarea,
+.w-md-editor-input textarea,
+textarea.w-md-editor-text-input {
+  color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+/* Override any inherited black text color */
+.w-md-editor-text * {
+  color: inherit !important;
+}
+
+.w-md-editor-text,
+.w-md-editor-area,
+.w-md-editor-input {
+  color: #ffffff !important;
+}
+
+.w-md-editor-content {
+  border: 1px solid transparent !important;
+  transition: border-color 0.2s ease !important;
+}
+
+.w-md-editor-content:has(.w-md-editor-text:focus-within) {
+  border-color: #a7f950 !important;
+}
+
+.w-md-editor-toolbar button[data-name='help'],
+.w-md-editor-toolbar button[data-name='quote'],
+.w-md-editor-toolbar button[data-name='hr'] {
+  display: none !important;
+}

@@ -48,6 +48,19 @@ function decodeJWT(token: string): JWTPayload | null {
   }
 }
 
+// Check if token is expired
+function isTokenExpired(token: string): boolean {
+  try {
+    const payload = decodeJWT(token);
+    if (!payload || !payload.exp) return true;
+
+    const currentTime = Math.floor(Date.now() / 1000);
+    return payload.exp < currentTime;
+  } catch {
+    return true;
+  }
+}
+
 export interface User {
   id: string;
   email: string;
@@ -145,6 +158,11 @@ export const useAuthStore = create<AuthState>()(
         try {
           set({ isLoading: true, error: null });
 
+          // Check if token is expired before proceeding
+          if (isTokenExpired(accessToken)) {
+            throw new Error('Access token has expired');
+          }
+
           get().setTokens(accessToken, refreshToken);
 
           const user = await getMe(accessToken);
@@ -182,6 +200,13 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: async () => {
+        const currentState = get();
+
+        // Prevent multiple logout calls
+        if (currentState.isLoading) {
+          return;
+        }
+
         try {
           set({ isLoading: true });
 
@@ -218,10 +243,59 @@ export const useAuthStore = create<AuthState>()(
         return new Promise<void>((resolve, reject) => {
           refreshTimeout = setTimeout(async () => {
             try {
-              const { accessToken } = get();
+              const { accessToken, refreshToken } = get();
 
               if (!accessToken) {
                 throw new Error('No access token available');
+              }
+
+              // Check if token is expired
+              if (isTokenExpired(accessToken)) {
+                // Try to refresh the token if we have a refresh token
+                if (refreshToken && !isTokenExpired(refreshToken)) {
+                  try {
+                    // This will be handled by the API interceptor
+                    const user = await getMe(accessToken);
+                    // If we get here, the token was refreshed by the interceptor
+                    const transformedUser: User = {
+                      id: (user._id || user.id) as string,
+                      email: user.email as string,
+                      name: (user.profile?.firstName || user.name) as
+                        | string
+                        | null,
+                      image: (user.profile?.avatar || user.image) as
+                        | string
+                        | null,
+                      username: (user.profile?.username || user.username) as
+                        | string
+                        | null,
+                      role: (user.roles?.[0] === 'ADMIN' ? 'ADMIN' : 'USER') as
+                        | 'USER'
+                        | 'ADMIN',
+                      isVerified: user.isVerified as boolean | undefined,
+                      profile: user.profile as User['profile'],
+                    };
+
+                    set({
+                      user: transformedUser,
+                      isAuthenticated: true,
+                      isLoading: false,
+                    });
+                    resolve();
+                    return;
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  } catch (refreshError) {
+                    // Refresh failed, clear auth data
+                    get().clearAuth();
+                    reject(new Error('Session expired. Please login again.'));
+                    return;
+                  }
+                } else {
+                  // No valid refresh token, clear auth data
+                  get().clearAuth();
+                  reject(new Error('Session expired. Please login again.'));
+                  return;
+                }
               }
 
               set({ isLoading: true, error: null });
@@ -259,7 +333,11 @@ export const useAuthStore = create<AuthState>()(
               });
 
               // If refresh fails, clear auth data
-              if (error instanceof Error && error.message.includes('401')) {
+              if (
+                error instanceof Error &&
+                (error.message.includes('401') ||
+                  error.message.includes('expired'))
+              ) {
                 get().clearAuth();
               }
 
@@ -269,7 +347,7 @@ export const useAuthStore = create<AuthState>()(
         });
       },
 
-      clearAuth: () => {
+      clearAuth: async () => {
         set({
           user: null,
           accessToken: null,
@@ -278,9 +356,11 @@ export const useAuthStore = create<AuthState>()(
           isLoading: false,
           error: null,
         });
+        // await signOut({ redirect: false });
 
         // Clear cookies only on client side
         if (typeof window !== 'undefined') {
+          Cookies.remove('authjs.session-token');
           Cookies.remove('accessToken');
           Cookies.remove('refreshToken');
         }
@@ -295,6 +375,13 @@ export const useAuthStore = create<AuthState>()(
 
       syncWithSession: async sessionUser => {
         if (sessionUser && sessionUser.accessToken) {
+          // Check if token is expired before proceeding
+          if (isTokenExpired(sessionUser.accessToken)) {
+            // Clear auth data if token is expired
+            get().clearAuth();
+            return;
+          }
+
           try {
             // Use the access token to fetch fresh user data
             const user = await getMe(sessionUser.accessToken || '');
@@ -359,22 +446,45 @@ export const useAuthStore = create<AuthState>()(
       onRehydrateStorage: () => state => {
         // Rehydrate cookies from localStorage on app start (client side only)
         if (typeof window !== 'undefined' && state?.accessToken) {
+          // Check if access token is expired on app startup
+          if (isTokenExpired(state.accessToken)) {
+            // Clear expired tokens
+            state.accessToken = null;
+            state.refreshToken = null;
+            state.user = null;
+            state.isAuthenticated = false;
+            Cookies.remove('accessToken');
+            Cookies.remove('refreshToken');
+            return;
+          }
+
           Cookies.set('accessToken', state.accessToken);
         }
         if (typeof window !== 'undefined' && state?.refreshToken) {
-          Cookies.set('refreshToken', state.refreshToken);
+          // Check if refresh token is also expired
+          if (isTokenExpired(state.refreshToken)) {
+            state.refreshToken = null;
+            Cookies.remove('refreshToken');
+          } else {
+            Cookies.set('refreshToken', state.refreshToken);
+          }
         }
 
         // Initialize auth state from cookies if we have tokens but no user
         if (
           typeof window !== 'undefined' &&
           state?.accessToken &&
-          !state?.user
+          !state?.user &&
+          !isTokenExpired(state.accessToken)
         ) {
           // This will trigger a refresh of user data
           const timeoutId = setTimeout(() => {
             const store = useAuthStore.getState();
-            if (store.accessToken && !store.user) {
+            if (
+              store.accessToken &&
+              !store.user &&
+              !isTokenExpired(store.accessToken)
+            ) {
               store.refreshUser().catch(() => {
                 // Silently handle refresh failure
               });

@@ -7,6 +7,7 @@ import {
   generateOrganizationStructuredData,
   generateWebsiteStructuredData,
 } from '@/lib/structured-data';
+import NextTopLoader from 'nextjs-toploader';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -86,6 +87,8 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} font-inter antialiased`}>
+        <NextTopLoader />
+
         <Providers>
           {children}
           <Toaster />

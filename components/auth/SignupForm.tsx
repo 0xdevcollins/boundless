@@ -106,10 +106,10 @@ const SignupForm = ({ onLoadingChange }: SignupFormProps) => {
         //   });
         // }
       }
-    } catch {
+    } catch (error) {
       form.setError('root', {
         type: 'manual',
-        message: 'Failed to create account. Please try again.',
+        message: `Failed to create account. Please try again. ${error instanceof Error ? error.message : String(error)}`,
       });
     }
   };

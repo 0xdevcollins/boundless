@@ -29,6 +29,7 @@ import { User, LogOut, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import WalletConnectButton from '../wallet/WalletConnectButton';
 import CreateProjectModal from './project/CreateProjectModal';
+import { useAuthStore } from '@/lib/stores/auth-store';
 
 gsap.registerPlugin(useGSAP);
 
@@ -156,9 +157,9 @@ export function Navbar() {
   return (
     <nav
       ref={navbarRef}
-      className='blur-s[12px] sticky top-0 z-50 -mt-11 max-h-[88px] bg-[#030303A3]'
+      className='sticky top-0 z-50 -mt-11 max-h-[88px] bg-[#030303A3] backdrop-blur-[12px]'
     >
-      <div className='px-5 py-5 md:px-[50px] lg:px-[100px]'>
+      <div className='mx-auto max-w-[1440px] px-5 py-5 md:px-[50px] lg:px-[100px]'>
         <div
           className={cn(
             'grid grid-cols-2 items-center md:grid-cols-[auto_1fr_auto] md:justify-items-center',
@@ -199,16 +200,10 @@ export function Navbar() {
             ) : isAuthenticated ? (
               <AuthenticatedNav user={user} />
             ) : (
-              <BoundlessButton>
-                <Link href='/auth'>Get Started</Link>
-              </BoundlessButton>
+              <UnauthenticatedNav />
             )}
           </div>
-          <MobileMenu
-            isAuthenticated={isAuthenticated}
-            isLoading={isLoading}
-            user={user}
-          />
+          <MobileMenu isAuthenticated={isAuthenticated} user={user} />
         </div>
       </div>
     </nav>
@@ -227,6 +222,7 @@ function AuthenticatedNav({
   } | null;
 }) {
   const { logout } = useAuthActions();
+  const { isLoading } = useAuthStore();
   const [createProjectModalOpen, setCreateProjectModalOpen] = useState(false);
   return (
     <div className='flex items-center space-x-3'>
@@ -279,7 +275,11 @@ function AuthenticatedNav({
                   user?.email?.charAt(0) ||
                   'U'} */}
                 <Image
-                  src='https://i.pravatar.cc/150?img=10'
+                  src={
+                    user?.image ||
+                    user?.profile?.avatar ||
+                    'https://i.pravatar.cc/150?img=10'
+                  }
                   alt='logo'
                   width={116}
                   height={22}
@@ -314,7 +314,7 @@ function AuthenticatedNav({
             asChild
           >
             <Link
-              href={`/profile/${user?.username}`}
+              href='/me'
               className='group-hover:!text-primary flex items-center'
             >
               <User className='teext-white group-hover:!text-primary mr-2 h-4 w-4 text-white' />
@@ -344,11 +344,12 @@ function AuthenticatedNav({
           </DropdownMenuItem>
           <DropdownMenuSeparator className='h-[0.5px] bg-[#2B2B2B]' />
           <DropdownMenuItem
-            onClick={() => logout()}
-            className='group flex cursor-pointer items-center px-6 pt-3 pb-6 text-red-600 hover:!bg-transparent hover:!text-red-700'
+            onClick={() => !isLoading && logout()}
+            disabled={isLoading}
+            className='group flex cursor-pointer items-center px-6 pt-3 pb-6 text-red-600 hover:!bg-transparent hover:!text-red-700 disabled:cursor-not-allowed disabled:opacity-50'
           >
             <LogOut className='mr-2 h-4 w-4 text-red-600 group-hover:!text-red-700' />
-            Sign Out
+            {isLoading ? 'Signing Out...' : 'Sign Out'}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -360,13 +361,49 @@ function AuthenticatedNav({
   );
 }
 
+// In development, show a lightweight CTA that opens CreateProjectModal
+// even for unauthenticated users, so designers/QA can test the flow.
+function UnauthenticatedNav() {
+  const [createProjectModalOpen, setCreateProjectModalOpen] = useState(false);
+
+  const showDevAddProject =
+    process.env.NODE_ENV !== 'production' &&
+    (process.env.NEXT_PUBLIC_SHOW_ADD_PROJECT_FOR_GUESTS === 'true' || true);
+
+  if (!showDevAddProject) {
+    return (
+      <BoundlessButton>
+        <Link href='/auth'>Get Started</Link>
+      </BoundlessButton>
+    );
+  }
+
+  return (
+    <div className='flex items-center space-x-3'>
+      <BoundlessButton
+        variant='outline'
+        onClick={() => setCreateProjectModalOpen(true)}
+        className='border-white/20 text-white hover:bg-white/10'
+      >
+        <Plus className='mr-2 h-4 w-4' />
+        Add Project
+      </BoundlessButton>
+      <BoundlessButton>
+        <Link href='/auth'>Sign in</Link>
+      </BoundlessButton>
+      <CreateProjectModal
+        open={createProjectModalOpen}
+        setOpen={setCreateProjectModalOpen}
+      />
+    </div>
+  );
+}
+
 function MobileMenu({
   isAuthenticated,
-  isLoading,
   user,
 }: {
   isAuthenticated: boolean;
-  isLoading: boolean;
   user: {
     name?: string | null;
     email?: string | null;
@@ -381,6 +418,7 @@ function MobileMenu({
   const mobileMenuItemsRef = useRef<HTMLDivElement>(null);
   const mobileCTARef = useRef<HTMLDivElement>(null);
   const { logout } = useAuthActions();
+  const { isLoading } = useAuthStore();
   const [createProjectModalOpen, setCreateProjectModalOpen] = useState(false);
   useGSAP(
     () => {
@@ -592,9 +630,10 @@ function MobileMenu({
                   className='w-full'
                   fullWidth
                   variant='outline'
-                  onClick={() => logout()}
+                  onClick={() => !isLoading && logout()}
+                  disabled={isLoading}
                 >
-                  Sign Out
+                  {isLoading ? 'Signing Out...' : 'Sign Out'}
                 </BoundlessButton>
               </div>
             ) : (
