@@ -3,12 +3,15 @@ import { generatePageMetadata } from '@/lib/metadata';
 import WaitlistForm from '@/components/waitlist/WaitlistForm';
 import BeamBackground from '@/components/landing-page/BeamBackground';
 import Image from 'next/image';
+import { Navbar } from '@/components/landing-page';
 
 export const metadata: Metadata = generatePageMetadata('waitlist');
 
 export default function WaitlistPage() {
   return (
-    <div className=''>
+    <div className='bg-background relative flex min-h-screen flex-col pt-5 md:pt-11'>
+      <Navbar />
+
       <Image
         src='/waitlist-bg.svg'
         alt='waitlist-bg'
