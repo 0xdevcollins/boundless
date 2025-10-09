@@ -146,6 +146,20 @@ export function ProjectSidebar({
           <ArrowUp className='h-5 w-5' />
           <span className=''>Upvote</span>
         </Button>
+
+        {/* Funding Button */}
+        {/* <FundingModal
+          projectId={project._id}
+          projectTitle={project.title}
+          currentRaised={project.funding?.raised || 0}
+          fundingGoal={project.funding?.goal || 0}
+        >
+          <Button className='flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 text-base font-semibold text-white shadow-lg transition-all duration-200 hover:bg-blue-700 hover:shadow-xl'>
+            <DollarSign className='h-5 w-5' />
+            <span className=''>Fund</span>
+          </Button>
+        </FundingModal> */}
+
         <Button
           variant='outline'
           className='flex h-12 w-12 items-center justify-center gap-2 rounded-lg border border-gray-700 bg-transparent text-sm font-medium text-gray-300 transition-all duration-200 hover:border-gray-600 hover:bg-transparent hover:text-white sm:flex-1'

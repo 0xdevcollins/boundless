@@ -360,7 +360,6 @@ export const useAuthStore = create<AuthState>()(
 
         // Clear cookies only on client side
         if (typeof window !== 'undefined') {
-          console.log('Clearing cookies', Cookies.get('authjs.session-token'));
           Cookies.remove('authjs.session-token');
           Cookies.remove('accessToken');
           Cookies.remove('refreshToken');

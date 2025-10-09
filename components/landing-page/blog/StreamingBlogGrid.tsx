@@ -183,7 +183,7 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
       {isNavigating && <AuthLoadingState message='Loading article...' />}
       <div className='min-h-screen bg-[#030303]'>
         <div>
-          <div className='mx-auto max-w-6xl px-6 py-8'>
+          <div className=''>
             <div className='flex gap-3 md:flex-row md:items-center md:justify-between lg:gap-16'>
               <div className='flex items-center gap-3'>
                 <DropdownMenu>
@@ -335,7 +335,7 @@ const StreamingBlogGrid: React.FC<StreamingBlogGridProps> = ({
           </div>
         </div>
 
-        <div className='mx-auto max-w-6xl px-6 py-12'>
+        <div className=''>
           {error && (
             <div className='mb-6 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-red-400'>
               {error}

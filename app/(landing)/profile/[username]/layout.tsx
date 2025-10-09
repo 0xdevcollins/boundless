@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 
 export default function ProfileLayout({ children }: ProfileLayoutProps) {
   return (
-    <main className='flex-1 px-6 py-5 md:px-10 md:py-20 xl:px-[100px]'>
+    <main className='mx-auto max-w-[1440px] flex-1 px-5 py-5 md:px-[50px] lg:px-[100px]'>
       <Suspense fallback={<ProfileLoadingFallback />}>{children}</Suspense>
     </main>
   );

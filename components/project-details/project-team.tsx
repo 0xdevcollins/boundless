@@ -60,9 +60,7 @@ export function ProjectTeam({ project }: ProjectTeamProps) {
     return role === 'OWNER' ? 'text-[#DBF936]' : 'text-[#B5B5B5]';
   };
 
-  const handleMemberClick = () => {
-    // TODO: Implement navigation to member profile
-  };
+  const handleMemberClick = () => {};
 
   return (
     <div>

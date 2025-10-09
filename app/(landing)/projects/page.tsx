@@ -28,9 +28,10 @@ interface ProjectFilters {
 function ProjectsPage() {
   const [projects, setProjects] = useState<CrowdfundingProject[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [filters, setFilters] = useState<ProjectFilters>({});
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -106,9 +107,13 @@ function ProjectsPage() {
   );
 
   const fetchProjects = useCallback(
-    async (page = 1, newFilters: ProjectFilters = {}) => {
+    async (page = 1, newFilters: ProjectFilters = {}, append = false) => {
       try {
-        setLoading(true);
+        if (append) {
+          setLoadingMore(true);
+        } else {
+          setLoading(true);
+        }
         setError(null);
 
         const response = await getCrowdfundingProjects(page, 9, {
@@ -138,14 +143,20 @@ function ProjectsPage() {
           fetchedProjects = sortProjects(fetchedProjects, newFilters.sort);
         }
 
-        setProjects(fetchedProjects);
-        setTotalPages(response.data.pagination.pages);
+        if (append) {
+          setProjects(prev => [...prev, ...fetchedProjects]);
+        } else {
+          setProjects(fetchedProjects);
+        }
+
+        setHasMore(response.data.pagination.pages > page);
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error('Error fetching projects:', err);
         setError('Failed to fetch projects. Please try again.');
       } finally {
         setLoading(false);
+        setLoadingMore(false);
       }
     },
     [sortProjects]
@@ -156,15 +167,12 @@ function ProjectsPage() {
     setFilters(prev => ({ ...prev, search: debouncedSearchTerm }));
   }, [debouncedSearchTerm]);
 
-  // Fetch projects when filters or page changes
-  useEffect(() => {
-    fetchProjects(currentPage, filters);
-  }, [currentPage, filters, fetchProjects]);
-
-  // Reset to first page when filters change
+  // Fetch projects when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [filters]);
+    setHasMore(true);
+    fetchProjects(1, filters);
+  }, [filters, fetchProjects]);
 
   const handleSearch = useCallback((searchTerm: string) => {
     setSearchTerm(searchTerm);
@@ -188,10 +196,11 @@ function ProjectsPage() {
     }));
   }, []);
 
-  const handlePageChange = useCallback((page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  const handleLoadMore = useCallback(() => {
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    fetchProjects(nextPage, filters, true);
+  }, [currentPage, filters, fetchProjects]);
 
   // Transform project data for ProjectCard component
   const transformProjectForCard = useCallback(
@@ -273,57 +282,28 @@ function ProjectsPage() {
     });
   }, [projects, transformProjectForCard]);
 
-  // Pagination component
-  const Pagination = useMemo(() => {
-    if (totalPages <= 1) return null;
-
-    const pages = [];
-    const maxVisiblePages = 5;
-    const startPage = Math.max(
-      1,
-      currentPage - Math.floor(maxVisiblePages / 2)
-    );
-    const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(
-        <button
-          key={i}
-          onClick={() => handlePageChange(i)}
-          className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-            i === currentPage
-              ? 'bg-primary text-white'
-              : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-          }`}
-        >
-          {i}
-        </button>
-      );
-    }
+  // Load More Button component
+  const LoadMoreButton = useMemo(() => {
+    if (!hasMore) return null;
 
     return (
-      <div className='mt-8 flex items-center justify-center gap-2'>
+      <div className='mt-8 flex items-center justify-center'>
         <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className='rounded-md bg-gray-800 px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50'
+          onClick={handleLoadMore}
+          disabled={loadingMore}
+          className='bg-primary hover:bg-primary/80 flex items-center gap-2 rounded-lg px-8 py-3 font-medium text-white transition-colors disabled:cursor-not-allowed disabled:bg-gray-600'
         >
-          Previous
-        </button>
-        {pages}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className='rounded-md bg-gray-800 px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50'
-        >
-          Next
+          {loadingMore && (
+            <div className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent'></div>
+          )}
+          {loadingMore ? 'Loading...' : 'Load More Projects'}
         </button>
       </div>
     );
-  }, [currentPage, totalPages, handlePageChange]);
+  }, [hasMore, loadingMore, handleLoadMore]);
 
   return (
-    <div className='relative min-h-screen bg-black'>
+    <div className='relative mx-auto min-h-screen max-w-[1440px] bg-black px-5 py-5 md:px-[50px] lg:px-[100px]'>
       <ProjectPageHero />
       <ExploreHeader
         onSearch={handleSearch}
@@ -332,7 +312,7 @@ function ProjectsPage() {
         onCategoryChange={handleCategory}
       />
 
-      <main className='mx-auto max-w-[1300px] space-y-[60px] md:space-y-[80px]'>
+      <main className='space-y-[40px] sm:space-y-[60px] md:space-y-[80px]'>
         {/* Results Summary */}
         {!loading && !error && (
           <div className='mb-6 flex items-center justify-between'>
@@ -423,10 +403,10 @@ function ProjectsPage() {
         {/* Projects Grid */}
         {!loading && !error && projects.length > 0 && (
           <>
-            <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
+            <div className='grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3'>
               {projectCards}
             </div>
-            {Pagination}
+            {LoadMoreButton}
           </>
         )}
       </main>

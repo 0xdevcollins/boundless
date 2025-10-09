@@ -62,7 +62,7 @@ const WhyBoundless = () => {
 
   return (
     <section
-      className='h-full w-full px-6 py-5 md:px-10 md:py-20 xl:px-[100px]'
+      className='h-full w-full'
       id='how-boundless-work'
       aria-labelledby='why-boundless-heading'
     >

@@ -175,6 +175,9 @@ export interface UseCommentsReturn {
   error: string | null;
   refetch: () => void;
   loadMore: () => void;
+  pausePolling: () => void;
+  resumePolling: () => void;
+  isPolling: boolean;
 }
 
 export interface UseCreateCommentReturn {

@@ -84,20 +84,15 @@ const ExploreHeader = ({
   ];
 
   return (
-    <div
-      className={cn(
-        'sticky top-0 z-50 w-full bg-black px-4 py-12 text-white',
-        className
-      )}
-    >
-      <div className='mx-auto max-w-7xl'>
+    <div className={cn('w-full bg-black py-12 text-white', className)}>
+      <div className=''>
         <div className='mb-12'>
-          <h1 className='font-inter text-center text-3xl text-white md:text-left md:text-4xl lg:text-5xl'>
+          <h1 className='font-inter text-center text-2xl text-white md:text-left md:text-4xl lg:text-5xl'>
             Explore Boundless Projects
           </h1>
         </div>
 
-        <div className='bg-rsed-500 flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:gap-8'>
+        <div className='hidden flex-col items-start gap-6 md:flex lg:flex-row lg:items-center lg:gap-8'>
           <div className='flex-wrsap flex w-full items-center gap-3 lg:max-w-1/4 lg:gap-4'>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

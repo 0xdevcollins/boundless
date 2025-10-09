@@ -11,7 +11,7 @@ export default function LandingPage() {
   return (
     <div className='relative overflow-hidden'>
       <BeamBackground />
-      <div className='relative z-10 mx-auto max-w-[1300px] space-y-[60px] md:space-y-[80px]'>
+      <div className='relative z-10 mx-auto max-w-[1440px] space-y-[60px] px-5 py-5 md:space-y-[80px] md:px-[50px] lg:px-[100px]'>
         <Hero />
         <Explore />
         <WhyBoundless />

@@ -196,7 +196,7 @@ const BackedBy = () => {
 
   return (
     <section
-      className='relative my-[70px] h-full w-full px-6 py-[59px] md:px-12 md:py-16 lg:px-[100px]'
+      className='relative my-[70px] h-full w-full'
       id='backed-by'
       aria-labelledby='backed-by-heading'
     >

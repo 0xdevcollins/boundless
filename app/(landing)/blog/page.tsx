@@ -59,10 +59,12 @@ function BlogGridLoading() {
 const BlogPage = async () => {
   return (
     <div className='min-h-screen bg-[#030303]'>
-      <BlogHero />
-      <Suspense fallback={<BlogGridLoading />}>
-        <StreamingBlogGridWrapper />
-      </Suspense>
+      <div className='mx-auto max-w-[1440px] px-5 py-5 md:px-[50px] lg:px-[100px]'>
+        <BlogHero />
+        <Suspense fallback={<BlogGridLoading />}>
+          <StreamingBlogGridWrapper />
+        </Suspense>
+      </div>
       <TestimonialSection testimonials={testimonials} />
     </div>
   );
