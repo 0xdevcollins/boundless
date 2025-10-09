@@ -13,6 +13,7 @@ import { ProjectComments } from './comment-section/project-comments';
 import ProjectMilestone from './project-milestone';
 import ProjectVoters from './project-voters';
 import ProjectBackers from './project-backers';
+import FundProject from '@/components/modals/fund-project';
 
 interface ProjectLayoutProps {
   project: CrowdfundingProject & {
@@ -343,6 +344,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
           </div>
         </div>
       </div>
+      <FundProject open={true} setOpen={() => {}} />
     </div>
   );
 }
