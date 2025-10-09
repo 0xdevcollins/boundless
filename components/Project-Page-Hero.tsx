@@ -24,7 +24,7 @@ export default function ProjectPageHero() {
         />
       </div>
 
-      <div className='relative z-10 mx-auto px-4 py-8 sm:px-6 md:px-8 lg:px-8 lg:py-16'>
+      <div className='relative z-10'>
         <div className='mx-auto grid min-h-[85vh] max-w-[1300px] items-center gap-6 space-y-[60px] md:grid-cols-2 md:gap-8 md:space-y-[80px] lg:gap-12'>
           <div className='z-10 space-y-6 text-left md:space-y-6 lg:space-y-8'>
             <h1 className='text-3xl leading-[1.1] tracking-tight sm:text-4xl md:text-4xl lg:text-5xl'>

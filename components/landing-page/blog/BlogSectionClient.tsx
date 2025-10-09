@@ -29,7 +29,7 @@ const BlogSectionClient = ({ posts }: BlogSectionClientProps) => {
     <>
       {isNavigating && <AuthLoadingState message='Loading article...' />}
       <section
-        className='relative h-full w-full px-6 py-5 md:px-12 md:py-16 lg:px-[100px]'
+        className='relative h-full w-full'
         aria-labelledby='blog-heading'
       >
         <header className='mb-16 flex items-end justify-between'>

@@ -117,10 +117,10 @@ const BlogPostDetails: React.FC<BlogPostDetailsProps> = ({ post }) => {
   return (
     <>
       {isNavigating && <AuthLoadingState message='Loading article...' />}
-      <div className='relative z-10 mx-auto min-h-screen max-w-[1440px] justify-start space-y-[23px] bg-[#030303] px-6 py-5 text-white md:space-y-[80px] md:px-12 md:py-16 lg:px-[100px]'>
+      <div className='relative z-10 mx-auto min-h-screen max-w-[1440px] justify-start space-y-[23px] bg-[#030303] px-5 py-5 text-white md:space-y-[80px] md:px-[50px] md:py-16 lg:px-[100px]'>
         <div className='relative flex flex-col lg:flex-row'>
           <div className='flex-1'>
-            <div className='mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8'>
+            <div className='max-w-4xl py-6 sm:py-8'>
               <div className='flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between'>
                 <div className='flex-1'>
                   <div className='mb-4 flex flex-col gap-2 sm:mb-6 sm:flex-row sm:items-center sm:gap-3'>
@@ -154,7 +154,7 @@ const BlogPostDetails: React.FC<BlogPostDetailsProps> = ({ post }) => {
               </div>
             </div>
 
-            <div className='mx-auto max-w-4xl px-4 sm:px-6'>
+            <div className='max-w-4xl'>
               <div className='relative h-[250px] w-full overflow-hidden rounded-lg border border-white/20 sm:h-[300px] md:h-[400px] lg:h-[500px]'>
                 <Image
                   src={post.image}
@@ -167,7 +167,7 @@ const BlogPostDetails: React.FC<BlogPostDetailsProps> = ({ post }) => {
               </div>
             </div>
 
-            <div className='mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12'>
+            <div className='max-w-4xl py-8 sm:py-12'>
               <div className='prose prose-invert prose-sm sm:prose-base max-w-none'>
                 {loading ? (
                   <div className='flex items-center justify-center py-12'>
@@ -307,7 +307,7 @@ const BlogPostDetails: React.FC<BlogPostDetailsProps> = ({ post }) => {
         </div>
 
         <div className='border-t border-[#2B2B2B] py-8 sm:py-12 lg:py-16'>
-          <div className='mx-auto max-w-6xl px-4 sm:px-6'>
+          <div className=''>
             <h2 className='mb-6 text-xl font-bold text-white sm:mb-8 sm:text-2xl lg:text-3xl'>
               Related Articles
             </h2>

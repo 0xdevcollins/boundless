@@ -157,9 +157,9 @@ export function Navbar() {
   return (
     <nav
       ref={navbarRef}
-      className='blur-s[12px] sticky top-0 z-50 -mt-11 max-h-[88px] bg-[#030303A3]'
+      className='sticky top-0 z-50 -mt-11 max-h-[88px] bg-[#030303A3] backdrop-blur-[12px]'
     >
-      <div className='px-5 py-5 md:px-[50px] lg:px-[100px]'>
+      <div className='mx-auto max-w-[1440px] px-5 py-5 md:px-[50px] lg:px-[100px]'>
         <div
           className={cn(
             'grid grid-cols-2 items-center md:grid-cols-[auto_1fr_auto] md:justify-items-center',

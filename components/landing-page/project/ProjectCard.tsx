@@ -92,7 +92,7 @@ function ProjectCard({
   return (
     <article
       onClick={handleClick}
-      className='font-inter hover:bg-primary/5 hover:border-primary/25 flex w-[397px] cursor-pointer flex-col gap-4 rounded-[8px] border border-gray-900 bg-[#030303] p-5'
+      className='font-inter hover:bg-primary/5 hover:border-primary/25 flex w-full max-w-[397px] cursor-pointer flex-col gap-4 rounded-[8px] border border-gray-900 bg-[#030303] p-4 sm:p-5'
     >
       <header className='flex items-center justify-between'>
         <div className='flex items-center gap-2'>
@@ -113,48 +113,52 @@ function ProjectCard({
           </div>
         </div>
       </header>
-      <section className='flex items-center gap-5'>
+      <section className='flex items-start gap-3 sm:gap-5'>
         <div
           style={{ backgroundImage: `url(${projectImage})` }}
-          className='h-[90px] w-[79.41px] rounded-[8px] bg-white bg-cover bg-center'
+          className='h-[70px] w-[60px] flex-shrink-0 rounded-[8px] bg-white bg-cover bg-center sm:h-[90px] sm:w-[79.41px]'
         ></div>
-        <div className='flex w-[257px] flex-col gap-2'>
-          <h2 className='text-left text-base font-semibold text-white'>
+        <div className='flex min-w-0 flex-1 flex-col gap-2'>
+          <h2 className='line-clamp-2 text-left text-sm font-semibold text-white sm:text-base'>
             {projectTitle}
           </h2>
-          <div className='group relative h-[60px]'>
-            <p className='line-clamp-3 cursor-pointer text-left text-sm font-normal text-white'>
+          <div className='group relative'>
+            <p className='line-clamp-3 cursor-pointer text-left text-xs font-normal text-white sm:text-sm'>
               {projectDescription}
             </p>
           </div>
         </div>
       </section>
       <footer className='flex flex-col gap-2'>
-        <div className='flex items-center justify-between'>
-          {status === 'Validation' && votes && (
-            <h3 className='text-sm font-medium text-[#f5f5f5]'>
-              {formatNumber(votes.current)}/{formatNumber(votes.goal)}{' '}
-              <span className='text-gray-500'>Votes</span>
-            </h3>
-          )}
-          {status === 'Funding' && funding && (
-            <h3 className='text-sm font-medium text-[#f5f5f5]'>
-              {formatNumber(funding.current)}/{formatNumber(funding.goal)}{' '}
-              <span className='text-gray-500'>{funding.currency} raised</span>
-            </h3>
-          )}
-          {(status === 'Funded' || status === 'Completed') && milestones && (
-            <h3 className='text-sm font-medium text-[#f5f5f5]'>
-              {milestones.current}/{milestones.goal}{' '}
-              <span className='text-gray-500'>Milestones Submitted</span>
-            </h3>
-          )}
+        <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+          <div className='flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2'>
+            {status === 'Validation' && votes && (
+              <h3 className='text-xs font-medium text-[#f5f5f5] sm:text-sm'>
+                {formatNumber(votes.current)}/{formatNumber(votes.goal)}{' '}
+                <span className='text-gray-500'>Votes</span>
+              </h3>
+            )}
+            {status === 'Funding' && funding && (
+              <h3 className='text-xs font-medium text-[#f5f5f5] sm:text-sm'>
+                {formatNumber(funding.current)}/{formatNumber(funding.goal)}{' '}
+                <span className='text-gray-500'>{funding.currency} raised</span>
+              </h3>
+            )}
+            {(status === 'Funded' || status === 'Completed') && milestones && (
+              <h3 className='text-xs font-medium text-[#f5f5f5] sm:text-sm'>
+                {milestones.current}/{milestones.goal}{' '}
+                <span className='text-gray-500'>Milestones Submitted</span>
+              </h3>
+            )}
+          </div>
 
-          <h3 className={`text-sm font-medium ${deadlineInfo.className}`}>
+          <h3
+            className={`text-xs font-medium sm:text-sm ${deadlineInfo.className}`}
+          >
             {deadlineInfo.text}
           </h3>
         </div>
-        <div>
+        <div className='w-full'>
           <Progress
             value={
               status === 'Validation'
@@ -169,7 +173,7 @@ function ProjectCard({
                     ? (milestones.current / milestones.goal) * 100
                     : 0
             }
-            className='h-2 w-[357px] rounded-full'
+            className='h-2 w-full rounded-full'
           />
         </div>
       </footer>
