@@ -1,4 +1,3 @@
-/* Custom styles for MDEditor to match the current UI theme */
 .w-md-editor {
   background-color: #1a1a1a !important;
   border: none !important;
@@ -7,17 +6,25 @@
 .w-md-editor-toolbar {
   background-color: #1a1a1a !important;
   border-bottom: 1px solid #484848 !important;
-  padding: 8px 12px !important;
+  padding: 15px 12px !important;
 }
 
 .w-md-editor-toolbar button {
   color: #b5b5b5 !important;
   background-color: transparent !important;
   border: none !important;
-  padding: 8px !important;
+  padding: 10px !important;
   margin: 2px !important;
   border-radius: 4px !important;
   transition: all 0.2s ease !important;
+  font-size: 15px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+}
+
+.w-md-editor-toolbar button svg {
+  width: 10px !important;
+  height: 10px !important;
 }
 
 .w-md-editor-toolbar button:hover {
@@ -30,21 +37,22 @@
   color: #000000 !important;
 }
 
+/* Removed vertical demarcators/dividers */
 .w-md-editor-toolbar .w-md-editor-divider {
-  background-color: #484848 !important;
-  margin: 4px 8px !important;
+  display: none !important;
 }
 
 .w-md-editor-text-pre,
 .w-md-editor-text-input {
-  background-color: #101010 !important;
   color: #ffffff !important;
+  background: #101010 !important;
   font-size: 14px !important;
   line-height: 1.5 !important;
 }
 
-.w-md-editor-text-pre {
-  color: #b5b5b5 !important;
+/* Removed conflicting color override for text-pre */
+.w-md-editor-text-pre > * {
+  color: #ffffff !important;
 }
 
 .w-md-editor-text-input::placeholder {
@@ -123,32 +131,6 @@
   gap: 4px;
 }
 
-.w-md-editor-toolbar .w-md-editor-toolbar-group:not(:last-child)::after {
-  content: '';
-  width: 1px;
-  height: 20px;
-  background-color: #484848;
-  margin: 0 8px;
-}
-
-/* Hide specific toolbar items if needed */
-/* Uncomment the lines below to hide specific toolbar buttons */
-
-/* Hide fullscreen button */
-/* .w-md-editor-toolbar button[data-name="fullscreen"] {
-  display: none !important;
-} */
-
-/* Hide help button */
-/* .w-md-editor-toolbar button[data-name="help"] {
-  display: none !important;
-} */
-
-/* Hide preview toggle */
-/* .w-md-editor-toolbar button[data-name="preview"] {
-  display: none !important;
-} */
-
 /* Custom button styling for specific commands */
 .w-md-editor-toolbar button[data-name='bold'] {
   font-weight: bold !important;
@@ -160,4 +142,53 @@
 
 .w-md-editor-toolbar button[data-name='strikethrough'] {
   text-decoration: line-through !important;
+}
+
+.w-md-editor-text {
+  height: 100vh !important;
+  background-color: #101010 !important;
+}
+
+.wmde-markdown-color {
+  color: #ffffff !important;
+}
+
+.w-md-editor-text-input,
+.w-md-editor-text-input textarea {
+  color: #ffffff !important;
+  caret-color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+.w-md-editor-area textarea,
+.w-md-editor-input textarea,
+textarea.w-md-editor-text-input {
+  color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+/* Override any inherited black text color */
+.w-md-editor-text * {
+  color: inherit !important;
+}
+
+.w-md-editor-text,
+.w-md-editor-area,
+.w-md-editor-input {
+  color: #ffffff !important;
+}
+
+.w-md-editor-content {
+  border: 1px solid transparent !important;
+  transition: border-color 0.2s ease !important;
+}
+
+.w-md-editor-content:has(.w-md-editor-text:focus-within) {
+  border-color: #a7f950 !important;
+}
+
+.w-md-editor-toolbar button[data-name='help'],
+.w-md-editor-toolbar button[data-name='quote'],
+.w-md-editor-toolbar button[data-name='hr'] {
+  display: none !important;
 }
