@@ -1,20 +1,15 @@
 import React from 'react';
-import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import LottieAnimation from '@/components/LottieAnimation';
 
 const NotFound = () => {
   return (
     <div className='flex min-h-[80vh] items-center justify-center bg-[#030303]'>
       <div className='mx-auto max-w-md px-6 text-center'>
         <div className='mb-8 flex flex-col items-center justify-center'>
-          <Image
-            src='/empty-state.png'
-            alt='Empty state illustration'
-            width={240}
-            height={260}
-            className='rounded-lg'
-          />
+          <LottieAnimation />
+
           <h1 className='mb-4 text-4xl font-bold text-white md:text-6xl'>
             404
           </h1>

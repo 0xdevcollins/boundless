@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Plus } from 'lucide-react';
-import Image from 'next/image';
+import LottieAnimation from './LottieAnimation';
 
 export interface EmptyStateProps {
   title?: string;
@@ -63,13 +63,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
     >
       {/* Illustration */}
       <div className='relative mb-8'>
-        <Image
-          src='/empty-state.png'
-          alt='Empty state illustration'
-          width={240}
-          height={260}
-          className='rounded-lg'
-        />
+        <LottieAnimation />
       </div>
 
       {/* Title */}

@@ -1,18 +1,12 @@
 import React from 'react';
-import Image from 'next/image';
 import { BoundlessButton } from '@/components/buttons/BoundlessButton';
 import { ArrowUpIcon } from 'lucide-react';
+import LottieAnimation from '@/components/LottieAnimation';
 
 const Empty = () => {
   return (
     <div className='mx-auto w-full max-w-[400px] space-y-5 py-5 text-center'>
-      <Image
-        src='/Humanoid.svg'
-        alt='Empty state illustration'
-        width={400}
-        height={400}
-        className='h-[400px] w-[400px] rounded-lg'
-      />
+      <LottieAnimation />
       <div className='space-y-1'>
         <h3 className='text-center text-base font-medium text-white md:text-lg'>
           Cast the First Vote!

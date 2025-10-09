@@ -344,7 +344,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
           </div>
         </div>
       </div>
-      <FundProject open={true} setOpen={() => {}} />
+      <FundProject open={false} setOpen={() => {}} />
     </div>
   );
 }
