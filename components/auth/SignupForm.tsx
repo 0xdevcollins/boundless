@@ -38,9 +38,10 @@ const formSchema = z.object({
 
 interface SignupFormProps {
   onLoadingChange?: (isLoading: boolean) => void;
+  invitation?: string | null;
 }
 
-const SignupForm = ({ onLoadingChange }: SignupFormProps) => {
+const SignupForm = ({ onLoadingChange, invitation }: SignupFormProps) => {
   const router = useRouter();
   const [step, setStep] = useState<'signup' | 'otp'>('signup');
   const [userData, setUserData] = useState<{ email: string } | null>(null);
@@ -80,6 +81,7 @@ const SignupForm = ({ onLoadingChange }: SignupFormProps) => {
         lastName: values.lastName,
         password: values.password,
         username: values.email.split('@')[0],
+        invitation: invitation || undefined,
       });
 
       if (response.message) {

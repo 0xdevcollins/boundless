@@ -66,6 +66,7 @@ export interface RegisterRequest {
   firstName: string;
   lastName: string;
   username: string;
+  invitation?: string;
 }
 export interface RegisterResponse {
   message: string;

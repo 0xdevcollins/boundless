@@ -12,6 +12,7 @@ export default function AuthPage() {
   const searchParams = useSearchParams();
 
   const mode = searchParams.get('mode') || 'signin';
+  const invitation = searchParams.get('invitation');
   const [currentMode, setCurrentMode] = useState<'signin' | 'signup'>(
     mode as 'signin' | 'signup'
   );
@@ -40,7 +41,10 @@ export default function AuthPage() {
                 {currentMode === 'signin' ? (
                   <LoginWrapper setLoadingState={setLoadingState} />
                 ) : (
-                  <SignupWrapper setLoadingState={setLoadingState} />
+                  <SignupWrapper
+                    setLoadingState={setLoadingState}
+                    invitation={invitation}
+                  />
                 )}
               </div>
             </div>
