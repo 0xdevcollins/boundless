@@ -1,3 +1,4 @@
+'use client';
 import { Progress } from '@/components/ui/progress';
 import { formatNumber } from '@/lib/utils';
 import { useRouter } from 'nextjs-toploader/app';

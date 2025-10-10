@@ -87,7 +87,10 @@ const ExploreHeader = ({
     <div className={cn('w-full bg-black py-12 text-white', className)}>
       <div className=''>
         <div className='mb-12'>
-          <h1 className='font-inter text-center text-2xl text-white md:text-left md:text-4xl lg:text-5xl'>
+          <h1
+            id='explore-project'
+            className='font-inter text-center text-2xl text-white md:text-left md:text-4xl lg:text-5xl'
+          >
             Explore Boundless Projects
           </h1>
         </div>
