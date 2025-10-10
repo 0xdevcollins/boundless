@@ -115,7 +115,7 @@ const SignupForm = ({ onLoadingChange }: SignupFormProps) => {
   };
 
   const handleOtpSuccess = () => {
-    router.push('/user');
+    router.push('/auth');
   };
 
   const handleResendOtp = async () => {
