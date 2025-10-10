@@ -379,7 +379,7 @@ export interface PrepareCrowdfundingProjectResponse {
     projectData: object; // Prepared project data
     milestoneAmount: number; // Calculated milestone amount
     mappedMilestones: Array<object>; // Processed milestones
-    mappedTeam: Array<object>; // Processed team data
+    teamInvitations: Array<object>; // Team invitations data
   };
 }
 
@@ -389,7 +389,7 @@ export interface ConfirmCrowdfundingProjectRequest {
   escrowAddress: string; // From step 1 response
   projectData: object; // From step 1 response
   mappedMilestones: Array<object>; // From step 1 response
-  mappedTeam: Array<object>; // From step 1 response
+  teamInvitations: Array<object>; // Team invitations data
 }
 
 export interface ConfirmCrowdfundingProjectResponse {
