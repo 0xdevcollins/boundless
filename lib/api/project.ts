@@ -227,3 +227,10 @@ export const confirmProjectFunding = async (
   );
   return res.data;
 };
+export const voteProject = async (
+  projectId: string,
+  value: 1 | -1 = 1
+): Promise<void> => {
+  const res = await api.post(`/projects/${projectId}/vote`, { value });
+  return res.data;
+};

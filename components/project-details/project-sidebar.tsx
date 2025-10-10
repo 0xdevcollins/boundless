@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Calendar,
   Github,
@@ -7,12 +9,14 @@ import {
   Share2,
   UserPlus,
   ArrowUp,
+  DollarSign,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import Image from 'next/image';
-import { CrowdfundingProject } from '@/lib/api/types';
+import type { CrowdfundingProject } from '@/lib/api/types';
+import { voteProject } from '@/lib/api/project';
 
 interface ProjectSidebarProps {
   project: CrowdfundingProject & {
@@ -142,7 +146,10 @@ export function ProjectSidebar({
 
       {/* Action Buttons - Responsive widths */}
       <div className='flex flex-row gap-3'>
-        <Button className='flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-[#A7F950] text-base font-semibold text-black shadow-lg transition-all duration-200 hover:shadow-xl'>
+        <Button
+          onClick={() => voteProject(project._id, 1)}
+          className='flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-[#A7F950] text-base font-semibold text-black shadow-lg transition-all duration-200 hover:shadow-xl'
+        >
           <ArrowUp className='h-5 w-5' />
           <span className=''>Upvote</span>
         </Button>
@@ -159,7 +166,12 @@ export function ProjectSidebar({
             <span className=''>Fund</span>
           </Button>
         </FundingModal> */}
-
+        {project.status === 'Funding' && (
+          <Button className='flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 text-base font-semibold text-white shadow-lg transition-all duration-200 hover:bg-blue-700 hover:shadow-xl'>
+            <DollarSign className='h-5 w-5' />
+            <span className=''>Fund</span>
+          </Button>
+        )}
         <Button
           variant='outline'
           className='flex h-12 w-12 items-center justify-center gap-2 rounded-lg border border-gray-700 bg-transparent text-sm font-medium text-gray-300 transition-all duration-200 hover:border-gray-600 hover:bg-transparent hover:text-white sm:flex-1'

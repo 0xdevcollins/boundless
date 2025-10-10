@@ -1,7 +1,9 @@
+'use client';
 import React from 'react';
 import Image from 'next/image';
 import { ArrowDown } from 'lucide-react';
 import { BoundlessButton } from './buttons/BoundlessButton';
+import Link from 'next/link';
 
 export default function ProjectPageHero() {
   return (
@@ -41,15 +43,17 @@ export default function ProjectPageHero() {
               Validated by the community. Backed milestone by milestone.
             </p>
 
-            <BoundlessButton
-              size='xl'
-              className='group relative transform rounded-lg bg-[#A7F950] px-6 py-3 text-sm font-semibold text-black transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#A7F950]/25 md:px-7 md:py-3.5 md:text-base lg:px-8 lg:py-4 lg:text-base'
-            >
-              <span className='flex items-center gap-2'>
-                Start Exploring Projects
-                <ArrowDown className='h-4 w-4 transition-transform group-hover:translate-y-1 md:h-4 md:w-4 lg:h-5 lg:w-5' />
-              </span>
-            </BoundlessButton>
+            <Link href='#explore-project'>
+              <BoundlessButton
+                size='xl'
+                className='group relative transform rounded-lg bg-[#A7F950] px-6 py-3 text-sm font-semibold text-black transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#A7F950]/25 md:px-7 md:py-3.5 md:text-base lg:px-8 lg:py-4 lg:text-base'
+              >
+                <span className='flex items-center gap-2'>
+                  Start Exploring Projects
+                  <ArrowDown className='h-4 w-4 transition-transform group-hover:translate-y-1 md:h-4 md:w-4 lg:h-5 lg:w-5' />
+                </span>
+              </BoundlessButton>
+            </Link>
           </div>
 
           <div className='relative hidden h-[60vh] md:block lg:h-[70vh]'>

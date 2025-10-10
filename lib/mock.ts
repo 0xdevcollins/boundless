@@ -28,7 +28,7 @@ export const mockProjects: Project[] = [
     category: 'defi',
     type: 'crowdfunding',
     amount: 85000,
-    status: 'approved',
+    status: 'funding',
     createdAt: '2024-01-10T09:15:00Z',
     updatedAt: '2024-01-18T16:45:00Z',
   },
