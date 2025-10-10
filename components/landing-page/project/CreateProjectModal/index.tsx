@@ -199,9 +199,9 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
 
     // Convert team members to API format
     const apiTeam = (team.members || []).map(member => ({
-      name: member.username,
-      role: member.role || 'MEMBER',
-      email: `${member.username}@example.com`, // Placeholder email
+      name: member.email.split('@')[0], // Extract name from email
+      role: 'MEMBER', // Default role for all members
+      email: member.email,
     }));
 
     // Convert social links to API format
@@ -265,7 +265,7 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
           escrowAddress: preparedData.escrowAddress,
           projectData: preparedData.projectData,
           mappedMilestones: preparedData.mappedMilestones,
-          mappedTeam: preparedData.mappedTeam,
+          teamInvitations: preparedData.teamInvitations,
         });
 
         if (confirmResponse.success) {
@@ -362,7 +362,7 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
               .array(
                 z.object({
                   id: z.string(),
-                  username: z.string().trim().min(1),
+                  email: z.string().email(),
                   role: z.string().optional(),
                 })
               )
@@ -572,18 +572,11 @@ Our development is structured in clear phases with measurable milestones and com
         members: [
           {
             id: 'member-1',
-            username: 'alice_dev',
-            role: 'Lead Developer',
+            email: 'john@example.com',
           },
           {
             id: 'member-2',
-            username: 'bob_crypto',
-            role: 'Smart Contract Engineer',
-          },
-          {
-            id: 'member-3',
-            username: 'charlie_ux',
-            role: 'Frontend Developer',
+            email: 'jane@example.com',
           },
         ],
       },

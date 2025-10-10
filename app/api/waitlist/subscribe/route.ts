@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const backendUrl =
       process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
-    const response = await fetch(`${backendUrl}/newsletter/subscribe`, {
+    const response = await fetch(`${backendUrl}/waitlist/subscribe`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

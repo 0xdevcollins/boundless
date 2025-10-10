@@ -22,6 +22,24 @@ export default auth(req => {
 
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
 
+  // Redirect all users to waitlist if not already on waitlist page
+  // Exclude API routes, static assets, and other necessary paths
+  // const shouldRedirect =
+  //   pathname !== '/waitlist' &&
+  //   !pathname.startsWith('/api') &&
+  //   !pathname.startsWith('/_next') &&
+  //   !pathname.startsWith('/favicon.ico') &&
+  //   !pathname.startsWith('/public') &&
+  //   !pathname.match(
+  //     /\.(png|jpg|jpeg|gif|svg|ico|webp|avif|css|js|woff|woff2|ttf|eot)$/i
+  //   );
+
+  // if (shouldRedirect) {
+  //   return NextResponse.redirect(
+  //     new URL('https://www.boundlessfi.xyz/waitlist')
+  //   );
+  // }
+
   const isOtherUserProfile = pathname.startsWith('/profile/');
 
   // if (process.env.NODE_ENV === 'development') {

@@ -12,7 +12,7 @@ interface TeamProps {
 
 export interface TeamMember {
   id: string;
-  username: string;
+  email: string;
   role?: string;
 }
 
@@ -35,9 +35,11 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
     }, [initialData]);
 
     const [searchQuery, setSearchQuery] = useState('');
-    const [errors, setErrors] = useState<{ members?: string }>({});
+    const [errors, setErrors] = useState<{ members?: string; email?: string }>(
+      {}
+    );
 
-    const handleInputChange = (
+    const handleFormDataChange = (
       field: keyof TeamFormData,
       value: TeamMember[]
     ) => {
@@ -51,7 +53,12 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
       onDataChange?.(newData);
     };
 
-    const addMember = (username: string) => {
+    const isValidEmail = (email: string): boolean => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    };
+
+    const addMember = (email: string) => {
       if (formData.members.length >= 4) {
         setErrors(prev => ({
           ...prev,
@@ -60,26 +67,47 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
         return;
       }
 
-      const trimmed = username.trim();
-      if (
-        trimmed &&
-        !formData.members.some(member => member.username === trimmed)
-      ) {
-        const newMember: TeamMember = {
-          id: Date.now().toString(),
-          username: trimmed,
-          role: 'MEMBER',
-        };
-        handleInputChange('members', [...formData.members, newMember]);
-        setSearchQuery('');
+      const trimmed = email.trim();
+
+      if (!trimmed) {
+        setErrors(prev => ({
+          ...prev,
+          email: 'Please enter an email address.',
+        }));
+        return;
       }
+
+      if (!isValidEmail(trimmed)) {
+        setErrors(prev => ({
+          ...prev,
+          email: 'Please enter a valid email address.',
+        }));
+        return;
+      }
+
+      if (formData.members.some(member => member.email === trimmed)) {
+        setErrors(prev => ({
+          ...prev,
+          email: 'This email is already added to the team.',
+        }));
+        return;
+      }
+
+      const newMember: TeamMember = {
+        id: Date.now().toString(),
+        email: trimmed,
+        role: 'MEMBER',
+      };
+      handleFormDataChange('members', [...formData.members, newMember]);
+      setSearchQuery('');
+      setErrors(prev => ({ ...prev, email: undefined }));
     };
 
     const removeMember = (id: string) => {
       const updatedMembers = formData.members.filter(
         member => member.id !== id
       );
-      handleInputChange('members', updatedMembers);
+      handleFormDataChange('members', updatedMembers);
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -89,8 +117,18 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
       }
     };
 
+    const handleEmailInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setSearchQuery(value);
+
+      // Clear email error when user starts typing
+      if (errors.email) {
+        setErrors(prev => ({ ...prev, email: undefined }));
+      }
+    };
+
     const validateForm = (): boolean => {
-      const newErrors: { members?: string } = {};
+      const newErrors: { members?: string; email?: string } = {};
 
       setErrors(newErrors);
       return Object.keys(newErrors).length === 0;
@@ -122,7 +160,7 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
 
         <div className='space-y-4'>
           <Label className='text-white'>
-            Invite members to your team (optional)
+            Invite members to your team by email (optional)
           </Label>
 
           <div className='space-y-4'>
@@ -133,9 +171,7 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
                     key={member.id}
                     className='flex items-center space-x-1 rounded-full bg-[#A7F95014] py-1.5 pr-1.5 pl-2'
                   >
-                    <span className='text-primary text-sm'>
-                      {member.username}
-                    </span>
+                    <span className='text-primary text-sm'>{member.email}</span>
                     <Button
                       type='button'
                       variant='ghost'
@@ -164,10 +200,10 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
                 ))}
 
                 <input
-                  type='text'
-                  placeholder={'Search by name, handle, or email'}
+                  type='email'
+                  placeholder={'Enter email address'}
                   value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
+                  onChange={handleEmailInputChange}
                   onKeyPress={handleKeyPress}
                   className='min-w-[200px] flex-1 bg-transparent text-sm text-white placeholder:text-[#919191] focus:outline-none'
                 />
@@ -188,6 +224,9 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
 
           {errors.members && (
             <p className='text-sm text-red-500'>{errors.members}</p>
+          )}
+          {errors.email && (
+            <p className='text-sm text-red-500'>{errors.email}</p>
           )}
         </div>
       </div>
