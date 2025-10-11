@@ -21,7 +21,7 @@ export default function OrganizationsLayout({
     <div className='min-h-screen bg-black text-white'>
       <OrganizationHeader />
       {showSidebar ? (
-        <div className='flex'>
+        <div className='flex border-t border-t-zinc-800'>
           <OrganizationSidebar />
           <main className='flex-1'>{children}</main>
         </div>

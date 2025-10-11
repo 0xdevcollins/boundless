@@ -13,7 +13,7 @@ import { useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { BoundlessButton } from '../buttons';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Sheet, SheetTrigger, SheetContent, SheetClose } from '../ui/sheet';
 import { useAuthStatus, useAuthActions } from '@/hooks/use-auth';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -48,6 +48,8 @@ export function Navbar() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { isAuthenticated, isLoading, user } = useAuthStatus();
+  const pathname = usePathname();
+
   useGSAP(
     () => {
       gsap.fromTo(
@@ -154,6 +156,9 @@ export function Navbar() {
     { scope: navbarRef }
   );
 
+  if (pathname.startsWith('/organizations')) {
+    return null;
+  }
   return (
     <nav
       ref={navbarRef}
@@ -246,18 +251,22 @@ function AuthenticatedNav({
               <Plus className='group-hover:text-primary h-4 w-4' />
             </span>
           </DropdownMenuItem>
-          <DropdownMenuItem className='group hover:text-primary px-6 py-3.5 text-white hover:!bg-transparent'>
-            <span className='group-hover:text-primary flex w-full items-center justify-between'>
-              Host Hackathon
-              <ArrowUpRight className='group-hover:text-primary h-4 w-4' />
-            </span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className='group hover:text-primary px-6 py-3.5 text-white hover:!bg-transparent'>
-            <span className='group-hover:text-primary flex w-full items-center justify-between'>
-              Create Grant
-              <ArrowUpRight className='group-hover:text-primary h-4 w-4' />
-            </span>
-          </DropdownMenuItem>
+          <Link href='/organizations/new' target='_blank' rel='noreferrer'>
+            <DropdownMenuItem className='group hover:text-primary px-6 py-3.5 text-white hover:!bg-transparent'>
+              <span className='group-hover:text-primary flex w-full items-center justify-between'>
+                Host Hackathon
+                <ArrowUpRight className='group-hover:text-primary h-4 w-4' />
+              </span>
+            </DropdownMenuItem>
+          </Link>
+          <Link href='/organizations/new' target='_blank' rel='noreferrer'>
+            <DropdownMenuItem className='group hover:text-primary px-6 py-3.5 text-white hover:!bg-transparent'>
+              <span className='group-hover:text-primary flex w-full items-center justify-between'>
+                Create Grant
+                <ArrowUpRight className='group-hover:text-primary h-4 w-4' />
+              </span>
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuContent>
       </DropdownMenu>
 
