@@ -45,7 +45,7 @@ interface ProjectLayoutProps {
  * Desktop: Two columns with proper spacing - sidebar left (400px), tabs+content right
  * Mobile: Single column - project info, tabs (including About), content
  */
-export function ProjectLayout({ project }: ProjectLayoutProps) {
+export function ProjectLayout({ project, crowdfund }: ProjectLayoutProps) {
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState('details'); // Start with about tab on mobile
   const [isLeftScrollable, setIsLeftScrollable] = useState(true);
@@ -117,7 +117,11 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
       <div className='min-h-screen overflow-x-hidden bg-[#030303]'>
         <div className='w-full'>
           <div className='px-4 py-6'>
-            <ProjectSidebar project={project} isMobile={true} />
+            <ProjectSidebar
+              project={project}
+              crowdfund={crowdfund}
+              isMobile={true}
+            />
           </div>
 
           <div className='w-full border-b border-gray-800'>
@@ -268,12 +272,16 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
   return (
     <div className='min-h-screen bg-[#030303]'>
       <div className=''>
-        <div className='grid grid-cols-[400px_1fr] gap-12'>
-          <div className='w-full'>
-            <ProjectSidebar project={project} isMobile={false} />
+        <div className='flex gap-12'>
+          <div className='w-full max-w-[400px]'>
+            <ProjectSidebar
+              project={project}
+              crowdfund={crowdfund}
+              isMobile={false}
+            />
           </div>
 
-          <div className='min-h-0 w-full'>
+          <div className='min-h-0 w-full max-w-[calc(100%-400px)]'>
             <Tabs
               value={activeTab}
               onValueChange={setActiveTab}

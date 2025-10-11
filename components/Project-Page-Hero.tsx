@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 export default function ProjectPageHero() {
   return (
-    <div className='relative min-h-screen overflow-hidden bg-black text-white'>
+    <div className='relative min-h-screen overflow-hidden text-white'>
       <div className='pointer-events-none absolute inset-0'>
         <div className='absolute bottom-1/3 left-[220px] h-[393px] w-[476px] rounded-[476px] border-[20px] border-[#DBFFB7] opacity-[0.30px] mix-blend-overlay blur-[25px] md:block lg:!hidden' />
         <div
