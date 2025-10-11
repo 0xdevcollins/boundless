@@ -20,6 +20,7 @@ import Image from 'next/image';
 import { useAuthActions, useAuthStatus } from '@/hooks/use-auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import OrganizationSelector from './cards/OrganizationSelector';
 
 export default function OrganizationHeader() {
   const { isLoading, user } = useAuthStatus();
@@ -27,8 +28,12 @@ export default function OrganizationHeader() {
   const pathname = usePathname();
   const isOnOrganizationsPage = pathname === '/dashboard/organizations';
 
+  const showOrgSelector =
+    pathname.includes('/new') ||
+    (pathname.split('/').length > 4 && pathname !== '/dashboard/organizations');
+
   return (
-    <header className='flex items-center justify-between border-b border-zinc-800 px-6 py-4'>
+    <header className='flex items-center justify-between border-0 border-zinc-800 px-6 py-4'>
       <div className='flex items-center gap-6'>
         <div className='flex items-center gap-2'>
           <Image
@@ -44,6 +49,8 @@ export default function OrganizationHeader() {
           <HomeIcon className='h-5 w-5' />
           <span className='text-sm font-medium'>Home</span>
         </button>
+
+        {showOrgSelector && <OrganizationSelector />}
       </div>
 
       {/* User Avatar Dropdown */}
@@ -64,8 +71,7 @@ export default function OrganizationHeader() {
                   src={
                     user?.image ||
                     user?.profile?.avatar ||
-                    'https://i.pravatar.cc/150?img=10' ||
-                    '/placeholder.svg'
+                    'https://i.pravatar.cc/150?img=10'
                   }
                   alt='logo'
                   width={116}

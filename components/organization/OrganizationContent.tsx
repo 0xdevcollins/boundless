@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import OrganizationCard from './cards/OrganzationCards';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const mockOrganizations = [
   {
@@ -42,31 +43,44 @@ const mockOrganizations = [
 
 export default function OrganizationContent() {
   const hasorganizations = mockOrganizations.length > 0;
-
+  const router = useRouter();
   return (
-    <main className='py-8'>
+    <main className=''>
       {/* Search and Sort Bar */}
-      <section className='mb-8 hidden border-b border-b-zinc-800 px-8 pb-8 md:block'>
-        <div className='mx-auto flex max-w-5xl items-center gap-4'>
-          <div className='relative flex-1'>
-            <Search className='absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-zinc-500' />
-            <Input
-              type='text'
-              placeholder='Search organization, hackathon, or grants'
-              className='w-full rounded-lg border-zinc-800 bg-zinc-900 py-6 pr-4 pl-12 text-white placeholder:text-zinc-500 focus-visible:border-lime-500 focus-visible:ring-[1px] focus-visible:ring-lime-500'
-            />
+      {hasorganizations && (
+        <section className='mb-8 hidden border-y border-y-zinc-800 px-8 md:block'>
+          <div className='mx-auto flex max-w-5xl items-center gap-4'>
+            <div className='relative flex-1'>
+              <Search className='absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-zinc-500' />
+              <Input
+                type='text'
+                placeholder='Search organization, hackathon, or grants'
+                className='w-full rounded-lg border-zinc-800 bg-zinc-900 py-6 pr-4 pl-12 text-white placeholder:text-zinc-500 focus-visible:border-lime-500 focus-visible:ring-[1px] focus-visible:ring-lime-500'
+              />
+            </div>
+            <Button
+              variant='outline'
+              className='text- rounded-lg border-zinc-800 bg-black px-6 py-6 hover:bg-zinc-800'
+            >
+              <ArrowUpDown className='h-4 w-4' />
+              Sort
+            </Button>
+            {hasorganizations && (
+              <div className='flex h-23 items-center border-l border-l-zinc-800 pl-4'>
+                <Button
+                  onClick={() => router.push('/dashboard/organizations/new')}
+                  className='rounded-lg bg-[#a6f948] px-6 py-6 text-black hover:bg-lime-600'
+                >
+                  Add Organization
+                  <Plus className='h-4 w-4' />
+                </Button>
+              </div>
+            )}
           </div>
-          <Button
-            variant='outline'
-            className='rounded-lg border-zinc-800 bg-zinc-900 px-6 py-6 text-white hover:bg-zinc-800 hover:text-white'
-          >
-            <ArrowUpDown className='mr-2 h-4 w-4' />
-            Sort
-          </Button>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section className='mx-auto max-w-5xl'>
+      <section className='mx-auto max-w-5xl px-8 py-8 md:px-0'>
         {/* Add Organization Section */}
         {hasorganizations && (
           <div className='grid grid-cols-1 gap-6'>
