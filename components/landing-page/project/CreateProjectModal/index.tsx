@@ -19,9 +19,8 @@ import {
   CreateCrowdfundingProjectRequest,
   PrepareCrowdfundingProjectResponse,
 } from '@/lib/api/types';
-import { useWalletInfo, useWalletSigning } from '@/hooks/use-wallet';
+import { useWalletSigning } from '@/hooks/use-wallet';
 import { useWalletProtection } from '@/hooks/use-wallet-protection';
-import { cn } from '@/lib/utils';
 
 type StepHandle = { validate: () => boolean; markSubmitted?: () => void };
 
@@ -56,8 +55,6 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
   const [flowStep, setFlowStep] = useState<
     'form' | 'preparing' | 'signing' | 'confirming' | 'success'
   >('form');
-
-  const { address } = useWalletInfo() || { address: '' };
 
   // Form data state
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -239,7 +236,7 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
         backup: contact.backupContact || '',
       },
       socialLinks: apiSocialLinks,
-      signer: address,
+      signer: 'GD4NCQMLAU5Z7HIMNGMKLSFLCA46AILVIB6FJZ7QEJXANFNGBHFR24H6',
     };
   };
 
@@ -695,15 +692,7 @@ Our development is structured in clear phases with measurable milestones and com
       )}
       <div
         ref={contentRef}
-        className={cn(
-          'min-h-[calc(55vh)] px-4 transition-opacity duration-100 md:px-[50px] lg:px-[75px] xl:px-[150px]',
-          flowStep === 'confirming' ||
-            isSigningTransaction ||
-            (flowStep === 'signing' &&
-              unsignedTransaction &&
-              !isSigningTransaction),
-          'flex h-full items-center justify-center'
-        )}
+        className={`min-h-[calc(55vh)] px-4 transition-opacity duration-100 md:px-[50px] lg:px-[75px] xl:px-[150px]`}
       >
         {flowStep !== 'form' ? (
           <div className='flex h-full items-center justify-center'>
