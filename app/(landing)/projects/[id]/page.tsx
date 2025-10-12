@@ -73,12 +73,11 @@ async function ProjectContent({ id }: { id: string }) {
         response.data.project,
         response.data.crowdfund
       );
-      console.log(projectData);
+      // Project data loaded successfully
     } else {
       throw new Error(response.message || 'Failed to fetch project');
     }
-  } catch (err) {
-    console.error('Error fetching project:', err);
+  } catch {
     error = 'Failed to fetch project data';
   }
 

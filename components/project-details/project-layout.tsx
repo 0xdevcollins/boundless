@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ProjectSidebar } from './project-sidebar';
+// import { ProjectSidebar } from './project-sidebar';
 import { ProjectDetails } from './project-details';
 import { ProjectAbout } from './project-about';
 import { ProjectTeam } from './project-team';
@@ -13,6 +13,7 @@ import { ProjectComments } from './comment-section/project-comments';
 import ProjectMilestone from './project-milestone';
 import ProjectVoters from './project-voters';
 import ProjectBackers from './project-backers';
+import { ProjectSidebar } from './project-sidebar';
 // import FundProject from '@/components/modals/fund-project';
 
 interface ProjectLayoutProps {
@@ -208,7 +209,7 @@ export function ProjectLayout({ project, crowdfund }: ProjectLayoutProps) {
                 <ProjectTeam project={project} />
               </TabsContent>
               <TabsContent value='milestones' className='mt-0'>
-                <ProjectMilestone />
+                <ProjectMilestone projectId={project._id} project={project} />
 
                 <div className='hidden space-y-6 text-white'>
                   <h2 className='text-2xl font-bold text-white'>Milestones</h2>
@@ -336,7 +337,7 @@ export function ProjectLayout({ project, crowdfund }: ProjectLayoutProps) {
                   <ProjectTeam project={project} />
                 </TabsContent>
                 <TabsContent value='milestones' className='mt-0'>
-                  <ProjectMilestone projectId={project._id} />
+                  <ProjectMilestone projectId={project._id} project={project} />
                 </TabsContent>
                 <TabsContent value='voters' className='mt-0'>
                   <ProjectVoters />

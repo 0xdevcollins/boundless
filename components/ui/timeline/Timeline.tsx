@@ -21,7 +21,7 @@ const Timeline: React.FC<TimelineProps> = ({
 
   if (!items || items.length === 0) {
     return (
-      <div className='flex items-center justify-center py-8'>
+      <div className='flex hidden items-center justify-center py-8'>
         <p className='text-sm text-gray-500'>No timeline items available</p>
       </div>
     );

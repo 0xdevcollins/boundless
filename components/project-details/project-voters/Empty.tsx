@@ -3,7 +3,11 @@ import { BoundlessButton } from '@/components/buttons/BoundlessButton';
 import { ArrowUpIcon } from 'lucide-react';
 import LottieAnimation from '@/components/LottieAnimation';
 
-const Empty = () => {
+interface EmptyProps {
+  onVote?: () => void;
+}
+
+const Empty = ({ onVote }: EmptyProps) => {
   return (
     <div className='mx-auto w-full max-w-[400px] space-y-5 py-5 text-center'>
       <LottieAnimation />
@@ -12,10 +16,15 @@ const Empty = () => {
           Cast the First Vote!
         </h3>
         <p className='text-center text-gray-500'>
-          Support this Project with your vote.
+          Be the first to vote on this project.
         </p>
       </div>
-      <BoundlessButton iconPosition='left' size='lg' icon={<ArrowUpIcon />}>
+      <BoundlessButton
+        onClick={onVote}
+        iconPosition='left'
+        size='lg'
+        icon={<ArrowUpIcon />}
+      >
         Upvote
       </BoundlessButton>
     </div>

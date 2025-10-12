@@ -83,7 +83,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
       </p>
 
       {/* Button or custom action */}
-      {action ? (
+      {action === false ? null : action ? (
         action
       ) : (
         <button
