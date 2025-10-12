@@ -21,6 +21,7 @@ import {
 } from '@/lib/api/types';
 import { useWalletInfo, useWalletSigning } from '@/hooks/use-wallet';
 import { useWalletProtection } from '@/hooks/use-wallet-protection';
+import { cn } from '@/lib/utils';
 
 type StepHandle = { validate: () => boolean; markSubmitted?: () => void };
 
@@ -694,7 +695,15 @@ Our development is structured in clear phases with measurable milestones and com
       )}
       <div
         ref={contentRef}
-        className={`min-h-[calc(55vh)] px-4 transition-opacity duration-100 md:px-[50px] lg:px-[75px] xl:px-[150px]`}
+        className={cn(
+          'min-h-[calc(55vh)] px-4 transition-opacity duration-100 md:px-[50px] lg:px-[75px] xl:px-[150px]',
+          flowStep === 'confirming' ||
+            isSigningTransaction ||
+            (flowStep === 'signing' &&
+              unsignedTransaction &&
+              !isSigningTransaction),
+          'flex h-full items-center justify-center'
+        )}
       >
         {flowStep !== 'form' ? (
           <div className='flex h-full items-center justify-center'>
