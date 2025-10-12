@@ -19,7 +19,7 @@ import {
   CreateCrowdfundingProjectRequest,
   PrepareCrowdfundingProjectResponse,
 } from '@/lib/api/types';
-import { useWalletSigning } from '@/hooks/use-wallet';
+import { useWalletInfo, useWalletSigning } from '@/hooks/use-wallet';
 import { useWalletProtection } from '@/hooks/use-wallet-protection';
 
 type StepHandle = { validate: () => boolean; markSubmitted?: () => void };
@@ -55,6 +55,8 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
   const [flowStep, setFlowStep] = useState<
     'form' | 'preparing' | 'signing' | 'confirming' | 'success'
   >('form');
+
+  const { address } = useWalletInfo() || { address: '' };
 
   // Form data state
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -236,7 +238,7 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
         backup: contact.backupContact || '',
       },
       socialLinks: apiSocialLinks,
-      signer: 'GD4NCQMLAU5Z7HIMNGMKLSFLCA46AILVIB6FJZ7QEJXANFNGBHFR24H6',
+      signer: address,
     };
   };
 
