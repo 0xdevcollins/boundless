@@ -554,6 +554,9 @@ export const useWalletStore = create<WalletState>()(
         network: state.network,
         isConnected: state.isConnected,
         selectedWallet: state.selectedWallet,
+        canSignTransaction: state.canSignTransaction,
+        canSignMessage: state.canSignMessage,
+        canSignAuthEntry: state.canSignAuthEntry,
       }),
     }
   )
