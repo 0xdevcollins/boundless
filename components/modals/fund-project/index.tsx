@@ -57,7 +57,6 @@ const FundProject = ({ open, setOpen, project }: FundProjectProps) => {
   const [flowStep, setFlowStep] = useState<
     'form' | 'preparing' | 'signing' | 'confirming' | 'success'
   >('form');
-  const [unsignedXdr, setUnsignedXdr] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Wallet hooks
@@ -208,10 +207,8 @@ const FundProject = ({ open, setOpen, project }: FundProjectProps) => {
         throw new Error(prepareResponse.message || 'Failed to prepare funding');
       }
 
-      setUnsignedXdr(prepareResponse.data.unsignedXdr);
-
       // Step 2: Sign transaction
-      const signedXdr = await signTransaction(unsignedXdr || '');
+      const signedXdr = await signTransaction(prepareResponse.data.unsignedXdr);
 
       // Step 3: Confirm funding
       setFlowStep('confirming');
@@ -288,7 +285,6 @@ const FundProject = ({ open, setOpen, project }: FundProjectProps) => {
     setSubmitErrors([]);
     setFlowStep('form');
     setError(null);
-    setUnsignedXdr(null);
     setOpen(false);
   };
 
