@@ -162,7 +162,7 @@ export function Navbar() {
   return (
     <nav
       ref={navbarRef}
-      className='sticky top-0 z-50 -mt-11 max-h-[88px] bg-[#030303A3] backdrop-blur-[12px]'
+      className='sticky top-0 z-50 max-h-[88px] bg-[#030303A3] backdrop-blur-[12px]'
     >
       <div className='mx-auto max-w-[1440px] px-5 py-5 md:px-[50px] lg:px-[100px]'>
         <div
