@@ -22,10 +22,30 @@ interface ConfirmProps {
   fundingData: AmountFormData;
   onDataChange?: (data: ConfirmFormData) => void;
   initialData?: Partial<ConfirmFormData>;
+  project?: {
+    _id: string;
+    title: string;
+    logo?: string;
+    description?: string;
+    creator?: {
+      profile?: {
+        firstName?: string;
+        lastName?: string;
+        avatar?: string;
+      };
+    };
+    milestones?: Array<{
+      title: string;
+      description: string;
+      dueDate: string;
+      amount: number;
+      status: string;
+    }>;
+  };
 }
 
 const Confirm = forwardRef<ConfirmHandle, ConfirmProps>(
-  ({ fundingData, onDataChange, initialData = {} }, ref) => {
+  ({ fundingData, onDataChange, initialData = {}, project }, ref) => {
     const [confirmData, setConfirmData] = React.useState<ConfirmFormData>({
       agreeToTerms: initialData.agreeToTerms || false,
       agreeToPrivacy: initialData.agreeToPrivacy || false,
@@ -37,42 +57,42 @@ const Confirm = forwardRef<ConfirmHandle, ConfirmProps>(
       onDataChange?.(newData);
     };
 
-    const milestones: TimelineItemType[] = useMemo(
-      () => [
+    const milestones: TimelineItemType[] = useMemo(() => {
+      if (project?.milestones && project.milestones.length > 0) {
+        return project.milestones.map((milestone, index) => ({
+          id: `milestone-${index + 1}`,
+          title: milestone.title,
+          description: milestone.description,
+          dueDate: milestone.dueDate,
+          amount: milestone.amount,
+          percentage: Math.round(
+            (milestone.amount /
+              (project.milestones?.reduce((sum, m) => sum + m.amount, 0) ||
+                1)) *
+              100
+          ),
+          status:
+            milestone.status === 'completed'
+              ? 'approved'
+              : (milestone.status as 'awaiting' | 'in-progress' | 'in-review'),
+          feedbackDays: milestone.status === 'in-review' ? 3 : undefined,
+        }));
+      }
+
+      // Fallback to default milestones if none provided
+      return [
         {
           id: 'milestone-1',
-          title: 'Smart Contract Development',
+          title: 'Project Development',
           description:
-            'Develop and deploy core smart contracts for the platform including escrow, milestone validation, and fund distribution mechanisms.',
-          dueDate: '05 Dec, 2025 - 31 Jan, 2026',
-          amount: 12300,
-          percentage: 10,
+            'Core development and implementation of project features.',
+          dueDate: 'TBD',
+          amount: 0,
+          percentage: 100,
           status: 'awaiting',
         },
-        {
-          id: 'milestone-2',
-          title: 'Frontend Development',
-          description:
-            'Build responsive web interface with user dashboard, project management tools, and real-time funding tracking.',
-          dueDate: '01 Feb, 2026 - 28 Feb, 2026',
-          amount: 12300,
-          percentage: 10,
-          status: 'in-review',
-          feedbackDays: 3,
-        },
-        {
-          id: 'milestone-3',
-          title: 'Security Audit',
-          description:
-            'Comprehensive security audit of smart contracts and platform infrastructure to ensure user fund safety.',
-          dueDate: '01 Mar, 2026 - 31 Mar, 2026',
-          amount: 12300,
-          percentage: 10,
-          status: 'in-progress',
-        },
-      ],
-      []
-    );
+      ];
+    }, [project?.milestones]);
 
     const markSubmitted = () => {
       // Validation handled by parent component
@@ -93,28 +113,35 @@ const Confirm = forwardRef<ConfirmHandle, ConfirmProps>(
               <Image
                 width={48}
                 height={48}
-                src='/avatar.png'
+                src={project?.creator?.profile?.avatar || '/avatar.png'}
                 alt='Project owner'
                 className='h-full w-full object-cover'
               />
             </div>
           </div>
           <div className='flex flex-col space-y-0.5'>
-            <span className='text-base font-normal text-white'>John Doe</span>
+            <span className='text-base font-normal text-white'>
+              {project?.creator?.profile?.firstName &&
+              project?.creator?.profile?.lastName
+                ? `${project.creator.profile.firstName} ${project.creator.profile.lastName}`
+                : 'Project Owner'}
+            </span>
             <span className='text-sm text-[#DBF936]'>PROJECT OWNER</span>
           </div>
         </div>
 
         <div className='space-y-3'>
-          <h5 className='font-medium text-white'>BitMed Health Protocol</h5>
+          <h5 className='font-medium text-white'>
+            {project?.title || 'Project'}
+          </h5>
           <p className='leading-relaxed text-gray-400'>
-            Building a secure, transparent, and trusted digital health ecosystem
-            powered by Sonic blockchain for 280M lives in Indonesia. Our
-            platform ensures health data integrity and enables seamless
-            healthcare transactions.
+            {project?.description ||
+              'No description available for this project.'}
           </p>
           <Link
-            href='/projects/bitmed'
+            href={
+              typeof window !== 'undefined' ? window.location.pathname : '#'
+            }
             className='text-primary flex items-center gap-2 text-sm font-medium hover:underline'
           >
             Learn More <ArrowUpRight className='h-4 w-4' />

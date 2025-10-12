@@ -84,7 +84,7 @@ const ExploreHeader = ({
   ];
 
   return (
-    <div className={cn('w-full bg-black py-12 text-white', className)}>
+    <div className={cn('w-full py-12 text-white', className)}>
       <div className=''>
         <div className='mb-12'>
           <h1

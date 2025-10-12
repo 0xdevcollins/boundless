@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { CrowdfundingProject } from '@/lib/api/types';
 import Image from 'next/image';
 
@@ -12,55 +13,82 @@ interface TeamMember {
   name: string;
   role: 'OWNER' | 'MEMBER';
   avatar?: string;
+  joinedAt?: string;
+  username?: string;
 }
 
-// Mock data
-const mockTeamMembers: TeamMember[] = [
-  {
-    id: '1',
-    name: 'Member Name',
-    role: 'OWNER',
-    avatar: '/avatar.png',
-  },
-  {
-    id: '2',
-    name: 'Member Name',
-    role: 'MEMBER',
-    avatar: '/avatar.png',
-  },
-  {
-    id: '3',
-    name: 'Member Name',
-    role: 'MEMBER',
-    avatar: '/avatar.png',
-  },
-  {
-    id: '4',
-    name: 'Member Name',
-    role: 'MEMBER',
-    avatar: '/avatar.png',
-  },
-];
-
 export function ProjectTeam({ project }: ProjectTeamProps) {
-  const teamMembers =
-    project.team && project.team.length > 0
-      ? project.team.map(member => ({
-          id: member?._id || '',
-          name: member?.profile
-            ? `${member.profile.firstName} ${member.profile.lastName}`
-            : 'Unknown Member',
-          role:
-            member.role === 'OWNER' ? ('OWNER' as const) : ('MEMBER' as const),
-          avatar: (member?.profile as { avatar?: string })?.avatar,
-        }))
-      : mockTeamMembers;
+  // Create team members from real project data
+  const teamMembers: TeamMember[] = React.useMemo(() => {
+    const members: TeamMember[] = [];
+
+    // Add project creator as owner
+    if (project.creator) {
+      members.push({
+        id: project.creator._id,
+        name: `${project.creator.profile?.firstName} ${project.creator.profile?.lastName}`,
+        role: 'OWNER',
+        avatar: (project.creator as { profile?: { avatar?: string } })?.profile
+          ?.avatar,
+        username: project.creator.profile?.username,
+      });
+    }
+
+    // Add team members
+    if (project.team && project.team.length > 0) {
+      project.team.forEach(member => {
+        // Skip if this member is already added as creator
+        if (member._id !== project.creator._id) {
+          members.push({
+            id: member._id,
+            name: `${member.profile?.firstName} ${member.profile?.lastName}`,
+            role: member.role === 'OWNER' ? 'OWNER' : 'MEMBER',
+            avatar: (member.profile as { avatar?: string })?.avatar,
+            joinedAt: member.joinedAt,
+            username: member.profile?.username,
+          });
+        }
+      });
+    }
+
+    return members;
+  }, [project.creator, project.team]);
 
   const getRoleColor = (role: 'OWNER' | 'MEMBER') => {
     return role === 'OWNER' ? 'text-[#DBF936]' : 'text-[#B5B5B5]';
   };
 
-  const handleMemberClick = () => {};
+  const handleMemberClick = () => {
+    // TODO: Navigate to member profile or show member details
+    // Handle member click action
+  };
+
+  // Show empty state if no team members
+  if (teamMembers.length === 0) {
+    return (
+      <div className='flex flex-col items-center justify-center py-8 text-center'>
+        <div className='mb-4 rounded-full bg-gray-800 p-4'>
+          <svg
+            className='h-8 w-8 text-gray-400'
+            fill='none'
+            stroke='currentColor'
+            viewBox='0 0 24 24'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth={2}
+              d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'
+            />
+          </svg>
+        </div>
+        <h3 className='mb-2 text-lg font-medium text-white'>No Team Members</h3>
+        <p className='text-sm text-gray-400'>
+          This project doesn't have any team members yet.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -69,7 +97,7 @@ export function ProjectTeam({ project }: ProjectTeamProps) {
           <div
             key={member.id}
             className='flex cursor-pointer items-center justify-between rounded px-3 py-2 transition-colors hover:bg-gray-900/30'
-            onClick={() => handleMemberClick()}
+            onClick={handleMemberClick}
           >
             <div className='flex items-center space-x-4'>
               {/* Avatar */}
@@ -93,6 +121,10 @@ export function ProjectTeam({ project }: ProjectTeamProps) {
                     />
                   )}
                 </div>
+                {/* Role indicator */}
+                {member.role === 'OWNER' && (
+                  <div className='absolute -right-1 -bottom-1 h-4 w-4 rounded-full border-2 border-gray-900 bg-[#DBF936]' />
+                )}
               </div>
 
               {/* Member Info */}
@@ -100,9 +132,21 @@ export function ProjectTeam({ project }: ProjectTeamProps) {
                 <span className='text-base font-normal text-white'>
                   {member.name}
                 </span>
-                <span className={`text-sm ${getRoleColor(member.role)}`}>
-                  {member.role}
-                </span>
+                <div className='flex items-center space-x-2'>
+                  <span className={`text-sm ${getRoleColor(member.role)}`}>
+                    {member.role}
+                  </span>
+                  {member.username && (
+                    <span className='text-xs text-gray-500'>
+                      @{member.username}
+                    </span>
+                  )}
+                </div>
+                {member.joinedAt && (
+                  <span className='text-xs text-gray-500'>
+                    Joined {new Date(member.joinedAt).toLocaleDateString()}
+                  </span>
+                )}
               </div>
             </div>
 

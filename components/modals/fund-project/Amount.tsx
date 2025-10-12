@@ -15,6 +15,15 @@ export interface AmountFormData {
 interface AmountProps {
   onDataChange: (data: AmountFormData) => void;
   initialData?: Partial<AmountFormData>;
+  project?: {
+    _id: string;
+    title: string;
+    logo?: string;
+    funding?: {
+      goal: number;
+      raised: number;
+    };
+  };
 }
 
 export interface AmountHandle {
@@ -23,7 +32,7 @@ export interface AmountHandle {
 }
 
 const Amount = forwardRef<AmountHandle, AmountProps>(
-  ({ onDataChange, initialData = {} }, ref) => {
+  ({ onDataChange, initialData = {}, project }, ref) => {
     const [data, setData] = useState<AmountFormData>({
       amount: initialData.amount || '',
       currency: initialData.currency || 'USD',
@@ -85,6 +94,32 @@ const Amount = forwardRef<AmountHandle, AmountProps>(
 
     return (
       <div className='space-y-6'>
+        {/* Project Funding Info */}
+        {project?.funding && (
+          <div className='mb-6 rounded-lg border border-gray-800 bg-gray-900/50 p-4'>
+            <div className='mb-2 flex items-center justify-between'>
+              <span className='text-sm text-gray-400'>Funding Progress</span>
+              <span className='text-sm text-white'>
+                ${project.funding.raised.toLocaleString()} / $
+                {project.funding.goal.toLocaleString()}
+              </span>
+            </div>
+            <div className='h-2 w-full rounded-full bg-gray-700'>
+              <div
+                className='bg-primary h-2 rounded-full transition-all duration-300'
+                style={{
+                  width: `${Math.min((project.funding.raised / project.funding.goal) * 100, 100)}%`,
+                }}
+              />
+            </div>
+            <p className='mt-2 text-xs text-gray-400'>
+              {project.funding.goal - project.funding.raised > 0
+                ? `$${(project.funding.goal - project.funding.raised).toLocaleString()} needed to reach goal`
+                : 'Goal reached!'}
+            </p>
+          </div>
+        )}
+
         <div className='mb-10 space-y-2'>
           <h5 className='text-sm text-white'>
             How much would you like to fund?{' '}

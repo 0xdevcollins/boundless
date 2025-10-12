@@ -153,8 +153,7 @@ export function useProjects(
         }
 
         setHasMore(response.data.pagination.pages > page);
-      } catch (err) {
-        console.error('Error fetching projects:', err);
+      } catch {
         setError('Failed to fetch projects. Please try again.');
       } finally {
         setLoading(false);

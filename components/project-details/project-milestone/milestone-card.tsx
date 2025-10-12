@@ -4,6 +4,7 @@ import React from 'react';
 
 export type Status =
   | 'awaiting'
+  | 'pending'
   | 'approved'
   | 'in-progress'
   | 'rejected'
@@ -28,6 +29,7 @@ interface MilestoneCardProps {
 //status badge colors
 const statusBadgeColors = {
   awaiting: 'bg-[#E4DBDB] border-[#3E3838] text-[#3E3838]',
+  pending: 'bg-[#E4DBDB] border-[#3E3838] text-[#3E3838]',
   approved: 'bg-[#B5E3C4] border-[#04802E] text-[#04802E]',
   'in-progress': 'bg-[#DBF93614] border-[#DBF936] text-[#DBF936]',
   rejected: 'bg-[#F2BCBA] border-[#BA110B] text-[#BA110B]',
@@ -37,6 +39,7 @@ const statusBadgeColors = {
 };
 const statusBadgeText = {
   awaiting: 'Awaiting',
+  pending: 'Awaiting',
   approved: 'Approved',
   'in-progress': 'In Progress',
   rejected: 'Rejected',
@@ -72,6 +75,7 @@ const MilestoneCard = ({
       case 'submission':
         return `${deadline || '43'} days to deadline`;
       case 'draft':
+      case 'pending':
       case 'awaiting':
       case 'in-progress':
       default:

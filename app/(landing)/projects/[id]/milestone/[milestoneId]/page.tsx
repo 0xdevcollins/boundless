@@ -3,22 +3,64 @@ import MilstoneOverview from '@/components/project-details/project-milestone/mil
 import MilestoneDetails from '@/components/project-details/project-milestone/milestone-details/MilestoneDetails';
 import MilestoneLinks from '@/components/project-details/project-milestone/milestone-details/MilestoneLinks';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { getProjects } from '@/lib/api/project';
+import { CrowdfundingProject } from '@/lib/api/types';
 
 interface MilestonePageProps {
   params: Promise<{
-    milestoneId: string; // This will be the milestone ID
+    id: string; // Project ID
+    milestoneId: string; // Milestone ID
   }>;
 }
 
 const MilestonePage = async ({ params }: MilestonePageProps) => {
-  const { milestoneId } = await params;
+  const { id: projectId, milestoneId } = await params;
+
+  // Fetch project data
+  let project: CrowdfundingProject | null = null;
+  let milestone = null;
+
+  try {
+    const projectResponse = await getProjects();
+    if (projectResponse.projects) {
+      // Find the specific project
+      const foundProject = projectResponse.projects.find(
+        (p: { id: string }) => p.id === projectId
+      );
+      project = foundProject
+        ? (foundProject as unknown as CrowdfundingProject)
+        : null;
+
+      // Find the specific milestone
+      milestone = project?.milestones?.find(
+        (m: { _id: string }) => m._id === milestoneId
+      );
+    }
+  } catch {
+    // Handle error silently
+  }
+
+  // If milestone not found, show error state
+  if (!milestone) {
+    return (
+      <section className='mx-auto mt-5 flex max-w-[1440px] flex-col justify-center gap-5 px-5 py-5 md:flex-row md:justify-between md:gap-18 md:px-[50px] lg:px-[100px]'>
+        <div className='w-full py-12 text-center'>
+          <h1 className='mb-4 text-2xl font-bold text-white'>
+            Milestone Not Found
+          </h1>
+          <p className='text-gray-400'>
+            The requested milestone could not be found.
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className='mx-auto mt-5 flex max-w-[1440px] flex-col justify-center gap-5 px-5 py-5 md:flex-row md:justify-between md:gap-18 md:px-[50px] lg:px-[100px]'>
       <div className='w-full md:max-w-[500px]'>
-        <MilstoneOverview />
+        <MilstoneOverview project={project} milestone={milestone} />
       </div>
-      {/* <div className=''> */}
       <Tabs defaultValue='details' className='w-full'>
         <div className='border-b border-gray-800 py-0'>
           <TabsList className='mb-0 h-auto w-fit justify-start gap-6 rounded-none bg-transparent p-0'>
@@ -37,13 +79,16 @@ const MilestonePage = async ({ params }: MilestonePageProps) => {
           </TabsList>
         </div>
         <TabsContent value='details'>
-          <MilestoneDetails milestoneId={milestoneId} />
+          <MilestoneDetails
+            milestoneId={milestoneId}
+            project={project}
+            milestone={milestone}
+          />
         </TabsContent>
         <TabsContent value='links'>
-          <MilestoneLinks />
+          <MilestoneLinks project={project} milestone={milestone} />
         </TabsContent>
       </Tabs>
-      {/* </div> */}
     </section>
   );
 };

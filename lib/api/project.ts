@@ -18,6 +18,11 @@ import {
   PrepareFundingResponse,
   ConfirmFundingRequest,
   ConfirmFundingResponse,
+  VoteRequest,
+  VoteResponse,
+  GetProjectVotesRequest,
+  GetProjectVotesResponse,
+  RemoveVoteResponse,
 } from './types';
 
 export const initProject = async (data: ProjectInitRequest) => {
@@ -230,7 +235,47 @@ export const confirmProjectFunding = async (
 export const voteProject = async (
   projectId: string,
   value: 1 | -1 = 1
-): Promise<void> => {
+): Promise<VoteResponse> => {
   const res = await api.post(`/projects/${projectId}/vote`, { value });
+  return res.data;
+};
+
+/**
+ * Get votes for a project with pagination and filtering
+ */
+export const getProjectVotes = async (
+  projectId: string,
+  params?: GetProjectVotesRequest
+): Promise<GetProjectVotesResponse> => {
+  const queryParams = new URLSearchParams();
+
+  if (params?.page) {
+    queryParams.append('page', params.page.toString());
+  }
+
+  if (params?.limit) {
+    queryParams.append('limit', params.limit.toString());
+  }
+
+  if (params?.voteType) {
+    queryParams.append('voteType', params.voteType);
+  }
+
+  const queryString = queryParams.toString();
+  const url = queryString
+    ? `/projects/${projectId}/votes?${queryString}`
+    : `/projects/${projectId}/votes`;
+
+  const res = await api.get(url);
+  return res.data;
+};
+
+/**
+ * Remove user's vote from a project
+ */
+export const removeProjectVote = async (
+  projectId: string
+): Promise<RemoveVoteResponse> => {
+  const res = await api.delete(`/projects/${projectId}/vote`);
   return res.data;
 };

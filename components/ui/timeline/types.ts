@@ -8,6 +8,7 @@ export interface TimelineItem {
   percentage?: number;
   status?:
     | 'awaiting'
+    | 'pending'
     | 'approved'
     | 'in-progress'
     | 'rejected'

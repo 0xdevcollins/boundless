@@ -16,6 +16,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
     item.status === 'submission' ||
     item.status === 'in-review' ||
     item.status === 'approved' ||
+    item.status === 'awaiting' ||
     item.status === 'rejected';
 
   // Handle milestone click - open in new tab

@@ -10,8 +10,9 @@ import {
 import { ListFilter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Status } from './milestone-card';
+import { CrowdfundingProject } from '@/lib/api/types';
+import EmptyState from '@/components/EmptyState';
 
-// Filter options
 const filterOptions = [
   { value: 'all', label: 'All Milestones', count: 0 },
   { value: 'awaiting', label: 'Awaiting', count: 0 },
@@ -25,137 +26,87 @@ const filterOptions = [
 
 interface ProjectMilestoneProps {
   projectId?: string;
+  project?: CrowdfundingProject;
 }
 
-const ProjectMilestone = ({ projectId }: ProjectMilestoneProps) => {
-  // Filter state
+const ProjectMilestone = ({ projectId, project }: ProjectMilestoneProps) => {
   const [selectedFilter, setSelectedFilter] = useState<Status | 'all'>('all');
 
-  // Sample milestone data - in a real app, this would come from props or API
-  const milestones: TimelineItemType[] = useMemo(
-    () => [
-      {
-        id: 'milestone-1',
-        title: 'Prototype & Smart Contract Setup',
-        description:
-          'Develop a functional UI prototype for the crowdfunding and grant flow. Simultaneously, implement and test Soroban smart contracts for escrow logic, milestone validation, and secure fund handling.',
-        dueDate: '05 Dec, 2025 - 31 Jan, 2026',
-        amount: 12300,
-        percentage: 10,
-        status: 'awaiting',
-      },
-      {
-        id: 'milestone-2',
-        title: 'Prototype & Smart Contract Setup',
-        description:
-          'Develop a functional UI prototype for the crowdfunding and grant flow. Simultaneously, implement and test Soroban smart contracts for escrow logic, milestone validation, and secure fund handling.',
-        dueDate: '05 Dec, 2025 - 31 Jan, 2026',
-        amount: 12300,
-        percentage: 10,
-        status: 'in-review',
-        feedbackDays: 3,
-      },
-      {
-        id: 'milestone-3',
-        title: 'Prototype & Smart Contract Setup',
-        description:
-          'Develop a functional UI prototype for the crowdfunding and grant flow. Simultaneously, implement and test Soroban smart contracts for escrow logic, milestone validation, and secure fund handling.',
-        dueDate: '05 Dec, 2025 - 31 Jan, 2026',
-        amount: 12300,
-        percentage: 10,
-        status: 'rejected',
-        deadline: '31, Jan, 2026',
-      },
-      {
-        id: 'milestone-4',
-        title: 'Prototype & Smart Contract Setup',
-        description:
-          'Develop a functional UI prototype for the crowdfunding and grant flow. Simultaneously, implement and test Soroban smart contracts for escrow logic, milestone validation, and secure fund handling.',
-        dueDate: '05 Dec, 2025 - 31 Jan, 2026',
-        amount: 12300,
-        percentage: 10,
-        status: 'in-progress',
-      },
-      {
-        id: 'milestone-5',
-        title: 'Prototype & Smart Contract Setup',
-        description:
-          'Develop a functional UI prototype for the crowdfunding and grant flow. Simultaneously, implement and test Soroban smart contracts for escrow logic, milestone validation, and secure fund handling.',
-        dueDate: '05 Dec, 2025 - 31 Jan, 2026',
-        amount: 12300,
-        percentage: 10,
-        status: 'in-review',
-        feedbackDays: 3,
-      },
-      {
-        id: 'milestone-6',
-        title: 'Prototype & Smart Contract Setup',
-        description:
-          'Develop a functional UI prototype for the crowdfunding and grant flow. Simultaneously, implement and test Soroban smart contracts for escrow logic, milestone validation, and secure fund handling.',
-        dueDate: '05 Dec, 2025 - 31 Jan, 2026',
-        amount: 12300,
-        percentage: 10,
-        status: 'rejected',
-        deadline: '31, Jan, 2026',
-      },
-      {
-        id: 'milestone-7',
-        title: 'Prototype & Smart Contract Setup',
-        description:
-          'Develop a functional UI prototype for the crowdfunding and grant flow. Simultaneously, implement and test Soroban smart contracts for escrow logic, milestone validation, and secure fund handling.',
-        dueDate: '05 Dec, 2025 - 31 Jan, 2026',
-        amount: 12300,
-        percentage: 10,
-        status: 'submission',
-        deadline: '43',
-      },
-      {
-        id: 'milestone-8',
-        title: 'Prototype & Smart Contract Setup',
-        description:
-          'Develop a functional UI prototype for the crowdfunding and grant flow. Simultaneously, implement and test Soroban smart contracts for escrow logic, milestone validation, and secure fund handling.',
-        dueDate: '05 Dec, 2025 - 31 Jan, 2026',
-        amount: 12300,
-        percentage: 10,
-        status: 'approved',
-        isUnlocked: true,
-      },
-      {
-        id: 'milestone-9',
-        title: 'Prototype & Smart Contract Setup',
-        description:
-          'Develop a functional UI prototype for the crowdfunding and grant flow. Simultaneously, implement and test Soroban smart contracts for escrow logic, milestone validation, and secure fund handling.',
-        dueDate: '05 Dec, 2025 - 31 Jan, 2026',
-        amount: 12300,
-        percentage: 10,
-        status: 'approved',
-        isUnlocked: true,
-      },
-      {
-        id: 'milestone-10',
-        title: 'Prototype & Smart Contract Setup',
-        description:
-          'Develop a functional UI prototype for the crowdfunding and grant flow. Simultaneously, implement and test Soroban smart contracts for escrow logic, milestone validation, and secure fund handling.',
-        dueDate: '05 Dec, 2025 - 31 Jan, 2026',
-        amount: 12300,
-        percentage: 10,
-        status: 'draft',
-      },
-      {
-        id: 'milestone-11',
-        title: 'Prototype & Smart Contract Setup',
-        description:
-          'Develop a functional UI prototype for the crowdfunding and grant flow. Simultaneously, implement and test Soroban smart contracts for escrow logic, milestone validation, and secure fund handling.',
-        dueDate: '05 Dec, 2025 - 31 Jan, 2026',
-        amount: 12300,
-        percentage: 10,
-        status: 'draft',
-      },
-    ],
-    []
-  );
+  const milestones: TimelineItemType[] = useMemo(() => {
+    if (!project?.milestones || project.milestones.length === 0) {
+      return [];
+    }
 
-  // Calculate counts for each filter option
+    const totalAmount = project.milestones.reduce(
+      (sum, milestone) => sum + milestone.amount,
+      0
+    );
+
+    return project.milestones.map(milestone => {
+      const percentage =
+        totalAmount > 0
+          ? Math.round((milestone.amount / totalAmount) * 100)
+          : 0;
+
+      let dueDate = 'TBD';
+      try {
+        if (milestone.dueDate) {
+          dueDate = new Date(milestone.dueDate).toLocaleDateString('en-US', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+          });
+        }
+      } catch {
+        // Invalid date format, use TBD
+      }
+
+      const mapStatus = (status: string): Status => {
+        const normalizedStatus = status.toLowerCase();
+
+        switch (normalizedStatus) {
+          case 'completed':
+          case 'approved':
+            return 'approved';
+          case 'in-progress':
+          case 'active':
+            return 'in-progress';
+          case 'pending':
+          case 'awaiting':
+            return 'awaiting';
+          case 'rejected':
+          case 'failed':
+            return 'rejected';
+          case 'submission':
+          case 'submitted':
+            return 'submission';
+          case 'review':
+          case 'in-review':
+            return 'in-review';
+          case 'draft':
+            return 'draft';
+          default:
+            return 'awaiting';
+        }
+      };
+
+      const mappedStatus = mapStatus(milestone.status);
+
+      return {
+        id: milestone._id,
+        title: milestone.title,
+        description: milestone.description,
+        dueDate,
+        amount: milestone.amount,
+        percentage,
+        status: mappedStatus,
+        ...(milestone.status === 'in-review' && { feedbackDays: 3 }),
+        ...(milestone.status === 'rejected' && { deadline: dueDate }),
+        ...(milestone.status === 'approved' && { isUnlocked: true }),
+      };
+    });
+  }, [project?.milestones]);
+
   const filterOptionsWithCounts = useMemo(() => {
     return filterOptions.map(option => {
       if (option.value === 'all') {
@@ -168,7 +119,6 @@ const ProjectMilestone = ({ projectId }: ProjectMilestoneProps) => {
     });
   }, [milestones]);
 
-  // Filter milestones based on selected filter
   const filteredMilestones = useMemo(() => {
     if (selectedFilter === 'all') {
       return milestones;
@@ -176,7 +126,6 @@ const ProjectMilestone = ({ projectId }: ProjectMilestoneProps) => {
     return milestones.filter(milestone => milestone.status === selectedFilter);
   }, [milestones, selectedFilter]);
 
-  // Get current filter label
   const currentFilterLabel =
     filterOptionsWithCounts.find(option => option.value === selectedFilter)
       ?.label || 'All Milestones';
@@ -234,13 +183,19 @@ const ProjectMilestone = ({ projectId }: ProjectMilestoneProps) => {
       {filteredMilestones.length === 0 && (
         <div className='flex flex-col items-center justify-center py-12'>
           <div className='text-center'>
-            <div className='mb-4 text-4xl'>🔍</div>
-            <h3 className='mb-2 text-lg font-semibold text-white'>
-              No milestones found
-            </h3>
-            <p className='text-gray-400'>
-              No milestones match the selected filter.
-            </p>
+            {milestones.length === 0 ? (
+              <EmptyState
+                title='No milestones defined'
+                description="This project doesn't have any milestones yet."
+                action={false}
+              />
+            ) : (
+              <EmptyState
+                title='No milestones found'
+                description='No milestones match the selected filter.'
+                action={false}
+              />
+            )}
           </div>
         </div>
       )}

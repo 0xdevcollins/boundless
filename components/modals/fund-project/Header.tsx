@@ -1,15 +1,30 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 // import { ProjectFormData } from './index';
 
 interface HeaderProps {
   currentStep?: number;
   onBack?: () => void;
   onTestData?: () => void;
+  project?: {
+    _id: string;
+    title: string;
+    logo?: string;
+    funding?: {
+      goal: number;
+      raised: number;
+    };
+  };
 }
 
-const Header = ({ currentStep = 1, onBack, onTestData }: HeaderProps) => {
+const Header = ({
+  currentStep = 1,
+  onBack,
+  onTestData,
+  project,
+}: HeaderProps) => {
   const steps = [
     { id: 1, name: 'Amount' },
     { id: 2, name: 'Confirm' },
@@ -43,9 +58,23 @@ const Header = ({ currentStep = 1, onBack, onTestData }: HeaderProps) => {
               </svg>
             </button>
           )}
-          <h1 className='text-2xl leading-[120%] font-medium tracking-[-0.48px] text-white'>
-            Fund Project
-          </h1>
+          <div className='flex items-center gap-3'>
+            {project?.logo && (
+              <Image
+                src={project.logo}
+                alt={project.title}
+                className='h-8 w-8 rounded-lg object-cover'
+                width={32}
+                height={32}
+              />
+            )}
+            <div>
+              <h1 className='text-2xl leading-[120%] font-medium tracking-[-0.48px] text-white'>
+                Fund Project
+              </h1>
+              <p className='text-sm text-gray-400'>{project?.title}</p>
+            </div>
+          </div>
         </div>
 
         {/* Test Data Button - Only show in development */}

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ProjectSidebar } from './project-sidebar';
+// import { ProjectSidebar } from './project-sidebar';
 import { ProjectDetails } from './project-details';
 import { ProjectAbout } from './project-about';
 import { ProjectTeam } from './project-team';
@@ -13,6 +13,7 @@ import { ProjectComments } from './comment-section/project-comments';
 import ProjectMilestone from './project-milestone';
 import ProjectVoters from './project-voters';
 import ProjectBackers from './project-backers';
+import { ProjectSidebar } from './project-sidebar';
 // import FundProject from '@/components/modals/fund-project';
 
 interface ProjectLayoutProps {
@@ -45,7 +46,7 @@ interface ProjectLayoutProps {
  * Desktop: Two columns with proper spacing - sidebar left (400px), tabs+content right
  * Mobile: Single column - project info, tabs (including About), content
  */
-export function ProjectLayout({ project }: ProjectLayoutProps) {
+export function ProjectLayout({ project, crowdfund }: ProjectLayoutProps) {
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState('details'); // Start with about tab on mobile
   const [isLeftScrollable, setIsLeftScrollable] = useState(true);
@@ -117,7 +118,11 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
       <div className='min-h-screen overflow-x-hidden bg-[#030303]'>
         <div className='w-full'>
           <div className='px-4 py-6'>
-            <ProjectSidebar project={project} isMobile={true} />
+            <ProjectSidebar
+              project={project}
+              crowdfund={crowdfund}
+              isMobile={true}
+            />
           </div>
 
           <div className='w-full border-b border-gray-800'>
@@ -204,7 +209,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                 <ProjectTeam project={project} />
               </TabsContent>
               <TabsContent value='milestones' className='mt-0'>
-                <ProjectMilestone />
+                <ProjectMilestone projectId={project._id} project={project} />
 
                 <div className='hidden space-y-6 text-white'>
                   <h2 className='text-2xl font-bold text-white'>Milestones</h2>
@@ -268,12 +273,16 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
   return (
     <div className='min-h-screen bg-[#030303]'>
       <div className=''>
-        <div className='grid grid-cols-[400px_1fr] gap-12'>
-          <div className='w-full'>
-            <ProjectSidebar project={project} isMobile={false} />
+        <div className='flex gap-12'>
+          <div className='w-full max-w-[400px]'>
+            <ProjectSidebar
+              project={project}
+              crowdfund={crowdfund}
+              isMobile={false}
+            />
           </div>
 
-          <div className='min-h-0 w-full'>
+          <div className='min-h-0 w-full max-w-[calc(100%-400px)]'>
             <Tabs
               value={activeTab}
               onValueChange={setActiveTab}
@@ -328,7 +337,7 @@ export function ProjectLayout({ project }: ProjectLayoutProps) {
                   <ProjectTeam project={project} />
                 </TabsContent>
                 <TabsContent value='milestones' className='mt-0'>
-                  <ProjectMilestone projectId={project._id} />
+                  <ProjectMilestone projectId={project._id} project={project} />
                 </TabsContent>
                 <TabsContent value='voters' className='mt-0'>
                   <ProjectVoters />
