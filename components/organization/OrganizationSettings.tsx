@@ -36,7 +36,7 @@ export default function OrganizationSettings({
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleSave = () => {
-    console.log('Saving organization data:', formData);
+    // console.log('Saving organization data:', formData);
   };
 
   return (
