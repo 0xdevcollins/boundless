@@ -65,17 +65,16 @@ export function ProjectSidebarActions({
         </BoundlessButton>
       )}
 
-      {projectStatus === 'Funding' ||
-        (projectStatus === 'live' && (
-          <BoundlessButton
-            onClick={handleFundClick}
-            className='flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-[#A7F950] text-base font-semibold text-black shadow-lg transition-all duration-200 hover:bg-[#A7F950] hover:shadow-xl'
-            icon={<HandCoins className='h-5 w-5' />}
-            iconPosition='left'
-          >
-            <span className=''>Back Project</span>
-          </BoundlessButton>
-        ))}
+      {projectStatus === 'Funding' && (
+        <BoundlessButton
+          onClick={handleFundClick}
+          className='flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-[#A7F950] text-base font-semibold text-black shadow-lg transition-all duration-200 hover:bg-[#A7F950] hover:shadow-xl'
+          icon={<HandCoins className='h-5 w-5' />}
+          iconPosition='left'
+        >
+          <span className=''>Back Project</span>
+        </BoundlessButton>
+      )}
 
       {projectStatus === 'Completed' && (
         <BoundlessButton
