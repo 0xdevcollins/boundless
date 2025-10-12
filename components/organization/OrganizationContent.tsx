@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import OrganizationCard from './cards/OrganzationCards';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 const mockOrganizations = [
   {
@@ -43,12 +42,11 @@ const mockOrganizations = [
 
 export default function OrganizationContent() {
   const hasorganizations = mockOrganizations.length > 0;
-  const router = useRouter();
   return (
     <main className=''>
       {/* Search and Sort Bar */}
       {hasorganizations && (
-        <section className='mb-8 hidden border-y border-y-zinc-800 px-8 md:block'>
+        <section className='mb-8 hidden border-b border-b-zinc-800 px-8 md:block'>
           <div className='mx-auto flex max-w-5xl items-center gap-4'>
             <div className='relative flex-1'>
               <Search className='absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-zinc-500' />
@@ -60,20 +58,19 @@ export default function OrganizationContent() {
             </div>
             <Button
               variant='outline'
-              className='text- rounded-lg border-zinc-800 bg-black px-6 py-6 hover:bg-zinc-800'
+              className='text- rounded-lg border-zinc-800 bg-black px-6 py-6 hover:bg-transparent hover:text-lime-500'
             >
               <ArrowUpDown className='h-4 w-4' />
               Sort
             </Button>
             {hasorganizations && (
               <div className='flex h-23 items-center border-l border-l-zinc-800 pl-4'>
-                <Button
-                  onClick={() => router.push('/dashboard/organizations/new')}
-                  className='rounded-lg bg-[#a6f948] px-6 py-6 text-black hover:bg-lime-600'
-                >
-                  Add Organization
-                  <Plus className='h-4 w-4' />
-                </Button>
+                <Link href='/organizations/new'>
+                  <Button className='rounded-lg bg-[#a6f948] px-6 py-6 text-black hover:bg-lime-600'>
+                    Add Organization
+                    <Plus className='h-4 w-4' />
+                  </Button>
+                </Link>
               </div>
             )}
           </div>
@@ -94,10 +91,12 @@ export default function OrganizationContent() {
 
         {!hasorganizations && (
           <div className='mx-8 flex items-center justify-center rounded-lg border-1 border-dashed border-green-600 p-32'>
-            <button className='flex items-center gap-2 font-medium text-lime-500 transition-colors hover:text-lime-400'>
-              <span>Add Organization</span>
-              <Plus className='h-5 w-5' size={100} />
-            </button>
+            <Link href='/organizations/new'>
+              <button className='flex items-center gap-2 font-medium text-lime-500 transition-colors hover:text-lime-400'>
+                <span>Add Organization</span>
+                <Plus className='h-5 w-5' size={100} />
+              </button>
+            </Link>
           </div>
         )}
       </section>

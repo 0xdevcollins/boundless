@@ -335,7 +335,7 @@ function AuthenticatedNav({
             asChild
           >
             <Link
-              href='/dashboard/organizations'
+              href='/organizations'
               className='group-hover:text-primary flex items-center'
             >
               <Building2 className='group-hover:!text-primary mr-2 h-4 w-4 text-white' />

@@ -86,7 +86,7 @@ async function ProjectContent({ id }: { id: string }) {
   }
 
   return (
-    <div className='mx-auto flex min-h-screen max-w-[1440px] flex-col space-y-[60px] overflow-x-hidden bg-[#030303] px-5 py-5 md:space-y-[80px] md:px-[50px] lg:px-[100px]'>
+    <div className='mx-auto flex min-h-screen max-w-[1440px] flex-col space-y-[60px] overflow-x-hidden bg-[#030303] px-5 pt-15 pb-5 md:space-y-[80px] md:px-[50px] lg:px-[100px]'>
       <div className='flex-1'>
         <ProjectLayout
           project={projectData.project}

@@ -33,7 +33,7 @@ export default function OrganizationHeader() {
     (pathname.split('/').length > 4 && pathname !== '/dashboard/organizations');
 
   return (
-    <header className='flex items-center justify-between border-0 border-zinc-800 px-10 py-4'>
+    <header className='flex items-center justify-between border-b-1 border-b-zinc-800 px-10 py-4'>
       <div className='flex items-center gap-6'>
         <div className='flex items-center gap-2'>
           <Image

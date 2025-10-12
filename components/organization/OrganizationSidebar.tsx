@@ -37,7 +37,7 @@ export default function OrganizationSidebar({
   ];
 
   return (
-    <aside className='w-[350px] border-r border-zinc-800 bg-black'>
+    <aside className='hidden w-[350px] border-r border-zinc-800 bg-black md:block'>
       <nav className='flex flex-col gap-1 py-4'>
         <h3 className='mb-2 px-11 text-xs font-semibold tracking-wider text-zinc-500 uppercase'>
           Menu
@@ -63,18 +63,20 @@ export default function OrganizationSidebar({
             </Link>
           );
         })}
-        <div className='mt-4 px-8'>
-          <Link href='flex items-center gap-3'>
+        <div className='mt-6 space-y-6 px-8'>
+          <Link href='' className='flex items-center gap-3'>
             <div className='grid h-6 w-6 place-content-center rounded-full bg-lime-500'>
               <Plus className='h-5 w-5 text-black' />
             </div>
             <span>Host Hackathon</span>
           </Link>
-          <Link href='flex items-center gap-3'>
-            <div className='grid h-6 w-6 place-content-center rounded-full bg-lime-500'>
-              <Plus className='h-5 w-5 text-black' />
+          <Link href='' className='flex items-center gap-3'>
+            <div className='flex items-center gap-3'>
+              <div className='grid h-6 w-6 place-content-center rounded-full bg-lime-500'>
+                <Plus className='h-5 w-5 text-black' />
+              </div>
+              <span>Create Grants</span>
             </div>
-            <span>Create Grant</span>
           </Link>
         </div>
       </nav>
