@@ -27,7 +27,6 @@ export function ProjectSidebarProgress({
   const renderProgressSection = () => {
     switch (projectStatus) {
       case 'Funding':
-      case 'campaigning':
         return (
           <div className='space-y-3'>
             <div className='flex items-center justify-between text-sm'>
