@@ -16,6 +16,45 @@
   --color-gray-700: #787878;
   --color-gray-800: #484848;
   --color-gray-900: #2b2b2b;
+
+  /*  Warning Colors */
+  --color-warning-50: #fef6e7;
+  --color-warning-75: #fbe2b7;
+  --color-warning-100: #f7d394;
+  --color-warning-200: #f7c164;
+  --color-warning-300: #f5b546;
+  --color-warning-400: #dd900d;
+  --color-warning-500: #dd900d;
+  --color-warning-600: #ad6f07;
+  --color-warning-700: #865503;
+  --color-warning-800: #664101;
+  --color-warning-900: #523300;
+
+  /* Secondary Colors */
+  --color-secondary-50: #e3effc;
+  --color-secondary-75: #c6ddf7;
+  --color-secondary-100: #b6d8ff;
+  --color-secondary-200: #80bbff;
+  --color-secondary-300: #3d89df;
+  --color-secondary-400: #1671d9;
+  --color-secondary-500: #0d5eba;
+  --color-secondary-600: #034592;
+  --color-secondary-700: #04326b;
+  --color-secondary-800: #012657;
+  --color-secondary-900: #001633;
+
+  /* Success Colors */
+  --color-success-50: #e7f6ec;
+  --color-success-75: #b5e3c4;
+  --color-success-100: #91d6a8;
+  --color-success-200: #5fc381;
+  --color-success-300: #40b869;
+  --color-success-400: #0f973d;
+  --color-success-500: #099137;
+  --color-success-600: #04802e;
+  --color-success-700: #036b26;
+  --color-success-800: #015b20;
+  --color-success-900: #004617;
 }
 /* Custom scrollbar styles for comment modal */
 .custom-scrollbar {

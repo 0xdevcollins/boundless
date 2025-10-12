@@ -760,3 +760,66 @@ export interface ConfirmFundingResponse {
     };
   };
 }
+
+// Vote Types
+export interface Vote {
+  _id: string;
+  userId: string;
+  projectId: string;
+  value: 1 | -1;
+  voteType: 'upvote' | 'downvote';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface VoteSummary {
+  upvotes: number;
+  downvotes: number;
+  totalVotes: number;
+  netVotes: number;
+}
+
+export interface VoteRequest {
+  value: 1 | -1;
+}
+
+export interface VoteResponse {
+  success: boolean;
+  data: {
+    vote: Vote;
+    projectVotes: VoteSummary;
+    isNewVote: boolean;
+  };
+  message: string;
+}
+
+export interface GetProjectVotesRequest {
+  page?: number;
+  limit?: number;
+  voteType?: 'upvote' | 'downvote';
+}
+
+export interface GetProjectVotesResponse {
+  success: boolean;
+  data: {
+    votes: Vote[];
+    voteSummary: VoteSummary;
+    userVote: Vote | null;
+    pagination: {
+      currentPage: number;
+      totalPages: number;
+      totalItems: number;
+      itemsPerPage: number;
+      hasNext: boolean;
+      hasPrev: boolean;
+    };
+  };
+}
+
+export interface RemoveVoteResponse {
+  success: boolean;
+  data: {
+    projectVotes: VoteSummary;
+  };
+  message: string;
+}

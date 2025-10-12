@@ -15,59 +15,8 @@ interface Backer {
   isAnonymous: boolean;
 }
 
-const mockBackers: Backer[] = [
-  {
-    _id: '1',
-    profile: {
-      firstName: 'John',
-      lastName: 'Doe',
-      username: 'john_doe',
-      bio: 'John Doe is a software engineer',
-    },
-    avatar: 'https://i.pravatar.cc/150?img=1',
-    amount: 100,
-    isAnonymous: true,
-  },
-  {
-    _id: '2',
-    profile: {
-      firstName: 'Jane',
-      lastName: 'Doe',
-      username: 'jane_doe',
-      bio: 'Jane Doe is a software engineer',
-    },
-    avatar: 'https://i.pravatar.cc/150?img=2',
-    amount: 100,
-    isAnonymous: false,
-  },
-  {
-    _id: '3',
-    profile: {
-      firstName: 'Jim',
-      lastName: 'Beam',
-      username: 'jim_beam',
-      bio: 'Jim Beam is a software engineer',
-    },
-    avatar: 'https://i.pravatar.cc/150?img=3',
-    amount: 100,
-    isAnonymous: false,
-  },
-  {
-    _id: '4',
-    profile: {
-      firstName: 'Jill',
-      lastName: 'Valentine',
-      username: 'jill_valentine',
-      bio: 'Jill Valentine is a software engineer',
-    },
-    avatar: 'https://i.pravatar.cc/150?img=4',
-    amount: 100,
-    isAnonymous: false,
-  },
-];
-
 const ProjectBackers = () => {
-  const [backers] = useState<Backer[]>(mockBackers);
+  const [backers] = useState<Backer[]>([]);
   const handleBackerClick = () => {};
   if (backers.length === 0) {
     return <Empty />;
@@ -81,7 +30,6 @@ const ProjectBackers = () => {
           onClick={() => handleBackerClick()}
         >
           <div className='flex items-center space-x-4'>
-            {/* Avatar */}
             <div className='relative'>
               <div className='h-12 w-12 overflow-hidden rounded-full border-[0.5px] border-[#2B2B2B]'>
                 {backer.avatar ? (
@@ -104,7 +52,6 @@ const ProjectBackers = () => {
               </div>
             </div>
 
-            {/* Member Info */}
             <div className='flex flex-col space-y-0.5'>
               <span className='text-base font-normal text-white'>
                 {backer.isAnonymous
@@ -122,7 +69,6 @@ const ProjectBackers = () => {
             </div>
           </div>
 
-          {/* Chevron */}
           <svg
             width='20'
             height='20'

@@ -45,12 +45,8 @@ export function useProjectTransform() {
             (end.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
           );
         }
-      } catch (error) {
-        console.warn(
-          'Error calculating deadline for project:',
-          project._id,
-          error
-        );
+      } catch {
+        // Handle error silently
         deadlineInDays = null;
       }
 
