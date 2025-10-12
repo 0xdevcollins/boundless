@@ -8,6 +8,7 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import Image from 'next/image';
 import { BoundlessButton } from '@/components/buttons';
 import LooperSVG from './LooperSVG';
+import { useRouter } from 'next/navigation';
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
@@ -18,7 +19,7 @@ interface HeroProps {
 export default function Hero({ className = '' }: HeroProps) {
   const heroRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-
+  const router = useRouter();
   const animationConfig = useMemo(
     () => ({
       ellipse: {
@@ -196,6 +197,7 @@ export default function Hero({ className = '' }: HeroProps) {
               size='xl'
               fullWidth
               aria-label='Explore featured projects and campaigns'
+              onClick={() => router.push('/projects')}
             >
               Explore Projects
             </BoundlessButton>
