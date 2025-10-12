@@ -502,69 +502,74 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
   const handleTestData = () => {
     const testData: ProjectFormData = {
       basic: {
-        projectName: 'DeFi Protocol',
-        logo: 'https://res.cloudinary.com/danuy5rqb/image/upload/v1759431246/boundless/projects/logos/jfc5v0l6xec0bdhmliet.png', // Will be handled by file upload
+        projectName: 'Nebula Finance',
+        logo: 'https://res.cloudinary.com/danuy5rqb/image/upload/v1759431246/boundless/projects/logos/jfc5v0l6xec0bdhmliet.png',
         logoUrl:
-          'https://res.cloudinary.com/danuy5rqb/image/upload/v1759431246/boundless/projects/logos/jfc5v0l6xec0bdhmliet.png', // Sample uploaded logo URL
+          'https://res.cloudinary.com/danuy5rqb/image/upload/v1759431246/boundless/projects/logos/jfc5v0l6xec0bdhmliet.png',
         vision:
-          'Building the future of decentralized finance with innovative yield farming strategies and automated market making.',
+          'Nebula Finance is redefining decentralized finance with real-time, cross-chain yield aggregation and AI-driven investment strategies for both retail and institutional users.',
         category: 'DeFi & Finance',
-        githubUrl: 'https://github.com/example/defi-protocol',
-        websiteUrl: 'https://defi-protocol.example.com',
-        demoVideoUrl: 'https://youtube.com/watch?v=example',
+        githubUrl: 'https://github.com/nebula-finance/nebula-protocol',
+        websiteUrl: 'https://nebula.finance',
+        demoVideoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
         socialLinks: [
-          'https://twitter.com/defi_protocol',
-          'https://discord.gg/defi-protocol',
-          'https://t.me/defi_protocol',
+          'https://twitter.com/nebula_defi',
+          'https://discord.gg/nebula-finance',
+          'https://t.me/nebula_defi',
+          'https://linkedin.com/company/nebula-finance',
         ],
       },
       details: {
-        vision: `# DeFi Protocol Vision
-
-## Overview
-We are building a revolutionary DeFi protocol that combines yield farming, automated market making, and cross-chain interoperability to create the most efficient and user-friendly decentralized finance platform.
-
-## Key Features
-- **Automated Yield Farming**: AI-powered strategies that automatically optimize yield across multiple protocols
-- **Cross-Chain Support**: Seamless asset transfers between Ethereum, Polygon, and BSC
-- **Liquidity Mining**: Innovative token distribution mechanism that rewards long-term holders
-- **Risk Management**: Advanced risk assessment tools and insurance integration
-
-## Technology Stack
-- Solidity smart contracts
-- React frontend with Web3 integration
-- Node.js backend services
-- IPFS for decentralized storage
-
-## Roadmap
-Our development is structured in clear phases with measurable milestones and community-driven governance.`,
+        vision: `# Nebula Finance Vision
+  
+  ## Overview
+  Nebula Finance is a next-generation DeFi protocol that enables users to earn optimized yields across multiple blockchains without needing to actively manage assets.
+  
+  ## Core Features
+  - **AI Yield Optimization**: Machine-learning models analyze yield opportunities in real-time to rebalance portfolios.
+  - **Cross-Chain Aggregation**: Unified interface and smart routing across Ethereum, Arbitrum, Optimism, and BNB Chain.
+  - **Decentralized Governance**: Token holders influence strategy, emissions, and protocol upgrades.
+  - **Institutional Features**: Compliance-ready APIs, whitelisting options, and secure custody integrations.
+  
+  ## Technology Stack
+  - Smart Contracts: Solidity + Vyper
+  - Frontend: React + TypeScript + Wagmi
+  - Backend: Node.js, PostgreSQL
+  - Data Indexing: The Graph
+  - Storage: IPFS & Arweave
+  
+  ## Roadmap
+  - **Q1 2026**: Smart contract audit and testnet launch
+  - **Q2 2026**: Mainnet launch with ETH, ARB, and OP integrations
+  - **Q3 2026**: Cross-chain dashboard and partner integrations
+  - **Q4 2026**: Governance activation and community treasury`,
       },
       milestones: {
-        fundingAmount: '50000',
+        fundingAmount: '250000', // More realistic for a serious DeFi project
         milestones: [
           {
             id: 'milestone-1',
-            title: 'Smart Contract Development',
+            title: 'Protocol Architecture & Smart Contracts',
             description:
-              'Develop and audit core smart contracts for yield farming and automated market making. This includes the main protocol contracts, token contracts, and governance mechanisms.',
-            startDate: '2026-02-01',
-            endDate: '2026-04-30',
+              'Design core protocol architecture and write smart contracts for vaults, rebalancing, and governance. Engage auditors from Certik or OpenZeppelin.',
+            startDate: '2026-01-10',
+            endDate: '2026-03-30',
           },
           {
             id: 'milestone-2',
-            title: 'Frontend Development',
+            title: 'UI/UX Development',
             description:
-              'Build a user-friendly web interface for interacting with the protocol. This includes dashboard, yield farming interface, and portfolio management tools.',
-            startDate: '2026-05-01',
-            endDate: '2026-06-30',
+              'Design and develop the frontend interface with wallet integrations (MetaMask, WalletConnect) and support for multi-chain data display.',
+            startDate: '2026-04-01',
+            endDate: '2026-05-31',
           },
           {
             id: 'milestone-3',
-            title: 'Security Audit & Testing',
+            title: 'Security Audits & Launch',
             description:
-              'Conduct comprehensive security audits, penetration testing, and bug bounty programs to ensure the protocol is secure and ready for mainnet launch.',
-            startDate: '2026-07-01',
-            endDate: '2026-08-31',
+              'Conduct security audits, final integration tests, and launch the protocol on Ethereum and Arbitrum. Begin initial liquidity mining campaign.',
+            startDate: '2026-06-01',
+            endDate: '2026-07-31',
           },
         ],
       },
@@ -572,18 +577,22 @@ Our development is structured in clear phases with measurable milestones and com
         members: [
           {
             id: 'member-1',
-            email: 'john@example.com',
+            email: 'alice@nebula.finance',
           },
           {
             id: 'member-2',
-            email: 'jane@example.com',
+            email: 'michael@nebula.finance',
+          },
+          {
+            id: 'member-3',
+            email: 'linda@nebula.finance',
           },
         ],
       },
       contact: {
-        telegram: 'alice_dev',
+        telegram: 'nebula_support',
         backupType: 'discord',
-        backupContact: 'alice_dev#1234',
+        backupContact: 'nebula_admin#0420',
         agreeToTerms: true,
         agreeToPrivacy: true,
       },
@@ -692,7 +701,15 @@ Our development is structured in clear phases with measurable milestones and com
       )}
       <div
         ref={contentRef}
-        className={`min-h-[calc(55vh)] px-4 transition-opacity duration-100 md:px-[50px] lg:px-[75px] xl:px-[150px]`}
+        className={cn(
+          'min-h-[calc(55vh)] px-4 transition-opacity duration-100 md:px-[50px] lg:px-[75px] xl:px-[150px]'
+          // flowStep === 'confirming' ||
+          //   isSigningTransaction ||
+          //   (flowStep === 'signing' &&
+          //     unsignedTransaction &&
+          //     !isSigningTransaction),
+          // 'flex h-full items-center justify-center'
+        )}
       >
         {flowStep !== 'form' ? (
           <div className='flex h-full items-center justify-center'>
