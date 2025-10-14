@@ -13,8 +13,8 @@ export function getProjectStatus(
   if (project.funding?.raised >= project.funding?.goal) {
     return 'Funded';
   }
-  if (project.status === 'idea' && !crowdfund?.isVotingActive) {
-    return 'Funding';
+  if (project.status === 'campaigning' && !crowdfund?.isVotingActive) {
+    return 'campaigning';
   }
   return project.status as ProjectStatus;
 }

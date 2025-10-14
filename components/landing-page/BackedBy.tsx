@@ -229,12 +229,12 @@ const BackedBy = () => {
         </p>
       </header>
 
-      <div className='mx-auto my-11 grid max-w-[872px] grid-cols-2 items-center justify-center gap-6 md:grid-cols-4'>
+      <div className='mx-auto my-11 grid w-full grid-cols-2 items-center justify-center gap-4 md:max-w-[872px] md:grid-cols-4'>
         {backedBy.map(item => (
           <Link
             href={item.url}
             key={item.name}
-            className='group relative flex items-center justify-center p-4 transition-transform hover:scale-105'
+            className='group w-fullflex relative items-center justify-center transition-transform hover:scale-105'
             target='_blank'
             rel='noopener noreferrer'
             aria-label={`Visit ${item.name} website`}

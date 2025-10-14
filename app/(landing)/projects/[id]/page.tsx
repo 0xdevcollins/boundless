@@ -67,7 +67,6 @@ async function ProjectContent({ id }: { id: string }) {
 
   try {
     const response = await getCrowdfundingProject(id);
-    console.log(response);
     if (response.success && response.data) {
       projectData = transformCrowdfundingProject(
         response.data.project,

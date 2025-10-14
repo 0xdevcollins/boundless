@@ -69,7 +69,7 @@ export interface ProjectSidebarLinksProps {
 }
 
 export type ProjectStatus =
-  | 'Funding'
+  | 'campaigning'
   | 'Funded'
   | 'Completed'
   | 'Validation'

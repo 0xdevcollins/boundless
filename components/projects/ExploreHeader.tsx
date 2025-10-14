@@ -19,6 +19,7 @@ interface ExploreHeaderProps {
   onStatusChange?: (status: string) => void;
   onCategoryChange?: (category: string) => void;
   className?: string;
+  searchPlaceholder?: string;
 }
 
 const ExploreHeader = ({
@@ -27,60 +28,67 @@ const ExploreHeader = ({
   onStatusChange,
   onCategoryChange,
   className,
+  searchPlaceholder = 'Search project or creator...',
 }: ExploreHeaderProps) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedSort, setSelectedSort] = useState('Sort');
-  const [selectedStatus, setSelectedStatus] = useState('Status');
-  const [selectedCategory, setSelectedCategory] = useState('Category');
+  const [selectedSort, setSelectedSort] = useState('Newest First');
+  const [selectedStatus, setSelectedStatus] = useState('All Status');
+  const [selectedCategory, setSelectedCategory] = useState('All Categories');
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
     if (onSearch) onSearch(value);
   };
 
-  const handleSort = (sortType: string) => {
-    setSelectedSort(sortType);
-    if (onSortChange) onSortChange(sortType);
+  const handleSort = (sortValue: string) => {
+    const option = sortOptions.find(opt => opt.value === sortValue);
+    setSelectedSort(option?.label || 'Newest First');
+    if (onSortChange) onSortChange(sortValue);
   };
 
-  const handleStatus = (status: string) => {
-    setSelectedStatus(status);
-    if (onStatusChange) onStatusChange(status);
+  const handleStatus = (statusValue: string) => {
+    const option = statusOptions.find(opt => opt.value === statusValue);
+    setSelectedStatus(option?.label || 'All Status');
+    if (onStatusChange) onStatusChange(statusValue);
   };
 
-  const handleCategory = (category: string) => {
-    setSelectedCategory(category);
-    if (onCategoryChange) onCategoryChange(category);
+  const handleCategory = (categoryValue: string) => {
+    const option = categoryOptions.find(opt => opt.value === categoryValue);
+    setSelectedCategory(option?.label || 'All Categories');
+    if (onCategoryChange) onCategoryChange(categoryValue);
   };
 
   const sortOptions = [
-    'Newest First',
-    'Oldest First',
-    'Most Funded',
-    'Least Funded',
-    'Ending Soon',
-    'Recently Started',
+    { label: 'Newest First', value: 'newest' },
+    { label: 'Oldest First', value: 'oldest' },
+    { label: 'Most Funded', value: 'funding_goal_high' },
+    { label: 'Least Funded', value: 'funding_goal_low' },
+    { label: 'Ending Soon', value: 'deadline_soon' },
+    { label: 'Recently Started', value: 'deadline_far' },
   ];
   const statusOptions = [
-    'All Status',
-    'Active',
-    'Completed',
-    'Draft',
-    'Under Review',
-    'Validated',
-    'Approved',
+    { label: 'All Status', value: 'all' },
+    { label: 'Active', value: 'active' },
+    { label: 'Completed', value: 'completed' },
+    { label: 'Draft', value: 'draft' },
+    { label: 'Under Review', value: 'under_review' },
+    { label: 'Validated', value: 'validated' },
+    { label: 'Funding', value: 'campaigning' },
+    { label: 'Funded', value: 'funded' },
+    { label: 'Live', value: 'live' },
+    { label: 'Idea', value: 'idea' },
   ];
   const categoryOptions = [
-    'All Categories',
-    'Technology',
-    'Art & Creative',
-    'Environment',
-    'Education',
-    'Healthcare',
-    'Community',
-    'DeFi',
-    'NFT',
-    'Web3',
+    { label: 'All Categories', value: 'all' },
+    { label: 'Technology', value: 'technology' },
+    { label: 'Art & Creative', value: 'art_creative' },
+    { label: 'Environment', value: 'environment' },
+    { label: 'Education', value: 'education' },
+    { label: 'Healthcare', value: 'healthcare' },
+    { label: 'Community', value: 'community' },
+    { label: 'DeFi', value: 'defi' },
+    { label: 'NFT', value: 'nft' },
+    { label: 'Web3', value: 'web3' },
   ];
 
   return (
@@ -122,11 +130,11 @@ const ExploreHeader = ({
               >
                 {sortOptions.map(option => (
                   <DropdownMenuItem
-                    key={option}
-                    onClick={() => handleSort(option)}
+                    key={option.value}
+                    onClick={() => handleSort(option.value)}
                     className='cursor-pointer hover:bg-gray-800'
                   >
-                    {option}
+                    {option.label}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
@@ -148,11 +156,11 @@ const ExploreHeader = ({
               >
                 {statusOptions.map(option => (
                   <DropdownMenuItem
-                    key={option}
-                    onClick={() => handleStatus(option)}
+                    key={option.value}
+                    onClick={() => handleStatus(option.value)}
                     className='cursor-pointer hover:bg-gray-800'
                   >
-                    {option}
+                    {option.label}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
@@ -174,11 +182,11 @@ const ExploreHeader = ({
               >
                 {categoryOptions.map(option => (
                   <DropdownMenuItem
-                    key={option}
-                    onClick={() => handleCategory(option)}
+                    key={option.value}
+                    onClick={() => handleCategory(option.value)}
                     className='cursor-pointer hover:bg-gray-800'
                   >
-                    {option}
+                    {option.label}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
@@ -190,7 +198,7 @@ const ExploreHeader = ({
               <Search className='absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-white/40' />
               <Input
                 type='text'
-                placeholder='Search project or creator...'
+                placeholder={searchPlaceholder}
                 value={searchTerm}
                 onChange={e => handleSearch(e.target.value)}
                 className='bg-background w-full rounded-lg border-gray-900 py-3 pr-4 pl-10 text-base text-white placeholder-gray-400 focus:border-gray-400 focus:ring-1 focus:ring-gray-400'
