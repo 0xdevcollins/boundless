@@ -51,6 +51,11 @@ export function useProjects(
   const [hasMore, setHasMore] = React.useState(true);
   const [filters, setFilters] = React.useState<ProjectFilters>(initialFilters);
 
+  // Update filters when initialFilters change
+  React.useEffect(() => {
+    setFilters(initialFilters);
+  }, [initialFilters]);
+
   // Get project deadline in milliseconds
   const getProjectDeadline = React.useCallback(
     (project: CrowdfundingProject): number => {

@@ -3,9 +3,41 @@ import React from 'react';
 import Image from 'next/image';
 import { ArrowDown } from 'lucide-react';
 import { BoundlessButton } from './buttons/BoundlessButton';
-import Link from 'next/link';
 
 export default function ProjectPageHero() {
+  const scrollToProjects = () => {
+    const projectsSection = document.getElementById('explore-project');
+    if (projectsSection) {
+      const targetPosition = projectsSection.offsetTop - 100;
+      const startPosition = window.pageYOffset;
+      const distance = targetPosition - startPosition;
+      const duration = 1000;
+      let start: number | null = null;
+
+      const animation = (currentTime: number) => {
+        if (start === null) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const run = easeInOutQuad(
+          timeElapsed,
+          startPosition,
+          distance,
+          duration
+        );
+        window.scrollTo(0, run);
+        if (timeElapsed < duration) requestAnimationFrame(animation);
+      };
+
+      const easeInOutQuad = (t: number, b: number, c: number, d: number) => {
+        t /= d / 2;
+        if (t < 1) return (c / 2) * t * t + b;
+        t--;
+        return (-c / 2) * (t * (t - 2) - 1) + b;
+      };
+
+      requestAnimationFrame(animation);
+    }
+  };
+
   return (
     <div className='relative min-h-screen overflow-hidden text-white'>
       <div className='pointer-events-none absolute inset-0'>
@@ -43,17 +75,16 @@ export default function ProjectPageHero() {
               Validated by the community. Backed milestone by milestone.
             </p>
 
-            <Link href='#explore-project'>
-              <BoundlessButton
-                size='xl'
-                className='group relative transform rounded-lg bg-[#A7F950] px-6 py-3 text-sm font-semibold text-black transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#A7F950]/25 md:px-7 md:py-3.5 md:text-base lg:px-8 lg:py-4 lg:text-base'
-              >
-                <span className='flex items-center gap-2'>
-                  Start Exploring Projects
-                  <ArrowDown className='h-4 w-4 transition-transform group-hover:translate-y-1 md:h-4 md:w-4 lg:h-5 lg:w-5' />
-                </span>
-              </BoundlessButton>
-            </Link>
+            <BoundlessButton
+              onClick={scrollToProjects}
+              size='xl'
+              className='group relative transform rounded-lg bg-[#A7F950] px-6 py-3 text-sm font-semibold text-black transition-none duration-300 hover:!scale-none hover:shadow-lg hover:shadow-[#A7F950]/25 md:px-7 md:py-3.5 md:text-base lg:px-8 lg:py-4 lg:text-base'
+            >
+              <span className='flex items-center gap-2'>
+                Start Exploring Projects
+                <ArrowDown className='h-4 w-4 transition-transform group-hover:translate-y-1 md:h-4 md:w-4 lg:h-5 lg:w-5' />
+              </span>
+            </BoundlessButton>
           </div>
 
           <div className='relative hidden h-[60vh] md:block lg:h-[70vh]'>

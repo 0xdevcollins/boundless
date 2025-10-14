@@ -340,10 +340,10 @@ export function ProjectLayout({ project, crowdfund }: ProjectLayoutProps) {
                   <ProjectMilestone projectId={project._id} project={project} />
                 </TabsContent>
                 <TabsContent value='voters' className='mt-0'>
-                  <ProjectVoters />
+                  <ProjectVoters project={project} />
                 </TabsContent>
                 <TabsContent value='backers' className='mt-0'>
-                  <ProjectBackers />
+                  <ProjectBackers project={project} />
                 </TabsContent>
                 <TabsContent value='comments' className='mt-0'>
                   <ProjectComments projectId={project._id} />
