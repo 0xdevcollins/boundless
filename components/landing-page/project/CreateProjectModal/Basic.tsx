@@ -20,7 +20,7 @@ interface BasicProps {
 export interface BasicFormData {
   projectName: string;
   logo: File | string | null;
-  logoUrl?: string; // URL of uploaded logo
+  logoUrl?: string;
   vision: string;
   category: string;
   githubUrl: string;
@@ -29,12 +29,35 @@ export interface BasicFormData {
   socialLinks: string[];
 }
 
-// File validation is handled in the upload handlers
+const normalizeUrl = (url: string): string => {
+  if (!url || url.trim() === '') return '';
+  const trimmed = url.trim();
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return trimmed;
+  }
+  return `https://${trimmed}`;
+};
+
+const urlValidation = z.string().refine(
+  val => {
+    if (!val || val.trim() === '') return true;
+    const normalized = normalizeUrl(val);
+    try {
+      new URL(normalized);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+  {
+    message: 'Please enter a valid URL',
+  }
+);
 
 const basicSchema = z
   .object({
     projectName: z.string().trim().min(1, 'Project name is required'),
-    logo: z.any().optional(), // Allow any type for logo (File or null)
+    logo: z.any().optional(),
     logoUrl: z.string().optional(),
     vision: z
       .string()
@@ -42,9 +65,9 @@ const basicSchema = z
       .min(1, 'Vision is required')
       .max(300, 'Vision must be 300 characters or less'),
     category: z.string().trim().min(1, 'Category is required'),
-    githubUrl: z.string().url().optional().or(z.literal('')),
-    websiteUrl: z.string().url().optional().or(z.literal('')),
-    demoVideoUrl: z.string().url().optional().or(z.literal('')),
+    githubUrl: urlValidation,
+    websiteUrl: urlValidation,
+    demoVideoUrl: urlValidation,
     socialLinks: z
       .array(z.string().trim())
       .refine(
@@ -81,7 +104,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
       socialLinks: initialData?.socialLinks || ['', '', ''],
     });
 
-    // Update form data when initialData changes
     React.useEffect(() => {
       if (initialData) {
         setFormData({
@@ -98,11 +120,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
       }
     }, [initialData]);
 
-    // Debug form data changes (removed for production)
-    // React.useEffect(() => {
-    //   console.log('Form data updated:', formData);
-    // }, [formData]);
-
     const [errors, setErrors] = useState<
       Partial<Record<keyof BasicFormData, string>>
     >({});
@@ -118,10 +135,26 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
       field: keyof BasicFormData,
       value: string | File | string[]
     ) => {
-      const newData = { ...formData, [field]: value };
+      let processedValue = value;
+
+      if (
+        typeof value === 'string' &&
+        (field === 'githubUrl' ||
+          field === 'websiteUrl' ||
+          field === 'demoVideoUrl')
+      ) {
+        if (
+          value.trim() &&
+          !value.startsWith('http://') &&
+          !value.startsWith('https://')
+        ) {
+          processedValue = `https://${value}`;
+        }
+      }
+
+      const newData = { ...formData, [field]: processedValue };
       setFormData(newData);
 
-      // Clear error when user starts typing
       if (errors[field]) {
         setErrors(prev => ({ ...prev, [field]: undefined }));
       }
@@ -143,7 +176,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
         setTouched(prev => ({ ...prev, logo: true }));
         setUploadError(null);
 
-        // Validate file type
         if (!file.type.match(/^image\/(jpeg|png)$/)) {
           setErrors(prev => ({
             ...prev,
@@ -152,7 +184,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
           return;
         }
 
-        // Validate file size (2MB = 2 * 1024 * 1024 bytes)
         if (file.size > 2 * 1024 * 1024) {
           setErrors(prev => ({
             ...prev,
@@ -180,9 +211,7 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
           });
 
           if (uploadResult.success) {
-            // Upload successful - set logoUrl and clear logo file
             handleInputChange('logoUrl', uploadResult.data.secure_url);
-            // Clear the file object since we have URL now
             setFormData(prev => {
               const newData = { ...prev, logo: null };
               onDataChange?.(newData);
@@ -190,11 +219,9 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
             });
             setErrors(prev => ({ ...prev, logo: undefined }));
           } else {
-            // Upload failed
             throw new Error(uploadResult.message || 'Upload failed');
           }
         } catch (error) {
-          // Upload error
           setUploadError(
             error instanceof Error ? error.message : 'Upload failed'
           );
@@ -231,7 +258,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
         setTouched(prev => ({ ...prev, logo: true }));
         setUploadError(null);
 
-        // Validate file type
         if (!file.type.match(/^image\/(jpeg|png)$/)) {
           setErrors(prev => ({
             ...prev,
@@ -240,7 +266,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
           return;
         }
 
-        // Validate file size (2MB = 2 * 1024 * 1024 bytes)
         if (file.size > 2 * 1024 * 1024) {
           setErrors(prev => ({
             ...prev,
@@ -249,10 +274,8 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
           return;
         }
 
-        // Set the file immediately for preview
         handleInputChange('logo', file);
 
-        // Upload the file
         setIsUploading(true);
         try {
           const uploadResult = await uploadService.uploadSingle(file, {
@@ -268,9 +291,7 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
           });
 
           if (uploadResult.success) {
-            // Upload successful - set logoUrl and clear logo file
             handleInputChange('logoUrl', uploadResult.data.secure_url);
-            // Clear the file object since we have URL now
             setFormData(prev => {
               const newData = { ...prev, logo: null };
               onDataChange?.(newData);
@@ -278,11 +299,9 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
             });
             setErrors(prev => ({ ...prev, logo: undefined }));
           } else {
-            // Upload failed
             throw new Error(uploadResult.message || 'Upload failed');
           }
         } catch (error) {
-          // Upload error
           setUploadError(
             error instanceof Error ? error.message : 'Upload failed'
           );
@@ -297,12 +316,10 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
     };
 
     const validateForm = (): boolean => {
-      // Don't validate logo if we're currently uploading
       if (isUploading) {
         return false;
       }
 
-      // Normalize social links (trim empties but keep array length for UI)
       const parsed = basicSchema.safeParse({
         ...formData,
         socialLinks: formData.socialLinks.map(s => s.trim()),
@@ -325,7 +342,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
       return false;
     };
 
-    // Field-level validation on blur
     const validateField = (field: keyof BasicFormData | 'socialLinks') => {
       setTouched(prev => ({ ...prev, [field]: true }));
       try {
@@ -370,11 +386,9 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
             setErrors(prev => ({ ...prev, demoVideoUrl: undefined }));
             break;
           case 'logo':
-            // Don't validate logo if we're currently uploading
             if (isUploading) {
               break;
             }
-            // Validate logo field - either file or URL should exist
             if (!formData.logo && !formData.logoUrl) {
               setErrors(prev => ({
                 ...prev,
@@ -397,7 +411,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
             break;
         }
       } catch (e: unknown) {
-        // Zod throws on parse; map first error
         if (e && typeof e === 'object' && 'issues' in e) {
           const zodError = e as { issues: Array<{ message: string }> };
           const issue = zodError.issues?.[0];
@@ -408,7 +421,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
       }
     };
 
-    // Expose validation function to parent
     React.useImperativeHandle(ref, () => ({
       validate: validateForm,
       markSubmitted: () => setSubmitted(true),
@@ -416,7 +428,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
 
     return (
       <div className='min-h-full space-y-8 text-white'>
-        {/* Project Name */}
         <div className='space-y-2'>
           <Label className='text-white'>
             Project Name <span className='text-red-500'>*</span>
@@ -438,7 +449,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
           )}
         </div>
 
-        {/* Logo/Image */}
         <div className='space-y-2'>
           <Label className='text-white'>
             Logo/Image <span className='text-red-500'>*</span>
@@ -486,7 +496,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
                         width={128}
                         height={128}
                         onError={e => {
-                          // Fallback to local file if URL fails
                           if (formData.logo && !formData.logoUrl) {
                             e.currentTarget.src = URL.createObjectURL(
                               formData.logo as File
@@ -574,7 +583,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
           </div>
         </div>
 
-        {/* Vision */}
         <div className='space-y-2'>
           <div className='flex items-center justify-between'>
             <Label className='text-white'>
@@ -615,7 +623,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
           )}
         </div>
 
-        {/* Category */}
         <div className='space-y-3'>
           <Label className='text-white'>
             Category <span className='text-red-500'>*</span>
@@ -660,7 +667,6 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
           )}
         </div>
 
-        {/* GitHub/GitLab/Bitbucket */}
         <div className='space-y-2'>
           <div className='flex items-center space-x-2'>
             <Label className='text-white'>
@@ -673,7 +679,12 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
             value={formData.githubUrl}
             onChange={e => handleInputChange('githubUrl', e.target.value)}
             onBlur={() => validateField('githubUrl')}
-            className='focus-visible:border-primary border-[#484848] bg-[#1A1A1A] p-4 text-white placeholder:text-[#919191]'
+            className={cn(
+              'focus-visible:border-primary border-[#484848] bg-[#1A1A1A] p-4 text-white placeholder:text-[#919191]',
+              (submitted || touched.githubUrl) &&
+                errors.githubUrl &&
+                'border-red-500'
+            )}
           />
           <div className='flex items-center gap-x-1.5'>
             <FormHint
@@ -685,9 +696,11 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
               E.g., "https://github.com/org" or "https://github.com/org/repo"
             </p>
           </div>
+          {(submitted || touched.githubUrl) && errors.githubUrl && (
+            <p className='text-sm text-red-500'>{errors.githubUrl}</p>
+          )}
         </div>
 
-        {/* Project Website */}
         <div className='space-y-2'>
           <Label className='text-white'>Project Website (optional)</Label>
           <Input
@@ -695,11 +708,18 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
             value={formData.websiteUrl}
             onChange={e => handleInputChange('websiteUrl', e.target.value)}
             onBlur={() => validateField('websiteUrl')}
-            className='focus-visible:border-primary border-[#484848] bg-[#1A1A1A] p-4 text-white placeholder:text-[#919191]'
+            className={cn(
+              'focus-visible:border-primary border-[#484848] bg-[#1A1A1A] p-4 text-white placeholder:text-[#919191]',
+              (submitted || touched.websiteUrl) &&
+                errors.websiteUrl &&
+                'border-red-500'
+            )}
           />
+          {(submitted || touched.websiteUrl) && errors.websiteUrl && (
+            <p className='text-sm text-red-500'>{errors.websiteUrl}</p>
+          )}
         </div>
 
-        {/* Demo Video */}
         <div className='space-y-2'>
           <div className='flex items-center space-x-2'>
             <Label className='text-white'>
@@ -712,7 +732,12 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
             value={formData.demoVideoUrl}
             onChange={e => handleInputChange('demoVideoUrl', e.target.value)}
             onBlur={() => validateField('demoVideoUrl')}
-            className='focus-visible:border-primary border-[#484848] bg-[#1A1A1A] p-4 text-white placeholder:text-[#919191]'
+            className={cn(
+              'focus-visible:border-primary border-[#484848] bg-[#1A1A1A] p-4 text-white placeholder:text-[#919191]',
+              (submitted || touched.demoVideoUrl) &&
+                errors.demoVideoUrl &&
+                'border-red-500'
+            )}
           />
           <div className='flex items-start space-x-2'>
             <svg
@@ -741,9 +766,11 @@ const Basic = React.forwardRef<{ validate: () => boolean }, BasicProps>(
               Tip: A YouTube video link will be displayed as an embedded player.
             </p>
           </div>
+          {(submitted || touched.demoVideoUrl) && errors.demoVideoUrl && (
+            <p className='text-sm text-red-500'>{errors.demoVideoUrl}</p>
+          )}
         </div>
 
-        {/* Social Links */}
         <div className='space-y-3'>
           <Label className='text-white'>
             Social links (at least one link){' '}

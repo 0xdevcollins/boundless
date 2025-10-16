@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useWalletStore } from './use-wallet';
 import { toast } from 'sonner';
 
@@ -9,11 +9,33 @@ interface UseWalletProtectionOptions {
 
 export function useWalletProtection(options: UseWalletProtectionOptions = {}) {
   const { actionName = 'perform this action', showModal = true } = options;
-  const { isConnected, publicKey } = useWalletStore();
+  const { isConnected, publicKey, validateConnection } = useWalletStore();
   const [showWalletModal, setShowWalletModal] = useState(false);
+  const [isValidating, setIsValidating] = useState(false);
 
-  const requireWallet = (callback?: () => void) => {
-    if (!isConnected) {
+  useEffect(() => {
+    const validateAndUpdateConnection = async () => {
+      if (isConnected && publicKey) {
+        setIsValidating(true);
+        try {
+          const isValid = await validateConnection();
+          if (!isValid && isConnected) {
+            toast.error(
+              'Wallet connection lost. Please reconnect your wallet.'
+            );
+          }
+        } catch {
+        } finally {
+          setIsValidating(false);
+        }
+      }
+    };
+
+    validateAndUpdateConnection();
+  }, [isConnected, publicKey, validateConnection]);
+
+  const requireWallet = async (callback?: () => void) => {
+    if (!isConnected || !publicKey) {
       if (showModal) {
         setShowWalletModal(true);
       } else {
@@ -22,12 +44,37 @@ export function useWalletProtection(options: UseWalletProtectionOptions = {}) {
       return false;
     }
 
-    // If callback provided and wallet is connected, execute it
-    if (callback) {
-      callback();
-    }
+    setIsValidating(true);
+    try {
+      const isValid = await validateConnection();
+      if (!isValid) {
+        if (showModal) {
+          setShowWalletModal(true);
+        } else {
+          toast.error(
+            `Wallet connection lost. Please reconnect to ${actionName}`
+          );
+        }
+        return false;
+      }
 
-    return true;
+      if (callback) {
+        callback();
+      }
+
+      return true;
+    } catch {
+      if (showModal) {
+        setShowWalletModal(true);
+      } else {
+        toast.error(
+          `Wallet connection validation failed. Please reconnect to ${actionName}`
+        );
+      }
+      return false;
+    } finally {
+      setIsValidating(false);
+    }
   };
 
   const handleWalletConnected = () => {
@@ -46,5 +93,6 @@ export function useWalletProtection(options: UseWalletProtectionOptions = {}) {
     showWalletModal,
     handleWalletConnected,
     closeWalletModal,
+    isValidating,
   };
 }

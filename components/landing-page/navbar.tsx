@@ -29,7 +29,9 @@ import { User, LogOut, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import WalletConnectButton from '../wallet/WalletConnectButton';
 import CreateProjectModal from './project/CreateProjectModal';
+import { useProtectedAction } from '@/hooks/use-protected-action';
 import { useAuthStore } from '@/lib/stores/auth-store';
+import WalletRequiredModal from '@/components/wallet/WalletRequiredModal';
 
 gsap.registerPlugin(useGSAP);
 
@@ -229,6 +231,16 @@ function AuthenticatedNav({
   const { logout } = useAuthActions();
   const { isLoading } = useAuthStore();
   const [createProjectModalOpen, setCreateProjectModalOpen] = useState(false);
+
+  const {
+    executeProtectedAction,
+    showWalletModal,
+    closeWalletModal,
+    handleWalletConnected,
+  } = useProtectedAction({
+    actionName: 'create project',
+    onSuccess: () => setCreateProjectModalOpen(true),
+  });
   return (
     <div className='flex items-center space-x-3'>
       <WalletConnectButton />
@@ -243,7 +255,11 @@ function AuthenticatedNav({
           className='bg-background w-[300px] rounded-[8px] border border-[#2B2B2B] pt-3 pb-6 text-white shadow-[0_4px_4px_0_rgba(26,26,26,0.25)]'
         >
           <DropdownMenuItem
-            onClick={() => setCreateProjectModalOpen(true)}
+            onClick={async () => {
+              await executeProtectedAction(() =>
+                setCreateProjectModalOpen(true)
+              );
+            }}
             className='group hover:text-primary px-6 py-3.5 text-white hover:!bg-transparent'
           >
             <span className='group-hover:text-primary flex w-full items-center justify-between'>
@@ -366,6 +382,14 @@ function AuthenticatedNav({
         open={createProjectModalOpen}
         setOpen={setCreateProjectModalOpen}
       />
+
+      {/* Wallet Required Modal */}
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='create project'
+        onWalletConnected={handleWalletConnected}
+      />
     </div>
   );
 }
@@ -374,6 +398,16 @@ function AuthenticatedNav({
 // even for unauthenticated users, so designers/QA can test the flow.
 function UnauthenticatedNav() {
   const [createProjectModalOpen, setCreateProjectModalOpen] = useState(false);
+
+  const {
+    executeProtectedAction,
+    showWalletModal,
+    closeWalletModal,
+    handleWalletConnected,
+  } = useProtectedAction({
+    actionName: 'create project',
+    onSuccess: () => setCreateProjectModalOpen(true),
+  });
 
   const showDevAddProject =
     process.env.NODE_ENV !== 'production' &&
@@ -391,7 +425,9 @@ function UnauthenticatedNav() {
     <div className='flex items-center space-x-3'>
       <BoundlessButton
         variant='outline'
-        onClick={() => setCreateProjectModalOpen(true)}
+        onClick={async () => {
+          await executeProtectedAction(() => setCreateProjectModalOpen(true));
+        }}
         className='border-white/20 text-white hover:bg-white/10'
       >
         <Plus className='mr-2 h-4 w-4' />
@@ -403,6 +439,14 @@ function UnauthenticatedNav() {
       <CreateProjectModal
         open={createProjectModalOpen}
         setOpen={setCreateProjectModalOpen}
+      />
+
+      {/* Wallet Required Modal */}
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='create project'
+        onWalletConnected={handleWalletConnected}
       />
     </div>
   );

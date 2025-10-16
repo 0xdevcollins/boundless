@@ -54,11 +54,50 @@ const milestoneSchema = z
     endDate: z.string().min(1, 'End date is required'),
   })
   .superRefine((val, ctx) => {
-    if (new Date(val.startDate) >= new Date(val.endDate)) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day for comparison
+
+    const startDate = new Date(val.startDate);
+    const endDate = new Date(val.endDate);
+
+    // Check if start date is in the future (at least tomorrow)
+    if (startDate <= today) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['startDate'],
+        message: 'Start date must be at least tomorrow',
+      });
+    }
+
+    // Check if end date is after start date
+    if (endDate <= startDate) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['endDate'],
         message: 'End date must be after start date',
+      });
+    }
+
+    // Check if milestone has reasonable duration (at least 1 week)
+    const durationInDays = Math.ceil(
+      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    if (durationInDays < 7) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['endDate'],
+        message: 'Milestone duration must be at least 1 week',
+      });
+    }
+
+    // Check if milestone is not too far in the future (max 2 years)
+    const maxFutureDate = new Date();
+    maxFutureDate.setFullYear(maxFutureDate.getFullYear() + 2);
+    if (startDate > maxFutureDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['startDate'],
+        message: 'Start date cannot be more than 2 years in the future',
       });
     }
   });
@@ -72,7 +111,47 @@ const milestonesSchema = z.object({
     ),
   milestones: z
     .array(milestoneSchema)
-    .min(1, 'At least one complete milestone is required'),
+    .min(1, 'At least one complete milestone is required')
+    .superRefine((milestones, ctx) => {
+      // Check that milestones are in chronological order
+      for (let i = 0; i < milestones.length - 1; i++) {
+        const currentEndDate = new Date(milestones[i].endDate);
+        const nextStartDate = new Date(milestones[i + 1].startDate);
+
+        // Allow some overlap (up to 1 day) but not significant overlap
+        const daysBetween = Math.ceil(
+          (nextStartDate.getTime() - currentEndDate.getTime()) /
+            (1000 * 60 * 60 * 24)
+        );
+
+        if (daysBetween < -1) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: [i + 1, 'startDate'],
+            message: `Milestone ${i + 2} start date should be after milestone ${i + 1} end date`,
+          });
+        }
+      }
+
+      // Check that total project timeline is reasonable (max 3 years)
+      if (milestones.length > 0) {
+        const firstStartDate = new Date(milestones[0].startDate);
+        const lastEndDate = new Date(milestones[milestones.length - 1].endDate);
+        const totalDurationInDays = Math.ceil(
+          (lastEndDate.getTime() - firstStartDate.getTime()) /
+            (1000 * 60 * 60 * 24)
+        );
+
+        if (totalDurationInDays > 1095) {
+          // 3 years
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['milestones'],
+            message: 'Total project timeline cannot exceed 3 years',
+          });
+        }
+      }
+    }),
 });
 
 // Sortable Milestone Item Component
@@ -82,6 +161,7 @@ const SortableMilestoneItem = ({
   onMilestoneChange,
   onRemoveMilestone,
   canRemove,
+  errors,
 }: {
   milestone: Milestone;
   index: number;
@@ -92,6 +172,7 @@ const SortableMilestoneItem = ({
   ) => void;
   onRemoveMilestone: (id: string) => void;
   canRemove: boolean;
+  errors: { [key: string]: string | undefined };
 }) => {
   const {
     attributes,
@@ -188,10 +269,18 @@ const SortableMilestoneItem = ({
                         e.target.value
                       )
                     }
-                    className='focus-visible:border-primary border-[#2B2B2B] bg-[#101010] p-4 pr-10 text-white'
+                    className={cn(
+                      'focus-visible:border-primary border-[#2B2B2B] bg-[#101010] p-4 pr-10 text-white',
+                      errors[`${milestone.id}-startDate`] && 'border-red-500'
+                    )}
                   />
                   <Calendar className='pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-[#919191]' />
                 </div>
+                {errors[`${milestone.id}-startDate`] && (
+                  <p className='text-sm text-red-500'>
+                    {errors[`${milestone.id}-startDate`]}
+                  </p>
+                )}
               </div>
 
               <div className='space-y-2'>
@@ -203,10 +292,18 @@ const SortableMilestoneItem = ({
                     onChange={e =>
                       onMilestoneChange(milestone.id, 'endDate', e.target.value)
                     }
-                    className='focus-visible:border-primary border-[#2B2B2B] bg-[#101010] p-4 pr-10 text-white'
+                    className={cn(
+                      'focus-visible:border-primary border-[#2B2B2B] bg-[#101010] p-4 pr-10 text-white',
+                      errors[`${milestone.id}-endDate`] && 'border-red-500'
+                    )}
                   />
                   <Calendar className='pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-[#919191]' />
                 </div>
+                {errors[`${milestone.id}-endDate`] && (
+                  <p className='text-sm text-red-500'>
+                    {errors[`${milestone.id}-endDate`]}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -267,6 +364,7 @@ const Milestones = React.forwardRef<
   const [errors, setErrors] = useState<{
     fundingAmount?: string;
     milestones?: string;
+    [key: string]: string | undefined;
   }>({});
 
   const sensors = useSensors(
@@ -291,6 +389,48 @@ const Milestones = React.forwardRef<
     onDataChange?.(newData);
   };
 
+  const validateMilestoneField = (
+    milestone: Milestone,
+    field: keyof Milestone,
+    value: string
+  ) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (field === 'startDate' && value) {
+      const startDate = new Date(value);
+      if (startDate <= today) {
+        return 'Start date must be at least tomorrow';
+      }
+
+      // Check if not too far in future (2 years)
+      const maxFutureDate = new Date();
+      maxFutureDate.setFullYear(maxFutureDate.getFullYear() + 2);
+      if (startDate > maxFutureDate) {
+        return 'Start date cannot be more than 2 years in the future';
+      }
+    }
+
+    if (field === 'endDate' && value && milestone.startDate) {
+      const startDate = new Date(milestone.startDate);
+      const endDate = new Date(value);
+
+      if (endDate <= startDate) {
+        return 'End date must be after start date';
+      }
+
+      // Check minimum duration (1 week)
+      const durationInDays = Math.ceil(
+        (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+      );
+      if (durationInDays < 7) {
+        return 'Milestone duration must be at least 1 week';
+      }
+    }
+
+    return undefined;
+  };
+
   const handleMilestoneChange = (
     id: string,
     field: keyof Milestone,
@@ -299,6 +439,22 @@ const Milestones = React.forwardRef<
     const updatedMilestones = formData.milestones.map(milestone =>
       milestone.id === id ? { ...milestone, [field]: value } : milestone
     );
+
+    // Validate the specific field
+    const milestone = updatedMilestones.find(m => m.id === id);
+    if (milestone) {
+      const fieldError = validateMilestoneField(milestone, field, value);
+      if (fieldError) {
+        setErrors(prev => ({ ...prev, [`${id}-${field}`]: fieldError }));
+      } else {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[`${id}-${field}`];
+          return newErrors;
+        });
+      }
+    }
+
     handleInputChange('milestones', updatedMilestones);
   };
 
@@ -421,6 +577,7 @@ const Milestones = React.forwardRef<
                   onMilestoneChange={handleMilestoneChange}
                   onRemoveMilestone={removeMilestone}
                   canRemove={formData.milestones.length > 1}
+                  errors={errors}
                 />
               ))}
             </div>
