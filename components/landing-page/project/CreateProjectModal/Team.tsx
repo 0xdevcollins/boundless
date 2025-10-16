@@ -159,9 +159,15 @@ const Team = React.forwardRef<{ validate: () => boolean }, TeamProps>(
         </div>
 
         <div className='space-y-4'>
-          <Label className='text-white'>
-            Invite members to your team by email (optional)
-          </Label>
+          <div className='space-y-2'>
+            <Label className='text-white'>
+              Invite members to your team by email (optional)
+            </Label>
+            <p className='text-sm text-[#B5B5B5]'>
+              Team members will receive invite links via email to join your
+              project.
+            </p>
+          </div>
 
           <div className='space-y-4'>
             <div className='relative'>

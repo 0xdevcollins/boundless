@@ -58,6 +58,7 @@ export interface WalletState {
   setError: (error: string | null) => void;
   clearError: () => void;
   getWalletInfo: () => { address: string; network: string } | null;
+  validateConnection: () => Promise<boolean>;
 }
 
 let walletKitInstance: StellarWalletsKit | null = null;
@@ -546,6 +547,55 @@ export const useWalletStore = create<WalletState>()(
           network: network === 'testnet' ? 'TESTNET' : 'PUBLIC',
         };
       },
+
+      validateConnection: async () => {
+        const { isConnected, publicKey, selectedWallet, walletKit } = get();
+
+        if (!isConnected || !publicKey || !selectedWallet) {
+          return false;
+        }
+
+        try {
+          // For Freighter with direct API
+          if (usingFreighterAPI && selectedWallet === 'freighter') {
+            const isStillConnected = await freighterIsConnected();
+            if (!isStillConnected) {
+              // Clear the connection state
+              get().disconnectWallet();
+              return false;
+            }
+
+            // Verify the address is still the same
+            const currentAddress = await freighterGetAddress();
+            if (currentAddress.address !== publicKey) {
+              // Address changed, update it
+              set({ publicKey: currentAddress.address });
+            }
+            return true;
+          }
+
+          // For other wallets using wallet kit
+          if (walletKit) {
+            try {
+              const addressResult = await walletKit.getAddress();
+              if (addressResult.address !== publicKey) {
+                // Address changed, update it
+                set({ publicKey: addressResult.address });
+              }
+              return true;
+            } catch {
+              // Connection lost
+              get().disconnectWallet();
+              return false;
+            }
+          }
+
+          return false;
+        } catch {
+          get().disconnectWallet();
+          return false;
+        }
+      },
     }),
     {
       name: 'stellar-wallets-kit-storage',
@@ -578,14 +628,38 @@ export function useWalletInfo() {
 }
 
 export function useAutoReconnect() {
-  const { isConnected, publicKey, selectedWallet, connectWallet } =
-    useWalletStore();
+  const {
+    isConnected,
+    publicKey,
+    selectedWallet,
+    connectWallet,
+    initializeWalletKit,
+    network,
+  } = useWalletStore();
 
   useEffect(() => {
-    if (publicKey && selectedWallet && !isConnected) {
-      connectWallet(selectedWallet).catch(() => {});
-    }
-  }, [publicKey, selectedWallet, isConnected, connectWallet]);
+    const attemptReconnection = async () => {
+      if (publicKey && selectedWallet && !isConnected) {
+        try {
+          await initializeWalletKit(network);
+          await connectWallet(selectedWallet);
+        } catch {
+          useWalletStore.getState().disconnectWallet();
+        }
+      }
+    };
+
+    const timeoutId = setTimeout(attemptReconnection, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [
+    publicKey,
+    selectedWallet,
+    isConnected,
+    connectWallet,
+    initializeWalletKit,
+    network,
+  ]);
 }
 
 export function useWalletConnection() {
