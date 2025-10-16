@@ -2,7 +2,7 @@
 import { register } from '@/lib/api/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LockIcon, MailIcon, User } from 'lucide-react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -164,7 +164,7 @@ const SignupForm = ({ onLoadingChange, invitation }: SignupFormProps) => {
         </p>
       </div>
       <div className='mt-6 space-y-6'>
-        <BoundlessButton
+        {/* <BoundlessButton
           fullWidth
           className='bg-background border !border-[#484848] !text-white'
         >
@@ -177,13 +177,13 @@ const SignupForm = ({ onLoadingChange, invitation }: SignupFormProps) => {
             unoptimized
           />
           Continue with Google
-        </BoundlessButton>
-
+        </BoundlessButton> */}
+        {/* 
         <div className='flex items-center justify-center gap-2.5'>
           <div className='h-[1px] w-full bg-[#2B2B2B]'></div>
           <p className='text-center text-sm text-[#B5B5B5]'>Or</p>
           <div className='h-[1px] w-full bg-[#2B2B2B]'></div>
-        </div>
+        </div> */}
 
         <Form {...form}>
           <form
