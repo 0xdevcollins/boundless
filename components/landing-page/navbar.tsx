@@ -40,6 +40,8 @@ const menuItems = [
   { href: '/projects', label: 'Projects' },
   { href: '/hackathons', label: 'Hackathons' },
   { href: '/grants', label: 'Grants' },
+  { href: '/bounties', label: 'Bounties' },
+
   { href: '/blog', label: 'Blog' },
 ];
 
