@@ -340,13 +340,53 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
           logo: z.any().optional(),
           vision: z.string().trim().min(1).max(300),
           category: z.string().trim().min(1),
-          githubUrl: z.string().url().optional().or(z.literal('')).optional(),
-          websiteUrl: z.string().url().optional().or(z.literal('')).optional(),
-          demoVideoUrl: z
+          githubUrl: z
             .string()
-            .url()
+            .trim()
             .optional()
             .or(z.literal(''))
+            .refine(
+              v =>
+                !v ||
+                /^https?:\/\/.+/i.test(v) ||
+                /^[\w.-]+\.[a-z]{2,}$/i.test(v),
+              {
+                message:
+                  'Please enter a valid URL (with or without https), e.g., https://github.com or github.com',
+              }
+            )
+            .optional(),
+          websiteUrl: z
+            .string()
+            .trim()
+            .optional()
+            .or(z.literal(''))
+            .refine(
+              v =>
+                !v ||
+                /^https?:\/\/.+/i.test(v) ||
+                /^[\w.-]+\.[a-z]{2,}$/i.test(v),
+              {
+                message:
+                  'Please enter a valid URL (with or without https), e.g., https://boundlessfi.xyz or boundlessfi.xyz',
+              }
+            )
+            .optional(),
+          demoVideoUrl: z
+            .string()
+            .trim()
+            .optional()
+            .or(z.literal(''))
+            .refine(
+              v =>
+                !v ||
+                /^https?:\/\/.+/i.test(v) ||
+                /^[\w.-]+\.[a-z]{2,}$/i.test(v),
+              {
+                message:
+                  'Please enter a valid URL (with or without https), e.g., https://demo.com or demo.com',
+              }
+            )
             .optional(),
           socialLinks: z.array(z.string()).min(1),
         }),
