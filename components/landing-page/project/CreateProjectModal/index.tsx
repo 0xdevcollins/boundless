@@ -254,7 +254,7 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
       return;
     }
 
-    requireWallet(async () => {
+    const walletValid = await requireWallet(async () => {
       setIsSigningTransaction(true);
       setFlowStep('confirming');
 
@@ -308,6 +308,10 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
         setFlowStep('signing');
       }
     });
+
+    if (!walletValid) {
+      return;
+    }
   };
 
   const handleSubmit = async () => {

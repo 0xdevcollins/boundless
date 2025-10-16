@@ -14,6 +14,8 @@ import { ProjectSidebarActionsProps } from './types';
 import { BoundlessButton } from '@/components/buttons';
 import { SharePopup } from './SharePopup';
 import FundProject from '@/components/modals/fund-project';
+import { useProtectedAction } from '@/hooks/use-protected-action';
+import WalletRequiredModal from '@/components/wallet/WalletRequiredModal';
 
 export function ProjectSidebarActions({
   project,
@@ -25,6 +27,16 @@ export function ProjectSidebarActions({
   const [isSharePopupOpen, setIsSharePopupOpen] = useState(false);
   const [isFundModalOpen, setIsFundModalOpen] = useState(false);
 
+  const {
+    executeProtectedAction,
+    showWalletModal,
+    closeWalletModal,
+    handleWalletConnected,
+  } = useProtectedAction({
+    actionName: 'fund project',
+    onSuccess: () => setIsFundModalOpen(true),
+  });
+
   const handleShareClick = () => {
     setIsSharePopupOpen(true);
   };
@@ -33,8 +45,8 @@ export function ProjectSidebarActions({
     setIsSharePopupOpen(false);
   };
 
-  const handleFundClick = () => {
-    setIsFundModalOpen(true);
+  const handleFundClick = async () => {
+    await executeProtectedAction(() => setIsFundModalOpen(true));
   };
 
   return (
@@ -141,6 +153,13 @@ export function ProjectSidebarActions({
               }
             : undefined,
         }}
+      />
+
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='fund project'
+        onWalletConnected={handleWalletConnected}
       />
     </div>
   );

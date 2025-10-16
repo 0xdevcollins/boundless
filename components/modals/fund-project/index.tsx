@@ -13,6 +13,7 @@ import {
   confirmProjectFunding,
 } from '@/lib/api/project';
 import { useWalletInfo, useWalletSigning } from '@/hooks/use-wallet';
+import { useWalletProtection } from '@/hooks/use-wallet-protection';
 
 interface FundProjectProps {
   open: boolean;
@@ -62,6 +63,9 @@ const FundProject = ({ open, setOpen, project }: FundProjectProps) => {
   // Wallet hooks
   const { signTransaction } = useWalletSigning();
   const { address } = useWalletInfo() || { address: '' };
+  const { requireWallet } = useWalletProtection({
+    actionName: 'fund project',
+  });
   // Form data state
   const [formData, setFormData] = useState<FundProjectFormData>({
     amount: {},
@@ -207,7 +211,17 @@ const FundProject = ({ open, setOpen, project }: FundProjectProps) => {
         throw new Error(prepareResponse.message || 'Failed to prepare funding');
       }
 
-      // Step 2: Sign transaction
+      // Step 2: Sign transaction with wallet protection
+      const walletValid = await requireWallet();
+
+      if (!walletValid) {
+        setError('Wallet connection required to fund project');
+        setFlowStep('form');
+        setIsLoading(false);
+        setIsSubmitting(false);
+        return;
+      }
+
       const signedXdr = await signTransaction(prepareResponse.data.unsignedXdr);
 
       // Step 3: Confirm funding

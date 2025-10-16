@@ -11,10 +11,25 @@ import { fadeInUp, slideInFromLeft, slideInFromRight } from '@/lib/motion';
 import WalletConnectButton from '../wallet/WalletConnectButton';
 import { ProjectSheetFlow } from '../project';
 import { useProjectSheetStore } from '@/lib/stores/project-sheet-store';
+import { useProtectedAction } from '@/hooks/use-protected-action';
+import WalletRequiredModal from '../wallet/WalletRequiredModal';
 
 const Header = () => {
   const [open, setOpen] = useState(false);
   const sheet = useProjectSheetStore();
+
+  const {
+    executeProtectedAction,
+    showWalletModal,
+    closeWalletModal,
+    handleWalletConnected,
+  } = useProtectedAction({
+    actionName: 'create project',
+    onSuccess: () => {
+      sheet.openInitialize();
+      setOpen(true);
+    },
+  });
 
   return (
     <motion.header
@@ -82,9 +97,11 @@ const Header = () => {
             size='default'
             icon={<Plus className='h-4 w-4 sm:h-5 sm:w-5' />}
             iconPosition='right'
-            onClick={() => {
-              sheet.openInitialize();
-              setOpen(true);
+            onClick={async () => {
+              await executeProtectedAction(() => {
+                sheet.openInitialize();
+                setOpen(true);
+              });
             }}
           >
             New Project
@@ -106,6 +123,13 @@ const Header = () => {
           setOpen(o);
           sheet.setOpen(o);
         }}
+      />
+
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='create project'
+        onWalletConnected={handleWalletConnected}
       />
     </motion.header>
   );
