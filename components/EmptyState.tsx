@@ -11,7 +11,7 @@ export interface EmptyStateProps {
   onAddClick?: () => void;
   className?: string;
   type?: 'default' | 'compact' | 'custom';
-  action?: React.ReactNode;
+  action?: React.ReactNode | boolean;
 }
 
 const EmptyState: React.FC<EmptyStateProps> = ({
@@ -21,7 +21,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   onAddClick = () => {},
   className = '',
   type = 'default',
-  action,
+  action = false,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -83,7 +83,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
       </p>
 
       {/* Button or custom action */}
-      {action ? (
+      {action === false ? null : action ? (
         action
       ) : (
         <button

@@ -1,6 +1,6 @@
 'use client';
 import { Eye, EyeOff, LockIcon, MailIcon } from 'lucide-react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import Link from 'next/link';
 import { UseFormReturn } from 'react-hook-form';
 import z from 'zod';
@@ -50,7 +50,7 @@ const LoginForm = ({
         </p>
       </div>
       <div className='mt-6 space-y-6'>
-        <BoundlessButton
+        {/* <BoundlessButton
           fullWidth
           size='xl'
           icon={
@@ -65,15 +65,15 @@ const LoginForm = ({
           className='bg-background hover:!text-background border !border-[#484848] text-base !text-white'
         >
           Continue with Google
-        </BoundlessButton>
-
+        </BoundlessButton> */}
+        {/* 
         <div className='flex items-center justify-center gap-2.5'>
           <div className='h-[1px] w-full bg-[#2B2B2B]'></div>
           <p className='text-center text-sm leading-[145%] text-[#B5B5B5]'>
             Or
           </p>
           <div className='h-[1px] w-full bg-[#2B2B2B]'></div>
-        </div>
+        </div> */}
 
         <Form {...form}>
           <form

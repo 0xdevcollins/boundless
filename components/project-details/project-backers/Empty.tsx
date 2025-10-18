@@ -6,7 +6,7 @@ import LottieAnimation from '@/components/LottieAnimation';
 const Empty = () => {
   return (
     <div className='mx-auto w-full max-w-[400px] space-y-5 py-5 text-center'>
-      <LottieAnimation />
+      <LottieAnimation width='400px' />
 
       <div className='space-y-1'>
         <h3 className='text-center text-base font-medium text-white md:text-lg'>

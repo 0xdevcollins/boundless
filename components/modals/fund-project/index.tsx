@@ -8,10 +8,40 @@ import Amount, { AmountFormData, AmountHandle } from './Amount';
 import Confirm, { ConfirmHandle, ConfirmFormData } from './Confirm';
 import Success from '../Success';
 import Loading from '../Loading';
+import {
+  prepareProjectFunding,
+  confirmProjectFunding,
+} from '@/lib/api/project';
+import { useWalletInfo, useWalletSigning } from '@/hooks/use-wallet';
+import { useWalletProtection } from '@/hooks/use-wallet-protection';
 
 interface FundProjectProps {
   open: boolean;
   setOpen: (open: boolean) => void;
+  project?: {
+    _id: string;
+    title: string;
+    logo?: string;
+    description?: string;
+    creator?: {
+      profile?: {
+        firstName?: string;
+        lastName?: string;
+        avatar?: string;
+      };
+    };
+    milestones?: Array<{
+      title: string;
+      description: string;
+      dueDate: string;
+      amount: number;
+      status: string;
+    }>;
+    funding?: {
+      goal: number;
+      raised: number;
+    };
+  };
 }
 
 export interface FundProjectFormData {
@@ -19,7 +49,7 @@ export interface FundProjectFormData {
   confirm: Partial<ConfirmFormData>;
 }
 
-const FundProject = ({ open, setOpen }: FundProjectProps) => {
+const FundProject = ({ open, setOpen, project }: FundProjectProps) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitErrors, setSubmitErrors] = useState<string[]>([]);
@@ -28,6 +58,14 @@ const FundProject = ({ open, setOpen }: FundProjectProps) => {
   const [flowStep, setFlowStep] = useState<
     'form' | 'preparing' | 'signing' | 'confirming' | 'success'
   >('form');
+  const [error, setError] = useState<string | null>(null);
+
+  // Wallet hooks
+  const { signTransaction } = useWalletSigning();
+  const { address } = useWalletInfo() || { address: '' };
+  const { requireWallet } = useWalletProtection({
+    actionName: 'fund project',
+  });
   // Form data state
   const [formData, setFormData] = useState<FundProjectFormData>({
     amount: {},
@@ -125,25 +163,92 @@ const FundProject = ({ open, setOpen }: FundProjectProps) => {
   };
 
   const handleSubmit = async () => {
+    if (!project?._id) {
+      setError('Project ID is required');
+      return;
+    }
+
+    const amount = parseFloat(formData.amount?.amount || '0');
+    if (!amount || amount <= 0) {
+      setError('Please enter a valid amount');
+      return;
+    }
+
+    if (!address) {
+      setError('Wallet address is required');
+      return;
+    }
+
+    // Check if amount exceeds remaining funding goal
+    if (project.funding) {
+      const remainingGoal = Math.max(
+        0,
+        project.funding.goal - project.funding.raised
+      );
+      if (amount > remainingGoal) {
+        setError(
+          `Amount cannot exceed remaining goal of $${remainingGoal.toLocaleString()}`
+        );
+        return;
+      }
+    }
+
     setIsSubmitting(true);
     setIsLoading(true);
     setFlowStep('preparing');
     setSubmitErrors([]);
+    setError(null);
 
     try {
-      // Simulate API call for funding preparation
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Step 1: Prepare funding
+      setFlowStep('signing');
+      const prepareResponse = await prepareProjectFunding(project._id, {
+        amount,
+        signer: address,
+      });
 
-      // Move to success state
+      if (!prepareResponse.success) {
+        throw new Error(prepareResponse.message || 'Failed to prepare funding');
+      }
+
+      // Step 2: Sign transaction with wallet protection
+      const walletValid = await requireWallet();
+
+      if (!walletValid) {
+        setError('Wallet connection required to fund project');
+        setFlowStep('form');
+        setIsLoading(false);
+        setIsSubmitting(false);
+        return;
+      }
+
+      const signedXdr = await signTransaction(prepareResponse.data.unsignedXdr);
+
+      // Step 3: Confirm funding
+      setFlowStep('confirming');
+      const confirmResponse = await confirmProjectFunding(project._id, {
+        signedXdr,
+        transactionHash: 'mock-hash', // This should come from the signing process
+        amount,
+      });
+
+      if (!confirmResponse.success) {
+        throw new Error(confirmResponse.message || 'Failed to confirm funding');
+      }
+
+      // Success - move to success state
       setFlowStep('success');
       setShowSuccess(true);
       setIsLoading(false);
       setIsSubmitting(false);
-    } catch {
-      setSubmitErrors(['Failed to process funding. Please try again.']);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
+      setSubmitErrors([errorMessage]);
+      setFlowStep('form');
       setIsLoading(false);
       setIsSubmitting(false);
-      setFlowStep('form');
     }
   };
 
@@ -193,6 +298,7 @@ const FundProject = ({ open, setOpen }: FundProjectProps) => {
     setIsLoading(false);
     setSubmitErrors([]);
     setFlowStep('form');
+    setError(null);
     setOpen(false);
   };
 
@@ -222,13 +328,12 @@ const FundProject = ({ open, setOpen }: FundProjectProps) => {
       const amount = formData.amount?.amount
         ? `$${formData.amount.amount} ${formData.amount.currency}`
         : undefined;
-      const projectName = 'BitMed Health Protocol';
 
       return (
         <Success
           onContinue={handleReset}
           title='Contribution Successful!'
-          description={`Your have backed [${projectName}](/projects/bitmed) with ${amount} USDC. Funds are securely held in escrow.`}
+          description={`You have backed [${project?.title || 'this project'}](${typeof window !== 'undefined' ? window.location.pathname : ''}) with ${amount} USDC. Funds are securely held in escrow.`}
           buttonText='Continue'
         />
       );
@@ -241,6 +346,7 @@ const FundProject = ({ open, setOpen }: FundProjectProps) => {
             ref={stepRefs.amount}
             onDataChange={data => handleDataChange('amount', data)}
             initialData={formData.amount}
+            project={project}
           />
         );
       case 2:
@@ -250,6 +356,7 @@ const FundProject = ({ open, setOpen }: FundProjectProps) => {
             onDataChange={data => handleDataChange('confirm', data)}
             initialData={formData.confirm}
             fundingData={formData.amount as AmountFormData}
+            project={project}
           />
         );
       default:
@@ -258,6 +365,7 @@ const FundProject = ({ open, setOpen }: FundProjectProps) => {
             ref={stepRefs.amount}
             onDataChange={data => handleDataChange('amount', data)}
             initialData={formData.amount}
+            project={project}
           />
         );
     }
@@ -274,6 +382,7 @@ const FundProject = ({ open, setOpen }: FundProjectProps) => {
           currentStep={currentStep}
           onBack={handleBack}
           onTestData={handleTestData}
+          project={project}
         />
       )}
       <div
@@ -286,18 +395,24 @@ const FundProject = ({ open, setOpen }: FundProjectProps) => {
           </div>
         ) : (
           <>
-            {submitErrors.length > 0 && (
+            {(submitErrors.length > 0 || error) && (
               <div className='mb-4 rounded-md border border-red-500/40 bg-red-500/10 p-4 text-red-200'>
                 <p className='mb-2 font-medium text-red-300'>
-                  Please fix the following errors before submitting:
+                  {submitErrors.length > 0
+                    ? 'Please fix the following errors before submitting:'
+                    : 'An error occurred:'}
                 </p>
-                <ul className='list-disc space-y-1 pl-5'>
-                  {submitErrors.map((e, idx) => (
-                    <li key={idx} className='text-sm'>
-                      {e}
-                    </li>
-                  ))}
-                </ul>
+                {submitErrors.length > 0 ? (
+                  <ul className='list-disc space-y-1 pl-5'>
+                    {submitErrors.map((e, idx) => (
+                      <li key={idx} className='text-sm'>
+                        {e}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className='text-sm'>{error}</p>
+                )}
               </div>
             )}
             <div key={currentStep}>{renderStepContent()}</div>

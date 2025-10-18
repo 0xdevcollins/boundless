@@ -12,7 +12,7 @@ interface LandingLayoutProps {
 
 export default function LandingLayout({ children }: LandingLayoutProps) {
   return (
-    <div className='bg-background relative flex min-h-screen flex-col pt-5 md:pt-11'>
+    <div className='bg-background relative flex min-h-screen flex-col'>
       <Navbar />
       <main className='flex-1'>{children}</main>
       <Footer />

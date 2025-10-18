@@ -1,74 +1,34 @@
 import React, { useState } from 'react';
 import Empty from './Empty';
 import Image from 'next/image';
+import { CrowdfundingProject } from '@/lib/api/types';
 
 interface Backer {
   _id: string;
-  profile: {
-    firstName: string;
-    lastName: string;
-    username: string;
-    bio: string;
+  user: {
+    _id: string;
+    email: string;
+    profile: {
+      firstName: string;
+      lastName: string;
+      username: string;
+      avatar?: string;
+    };
   };
-  avatar: string;
   amount: number;
-  isAnonymous: boolean;
+  date: string;
+  transactionHash: string;
 }
 
-const mockBackers: Backer[] = [
-  {
-    _id: '1',
-    profile: {
-      firstName: 'John',
-      lastName: 'Doe',
-      username: 'john_doe',
-      bio: 'John Doe is a software engineer',
-    },
-    avatar: 'https://i.pravatar.cc/150?img=1',
-    amount: 100,
-    isAnonymous: true,
-  },
-  {
-    _id: '2',
-    profile: {
-      firstName: 'Jane',
-      lastName: 'Doe',
-      username: 'jane_doe',
-      bio: 'Jane Doe is a software engineer',
-    },
-    avatar: 'https://i.pravatar.cc/150?img=2',
-    amount: 100,
-    isAnonymous: false,
-  },
-  {
-    _id: '3',
-    profile: {
-      firstName: 'Jim',
-      lastName: 'Beam',
-      username: 'jim_beam',
-      bio: 'Jim Beam is a software engineer',
-    },
-    avatar: 'https://i.pravatar.cc/150?img=3',
-    amount: 100,
-    isAnonymous: false,
-  },
-  {
-    _id: '4',
-    profile: {
-      firstName: 'Jill',
-      lastName: 'Valentine',
-      username: 'jill_valentine',
-      bio: 'Jill Valentine is a software engineer',
-    },
-    avatar: 'https://i.pravatar.cc/150?img=4',
-    amount: 100,
-    isAnonymous: false,
-  },
-];
+const ProjectBackers = ({ project }: { project: CrowdfundingProject }) => {
+  const [backers] = useState<Backer[]>(
+    project.funding.contributors as Backer[]
+  );
 
-const ProjectBackers = () => {
-  const [backers] = useState<Backer[]>(mockBackers);
-  const handleBackerClick = () => {};
+  const handleBackerClick = (backer: Backer) => {
+    window.open(`/profile/${backer.user.profile.username}`, '_blank');
+  };
+
   if (backers.length === 0) {
     return <Empty />;
   }
@@ -78,18 +38,18 @@ const ProjectBackers = () => {
         <div
           key={backer._id}
           className='flex cursor-pointer items-center justify-between rounded px-3 py-2 transition-colors hover:bg-gray-900/30'
-          onClick={() => handleBackerClick()}
+          onClick={() => handleBackerClick(backer)}
         >
           <div className='flex items-center space-x-4'>
             {/* Avatar */}
             <div className='relative'>
               <div className='h-12 w-12 overflow-hidden rounded-full border-[0.5px] border-[#2B2B2B]'>
-                {backer.avatar ? (
+                {backer.user.profile.avatar ? (
                   <Image
                     width={48}
                     height={48}
-                    src={backer.avatar}
-                    alt={backer.profile.firstName}
+                    src={backer.user.profile.avatar}
+                    alt={backer.user.profile.firstName}
                     className='h-full w-full object-cover'
                   />
                 ) : (
@@ -104,17 +64,10 @@ const ProjectBackers = () => {
               </div>
             </div>
 
-            {/* Member Info */}
+            {/* Backer Info */}
             <div className='flex flex-col space-y-0.5'>
               <span className='text-base font-normal text-white'>
-                {backer.isAnonymous
-                  ? 'Anonymous'
-                  : `${backer.profile.firstName} ${backer.profile.lastName}`}{' '}
-                {!backer.isAnonymous && (
-                  <span className='text-xs font-bold'>
-                    @{backer.profile.username}
-                  </span>
-                )}
+                {backer.user.profile.firstName} {backer.user.profile.lastName}
               </span>
               <span className={`truncate text-sm text-gray-500`}>
                 ${backer.amount}
@@ -122,7 +75,6 @@ const ProjectBackers = () => {
             </div>
           </div>
 
-          {/* Chevron */}
           <svg
             width='20'
             height='20'

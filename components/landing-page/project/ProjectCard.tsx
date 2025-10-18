@@ -1,3 +1,4 @@
+'use client';
 import { Progress } from '@/components/ui/progress';
 import { formatNumber } from '@/lib/utils';
 import { useRouter } from 'nextjs-toploader/app';
@@ -90,11 +91,11 @@ function ProjectCard({
   const deadlineInfo = getDeadlineInfo();
 
   return (
-    <article
+    <div
       onClick={handleClick}
-      className='font-inter hover:bg-primary/5 hover:border-primary/25 flex w-full max-w-[397px] cursor-pointer flex-col gap-4 rounded-[8px] border border-gray-900 bg-[#030303] p-4 sm:p-5'
+      className='font-inter hover:border-primary/45 flex w-full max-w-[397px] cursor-pointer flex-col gap-4 rounded-[8px] border border-gray-900 bg-[#030303] p-4 transition-all duration-300 sm:p-5'
     >
-      <header className='flex items-center justify-between'>
+      <div className='flex items-center justify-between'>
         <div className='flex items-center gap-2'>
           <div
             style={{ backgroundImage: `url(${creatorLogo})` }}
@@ -112,8 +113,8 @@ function ProjectCard({
             {status}
           </div>
         </div>
-      </header>
-      <section className='flex items-start gap-3 sm:gap-5'>
+      </div>
+      <div className='flex items-start gap-3 sm:gap-5'>
         <div
           style={{ backgroundImage: `url(${projectImage})` }}
           className='h-[70px] w-[60px] flex-shrink-0 rounded-[8px] bg-white bg-cover bg-center sm:h-[90px] sm:w-[79.41px]'
@@ -128,8 +129,8 @@ function ProjectCard({
             </p>
           </div>
         </div>
-      </section>
-      <footer className='flex flex-col gap-2'>
+      </div>
+      <div className='flex flex-col gap-2'>
         <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
           <div className='flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2'>
             {status === 'Validation' && votes && (
@@ -176,8 +177,8 @@ function ProjectCard({
             className='h-2 w-full rounded-full'
           />
         </div>
-      </footer>
-    </article>
+      </div>
+    </div>
   );
 }
 

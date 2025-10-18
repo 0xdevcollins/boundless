@@ -71,6 +71,7 @@ const OtpForm = ({
         }
 
         toast.success('Account created successfully!');
+        window.location.reload();
         onOtpSuccess();
       } else {
         const error = await response.json();

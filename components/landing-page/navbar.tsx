@@ -13,7 +13,7 @@ import { useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { BoundlessButton } from '../buttons';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Sheet, SheetTrigger, SheetContent, SheetClose } from '../ui/sheet';
 import { useAuthStatus, useAuthActions } from '@/hooks/use-auth';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -29,7 +29,9 @@ import { User, LogOut, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import WalletConnectButton from '../wallet/WalletConnectButton';
 import CreateProjectModal from './project/CreateProjectModal';
+import { useProtectedAction } from '@/hooks/use-protected-action';
 import { useAuthStore } from '@/lib/stores/auth-store';
+import WalletRequiredModal from '@/components/wallet/WalletRequiredModal';
 
 gsap.registerPlugin(useGSAP);
 
@@ -38,6 +40,8 @@ const menuItems = [
   { href: '/projects', label: 'Projects' },
   { href: '/hackathons', label: 'Hackathons' },
   { href: '/grants', label: 'Grants' },
+  { href: '/bounties', label: 'Bounties' },
+
   { href: '/blog', label: 'Blog' },
 ];
 
@@ -48,6 +52,8 @@ export function Navbar() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { isAuthenticated, isLoading, user } = useAuthStatus();
+  const pathname = usePathname();
+
   useGSAP(
     () => {
       gsap.fromTo(
@@ -154,10 +160,13 @@ export function Navbar() {
     { scope: navbarRef }
   );
 
+  if (pathname.startsWith('/organizations')) {
+    return null;
+  }
   return (
     <nav
       ref={navbarRef}
-      className='sticky top-0 z-50 -mt-11 max-h-[88px] bg-[#030303A3] backdrop-blur-[12px]'
+      className='sticky top-0 z-50 max-h-[88px] bg-[#030303A3] backdrop-blur-[12px]'
     >
       <div className='mx-auto max-w-[1440px] px-5 py-5 md:px-[50px] lg:px-[100px]'>
         <div
@@ -224,6 +233,16 @@ function AuthenticatedNav({
   const { logout } = useAuthActions();
   const { isLoading } = useAuthStore();
   const [createProjectModalOpen, setCreateProjectModalOpen] = useState(false);
+
+  const {
+    executeProtectedAction,
+    showWalletModal,
+    closeWalletModal,
+    handleWalletConnected,
+  } = useProtectedAction({
+    actionName: 'create project',
+    onSuccess: () => setCreateProjectModalOpen(true),
+  });
   return (
     <div className='flex items-center space-x-3'>
       <WalletConnectButton />
@@ -238,7 +257,11 @@ function AuthenticatedNav({
           className='bg-background w-[300px] rounded-[8px] border border-[#2B2B2B] pt-3 pb-6 text-white shadow-[0_4px_4px_0_rgba(26,26,26,0.25)]'
         >
           <DropdownMenuItem
-            onClick={() => setCreateProjectModalOpen(true)}
+            onClick={async () => {
+              await executeProtectedAction(() =>
+                setCreateProjectModalOpen(true)
+              );
+            }}
             className='group hover:text-primary px-6 py-3.5 text-white hover:!bg-transparent'
           >
             <span className='group-hover:text-primary flex w-full items-center justify-between'>
@@ -246,18 +269,22 @@ function AuthenticatedNav({
               <Plus className='group-hover:text-primary h-4 w-4' />
             </span>
           </DropdownMenuItem>
-          <DropdownMenuItem className='group hover:text-primary px-6 py-3.5 text-white hover:!bg-transparent'>
-            <span className='group-hover:text-primary flex w-full items-center justify-between'>
-              Host Hackathon
-              <ArrowUpRight className='group-hover:text-primary h-4 w-4' />
-            </span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className='group hover:text-primary px-6 py-3.5 text-white hover:!bg-transparent'>
-            <span className='group-hover:text-primary flex w-full items-center justify-between'>
-              Create Grant
-              <ArrowUpRight className='group-hover:text-primary h-4 w-4' />
-            </span>
-          </DropdownMenuItem>
+          <Link href='/organizations/new' target='_blank' rel='noreferrer'>
+            <DropdownMenuItem className='group hover:text-primary px-6 py-3.5 text-white hover:!bg-transparent'>
+              <span className='group-hover:text-primary flex w-full items-center justify-between'>
+                Host Hackathon
+                <ArrowUpRight className='group-hover:text-primary h-4 w-4' />
+              </span>
+            </DropdownMenuItem>
+          </Link>
+          <Link href='/organizations/new' target='_blank' rel='noreferrer'>
+            <DropdownMenuItem className='group hover:text-primary px-6 py-3.5 text-white hover:!bg-transparent'>
+              <span className='group-hover:text-primary flex w-full items-center justify-between'>
+                Create Grant
+                <ArrowUpRight className='group-hover:text-primary h-4 w-4' />
+              </span>
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -357,6 +384,14 @@ function AuthenticatedNav({
         open={createProjectModalOpen}
         setOpen={setCreateProjectModalOpen}
       />
+
+      {/* Wallet Required Modal */}
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='create project'
+        onWalletConnected={handleWalletConnected}
+      />
     </div>
   );
 }
@@ -365,6 +400,16 @@ function AuthenticatedNav({
 // even for unauthenticated users, so designers/QA can test the flow.
 function UnauthenticatedNav() {
   const [createProjectModalOpen, setCreateProjectModalOpen] = useState(false);
+
+  const {
+    executeProtectedAction,
+    showWalletModal,
+    closeWalletModal,
+    handleWalletConnected,
+  } = useProtectedAction({
+    actionName: 'create project',
+    onSuccess: () => setCreateProjectModalOpen(true),
+  });
 
   const showDevAddProject =
     process.env.NODE_ENV !== 'production' &&
@@ -382,7 +427,9 @@ function UnauthenticatedNav() {
     <div className='flex items-center space-x-3'>
       <BoundlessButton
         variant='outline'
-        onClick={() => setCreateProjectModalOpen(true)}
+        onClick={async () => {
+          await executeProtectedAction(() => setCreateProjectModalOpen(true));
+        }}
         className='border-white/20 text-white hover:bg-white/10'
       >
         <Plus className='mr-2 h-4 w-4' />
@@ -394,6 +441,14 @@ function UnauthenticatedNav() {
       <CreateProjectModal
         open={createProjectModalOpen}
         setOpen={setCreateProjectModalOpen}
+      />
+
+      {/* Wallet Required Modal */}
+      <WalletRequiredModal
+        open={showWalletModal}
+        onOpenChange={closeWalletModal}
+        actionName='create project'
+        onWalletConnected={handleWalletConnected}
       />
     </div>
   );

@@ -19,8 +19,9 @@ import {
   CreateCrowdfundingProjectRequest,
   PrepareCrowdfundingProjectResponse,
 } from '@/lib/api/types';
-import { useWalletSigning } from '@/hooks/use-wallet';
+import { useWalletInfo, useWalletSigning } from '@/hooks/use-wallet';
 import { useWalletProtection } from '@/hooks/use-wallet-protection';
+import { cn } from '@/lib/utils';
 
 type StepHandle = { validate: () => boolean; markSubmitted?: () => void };
 
@@ -55,6 +56,8 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
   const [flowStep, setFlowStep] = useState<
     'form' | 'preparing' | 'signing' | 'confirming' | 'success'
   >('form');
+
+  const { address } = useWalletInfo() || { address: '' };
 
   // Form data state
   const [formData, setFormData] = useState<ProjectFormData>({
@@ -236,7 +239,7 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
         backup: contact.backupContact || '',
       },
       socialLinks: apiSocialLinks,
-      signer: 'GD4NCQMLAU5Z7HIMNGMKLSFLCA46AILVIB6FJZ7QEJXANFNGBHFR24H6',
+      signer: address,
     };
   };
 
@@ -251,7 +254,7 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
       return;
     }
 
-    requireWallet(async () => {
+    const walletValid = await requireWallet(async () => {
       setIsSigningTransaction(true);
       setFlowStep('confirming');
 
@@ -305,6 +308,10 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
         setFlowStep('signing');
       }
     });
+
+    if (!walletValid) {
+      return;
+    }
   };
 
   const handleSubmit = async () => {
@@ -322,11 +329,50 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
           endDate: z.string().min(1),
         })
         .superRefine((val, ctx) => {
-          if (new Date(val.startDate) >= new Date(val.endDate)) {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          const startDate = new Date(val.startDate);
+          const endDate = new Date(val.endDate);
+
+          // Check if start date is in the future (at least tomorrow)
+          if (startDate <= today) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['startDate'],
+              message: 'Start date must be at least tomorrow',
+            });
+          }
+
+          // Check if end date is after start date
+          if (endDate <= startDate) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               path: ['endDate'],
               message: 'End date must be after start date',
+            });
+          }
+
+          // Check if milestone has reasonable duration (at least 1 week)
+          const durationInDays = Math.ceil(
+            (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+          );
+          if (durationInDays < 7) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['endDate'],
+              message: 'Milestone duration must be at least 1 week',
+            });
+          }
+
+          // Check if milestone is not too far in the future (max 2 years)
+          const maxFutureDate = new Date();
+          maxFutureDate.setFullYear(maxFutureDate.getFullYear() + 2);
+          if (startDate > maxFutureDate) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['startDate'],
+              message: 'Start date cannot be more than 2 years in the future',
             });
           }
         });
@@ -337,13 +383,53 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
           logo: z.any().optional(),
           vision: z.string().trim().min(1).max(300),
           category: z.string().trim().min(1),
-          githubUrl: z.string().url().optional().or(z.literal('')).optional(),
-          websiteUrl: z.string().url().optional().or(z.literal('')).optional(),
-          demoVideoUrl: z
+          githubUrl: z
             .string()
-            .url()
+            .trim()
             .optional()
             .or(z.literal(''))
+            .refine(
+              v =>
+                !v ||
+                /^https?:\/\/.+/i.test(v) ||
+                /^[\w.-]+\.[a-z]{2,}$/i.test(v),
+              {
+                message:
+                  'Please enter a valid URL (with or without https), e.g., https://github.com or github.com',
+              }
+            )
+            .optional(),
+          websiteUrl: z
+            .string()
+            .trim()
+            .optional()
+            .or(z.literal(''))
+            .refine(
+              v =>
+                !v ||
+                /^https?:\/\/.+/i.test(v) ||
+                /^[\w.-]+\.[a-z]{2,}$/i.test(v),
+              {
+                message:
+                  'Please enter a valid URL (with or without https), e.g., https://boundlessfi.xyz or boundlessfi.xyz',
+              }
+            )
+            .optional(),
+          demoVideoUrl: z
+            .string()
+            .trim()
+            .optional()
+            .or(z.literal(''))
+            .refine(
+              v =>
+                !v ||
+                /^https?:\/\/.+/i.test(v) ||
+                /^[\w.-]+\.[a-z]{2,}$/i.test(v),
+              {
+                message:
+                  'Please enter a valid URL (with or without https), e.g., https://demo.com or demo.com',
+              }
+            )
             .optional(),
           socialLinks: z.array(z.string()).min(1),
         }),
@@ -354,7 +440,51 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
           fundingAmount: z
             .string()
             .refine(v => !isNaN(parseFloat(v)) && parseFloat(v) > 0),
-          milestones: z.array(milestoneSchema).min(1),
+          milestones: z
+            .array(milestoneSchema)
+            .min(1)
+            .superRefine((milestones, ctx) => {
+              // Check that milestones are in chronological order
+              for (let i = 0; i < milestones.length - 1; i++) {
+                const currentEndDate = new Date(milestones[i].endDate);
+                const nextStartDate = new Date(milestones[i + 1].startDate);
+
+                // Allow some overlap (up to 1 day) but not significant overlap
+                const daysBetween = Math.ceil(
+                  (nextStartDate.getTime() - currentEndDate.getTime()) /
+                    (1000 * 60 * 60 * 24)
+                );
+
+                if (daysBetween < -1) {
+                  ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: [i + 1, 'startDate'],
+                    message: `Milestone ${i + 2} start date should be after milestone ${i + 1} end date`,
+                  });
+                }
+              }
+
+              // Check that total project timeline is reasonable (max 3 years)
+              if (milestones.length > 0) {
+                const firstStartDate = new Date(milestones[0].startDate);
+                const lastEndDate = new Date(
+                  milestones[milestones.length - 1].endDate
+                );
+                const totalDurationInDays = Math.ceil(
+                  (lastEndDate.getTime() - firstStartDate.getTime()) /
+                    (1000 * 60 * 60 * 24)
+                );
+
+                if (totalDurationInDays > 1095) {
+                  // 3 years
+                  ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['milestones'],
+                    message: 'Total project timeline cannot exceed 3 years',
+                  });
+                }
+              }
+            }),
         }),
         team: z
           .object({
@@ -502,69 +632,74 @@ const CreateProjectModal = ({ open, setOpen }: CreateProjectModalProps) => {
   const handleTestData = () => {
     const testData: ProjectFormData = {
       basic: {
-        projectName: 'DeFi Protocol',
-        logo: 'https://res.cloudinary.com/danuy5rqb/image/upload/v1759431246/boundless/projects/logos/jfc5v0l6xec0bdhmliet.png', // Will be handled by file upload
+        projectName: 'Nebula Finance',
+        logo: 'https://res.cloudinary.com/danuy5rqb/image/upload/v1759431246/boundless/projects/logos/jfc5v0l6xec0bdhmliet.png',
         logoUrl:
-          'https://res.cloudinary.com/danuy5rqb/image/upload/v1759431246/boundless/projects/logos/jfc5v0l6xec0bdhmliet.png', // Sample uploaded logo URL
+          'https://res.cloudinary.com/danuy5rqb/image/upload/v1759431246/boundless/projects/logos/jfc5v0l6xec0bdhmliet.png',
         vision:
-          'Building the future of decentralized finance with innovative yield farming strategies and automated market making.',
+          'Nebula Finance is redefining decentralized finance with real-time, cross-chain yield aggregation and AI-driven investment strategies for both retail and institutional users.',
         category: 'DeFi & Finance',
-        githubUrl: 'https://github.com/example/defi-protocol',
-        websiteUrl: 'https://defi-protocol.example.com',
-        demoVideoUrl: 'https://youtube.com/watch?v=example',
+        githubUrl: 'https://github.com/nebula-finance/nebula-protocol',
+        websiteUrl: 'https://nebula.finance',
+        demoVideoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
         socialLinks: [
-          'https://twitter.com/defi_protocol',
-          'https://discord.gg/defi-protocol',
-          'https://t.me/defi_protocol',
+          'https://twitter.com/nebula_defi',
+          'https://discord.gg/nebula-finance',
+          'https://t.me/nebula_defi',
+          'https://linkedin.com/company/nebula-finance',
         ],
       },
       details: {
-        vision: `# DeFi Protocol Vision
-
-## Overview
-We are building a revolutionary DeFi protocol that combines yield farming, automated market making, and cross-chain interoperability to create the most efficient and user-friendly decentralized finance platform.
-
-## Key Features
-- **Automated Yield Farming**: AI-powered strategies that automatically optimize yield across multiple protocols
-- **Cross-Chain Support**: Seamless asset transfers between Ethereum, Polygon, and BSC
-- **Liquidity Mining**: Innovative token distribution mechanism that rewards long-term holders
-- **Risk Management**: Advanced risk assessment tools and insurance integration
-
-## Technology Stack
-- Solidity smart contracts
-- React frontend with Web3 integration
-- Node.js backend services
-- IPFS for decentralized storage
-
-## Roadmap
-Our development is structured in clear phases with measurable milestones and community-driven governance.`,
+        vision: `# Nebula Finance Vision
+  
+  ## Overview
+  Nebula Finance is a next-generation DeFi protocol that enables users to earn optimized yields across multiple blockchains without needing to actively manage assets.
+  
+  ## Core Features
+  - **AI Yield Optimization**: Machine-learning models analyze yield opportunities in real-time to rebalance portfolios.
+  - **Cross-Chain Aggregation**: Unified interface and smart routing across Ethereum, Arbitrum, Optimism, and BNB Chain.
+  - **Decentralized Governance**: Token holders influence strategy, emissions, and protocol upgrades.
+  - **Institutional Features**: Compliance-ready APIs, whitelisting options, and secure custody integrations.
+  
+  ## Technology Stack
+  - Smart Contracts: Solidity + Vyper
+  - Frontend: React + TypeScript + Wagmi
+  - Backend: Node.js, PostgreSQL
+  - Data Indexing: The Graph
+  - Storage: IPFS & Arweave
+  
+  ## Roadmap
+  - **Q1 2026**: Smart contract audit and testnet launch
+  - **Q2 2026**: Mainnet launch with ETH, ARB, and OP integrations
+  - **Q3 2026**: Cross-chain dashboard and partner integrations
+  - **Q4 2026**: Governance activation and community treasury`,
       },
       milestones: {
-        fundingAmount: '50000',
+        fundingAmount: '250000', // More realistic for a serious DeFi project
         milestones: [
           {
             id: 'milestone-1',
-            title: 'Smart Contract Development',
+            title: 'Protocol Architecture & Smart Contracts',
             description:
-              'Develop and audit core smart contracts for yield farming and automated market making. This includes the main protocol contracts, token contracts, and governance mechanisms.',
-            startDate: '2026-02-01',
-            endDate: '2026-04-30',
+              'Design core protocol architecture and write smart contracts for vaults, rebalancing, and governance. Engage auditors from Certik or OpenZeppelin.',
+            startDate: '2026-01-10',
+            endDate: '2026-03-30',
           },
           {
             id: 'milestone-2',
-            title: 'Frontend Development',
+            title: 'UI/UX Development',
             description:
-              'Build a user-friendly web interface for interacting with the protocol. This includes dashboard, yield farming interface, and portfolio management tools.',
-            startDate: '2026-05-01',
-            endDate: '2026-06-30',
+              'Design and develop the frontend interface with wallet integrations (MetaMask, WalletConnect) and support for multi-chain data display.',
+            startDate: '2026-04-01',
+            endDate: '2026-05-31',
           },
           {
             id: 'milestone-3',
-            title: 'Security Audit & Testing',
+            title: 'Security Audits & Launch',
             description:
-              'Conduct comprehensive security audits, penetration testing, and bug bounty programs to ensure the protocol is secure and ready for mainnet launch.',
-            startDate: '2026-07-01',
-            endDate: '2026-08-31',
+              'Conduct security audits, final integration tests, and launch the protocol on Ethereum and Arbitrum. Begin initial liquidity mining campaign.',
+            startDate: '2026-06-01',
+            endDate: '2026-07-31',
           },
         ],
       },
@@ -572,18 +707,22 @@ Our development is structured in clear phases with measurable milestones and com
         members: [
           {
             id: 'member-1',
-            email: 'john@example.com',
+            email: 'alice@nebula.finance',
           },
           {
             id: 'member-2',
-            email: 'jane@example.com',
+            email: 'michael@nebula.finance',
+          },
+          {
+            id: 'member-3',
+            email: 'linda@nebula.finance',
           },
         ],
       },
       contact: {
-        telegram: 'alice_dev',
+        telegram: 'nebula_support',
         backupType: 'discord',
-        backupContact: 'alice_dev#1234',
+        backupContact: 'nebula_admin#0420',
         agreeToTerms: true,
         agreeToPrivacy: true,
       },
@@ -692,7 +831,15 @@ Our development is structured in clear phases with measurable milestones and com
       )}
       <div
         ref={contentRef}
-        className={`min-h-[calc(55vh)] px-4 transition-opacity duration-100 md:px-[50px] lg:px-[75px] xl:px-[150px]`}
+        className={cn(
+          'min-h-[calc(55vh)] px-4 transition-opacity duration-100 md:px-[50px] lg:px-[75px] xl:px-[150px]'
+          // flowStep === 'confirming' ||
+          //   isSigningTransaction ||
+          //   (flowStep === 'signing' &&
+          //     unsignedTransaction &&
+          //     !isSigningTransaction),
+          // 'flex h-full items-center justify-center'
+        )}
       >
         {flowStep !== 'form' ? (
           <div className='flex h-full items-center justify-center'>
