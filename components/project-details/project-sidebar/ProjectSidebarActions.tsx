@@ -52,29 +52,37 @@ export function ProjectSidebarActions({
   return (
     <div className='flex flex-row gap-3'>
       {projectStatus === 'Validation' && (
-        <BoundlessButton
-          onClick={() => onVote(1)}
-          disabled={isVoting || userVote === 1}
-          //   variant={userVote === 1 ? 'default' : 'outline'}
-          loading={isVoting}
-          iconPosition={userVote === 1 ? 'right' : 'left'}
-          icon={
-            userVote === 1 ? (
-              <ThumbsUp className='h-5 w-5' fill='#A7F950' />
-            ) : (
-              <ArrowUp className='h-5 w-5' />
-            )
-          }
-          className={`flex h-12 flex-1 items-center justify-center gap-2 rounded-lg text-base font-semibold shadow-lg transition-all duration-200 hover:shadow-xl ${
-            userVote === 1
-              ? 'bg-primary/10 border-primary/24 text-primary border'
-              : 'bg-[#A7F950] text-black hover:bg-[#A7F950]'
-          } `}
-        >
-          <span className=''>
-            {isVoting ? 'Voting...' : userVote === 1 ? 'Upvoted' : 'Upvote'}
-          </span>
-        </BoundlessButton>
+        <div className='group relative inline-block'>
+          <BoundlessButton
+            onClick={() => onVote(1)}
+            disabled={isVoting || userVote === 1}
+            loading={isVoting}
+            iconPosition={userVote === 1 ? 'right' : 'left'}
+            icon={
+              userVote === 1 ? (
+                <ThumbsUp className='h-5 w-5' fill='#A7F950' />
+              ) : (
+                <ArrowUp className='h-5 w-5' />
+              )
+            }
+            className={`flex h-12 flex-1 items-center justify-center gap-2 rounded-lg text-base font-semibold shadow-lg transition-all duration-200 hover:shadow-xl ${
+              userVote === 1
+                ? 'bg-primary/10 border-primary/24 text-primary border'
+                : 'bg-[#A7F950] text-black hover:bg-[#A7F950]'
+            } `}
+          >
+            <span>
+              {isVoting ? 'Voting...' : userVote === 1 ? 'Upvoted' : 'Upvote'}
+            </span>
+          </BoundlessButton>
+
+          {/* Dropdown text */}
+          <div className='absolute top-full left-1/2 z-10 mt-2 hidden w-64 -translate-x-1/2 rounded-xl border border-gray-200 bg-white p-3 text-sm text-gray-700 shadow-lg group-hover:block'>
+            Voting is straightforward and individualistic — it’s for everyone.
+            Voting power, weight, and eligibility for who can vote are currently
+            under implementation.
+          </div>
+        </div>
       )}
 
       {projectStatus === 'funding' ||
