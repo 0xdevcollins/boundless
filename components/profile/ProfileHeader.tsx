@@ -4,20 +4,46 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { UserProfile, UserStats as UserStatsType } from '@/types/profile';
+import { GetMeResponse } from '@/lib/api/types';
+import { TeamMember } from '@/components/ui/TeamList';
 import { BoundlessButton } from '@/components/buttons';
 import { BellPlus } from 'lucide-react';
 import { ProfileSocialLinks } from '@/lib/config';
 import UserStats from './UserStats';
-import FollowersModal, { mockFollowers, mockProjects } from './FollowersModal';
+import FollowersModal from './FollowersModal';
 
 interface ProfileHeaderProps {
   profile: UserProfile;
   stats: UserStatsType;
+  user: GetMeResponse;
 }
 
-export default function ProfileHeader({ profile, stats }: ProfileHeaderProps) {
+export default function ProfileHeader({
+  profile,
+  stats,
+  user,
+}: ProfileHeaderProps) {
   const [followersModalOpen, setFollowersModalOpen] = useState(false);
   const [followingModalOpen, setFollowingModalOpen] = useState(false);
+
+  // Convert API user data to TeamMember format
+  const convertToTeamMembers = (
+    users: GetMeResponse['followers']
+  ): TeamMember[] => {
+    return users.map(user => ({
+      id: user._id,
+      name:
+        `${user.profile?.firstName || ''} ${user.profile?.lastName || ''}`.trim() ||
+        'Unknown User',
+      role: 'MEMBER' as const,
+      avatar: user.profile?.avatar || '/avatar.png',
+      username: user.profile?.username || user._id,
+      joinedAt:
+        typeof user.createdAt === 'string'
+          ? user.createdAt
+          : new Date().toISOString(),
+    }));
+  };
 
   const handleFollowersClick = () => {
     setFollowersModalOpen(true);
@@ -91,15 +117,15 @@ export default function ProfileHeader({ profile, stats }: ProfileHeaderProps) {
         open={followersModalOpen}
         setOpen={setFollowersModalOpen}
         type='followers'
-        users={mockFollowers}
+        users={convertToTeamMembers(user.followers || [])}
       />
 
       <FollowersModal
         open={followingModalOpen}
         setOpen={setFollowingModalOpen}
         type='following'
-        users={mockFollowers}
-        projects={mockProjects}
+        users={convertToTeamMembers(user.following || [])}
+        projects={user.projects || []}
       />
     </main>
   );

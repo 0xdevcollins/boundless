@@ -3,43 +3,66 @@
 import { useState, useEffect, useCallback } from 'react';
 import ProjectCard from '../ProjectCard';
 import { Project } from '@/types/project';
-import { mockProjects } from './mockData';
+import { GetMeResponse } from '@/lib/api/types';
+import { useWindowSize } from '@/hooks/use-window-size';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
-export default function ProjectsTab() {
+interface ProjectsTabProps {
+  user: GetMeResponse;
+}
+
+export default function ProjectsTab({ user }: ProjectsTabProps) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
-
+  const { height: windowHeight } = useWindowSize();
   const itemsPerPage = 6;
 
-  // Simulate API call
-  const loadProjects = useCallback(async (pageNum: number) => {
-    setLoading(true);
+  const calculateScrollHeight = () => {
+    if (!windowHeight) return '400px';
 
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const headerHeight = 80;
+    const tabsHeight = 60;
+    const projectsHeaderHeight = 60;
+    const padding = 40;
 
-    const startIndex = (pageNum - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const newProjects = mockProjects.slice(startIndex, endIndex);
+    const availableHeight =
+      windowHeight - headerHeight - tabsHeight - projectsHeaderHeight - padding;
 
-    if (pageNum === 1) {
-      setProjects(newProjects);
-    } else {
-      setProjects(prev => [...prev, ...newProjects]);
-    }
+    return Math.max(300, Math.min(availableHeight, windowHeight * 0.6)) + 'px';
+  };
 
-    setHasMore(endIndex < mockProjects.length);
-    setLoading(false);
-  }, []);
+  const loadProjects = useCallback(
+    async (pageNum: number) => {
+      setLoading(true);
 
-  // Load initial projects
+      // Simulate API delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const startIndex = (pageNum - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+
+      // Use real projects data from API
+      const allProjects = user.projects || [];
+      const newProjects = allProjects.slice(startIndex, endIndex);
+
+      if (pageNum === 1) {
+        setProjects(newProjects);
+      } else {
+        setProjects(prev => [...prev, ...newProjects]);
+      }
+
+      setHasMore(endIndex < allProjects.length);
+      setLoading(false);
+    },
+    [user.projects]
+  );
+
   useEffect(() => {
     loadProjects(1);
   }, [loadProjects]);
 
-  // Infinite scroll handler
   const handleScroll = useCallback(
     (e: React.UIEvent<HTMLDivElement>) => {
       const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
@@ -73,41 +96,44 @@ export default function ProjectsTab() {
       <div className='flex items-center justify-between'>
         <h3 className='text-lg font-medium text-gray-300'>Your Projects</h3>
         <span className='text-sm text-gray-500'>
-          {projects.length} projects
+          {user.projects?.length || 0} projects
         </span>
       </div>
 
-      <div
-        className='grid max-h-[600px] gap-4 overflow-y-auto md:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2'
-        onScroll={handleScroll}
+      <ScrollArea
+        className='w-full'
+        style={{ height: calculateScrollHeight() }}
+        onScrollCapture={handleScroll}
       >
-        {projects.map(project => (
-          <ProjectCard
-            key={project.id}
-            project={project}
-            creatorName={project.ownerName}
-            creatorAvatar={project.ownerAvatar}
-            isFullWidth={true}
-          />
-        ))}
+        <div className='grid gap-4 pr-4 md:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2'>
+          {projects.map(project => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              creatorName={`${user.profile.firstName} ${user.profile.lastName}`}
+              creatorAvatar={user.profile.avatar || '/avatar.png'}
+              isFullWidth={true}
+            />
+          ))}
 
-        {loading && (
-          <div className='col-span-full flex justify-center py-8'>
-            <div className='flex items-center space-x-2'>
-              <div className='border-primary h-6 w-6 animate-spin rounded-full border-b-2'></div>
-              <span className='text-sm text-gray-400'>
-                Loading more projects...
-              </span>
+          {loading && (
+            <div className='col-span-full flex justify-center py-8'>
+              <div className='flex items-center space-x-2'>
+                <div className='border-primary h-6 w-6 animate-spin rounded-full border-b-2'></div>
+                <span className='text-sm text-gray-400'>
+                  Loading more projects...
+                </span>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {!hasMore && projects.length > 0 && (
-          <div className='col-span-full py-4 text-center'>
-            <p className='text-sm text-gray-500'>No more projects to load</p>
-          </div>
-        )}
-      </div>
+          {!hasMore && projects.length > 0 && (
+            <div className='col-span-full py-4 text-center'>
+              <p className='text-sm text-gray-500'>No more projects to load</p>
+            </div>
+          )}
+        </div>
+      </ScrollArea>
     </div>
   );
 }

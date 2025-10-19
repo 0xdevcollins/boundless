@@ -41,7 +41,7 @@ export default function ProfileOverview({ user }: ProfileOverviewProps) {
 
   return (
     <article className='flex w-full max-w-[500px] flex-col gap-11 text-white'>
-      <ProfileHeader profile={profileData} stats={statsData} />
+      <ProfileHeader profile={profileData} stats={statsData} user={user} />
 
       {/* Organizations hidden on mobile - moved to tab */}
       <div className='hidden md:block'>

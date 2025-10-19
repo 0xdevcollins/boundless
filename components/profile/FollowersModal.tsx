@@ -6,7 +6,6 @@ import { Project } from '@/types/project';
 import { ModalTabs } from './ModalTabs';
 import { FollowersContent } from './FollowersContent';
 import { useProjectFilters } from './useProjectFilters';
-import { mockFollowers, mockProjects } from './mockData';
 
 interface FollowersModalProps {
   open: boolean;
@@ -29,13 +28,13 @@ export default function FollowersModal({
     sortFilter,
     setSortFilter,
     getFilteredProjects,
-  } = useProjectFilters(projects || mockProjects);
+  } = useProjectFilters(projects || []);
 
   const handleMemberClick = (member: TeamMember) => {
     window.open(`/profile/${member.username}`, '_blank');
   };
 
-  const displayUsers = users || mockFollowers;
+  const displayUsers = users || [];
   const displayProjects = getFilteredProjects();
 
   return (
@@ -66,6 +65,3 @@ export default function FollowersModal({
     </BoundlessSheet>
   );
 }
-
-// Export the mock data for use in ProfileHeader
-export { mockFollowers, mockProjects };
