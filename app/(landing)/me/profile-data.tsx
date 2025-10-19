@@ -1,6 +1,6 @@
 import { getMe } from '@/lib/api/auth';
 import { auth } from '@/auth';
-import ProfileOverview from '@/components/profile/ProfileOverview';
+import ProfileDataClient from '@/components/profile/ProfileDataClient';
 
 export async function ProfileData() {
   const session = await auth();
@@ -17,9 +17,9 @@ export async function ProfileData() {
   try {
     const userData = await getMe(session.user.accessToken);
     return (
-      <ProfileOverview
-        username={session.user.username || 'me'}
+      <ProfileDataClient
         user={userData}
+        username={session.user.username || 'me'}
       />
     );
   } catch (error) {
