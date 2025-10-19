@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, Check } from 'lucide-react';
+import { Check, ChevronsUpDown } from 'lucide-react';
 import Image from 'next/image';
 import {
   DropdownMenu,
@@ -87,8 +87,7 @@ export default function OrganizationSelector({
 
           {/* Chevron Icons */}
           <div className='flex flex-col gap-0'>
-            <ChevronUp className='m-0 h-4 w-4 p-0 text-white' />
-            <ChevronDown className='m-0 h-4 w-4 p-0 text-white' />
+            <ChevronsUpDown className='m-0 h-4 w-4 p-0 text-white' />
           </div>
         </Button>
       </DropdownMenuTrigger>
@@ -120,7 +119,7 @@ export default function OrganizationSelector({
 
             {/* Check Icon for Selected */}
             {selectedOrg.id === org.id && (
-              <Check className='h-4 w-4 text-lime-500' />
+              <Check className='text-primary h-4 w-4' />
             )}
           </DropdownMenuItem>
         ))}

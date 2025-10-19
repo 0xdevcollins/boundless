@@ -18,12 +18,12 @@ export default function OrganizationsLayout({
     (pathname.split('/').length > 4 && pathname !== '/dashboard/organizations');
 
   return (
-    <div className='min-h-screen bg-black text-white'>
+    <div className='relative min-h-screen bg-black text-white'>
       <OrganizationHeader />
       {showSidebar ? (
-        <div className='flex border-t border-t-zinc-800'>
+        <div className='relative border-t border-t-zinc-800'>
           <OrganizationSidebar />
-          <main className='flex-1'>{children}</main>
+          <main className='md:ml-[350px]'>{children}</main>
         </div>
       ) : (
         <main>{children}</main>
