@@ -40,10 +40,13 @@ export default function ProfileOverview({ user }: ProfileOverviewProps) {
     })) || [];
 
   return (
-    <article className='mt-14 flex w-[500px] flex-col gap-11 text-white'>
+    <article className='flex w-full max-w-[500px] flex-col gap-11 text-white'>
       <ProfileHeader profile={profileData} stats={statsData} />
 
-      <OrganizationsList organizations={organizationsData} />
+      {/* Organizations hidden on mobile - moved to tab */}
+      <div className='hidden md:block'>
+        <OrganizationsList organizations={organizationsData} />
+      </div>
     </article>
   );
 }

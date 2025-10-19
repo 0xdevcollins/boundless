@@ -68,7 +68,7 @@ export function useProtectedAction({
         return false;
       }
     },
-    [isHydrated, isConnected, publicKey, requireWallet, actionName, onSuccess]
+    [isHydrated, isConnected, publicKey, requireWallet, onSuccess]
   );
 
   const handleWalletConnectedWithRedirect = useCallback(() => {

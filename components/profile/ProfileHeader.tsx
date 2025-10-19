@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { UserProfile, UserStats as UserStatsType } from '@/types/profile';
@@ -5,6 +8,7 @@ import { BoundlessButton } from '@/components/buttons';
 import { BellPlus } from 'lucide-react';
 import { ProfileSocialLinks } from '@/lib/config';
 import UserStats from './UserStats';
+import FollowersModal, { mockFollowers, mockProjects } from './FollowersModal';
 
 interface ProfileHeaderProps {
   profile: UserProfile;
@@ -12,6 +16,17 @@ interface ProfileHeaderProps {
 }
 
 export default function ProfileHeader({ profile, stats }: ProfileHeaderProps) {
+  const [followersModalOpen, setFollowersModalOpen] = useState(false);
+  const [followingModalOpen, setFollowingModalOpen] = useState(false);
+
+  const handleFollowersClick = () => {
+    setFollowersModalOpen(true);
+  };
+
+  const handleFollowingClick = () => {
+    setFollowingModalOpen(true);
+  };
+
   return (
     <main className='flex flex-col gap-6'>
       <header className='flex items-end gap-4'>
@@ -56,7 +71,11 @@ export default function ProfileHeader({ profile, stats }: ProfileHeaderProps) {
           </div>
         ))}
       </div>
-      <UserStats stats={stats} />
+      <UserStats
+        stats={stats}
+        onFollowersClick={handleFollowersClick}
+        onFollowingClick={handleFollowingClick}
+      />
       <div className='flex gap-4'>
         <BoundlessButton icon={<BellPlus />} iconPosition='right'>
           Follow
@@ -66,6 +85,22 @@ export default function ProfileHeader({ profile, stats }: ProfileHeaderProps) {
           <Image src='/share.svg' alt='Share icon' width={16} height={16} />
         </BoundlessButton>
       </div>
+
+      {/* Modals */}
+      <FollowersModal
+        open={followersModalOpen}
+        setOpen={setFollowersModalOpen}
+        type='followers'
+        users={mockFollowers}
+      />
+
+      <FollowersModal
+        open={followingModalOpen}
+        setOpen={setFollowingModalOpen}
+        type='following'
+        users={mockFollowers}
+        projects={mockProjects}
+      />
     </main>
   );
 }
