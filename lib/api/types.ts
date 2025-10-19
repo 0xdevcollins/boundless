@@ -97,6 +97,23 @@ export type GetMeResponse = User & {
   projects: Project[];
   following: User[];
   followers: User[];
+  stats: {
+    votes: number;
+    grants: number;
+    hackathons: number;
+    donations: number;
+    projectsCreated: number;
+    projectsFunded: number;
+    totalContributed: number;
+    reputation: number;
+    communityScore: number;
+    commentsPosted: number;
+    organizations: number;
+    followers: number;
+    following: number;
+  };
+  activities: unknown[];
+  contributedProjects: unknown[];
 };
 
 // Logout

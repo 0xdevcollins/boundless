@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
+import { GetMeResponse } from '@/lib/api/types';
 
 interface ActivityItem {
   id: string;
@@ -16,89 +17,6 @@ interface ActivityItem {
   emoji?: string;
   image?: string;
 }
-
-const mockActivities: ActivityItem[] = [
-  // TODAY
-  {
-    id: '1',
-    type: 'comment',
-    description: 'Commented on project:',
-    projectName: 'Bitmed',
-    emoji: '💡🌍',
-    timestamp: '2 mins ago',
-  },
-  {
-    id: '2',
-    type: 'back',
-    description: 'Backed project:',
-    projectName: 'SolarPay',
-    amount: '$250 USDC',
-    timestamp: '10 mins ago',
-  },
-  {
-    id: '3',
-    type: 'add',
-    description: 'Added new project:',
-    projectName: 'EduChain',
-    timestamp: '30 mins ago',
-  },
-  {
-    id: '4',
-    type: 'submit',
-    description: 'Submitted project:',
-    projectName: 'EduChain',
-    hackathonName: 'DeFi Innovators Hackathon',
-    timestamp: '11 h',
-  },
-  // YESTERDAY
-  {
-    id: '5',
-    type: 'comment',
-    description: 'Commented on project:',
-    projectName: 'EduChain',
-    emoji: '📱',
-    timestamp: 'Yesterday',
-  },
-  {
-    id: '6',
-    type: 'back',
-    description: 'Backed project:',
-    projectName: 'AgriChain',
-    amount: '$75 USDC',
-    timestamp: 'Yesterday',
-  },
-  // THIS WEEK
-  {
-    id: '7',
-    type: 'apply',
-    description: 'Applied for grant:',
-    grantName: 'Open Finance Fund',
-    timestamp: '2d',
-  },
-  {
-    id: '8',
-    type: 'submit',
-    description: 'Submitted project to hackathon:',
-    hackathonName: 'Global Impact Hack 2025',
-    timestamp: '2d',
-  },
-  {
-    id: '9',
-    type: 'reply',
-    description: 'Replied to comment on',
-    projectName: 'SolarPay',
-    emoji: '🔜',
-    timestamp: '3d',
-  },
-  {
-    id: '10',
-    type: 'back',
-    description: 'Backed project:',
-    projectName: 'GreenGrid',
-    amount: '$500 USDC',
-    timestamp: '3d',
-  },
-];
 
 const getActivityDescription = (activity: ActivityItem) => {
   let description = activity.description;
@@ -127,14 +45,45 @@ const getActivityDescription = (activity: ActivityItem) => {
 
 interface ActivityFeedProps {
   filter: string;
+  user: GetMeResponse;
 }
 
-export default function ActivityFeed({ filter }: ActivityFeedProps) {
+export default function ActivityFeed({ filter, user }: ActivityFeedProps) {
   const [showAll, setShowAll] = useState(false);
 
-  const todayActivities = mockActivities.slice(0, 4);
-  const yesterdayActivities = mockActivities.slice(4, 6);
-  const weekActivities = mockActivities.slice(6, 10);
+  // Use real activities from API, fallback to empty array if none
+  const realActivities = (user.activities || []) as ActivityItem[];
+
+  // For now, show empty state when no activities
+  if (realActivities.length === 0) {
+    return (
+      <div className='flex flex-col items-center justify-center py-12 text-center'>
+        <div className='mb-4 rounded-full bg-gray-800 p-4'>
+          <svg
+            className='h-8 w-8 text-gray-400'
+            fill='none'
+            stroke='currentColor'
+            viewBox='0 0 24 24'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth={2}
+              d='M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'
+            />
+          </svg>
+        </div>
+        <h3 className='mb-2 text-lg font-medium text-white'>No Activity Yet</h3>
+        <p className='text-sm text-gray-400'>
+          Your activity will appear here once you start engaging with projects.
+        </p>
+      </div>
+    );
+  }
+
+  const todayActivities = realActivities.slice(0, 4);
+  const yesterdayActivities = realActivities.slice(4, 6);
+  const weekActivities = realActivities.slice(6, 10);
 
   // Filter activities based on selected filter
   const getFilteredActivities = () => {
@@ -211,7 +160,7 @@ export default function ActivityFeed({ filter }: ActivityFeedProps) {
         <div>
           <h3 className='mb-4 text-sm text-white'>EARLIER</h3>
           <div className='ml-5 space-y-4'>
-            {mockActivities.slice(10).map(activity => (
+            {realActivities.slice(10).map(activity => (
               <div key={activity.id} className='flex items-start gap-3'>
                 <Image
                   src={activity.image || '/admin.png'}

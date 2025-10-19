@@ -16,6 +16,7 @@ export async function ProfileData() {
 
   try {
     const userData = await getMe(session.user.accessToken);
+    // console.log(userData);
     return (
       <ProfileDataClient
         user={userData}

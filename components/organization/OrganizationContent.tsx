@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import OrganizationCard from './cards/OrganzationCards';
 import Link from 'next/link';
+import { BoundlessButton } from '../buttons';
 
 const mockOrganizations = [
   {
@@ -53,12 +54,12 @@ export default function OrganizationContent() {
               <Input
                 type='text'
                 placeholder='Search organization, hackathon, or grants'
-                className='w-full rounded-lg border-zinc-800 bg-zinc-900 py-6 pr-4 pl-12 text-white placeholder:text-zinc-500 focus-visible:border-lime-500 focus-visible:ring-[1px] focus-visible:ring-lime-500'
+                className='focus-visible:border-primary focus-visible:ring-primary w-full rounded-lg border-zinc-800 bg-zinc-900 py-6 pr-4 pl-12 text-white placeholder:text-zinc-500 focus-visible:ring-[1px]'
               />
             </div>
             <Button
               variant='outline'
-              className='text- rounded-lg border-zinc-800 bg-black px-6 py-6 hover:bg-transparent hover:text-lime-500'
+              className='text- hover:text-primary rounded-lg border-zinc-800 bg-black px-6 py-6 hover:bg-transparent'
             >
               <ArrowUpDown className='h-4 w-4' />
               Sort
@@ -66,10 +67,14 @@ export default function OrganizationContent() {
             {hasorganizations && (
               <div className='flex h-23 items-center border-l border-l-zinc-800 pl-4'>
                 <Link href='/organizations/new'>
-                  <Button className='rounded-lg bg-[#a6f948] px-6 py-6 text-black hover:bg-lime-600'>
+                  <BoundlessButton
+                    variant='default'
+                    iconPosition='right'
+                    icon={<Plus className='h-4 w-4' />}
+                    className='rounded-lg px-6 py-6 text-black'
+                  >
                     Add Organization
-                    <Plus className='h-4 w-4' />
-                  </Button>
+                  </BoundlessButton>
                 </Link>
               </div>
             )}
@@ -92,7 +97,7 @@ export default function OrganizationContent() {
         {!hasorganizations && (
           <div className='mx-8 flex items-center justify-center rounded-lg border-1 border-dashed border-green-600 p-32'>
             <Link href='/organizations/new'>
-              <button className='flex items-center gap-2 font-medium text-lime-500 transition-colors hover:text-lime-400'>
+              <button className='text-primary flex items-center gap-2 font-medium transition-colors hover:text-lime-400'>
                 <span>Add Organization</span>
                 <Plus className='h-5 w-5' size={100} />
               </button>

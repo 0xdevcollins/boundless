@@ -70,7 +70,7 @@ export default function ProfileDataClient({
 
           <div className='mt-8'>
             <TabsContent value='activity' className='mt-0'>
-              <ActivityTab />
+              <ActivityTab user={user} />
               <div className='mt-6'>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -121,11 +121,11 @@ export default function ProfileDataClient({
               </div>
 
               <div className='mt-8'>
-                <ActivityFeed filter={selectedFilter} />
+                <ActivityFeed filter={selectedFilter} user={user} />
               </div>
             </TabsContent>
             <TabsContent value='projects' className='mt-0'>
-              <ProjectsTab />
+              <ProjectsTab user={user} />
             </TabsContent>
             <TabsContent value='organizations' className='mt-0'>
               <OrganizationsTab organizations={organizationsData} />
