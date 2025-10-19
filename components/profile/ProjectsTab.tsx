@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import ProjectCard from '../ProjectCard';
+import ProjectCard from '../landing-page/project/ProjectCard';
 import { Project } from '@/types/project';
 import { GetMeResponse } from '@/lib/api/types';
 import { useWindowSize } from '@/hooks/use-window-size';
@@ -18,6 +18,26 @@ export default function ProjectsTab({ user }: ProjectsTabProps) {
   const [page, setPage] = useState(1);
   const { height: windowHeight } = useWindowSize();
   const itemsPerPage = 6;
+
+  // Map project status to ProjectCard expected status
+  const getProjectStatus = (
+    status: string
+  ): 'Validation' | 'Funding' | 'Funded' | 'Completed' => {
+    switch (status) {
+      case 'under_review':
+        return 'Validation';
+      case 'funding':
+        return 'Funding';
+      case 'funded':
+        return 'Funded';
+      case 'completed':
+        return 'Completed';
+      case 'in_progress':
+        return 'Funding';
+      default:
+        return 'Validation';
+    }
+  };
 
   const calculateScrollHeight = () => {
     if (!windowHeight) return '400px';
@@ -109,10 +129,21 @@ export default function ProjectsTab({ user }: ProjectsTabProps) {
           {projects.map(project => (
             <ProjectCard
               key={project.id}
-              project={project}
+              projectId={project.id}
               creatorName={`${user.profile.firstName} ${user.profile.lastName}`}
-              creatorAvatar={user.profile.avatar || '/avatar.png'}
+              creatorLogo={user.profile.avatar || '/avatar.png'}
+              projectImage={project.image || '/bitmed.png'}
+              projectTitle={project.name}
+              projectDescription={project.description}
+              status={getProjectStatus(project.status)}
+              deadlineInDays={30}
+              milestoneRejected={false}
               isFullWidth={true}
+              funding={{
+                current: 0,
+                goal: project.amount || 10000,
+                currency: 'USDC',
+              }}
             />
           ))}
 
