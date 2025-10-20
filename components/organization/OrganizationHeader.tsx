@@ -26,8 +26,8 @@ export default function OrganizationHeader() {
     pathname !== '/organizations' && pathname.startsWith('/organizations');
 
   return (
-    <header className='sticky top-0 z-50 flex items-center justify-between border-b-1 border-b-zinc-800 bg-black px-10 py-4'>
-      <div className='flex items-center gap-6'>
+    <header className='sticky top-0 z-50 flex w-full flex-wrap items-center justify-between overflow-x-hidden border-b border-b-zinc-800 bg-black px-4 py-3 md:flex-nowrap md:px-10'>
+      <div className='flex min-w-0 flex-1 items-center gap-4 overflow-x-auto md:overflow-visible'>
         <div className='flex items-center gap-2'>
           <Image
             src='/footer/logo.svg'

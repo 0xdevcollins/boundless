@@ -6,10 +6,25 @@ import OrganizationCard from './cards/OrganzationCards';
 import Link from 'next/link';
 import { BoundlessButton } from '../buttons';
 import { useOrganization } from '@/lib/providers/OrganizationProvider';
+import LoadingSpinner from '../LoadingSpinner';
 
 export default function OrganizationContent() {
-  const { organizations } = useOrganization();
+  const { organizations, isLoading, isLoadingOrganizations } =
+    useOrganization();
+  const loading = isLoading || isLoadingOrganizations;
   const hasOrganizations = organizations.length > 0;
+
+  if (loading) {
+    return (
+      <main className='flex h-[70vh] items-center justify-center'>
+        <div className='flex flex-col items-center gap-3 text-zinc-400'>
+          <LoadingSpinner size='lg' color='primary' variant='spinner' />
+          <p className='text-sm text-zinc-400'>Loading organizations...</p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className=''>
       {hasOrganizations && (

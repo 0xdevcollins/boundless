@@ -55,32 +55,34 @@ export default function OrganizationSettings({
             </button>
             <div className='h-[50px] w-[0.5px] bg-gray-900 md:hidden' />
 
-            <TabsList className='h-auto gap-10 bg-transparent p-0'>
-              <TabsTrigger
-                value='profile'
-                className='data-[state=active]:border-b-primary rounded-none border-b-2 border-transparent bg-transparent px-0 pt-4 pb-3 text-sm font-medium text-zinc-400 transition-all data-[state=active]:text-white data-[state=active]:shadow-none'
-              >
-                Profile
-              </TabsTrigger>
-              <TabsTrigger
-                value='links'
-                className='data-[state=active]:border-b-primary rounded-none border-b-2 border-transparent bg-transparent px-0 pt-4 pb-3 text-sm font-medium text-zinc-400 transition-all data-[state=active]:text-white data-[state=active]:shadow-none'
-              >
-                Links
-              </TabsTrigger>
-              <TabsTrigger
-                value='members'
-                className='data-[state=active]:border-b-primary rounded-none border-b-2 border-transparent bg-transparent px-0 pt-4 pb-3 text-sm font-medium text-zinc-400 transition-all data-[state=active]:text-white data-[state=active]:shadow-none'
-              >
-                Members
-              </TabsTrigger>
-              <TabsTrigger
-                value='transfer'
-                className='data-[state=active]:border-b-primary rounded-none border-b-2 border-transparent bg-transparent px-0 pt-4 pb-3 text-sm font-medium text-zinc-400 transition-all data-[state=active]:text-white data-[state=active]:shadow-none'
-              >
-                Transfer Ownership
-              </TabsTrigger>
-            </TabsList>
+            <div className='scrollbar-hide overflow-x-auto'>
+              <TabsList className='inline-flex h-auto gap-10 bg-transparent p-0'>
+                <TabsTrigger
+                  value='profile'
+                  className='data-[state=active]:border-b-primary rounded-none border-b-2 border-transparent bg-transparent px-0 pt-4 pb-3 text-sm font-medium text-zinc-400 transition-all data-[state=active]:text-white data-[state=active]:shadow-none'
+                >
+                  Profile
+                </TabsTrigger>
+                <TabsTrigger
+                  value='links'
+                  className='data-[state=active]:border-b-primary rounded-none border-b-2 border-transparent bg-transparent px-0 pt-4 pb-3 text-sm font-medium text-zinc-400 transition-all data-[state=active]:text-white data-[state=active]:shadow-none'
+                >
+                  Links
+                </TabsTrigger>
+                <TabsTrigger
+                  value='members'
+                  className='data-[state=active]:border-b-primary rounded-none border-b-2 border-transparent bg-transparent px-0 pt-4 pb-3 text-sm font-medium text-zinc-400 transition-all data-[state=active]:text-white data-[state=active]:shadow-none'
+                >
+                  Members
+                </TabsTrigger>
+                <TabsTrigger
+                  value='transfer'
+                  className='data-[state=active]:border-b-primary rounded-none border-b-2 border-transparent bg-transparent px-0 pt-4 pb-3 text-sm font-medium text-zinc-400 transition-all data-[state=active]:text-white data-[state=active]:shadow-none'
+                >
+                  Transfer Ownership
+                </TabsTrigger>
+              </TabsList>
+            </div>
           </div>
         </div>
 
