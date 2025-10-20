@@ -1,6 +1,6 @@
 import { ArrowRight, HandCoins, Triangle, Trophy } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface OrganizationCardProps {
   id: string;
@@ -25,13 +25,17 @@ export default function OrganizationCard({
   hackathons,
   grants,
 }: OrganizationCardProps) {
+  const router = useRouter();
   return (
-    <section className='cursor-pointer rounded-xl border border-zinc-800 bg-black transition-shadow duration-300 hover:shadow-lg hover:shadow-lime-500/10'>
+    <section
+      onClick={() => router.push(`/organizations/${id}/settings`)}
+      className='hover:shadow-primary/10 cursor-pointer rounded-xl border border-zinc-800 bg-black transition-shadow duration-300 hover:shadow-lg'
+    >
       <div className='rounded-xl border border-zinc-800 bg-zinc-900 px-6 pt-6 pb-1'>
         <div className='mb-6 flex items-start gap-4'>
           <div className='flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg'>
             <Image
-              src={logo || '/placeholder.svg'}
+              src={logo}
               alt={`${name} Logo`}
               width={56}
               height={56}
@@ -44,13 +48,11 @@ export default function OrganizationCard({
           </div>
         </div>
 
-        {/* Stats Grid */}
         <div className='mb-6 grid grid-cols-2 gap-4'>
-          {/* Hackathons */}
           <div className='rounded-lg border border-zinc-800 bg-black p-4'>
             <div className='mb-2 flex items-center gap-2'>
-              <div className='grid h-7 w-7 place-content-center rounded-lg border-1 border-green-400/30 bg-lime-200/10 md:h-10 md:w-10'>
-                <Trophy className='h-3 w-3 text-lime-500 md:h-4 md:w-4' />
+              <div className='bg-active-bg grid h-7 w-7 place-content-center rounded-lg border-[0.5px] border-[rgba(167,249,80,0.24)] md:h-10 md:w-10'>
+                <Trophy className='text-primary h-3 w-3 md:h-4 md:w-4' />
               </div>
               <span className='text-sm font-medium text-white'>Hackathons</span>
             </div>
@@ -76,11 +78,10 @@ export default function OrganizationCard({
             </div>
           </div>
 
-          {/* Grants */}
           <div className='rounded-lg border border-zinc-800 bg-black p-4'>
             <div className='mb-2 flex items-center gap-2'>
-              <div className='grid h-7 w-7 place-content-center rounded-lg border-1 border-green-400/30 bg-lime-200/10 md:h-10 md:w-10'>
-                <HandCoins className='h-3 w-3 text-lime-500 md:h-4 md:w-4' />
+              <div className='bg-active-bg grid h-7 w-7 place-content-center rounded-lg border-[0.5px] border-[rgba(167,249,80,0.24)] md:h-10 md:w-10'>
+                <HandCoins className='text-primary h-3 w-3 md:h-4 md:w-4' />
               </div>
               <span className='text-sm font-medium text-white'>Grants</span>
             </div>
@@ -107,14 +108,10 @@ export default function OrganizationCard({
           </div>
         </div>
       </div>
-      {/* Footer */}
-      <Link
-        href={`/organization/${id}`}
-        className='flex items-center justify-end gap-2 px-10 py-5 text-sm font-medium text-lime-500 transition-colors hover:text-lime-400'
-      >
+      <span className='text-primary flex items-center justify-end gap-2 px-10 py-5 text-sm font-medium transition-colors hover:text-lime-400'>
         <span>Manage Organization</span>
         <ArrowRight className='h-4 w-4' />
-      </Link>
+      </span>
     </section>
   );
 }

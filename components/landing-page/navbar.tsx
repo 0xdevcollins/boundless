@@ -32,6 +32,7 @@ import CreateProjectModal from './project/CreateProjectModal';
 import { useProtectedAction } from '@/hooks/use-protected-action';
 import { useAuthStore } from '@/lib/stores/auth-store';
 import WalletRequiredModal from '@/components/wallet/WalletRequiredModal';
+import { useWindowSize } from '@/hooks/use-window-size';
 
 gsap.registerPlugin(useGSAP);
 
@@ -53,6 +54,7 @@ export function Navbar() {
   const router = useRouter();
   const { isAuthenticated, isLoading, user } = useAuthStatus();
   const pathname = usePathname();
+  const { width } = useWindowSize();
 
   useGSAP(
     () => {
@@ -168,10 +170,10 @@ export function Navbar() {
       ref={navbarRef}
       className='sticky top-0 z-50 max-h-[88px] bg-[#030303A3] backdrop-blur-[12px]'
     >
-      <div className='mx-auto max-w-[1440px] px-5 py-5 md:px-[50px] lg:px-[100px]'>
+      <div className='mx-auto max-w-[1440px] px-3 py-3 sm:px-6 sm:py-5 md:px-8 lg:px-12 xl:px-16 2xl:px-20'>
         <div
           className={cn(
-            'grid grid-cols-2 items-center md:grid-cols-[auto_1fr_auto] md:justify-items-center',
+            'grid grid-cols-2 items-center gap-3 sm:gap-6 md:grid-cols-[auto_1fr_auto] md:justify-items-center',
             isAuthenticated && 'md:justify-items-start'
           )}
         >
@@ -182,17 +184,27 @@ export function Navbar() {
               onClick={() => router.push('/')}
               className='flex items-center'
             >
-              <Image src='/auth/logo.svg' alt='logo' width={116} height={22} />
+              <Image
+                src='/auth/logo.svg'
+                alt='logo'
+                width={width && width < 640 ? 90 : 116}
+                height={width && width < 640 ? 18 : 22}
+                className='transition-all duration-200'
+              />
             </Link>
           </div>
 
           <div ref={menuRef} className='hidden md:block'>
-            <div className='ml-10 flex items-baseline space-x-4'>
+            <div className='ml-6 flex items-baseline space-x-2 lg:ml-10 lg:space-x-4'>
               {menuItems.map(item => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className='rounded-md px-3 py-2 font-medium text-white transition-colors hover:text-white/80 md:text-xs lg:text-sm'
+                  className={cn(
+                    'rounded-md px-2 py-2 font-medium text-white transition-all duration-200 hover:bg-white/5 hover:text-white/80',
+                    'md:text-xs lg:text-sm',
+                    width && width < 1024 ? 'px-2' : 'px-3'
+                  )}
                 >
                   {item.label}
                 </Link>
@@ -244,7 +256,7 @@ function AuthenticatedNav({
     onSuccess: () => setCreateProjectModalOpen(true),
   });
   return (
-    <div className='flex items-center space-x-3'>
+    <div className='flex items-center space-x-2 lg:space-x-3'>
       <WalletConnectButton />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -254,7 +266,7 @@ function AuthenticatedNav({
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align='end'
-          className='bg-background w-[300px] rounded-[8px] border border-[#2B2B2B] pt-3 pb-6 text-white shadow-[0_4px_4px_0_rgba(26,26,26,0.25)]'
+          className='bg-background w-[280px] rounded-[8px] border border-[#2B2B2B] pt-3 pb-6 text-white shadow-[0_4px_4px_0_rgba(26,26,26,0.25)] sm:w-[300px]'
         >
           <DropdownMenuItem
             onClick={async () => {
@@ -318,7 +330,7 @@ function AuthenticatedNav({
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className='bg-background w-[350px] rounded-[8px] border border-[#2B2B2B] p-0 !text-white shadow-[0_4px_4px_0_rgba(26,26,26,0.25)]'
+          className='bg-background w-[320px] rounded-[8px] border border-[#2B2B2B] p-0 !text-white shadow-[0_4px_4px_0_rgba(26,26,26,0.25)] sm:w-[350px]'
           align='end'
           forceMount
         >
@@ -400,6 +412,7 @@ function AuthenticatedNav({
 // even for unauthenticated users, so designers/QA can test the flow.
 function UnauthenticatedNav() {
   const [createProjectModalOpen, setCreateProjectModalOpen] = useState(false);
+  const { width } = useWindowSize();
 
   const {
     executeProtectedAction,
@@ -424,18 +437,20 @@ function UnauthenticatedNav() {
   }
 
   return (
-    <div className='flex items-center space-x-3'>
+    <div className='flex items-center space-x-2 lg:space-x-3'>
       <BoundlessButton
         variant='outline'
         onClick={async () => {
           await executeProtectedAction(() => setCreateProjectModalOpen(true));
         }}
         className='border-white/20 text-white hover:bg-white/10'
+        size={width && width < 1024 ? 'sm' : 'default'}
       >
-        <Plus className='mr-2 h-4 w-4' />
-        Add Project
+        <Plus className='mr-1 h-3 w-3 lg:mr-2 lg:h-4 lg:w-4' />
+        <span className='hidden sm:inline'>Add Project</span>
+        <span className='sm:hidden'>Add</span>
       </BoundlessButton>
-      <BoundlessButton>
+      <BoundlessButton size={width && width < 1024 ? 'sm' : 'default'}>
         <Link href='/auth'>Sign in</Link>
       </BoundlessButton>
       <CreateProjectModal
@@ -475,6 +490,7 @@ function MobileMenu({
   const { logout } = useAuthActions();
   const { isLoading } = useAuthStore();
   const [createProjectModalOpen, setCreateProjectModalOpen] = useState(false);
+  const { width } = useWindowSize();
   useGSAP(
     () => {
       gsap.fromTo(
@@ -578,43 +594,56 @@ function MobileMenu({
           <BoundlessButton
             ref={mobileButtonRef}
             variant='outline'
-            className='md:hidden'
+            size={width && width < 480 ? 'sm' : 'default'}
+            className='border-white/20 transition-all duration-200 hover:border-white/30 hover:bg-white/10 md:hidden'
           >
-            <Menu />
+            <Menu className={width && width < 480 ? 'h-4 w-4' : 'h-5 w-5'} />
           </BoundlessButton>
         </SheetTrigger>
         <SheetContent
           showCloseButton={false}
           side='top'
-          className='px-9 pt-8 pb-16'
+          className='px-4 pt-4 pb-8 sm:px-6 sm:pt-6 sm:pb-12'
         >
-          <div className='flex items-center justify-between'>
+          {/* Header with logo and close button */}
+          <div className='mb-6 flex items-center justify-between sm:mb-8'>
             <div className='flex-shrink-0'>
               <Link ref={mobileLogoRef} href='/' className='flex items-center'>
                 <Image
                   src='/auth/logo.svg'
                   alt='logo'
-                  width={116}
-                  height={22}
+                  width={width && width < 640 ? 90 : 116}
+                  height={width && width < 640 ? 18 : 22}
+                  className='transition-all duration-200'
                 />
               </Link>
             </div>
             <SheetClose>
-              <BoundlessButton variant='outline'>
-                <XIcon className='h-5 w-5' />
+              <BoundlessButton
+                variant='outline'
+                size='sm'
+                className='border-white/20 hover:bg-white/10'
+              >
+                <XIcon className='h-4 w-4' />
               </BoundlessButton>
             </SheetClose>
           </div>
-          <div ref={mobileMenuItemsRef} className='flex flex-col gap-4'>
-            {menuItems.map(item => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className='rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:text-white/80'
-              >
-                {item.label}
-              </Link>
-            ))}
+          {/* Navigation Menu */}
+          <div ref={mobileMenuItemsRef} className='mb-6 sm:mb-8'>
+            <h3 className='mb-4 text-xs font-semibold tracking-wider text-white/60 uppercase'>
+              Navigation
+            </h3>
+            <div className='flex flex-col gap-1'>
+              {menuItems.map(item => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className='flex items-center rounded-lg px-4 py-3 text-base font-medium text-white transition-all duration-200 hover:bg-white/10 hover:text-white active:bg-white/15'
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
           </div>
           <div ref={mobileCTARef}>
             {isLoading ? (
@@ -623,89 +652,122 @@ function MobileMenu({
                 <div className='h-4 w-20 animate-pulse rounded bg-gray-200' />
               </div>
             ) : isAuthenticated ? (
-              <div className='space-y-4'>
-                <div className='flex items-center space-x-3 rounded-lg bg-white/10 p-3'>
-                  <Avatar className='h-10 w-10'>
-                    <AvatarImage
-                      src={user?.image || user?.profile?.avatar || ''}
-                      alt={user?.name || user?.profile?.firstName || ''}
-                    />
-                    <AvatarFallback>
-                      {user?.name?.charAt(0) ||
-                        user?.profile?.firstName?.charAt(0) ||
-                        user?.email?.charAt(0) ||
-                        'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className='flex-1'>
-                    <p className='text-sm font-medium text-white'>
-                      {user?.name || user?.profile?.firstName || 'User'}
-                    </p>
-                    <p className='text-xs text-white/70'>{user?.email}</p>
+              <div className='space-y-6'>
+                {/* User Profile Section */}
+                <div className='rounded-xl border border-white/10 bg-gradient-to-r from-white/5 to-white/10 p-4'>
+                  <div className='flex items-center space-x-3'>
+                    <Avatar className='h-12 w-12 ring-2 ring-white/20'>
+                      <AvatarImage
+                        src={user?.image || user?.profile?.avatar || ''}
+                        alt={user?.name || user?.profile?.firstName || ''}
+                      />
+                      <AvatarFallback className='bg-white/10 font-semibold text-white'>
+                        {user?.name?.charAt(0) ||
+                          user?.profile?.firstName?.charAt(0) ||
+                          user?.email?.charAt(0) ||
+                          'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className='min-w-0 flex-1'>
+                      <p className='truncate text-base font-semibold text-white'>
+                        {user?.name || user?.profile?.firstName || 'User'}
+                      </p>
+                      <p className='truncate text-sm text-white/70'>
+                        {user?.email}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
                 {/* Wallet Connection */}
-                <div className='space-y-2'>
-                  <p className='text-xs font-medium tracking-wide text-white/70 uppercase'>
+                <div className='space-y-3'>
+                  <h3 className='text-xs font-semibold tracking-wider text-white/60 uppercase'>
                     Wallet
-                  </p>
+                  </h3>
                   <WalletConnectButton
                     variant='outline'
                     size='sm'
-                    className='w-full border-white/20 bg-transparent text-white hover:bg-white/10'
+                    className='w-full border-white/20 bg-white/5 text-white hover:border-white/30 hover:bg-white/10'
                   />
                 </div>
 
-                <div className='space-y-2'>
-                  <p className='text-xs font-medium tracking-wide text-white/70 uppercase'>
-                    Navigation
-                  </p>
-                  <Link
-                    href={`/profile/${user?.username}`}
-                    className='block rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10'
-                  >
-                    Profile
-                  </Link>
-                  <Link
-                    href='/organizations'
-                    className='block rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10'
-                  >
-                    Organizations
-                  </Link>
-                  <Link
-                    href='/settings'
-                    className='block rounded-md px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10'
-                  >
-                    Settings
-                  </Link>
+                {/* Quick Actions */}
+                <div className='space-y-3'>
+                  <h3 className='text-xs font-semibold tracking-wider text-white/60 uppercase'>
+                    Quick Actions
+                  </h3>
+                  <div className='grid grid-cols-1 gap-2'>
+                    <Link
+                      href={`/profile/${user?.username}`}
+                      className='flex items-center rounded-lg px-4 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-white/10 active:bg-white/15'
+                    >
+                      <User className='mr-3 h-4 w-4' />
+                      Profile
+                    </Link>
+                    <Link
+                      href='/organizations'
+                      className='flex items-center rounded-lg px-4 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-white/10 active:bg-white/15'
+                    >
+                      <Building2 className='mr-3 h-4 w-4' />
+                      Organizations
+                    </Link>
+                    <Link
+                      href='/settings'
+                      className='flex items-center rounded-lg px-4 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-white/10 active:bg-white/15'
+                    >
+                      <Settings className='mr-3 h-4 w-4' />
+                      Settings
+                    </Link>
+                  </div>
                 </div>
-                <BoundlessButton
-                  size='xl'
-                  className='w-full'
-                  fullWidth
-                  variant='outline'
-                  onClick={() => !isLoading && logout()}
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Signing Out...' : 'Sign Out'}
-                </BoundlessButton>
+                {/* Sign Out Button */}
+                <div className='border-t border-white/10 pt-2'>
+                  <BoundlessButton
+                    size='lg'
+                    fullWidth
+                    variant='outline'
+                    onClick={() => !isLoading && logout()}
+                    disabled={isLoading}
+                    className='w-full border-red-500/50 text-red-400 hover:border-red-500 hover:bg-red-500/10 hover:text-red-300'
+                  >
+                    <LogOut className='mr-2 h-4 w-4' />
+                    {isLoading ? 'Signing Out...' : 'Sign Out'}
+                  </BoundlessButton>
+                </div>
               </div>
             ) : (
-              <div className='space-y-4'>
-                <div className='space-y-2'>
-                  <p className='text-xs font-medium tracking-wide text-white/70 uppercase'>
-                    Wallet
-                  </p>
+              <div className='space-y-6'>
+                {/* Wallet Connection */}
+                <div className='space-y-3'>
+                  <h3 className='text-xs font-semibold tracking-wider text-white/60 uppercase'>
+                    Connect Wallet
+                  </h3>
                   <WalletConnectButton
                     variant='outline'
                     size='sm'
-                    className='w-full border-white/20 bg-transparent text-white hover:bg-white/10'
+                    className='w-full border-white/20 bg-white/5 text-white hover:border-white/30 hover:bg-white/10'
                   />
                 </div>
-                <BoundlessButton size='xl' className='w-full' fullWidth>
-                  <Link href='/auth'>Get Started</Link>
-                </BoundlessButton>
+
+                {/* Get Started Section */}
+                <div className='space-y-3'>
+                  <h3 className='text-xs font-semibold tracking-wider text-white/60 uppercase'>
+                    Get Started
+                  </h3>
+                  <BoundlessButton
+                    size='lg'
+                    fullWidth
+                    className='w-full bg-gradient-to-r from-blue-600 to-purple-600 font-semibold text-white hover:from-blue-700 hover:to-purple-700'
+                  >
+                    <Link
+                      href='/auth'
+                      className='flex items-center justify-center'
+                    >
+                      <Plus className='mr-2 h-4 w-4' />
+                      Get Started
+                    </Link>
+                  </BoundlessButton>
+                </div>
               </div>
             )}
           </div>

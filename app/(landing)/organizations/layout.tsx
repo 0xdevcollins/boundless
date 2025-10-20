@@ -5,6 +5,7 @@ import type React from 'react';
 import OrganizationHeader from '@/components/organization/OrganizationHeader';
 import OrganizationSidebar from '@/components/organization/OrganizationSidebar';
 import { usePathname } from 'next/navigation';
+import { OrganizationProvider } from '@/lib/providers';
 
 export default function OrganizationsLayout({
   children,
@@ -14,20 +15,34 @@ export default function OrganizationsLayout({
   const pathname = usePathname();
 
   const showSidebar =
-    pathname.includes('/new') ||
-    (pathname.split('/').length > 4 && pathname !== '/dashboard/organizations');
+    pathname !== '/organizations' && pathname.startsWith('/organizations');
+
+  const getOrgIdFromPath = () => {
+    if (pathname.startsWith('/organizations/')) {
+      const pathParts = pathname.split('/');
+      const orgId = pathParts[2];
+      if (orgId && /^[a-f0-9]{24}$/.test(orgId)) {
+        return orgId;
+      }
+    }
+    return null;
+  };
+
+  const initialOrgId = getOrgIdFromPath();
 
   return (
-    <div className='min-h-screen bg-black text-white'>
-      <OrganizationHeader />
-      {showSidebar ? (
-        <div className='flex border-t border-t-zinc-800'>
-          <OrganizationSidebar />
-          <main className='flex-1'>{children}</main>
-        </div>
-      ) : (
-        <main>{children}</main>
-      )}
-    </div>
+    <OrganizationProvider initialOrgId={initialOrgId || undefined}>
+      <div className='relative min-h-screen bg-black text-white'>
+        <OrganizationHeader />
+        {showSidebar ? (
+          <div className='relative border-t border-t-zinc-800'>
+            <OrganizationSidebar />
+            <main className='md:ml-[350px]'>{children}</main>
+          </div>
+        ) : (
+          <main>{children}</main>
+        )}
+      </div>
+    </OrganizationProvider>
   );
 }

@@ -64,7 +64,7 @@ export default function ResponsiveSidebar({
                 className={cn(
                   'flex items-center gap-3 px-6 py-2.5 text-sm font-medium transition-colors',
                   isActive
-                    ? 'border-r-4 border-r-lime-500 bg-lime-500/10 text-lime-500'
+                    ? 'border-r-primary bg-primary/10 text-primary border-r-4'
                     : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
                 )}
               >
@@ -80,7 +80,7 @@ export default function ResponsiveSidebar({
               onClick={() => onOpenChange?.(false)}
               className='flex items-center gap-3 px-3 py-2'
             >
-              <div className='grid h-6 w-6 flex-shrink-0 place-content-center rounded-full bg-lime-500'>
+              <div className='bg-primary grid h-6 w-6 flex-shrink-0 place-content-center rounded-full'>
                 <Plus className='h-5 w-5 text-black' />
               </div>
               <span className='text-sm font-medium text-zinc-300'>
@@ -92,7 +92,7 @@ export default function ResponsiveSidebar({
               onClick={() => onOpenChange?.(false)}
               className='flex items-center gap-3 px-3 py-2'
             >
-              <div className='grid h-6 w-6 flex-shrink-0 place-content-center rounded-full bg-lime-500'>
+              <div className='bg-primary grid h-6 w-6 flex-shrink-0 place-content-center rounded-full'>
                 <Plus className='h-5 w-5 text-black' />
               </div>
               <span className='text-sm font-medium text-zinc-300'>
