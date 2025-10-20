@@ -24,7 +24,6 @@ export default function TeamManagementSection({
   onRoleChange,
   onRemoveMember,
 }: TeamManagementSectionProps) {
-  // Always show owner as the first member
   const ownerMember = {
     id: 'owner-1',
     name: 'Collins Chikangwu',
@@ -35,7 +34,6 @@ export default function TeamManagementSection({
     status: 'active' as const,
   };
 
-  // Separate members by status
   const activeMembers = members.filter(member => member.status === 'active');
   const pendingMembers = members.filter(member => member.status === 'pending');
 
@@ -51,7 +49,6 @@ export default function TeamManagementSection({
       </div>
 
       <div className='space-y-4'>
-        {/* Owner - Always displayed */}
         <div className='flex gap-3'>
           <Avatar className='h-12 w-12'>
             <AvatarImage src={ownerMember.avatar} alt={ownerMember.name} />
@@ -68,7 +65,6 @@ export default function TeamManagementSection({
           </div>
         </div>
 
-        {/* Active Members (excluding owner) */}
         {activeMembers.filter(member => member.role !== 'owner').length > 0 && (
           <div className='space-y-3'>
             {activeMembers
@@ -84,7 +80,6 @@ export default function TeamManagementSection({
           </div>
         )}
 
-        {/* Pending Invites */}
         {pendingMembers.length > 0 && (
           <div className='space-y-4'>
             <h4 className='mb-3 text-sm text-white italic'>Pending Invites</h4>

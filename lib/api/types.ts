@@ -45,12 +45,28 @@ export interface User {
   lastLogin?: string;
   [key: string]: unknown;
 }
+export interface OrganizationLinks {
+  website: string;
+  x: string; // Twitter/X handle
+  github: string;
+  others: string;
+}
+
 export interface Organization {
   _id: string;
   name: string;
-  avatar: string;
-  username: string;
-  bio: string;
+  logo: string;
+  tagline: string;
+  about: string;
+  links: OrganizationLinks;
+  members: string[]; // Array of user emails
+  owner: string; // Owner email or userId
+  hackathons: string[]; // Array of hackathon IDs
+  grants: string[]; // Array of grant IDs
+  isProfileComplete: boolean;
+  pendingInvites: string[]; // Array of emails invited but not yet accepted
+  createdAt: string;
+  updatedAt: string;
 }
 
 // Auth tokens

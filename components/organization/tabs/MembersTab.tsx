@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { BoundlessButton } from '@/components/buttons';
+import { useOrganization } from '@/lib/providers/OrganizationProvider';
 import EmailInviteSection from './MembersTab/EmailInviteSection';
 import PermissionsTable from './MembersTab/PermissionsTable';
 import TeamManagementSection from './MembersTab/TeamManagementSection';
@@ -17,96 +18,65 @@ interface Member {
 }
 
 interface MembersTabProps {
-  initialMembers?: Member[];
   onSave?: (members: Member[]) => void;
 }
 
-export default function MembersTab({
-  initialMembers = [],
-  onSave,
-}: MembersTabProps) {
-  const dummyMembers: Member[] = [
-    {
-      id: 'member-1',
-      name: 'Sarah Johnson',
-      email: 'sarah.johnson@example.com',
-      avatar: '/avatar.png',
-      role: 'admin',
-      joinedAt: new Date().toISOString(),
-      status: 'active',
-    },
-    {
-      id: 'member-2',
-      name: 'Mike Chen',
-      email: 'mike.chen@example.com',
-      avatar: '/avatar.png',
-      role: 'member',
-      joinedAt: new Date().toISOString(),
-      status: 'active',
-    },
-    {
-      id: 'member-3',
-      name: 'Emily Rodriguez',
-      email: 'emily.rodriguez@example.com',
-      avatar: '/avatar.png',
-      role: 'admin',
-      joinedAt: new Date().toISOString(),
-      status: 'active',
-    },
-    {
-      id: 'pending-1',
-      name: 'Alex Thompson',
-      email: 'alex.thompson@example.com',
-      avatar: '/avatar.png',
-      role: 'member',
-      joinedAt: new Date().toISOString(),
-      status: 'pending',
-    },
-    {
-      id: 'pending-2',
-      name: 'Lisa Wang',
-      email: 'lisa.wang@example.com',
-      avatar: '/avatar.png',
-      role: 'admin',
-      joinedAt: new Date().toISOString(),
-      status: 'pending',
-    },
-  ];
+export default function MembersTab({ onSave }: MembersTabProps) {
+  const {
+    activeOrg,
+    activeOrgId,
+    updateOrganizationMembers,
+    inviteMember,
+    removeMember,
+    isLoading,
+  } = useOrganization();
 
-  const [members, setMembers] = useState<Member[]>(
-    initialMembers.length > 0 ? initialMembers : dummyMembers
-  );
+  const members: Member[] = useMemo(() => {
+    const emails = activeOrg?.members ?? [];
+    return emails.map((email, idx) => ({
+      id: `${idx}-${email}`,
+      name: email.split('@')[0] || email,
+      email,
+      role: 'member',
+      joinedAt: new Date().toISOString(),
+      status: 'active',
+    }));
+  }, [activeOrg?.members]);
   const [inviteEmails, setInviteEmails] = useState<string[]>([]);
   const [emailInput, setEmailInput] = useState('');
+  const [hasUserChanges, setHasUserChanges] = useState(false);
 
   const handleInvite = () => {
-    if (inviteEmails.length > 0) {
-      const newMembers: Member[] = inviteEmails.map(email => ({
-        id: Date.now().toString() + Math.random(),
-        name: email.split('@')[0],
-        email: email,
-        role: 'member', // Default role
-        joinedAt: new Date().toISOString(),
-        status: 'pending',
-      }));
-      setMembers([...members, ...newMembers]);
+    if (inviteEmails.length > 0 && activeOrgId) {
+      inviteMember(activeOrgId, inviteEmails);
       setInviteEmails([]);
       setEmailInput('');
     }
   };
 
-  const handleRoleChange = (memberId: string, newRole: string) => {
-    setMembers(prev =>
-      prev.map(member =>
-        member.id === memberId
-          ? { ...member, role: newRole as 'admin' | 'member' }
-          : member
-      )
-    );
+  const handleRoleChange = (memberId: string) => {
+    if (!activeOrgId) return;
+    const m = members.find(x => x.id === memberId);
+    if (!m) return;
+    updateOrganizationMembers(activeOrgId, [m.email]);
+    setHasUserChanges(true);
   };
 
   const handleRemoveMember = (memberId: string) => {
-    setMembers(prev => prev.filter(member => member.id !== memberId));
+    if (!activeOrgId) return;
+    const m = members.find(x => x.id === memberId);
+    if (!m) return;
+    removeMember(activeOrgId, m.email);
+  };
+
+  const handleSave = async () => {
+    if (!activeOrgId) return;
+    const emails = members.map(m => m.email);
+    try {
+      await updateOrganizationMembers(activeOrgId, emails);
+      onSave?.(members);
+      setHasUserChanges(false);
+    } catch {}
   };
 
   return (
@@ -127,9 +97,21 @@ export default function MembersTab({
         onRemoveMember={handleRemoveMember}
       />
 
-      <BoundlessButton onClick={() => onSave?.(members)} className=''>
-        Save Changes
-      </BoundlessButton>
+      <div className='space-y-2'>
+        {hasUserChanges && (
+          <div className='flex items-center gap-2 text-sm text-amber-400'>
+            <div className='h-2 w-2 rounded-full bg-amber-400' />
+            You have unsaved changes
+          </div>
+        )}
+        <BoundlessButton
+          onClick={handleSave}
+          className='w-full'
+          disabled={isLoading}
+        >
+          {isLoading ? 'Saving...' : 'Save Changes'}
+        </BoundlessButton>
+      </div>
     </div>
   );
 }

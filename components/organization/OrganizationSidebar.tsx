@@ -16,30 +16,42 @@ export default function OrganizationSidebar({
   const pathname = usePathname();
   const { height } = useWindowSize();
 
+  const derivedOrgId =
+    organizationId ||
+    (() => {
+      if (!pathname) return undefined;
+      const parts = pathname.split('/');
+      if (parts.length >= 3 && parts[1] === 'organizations') {
+        return parts[2];
+      }
+      return undefined;
+    })();
+
+  const normalizedPath =
+    pathname?.endsWith('/') && pathname !== '/'
+      ? pathname.slice(0, -1)
+      : pathname;
+
   const menuItems = [
     {
       icon: Trophy,
       label: 'Hackathons',
-      href: organizationId
-        ? `/organizations/${organizationId}/hackathons`
-        : '#',
+      href: derivedOrgId ? `/organizations/${derivedOrgId}/hackathons` : '#',
     },
     {
       icon: HandCoins,
       label: 'Grants',
-      href: organizationId ? `/organizations/${organizationId}/grants` : '#',
+      href: derivedOrgId ? `/organizations/${derivedOrgId}/grants` : '#',
     },
     {
       icon: Settings,
       label: 'Settings',
-      href: organizationId
-        ? `/organizations/${organizationId}/settings`
+      href: derivedOrgId
+        ? `/organizations/${derivedOrgId}/settings`
         : '/organizations/new',
     },
   ];
 
-  // Calculate the available height (window height minus header height)
-  // Assuming header height is around 64px (4rem), adjust as needed
   const headerHeight = 64;
   const availableHeight = height ? height - headerHeight : 'calc(100vh - 4rem)';
 
@@ -54,8 +66,11 @@ export default function OrganizationSidebar({
         </h3>
         {menuItems.map(item => {
           const Icon = item.icon;
+          const isValidHref = item.href !== '#';
           const isActive =
-            pathname === item.href || pathname?.startsWith(item.href + '/');
+            isValidHref &&
+            (normalizedPath === item.href ||
+              normalizedPath?.startsWith(item.href + '/'));
 
           return (
             <Link

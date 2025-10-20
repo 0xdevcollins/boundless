@@ -36,7 +36,7 @@ export default function ProfileOverview({ user }: ProfileOverviewProps) {
   const organizationsData: Organization[] =
     user.organizations?.map(org => ({
       name: org.name,
-      avatarUrl: org.avatar || '/blog1.jpg',
+      avatarUrl: (org as unknown as { logo?: string }).logo || '/blog1.jpg',
     })) || [];
 
   return (
