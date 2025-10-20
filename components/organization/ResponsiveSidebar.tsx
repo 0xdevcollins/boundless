@@ -1,6 +1,6 @@
 'use client';
 
-import { Trophy, HandCoins, Settings, Plus } from 'lucide-react';
+import { Trophy, HandCoins, Settings, Plus, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -45,8 +45,16 @@ export default function ResponsiveSidebar({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side='left'
-        className='w-[350px] border-r border-zinc-800 bg-black p-0'
+        className='w-[350px] border-r border-zinc-800 bg-black p-0 [&_[data-radix-sheet-close-icon]]:text-white'
       >
+        <button
+          onClick={() => onOpenChange?.(false)}
+          className='absolute top-4 right-4 rounded-md p-2 transition hover:bg-zinc-800'
+          aria-label='Close'
+        >
+          <X className='cursor-pointer text-white' />
+        </button>
+
         <nav className='flex h-full flex-col gap-1 py-4'>
           <h3 className='mb-2 px-6 text-xs font-semibold tracking-wider text-zinc-500 uppercase'>
             Menu
