@@ -57,8 +57,9 @@
   --color-success-900: #004617;
 
   --color-active-bg: rgba(167, 249, 80, 0.08);
+  --color-active-bg2: rgba(167, 249, 80, 0.32);
 }
-/* Custom scrollbar styles for comment modal */
+
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #4a4a4a #1a1a1a;

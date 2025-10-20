@@ -14,16 +14,16 @@ import { useAuthActions, useAuthStatus } from '@/hooks/use-auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import OrganizationSelector from './cards/OrganizationSelector';
+import { useOrganization } from '@/lib/providers/OrganizationProvider';
 
 export default function OrganizationHeader() {
   const { isLoading, user } = useAuthStatus();
   const { logout } = useAuthActions();
   const pathname = usePathname();
   const isOnOrganizationsPage = pathname === '/dashboard/organizations';
-
+  const { organizations, activeOrg, setActiveOrg } = useOrganization();
   const showOrgSelector =
-    pathname.includes('/new') ||
-    (pathname.split('/').length > 4 && pathname !== '/dashboard/organizations');
+    pathname !== '/organizations' && pathname.startsWith('/organizations');
 
   return (
     <header className='sticky top-0 z-50 flex items-center justify-between border-b-1 border-b-zinc-800 bg-black px-10 py-4'>
@@ -37,7 +37,6 @@ export default function OrganizationHeader() {
           />
         </div>
 
-        {/* Home Link */}
         <Link href='/'>
           <button className='hover:text-primary/80 flex items-center gap-2 text-gray-600 transition-colors'>
             <Building2 className='h-5 w-5' />
@@ -45,10 +44,30 @@ export default function OrganizationHeader() {
           </button>
         </Link>
 
-        {showOrgSelector && <OrganizationSelector />}
+        {showOrgSelector && organizations && organizations.length > 0 && (
+          <OrganizationSelector
+            organizations={organizations}
+            currentOrganization={
+              activeOrg
+                ? {
+                    _id: activeOrg._id,
+                    name: activeOrg.name,
+                    logo: activeOrg.logo,
+                    tagline: activeOrg.tagline,
+                    isProfileComplete: activeOrg.isProfileComplete,
+                    role: 'owner',
+                    memberCount: activeOrg.members.length,
+                    hackathonCount: activeOrg.hackathons.length,
+                    grantCount: activeOrg.grants.length,
+                    createdAt: activeOrg.createdAt,
+                  }
+                : undefined
+            }
+            onOrganizationChange={orgId => setActiveOrg(orgId)}
+          />
+        )}
       </div>
 
-      {/* User Avatar Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className='flex items-center space-x-2 rounded-full p-1 transition-colors hover:bg-white/10'>
@@ -58,10 +77,6 @@ export default function OrganizationHeader() {
                 alt={user?.name || user?.profile?.firstName || ''}
               />
               <AvatarFallback>
-                {/* {user?.name?.charAt(0) ||
-                             user?.profile?.firstName?.charAt(0) ||
-                             user?.email?.charAt(0) ||
-                             'U'} */}
                 <Image
                   src={
                     user?.image ||
@@ -115,7 +130,7 @@ export default function OrganizationHeader() {
               asChild
             >
               <Link
-                href='/dashboard/organizations'
+                href='/organizations'
                 className='group-hover:text-primary flex items-center'
               >
                 <Building2 className='group-hover:!text-primary mr-2 h-4 w-4 text-white' />
