@@ -86,19 +86,3 @@ export {
   isOrganizationNameAvailable,
   generateOrganizationSuggestions,
 } from './organization-utils';
-
-// Example component exports
-export {
-  OrganizationSwitcher,
-  OrganizationSwitcherWithIcons,
-  OrganizationSwitcherDropdown,
-} from './examples/OrganizationSwitcher';
-
-export { OrganizationDashboard } from './examples/OrganizationDashboard';
-
-export {
-  OrganizationForm,
-  OrganizationInviteForm,
-} from './examples/OrganizationForm';
-
-// ExampleUsage not included; remove exports to avoid type errors
