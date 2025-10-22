@@ -6,6 +6,7 @@ import OrganizationHeader from '@/components/organization/OrganizationHeader';
 import OrganizationSidebar from '@/components/organization/OrganizationSidebar';
 import { usePathname } from 'next/navigation';
 import { OrganizationProvider } from '@/lib/providers';
+import NewHackathonSidebar from '@/components/organization/hackathons/new/NewHackathonSidebar';
 
 export default function OrganizationsLayout({
   children,
@@ -14,8 +15,10 @@ export default function OrganizationsLayout({
 }) {
   const pathname = usePathname();
 
-  const showSidebar =
+  const showOrganizationSidebar =
     pathname !== '/organizations' && pathname.startsWith('/organizations');
+  const showNewHackathonSidebar = pathname.includes('/hackathons/new');
+  const showNewGrantSidebar = pathname.includes('/grants/new');
 
   const getOrgIdFromPath = () => {
     if (pathname.startsWith('/organizations/')) {
@@ -32,11 +35,16 @@ export default function OrganizationsLayout({
 
   return (
     <OrganizationProvider initialOrgId={initialOrgId || undefined}>
-      <div className='relative min-h-screen bg-black text-white'>
+      <div className='bg-background-main-bg relative min-h-screen text-white'>
         <OrganizationHeader />
-        {showSidebar ? (
+        {showOrganizationSidebar ? (
           <div className='relative border-t border-t-zinc-800'>
-            <OrganizationSidebar />
+            {showOrganizationSidebar &&
+              !showNewHackathonSidebar &&
+              !showNewGrantSidebar && <OrganizationSidebar />}
+            {showNewHackathonSidebar && <NewHackathonSidebar />}
+            {/* {showNewGrantSidebar && <NewGrantSidebar />} */}
+
             <main className='md:ml-[350px]'>{children}</main>
           </div>
         ) : (
